@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F1071DED-3D92-4416-9B9C-8664441ADE64}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>OpenNos.Data</RootNamespace>
+    <AssemblyName>OpenNos.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp />
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp, Version=106.2.1.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.106.2.1\lib\net452\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Base\SynchronizableBaseDTO.cs" />
+    <Compile Include="BazaarItemDTO.cs" />
+    <Compile Include="BCardDTO.cs" />
+    <Compile Include="MaintenanceLogDTO.cs" />
+    <Compile Include="MallDTO.cs" />
+    <Compile Include="MinigameLogDTO.cs" />
+    <Compile Include="QuestDTO.cs" />
+    <Compile Include="QuestProgressDTO.cs" />
+    <Compile Include="RecipeListDTO.cs" />
+    <Compile Include="RollGeneratedItemDTO.cs" />
+    <Compile Include="CardDTO.cs" />
+    <Compile Include="CellonOptionDTO.cs" />
+    <Compile Include="CharacterRelationDTO.cs" />
+    <Compile Include="ComboDTO.cs" />
+    <Compile Include="DropDTO.cs" />
+    <Compile Include="MateDTO.cs" />
+    <Compile Include="FamilyCharacterDTO.cs" />
+    <Compile Include="FamilyDTO.cs" />
+    <Compile Include="FamilyLogDTO.cs" />
+    <Compile Include="GeneralLogDTO.cs" />
+    <Compile Include="Interfaces\IMapDTO.cs" />
+    <Compile Include="MailDTO.cs" />
+    <Compile Include="MapMonsterDTO.cs" />
+    <Compile Include="MapNpcDTO.cs" />
+    <Compile Include="MapTypeDTO.cs" />
+    <Compile Include="MapTypeMapDTO.cs" />
+    <Compile Include="MinilandObjectDTO.cs" />
+    <Compile Include="NpcMonsterSkillDTO.cs" />
+    <Compile Include="PenaltyLogDTO.cs" />
+    <Compile Include="QuicklistEntryDTO.cs" />
+    <Compile Include="RecipeDTO.cs" />
+    <Compile Include="RecipeItemDTO.cs" />
+    <Compile Include="RespawnDTO.cs" />
+    <Compile Include="RespawnMapTypeDTO.cs" />
+    <Compile Include="ShellEffectDTO.cs" />
+    <Compile Include="ShopItemDTO.cs" />
+    <Compile Include="ShopDTO.cs" />
+    <Compile Include="ItemInstanceDTO.cs" />
+    <Compile Include="ItemDTO.cs" />
+    <Compile Include="MapDTO.cs" />
+    <Compile Include="NpcMonsterDTO.cs" />
+    <Compile Include="PortalDTO.cs" />
+    <Compile Include="AccountDTO.cs" />
+    <Compile Include="CharacterDTO.cs" />
+    <Compile Include="Enums\DeleteResult.cs" />
+    <Compile Include="Enums\SaveResult.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SkillDTO.cs" />
+    <Compile Include="ShopSkillDTO.cs" />
+    <Compile Include="CharacterSkillDTO.cs" />
+    <Compile Include="StaticBonusDTO.cs" />
+    <Compile Include="StaticBuffDTO.cs" />
+    <Compile Include="TeleporterDTO.cs" />
+    <Compile Include="ScriptedInstanceDTO.cs" />
+    <Compile Include="UserDTO.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OpenNos.Core\OpenNos.Core.csproj">
+      <Project>{c93a0a40-0551-4732-b594-171b87679ac1}</Project>
+      <Name>OpenNos.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenNos.Domain\OpenNos.Domain.csproj">
+      <Project>{20addddd-dad9-44f3-9beb-026c73090660}</Project>
+      <Name>OpenNos.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenNos.XMLModel\OpenNos.XMLModel.csproj">
+      <Project>{ce1bcbe7-edb7-4564-a11e-8d90868df9d0}</Project>
+      <Name>OpenNos.XMLModel</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

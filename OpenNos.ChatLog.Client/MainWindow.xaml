@@ -1,0 +1,44 @@
+﻿<Window x:Class="OpenNos.ChatLog.Client.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:local="clr-namespace:OpenNos.ChatLog.Client"
+        mc:Ignorable="d"
+        Title="OpenNos.ChatLog.Client" Height="514" Width="1251" Icon="on-logo-icon.ico" MinWidth="1251" MinHeight="300">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File" IsEnabled="False">
+                <MenuItem Header="_Open" IsEnabled="False" Click="OpenFile"/>
+                <MenuItem Header="_Close" IsEnabled="False" Click="CloseFile"/>
+            </MenuItem>
+            <MenuItem Header="_Settings">
+                <MenuItem Header="Order results by Date...">
+                    <MenuItem x:Name="Orderasc" Header="Ascending" IsCheckable="True" IsChecked="True" Click="SettingsOrderAscending" />
+                    <MenuItem x:Name="Orderdesc" Header="Descending" IsCheckable="True" Click="SettingsOrderDescending" />
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+        <Grid>
+            <Label Content="Sender" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0"/>
+            <TextBox x:Name="senderbox" Height="23" TextWrapping="Wrap" Margin="10,36,0,0" HorizontalAlignment="Left" Width="125" VerticalAlignment="Top"/>
+            <Label Content="SenderId" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="140,10,0,0"/>
+            <TextBox x:Name="senderidbox" Height="23" TextWrapping="Wrap" Margin="140,36,0,0" HorizontalAlignment="Left" Width="125" VerticalAlignment="Top"/>
+            <Label Content="Receiver" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="270,10,0,0"/>
+            <TextBox x:Name="receiverbox" Height="23" TextWrapping="Wrap" Margin="270,36,0,0" HorizontalAlignment="Left" Width="125" VerticalAlignment="Top"/>
+            <Label Content="ReceiverId" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="400,10,0,0"/>
+            <TextBox x:Name="receiveridbox" Height="23" TextWrapping="Wrap" Margin="400,36,0,0" HorizontalAlignment="Left" Width="125" VerticalAlignment="Top"/>
+            <Label Content="Message" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="530,10,0,0"/>
+            <TextBox x:Name="messagebox" Height="23" TextWrapping="Wrap" Margin="530,36,0,0" HorizontalAlignment="Left" Width="125" VerticalAlignment="Top"/>
+            <Label Content="DateStart" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="660,10,0,0"/>
+            <xctk:DateTimePicker x:Name="datestartpicker" HorizontalAlignment="Left" Margin="660,36,0,0" VerticalAlignment="Top" Width="178" Height="23" Format="Custom" FormatString="yyyy/MM/dd hh:mm tt" CultureInfo="en-US" CurrentDateTimePart="Hour12"/>
+            <Label Content="DateEnd" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="843,10,0,0"/>
+            <xctk:DateTimePicker x:Name="dateendpicker" HorizontalAlignment="Left" Margin="843,36,0,0" VerticalAlignment="Top" Width="178" Height="23" Format="Custom" FormatString="yyyy/MM/dd hh:mm tt" CultureInfo="en-US" CurrentDateTimePart="Hour12"/>
+            <Button x:Name="searchbutton" Content="Search" Margin="1151,36,10,0" VerticalAlignment="Top" Height="23" Click="SearchButton"/>
+            <ListBox x:Name="resultlistbox" Margin="10,64,10,10"/>
+            <Label Content="Type" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1026,10,0,0"/>
+            <ComboBox x:Name="typedropdown" HorizontalAlignment="Left" Margin="1026,37,0,0" VerticalAlignment="Top" Width="120"/>
+        </Grid>
+    </DockPanel>
+</Window>
