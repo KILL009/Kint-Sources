@@ -427,6 +427,9 @@ namespace OpenNos.GameObject.Networking
                         session.SendPacket(session.Character.Group.GeneraterRaidmbf(session));
                     }
 
+                    session.SendPacket(session.CurrentMapInstance.GenerateMapDesignObjects());
+                    session.SendPackets(session.CurrentMapInstance.GetMapDesignObjectEffects());
+
                     Parallel.ForEach(
                         session.CurrentMapInstance.Sessions.Where(s =>
                             s.Character?.InvisibleGm == false &&
@@ -1064,15 +1067,15 @@ namespace OpenNos.GameObject.Networking
                 session.SendPacket(UserInterfaceHelper.GenerateMsg(session.Character.MinilandMessage.Replace(' ', '^'), 0));
                 session.SendPacket(session.Character.GenerateMlinfobr());
                 minilandOwner.Character.GeneralLogs.Add(new GeneralLogDTO { AccountId = session.Account.AccountId, CharacterId = session.Character.CharacterId, IpAddress = session.IpAddress, LogData = "Miniland", LogType = "World", Timestamp = DateTime.Now });
-                session.SendPacket(minilandOwner.Character.GenerateMinilandObjectForFriends());
+                
             }
             else
             {
                 session.SendPacket(session.Character.GenerateMlinfo());
-                session.SendPacket(minilandOwner.Character.GetMinilandObjectList());
+                
             }
             minilandOwner.Character.Mates.Where(s => !s.IsTeamMember).ToList().ForEach(s => session.SendPacket(s.GenerateIn()));
-            session.SendPackets(minilandOwner.Character.GetMinilandEffects());
+            
             session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("MINILAND_VISITOR"), session.Character.GeneralLogs.CountLinq(s => s.LogData == "Miniland" && s.Timestamp.Day == DateTime.Now.Day), session.Character.GeneralLogs.CountLinq(s => s.LogData == "Miniland")), 10));
         }
 

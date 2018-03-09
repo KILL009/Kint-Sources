@@ -62,7 +62,7 @@ namespace OpenNos.GameObject
             TradeRequests = new ThreadSafeGenericList<long>();
             FriendRequestCharacters = new ThreadSafeGenericList<long>();
             StaticBonusList = new List<StaticBonusDTO>();
-            MinilandObjects = new List<MinilandObject>();
+            
             Mates = new List<Mate>();
             LastMonsterAggro = DateTime.Now;
             LastPulse = DateTime.Now;
@@ -141,7 +141,7 @@ namespace OpenNos.GameObject
             TradeRequests = new ThreadSafeGenericList<long>();
             FriendRequestCharacters = new ThreadSafeGenericList<long>();
             StaticBonusList = new List<StaticBonusDTO>();
-            MinilandObjects = new List<MinilandObject>();
+           
             Mates = new List<Mate>();
             LastMonsterAggro = DateTime.Now;
             LastPulse = DateTime.Now;
@@ -359,7 +359,7 @@ namespace OpenNos.GameObject
 
         public MapInstance Miniland { get; private set; }
 
-        public List<MinilandObject> MinilandObjects { get; set; }
+        
 
         public int Morph { get; set; }
 
@@ -2144,31 +2144,21 @@ namespace OpenNos.GameObject
                 Miniland = ServerManager.GenerateMapInstance(20001, MapInstanceType.NormalInstance, new InstanceBag());
                 foreach (MinilandObjectDTO obj in DAOFactory.MinilandObjectDAO.LoadByCharacterId(CharacterId))
                 {
-                    MinilandObject mapobj = new MinilandObject(obj);
+                    MapDesignObject mapobj = (MapDesignObject)obj;
                     if (mapobj.ItemInstanceId != null)
                     {
                         ItemInstance item = Inventory.GetItemInstanceById((Guid)mapobj.ItemInstanceId);
                         if (item != null)
                         {
                             mapobj.ItemInstance = item;
-                            MinilandObjects.Add(mapobj);
+                            Miniland.MapDesignObjects.Add(mapobj);
                         }
                     }
                 }
             }
         }
 
-        public string GenerateMinilandObjectForFriends()
-        {
-            string mlobjstring = "mltobj";
-            int i = 0;
-            foreach (MinilandObject mp in MinilandObjects)
-            {
-                mlobjstring += $" {mp.ItemInstance.ItemVNum}.{i}.{mp.MapX}.{mp.MapY}";
-                i++;
-            }
-            return mlobjstring;
-        }
+       
 
         public string GenerateMinilandPoint() => $"mlpt {MinilandPoint} 100";
 
@@ -2180,7 +2170,10 @@ namespace OpenNos.GameObject
 
         public string GenerateMlinfobr() => $"mlinfobr 3800 {Name} {GeneralLogs.CountLinq(s => s.LogData == nameof(Miniland) && s.Timestamp.Day == DateTime.Now.Day)} {GeneralLogs.CountLinq(s => s.LogData == nameof(Miniland))} 25 {MinilandMessage.Replace(' ', '^')}";
 
-        public string GenerateMloMg(MinilandObject mlobj, MinigamePacket packet) => $"mlo_mg {packet.MinigameVNum} {MinilandPoint} 0 0 {mlobj.ItemInstance.DurabilityPoint} {mlobj.ItemInstance.Item.MinilandObjectPoint}";
+        public string GenerateMloMg(MapDesignObject mlobj, MinigamePacket packet)
+        {
+            return $"mlo_mg {packet.MinigameVNum} {MinilandPoint} 0 0 {mlobj.ItemInstance.DurabilityPoint} {mlobj.ItemInstance.Item.MinilandObjectPoint}";
+        }
 
         public string GenerateNpcDialog(int value) => $"npc_req 1 {CharacterId} {value}";
 
@@ -2963,7 +2956,7 @@ namespace OpenNos.GameObject
             return new List<string>();
         }
 
-        public IEnumerable<string> GetMinilandEffects() => MinilandObjects.Select(mp => mp.GenerateMinilandEffect(false)).ToList();
+      
 
         public string GetMinilandObjectList()
         {
@@ -2974,7 +2967,7 @@ namespace OpenNos.GameObject
                 {
                     WareHouseSize = item.Item.MinilandObjectPoint;
                 }
-                MinilandObject mp = MinilandObjects.Find(s => s.ItemInstanceId == item.Id);
+                MapDesignObject mp = Session.Character.MapInstance.MapDesignObjects.FirstOrDefault(s => s.ItemInstanceId == item.Id);
                 bool used = mp != null;
                 mlobjstring += $" {item.Slot}.{(used ? 1 : 0)}.{(used ? mp.MapX : 0)}.{(used ? mp.MapY : 0)}.{(item.Item.Width != 0 ? item.Item.Width : 1) }.{(item.Item.Height != 0 ? item.Item.Height : 1) }.{(used ? mp.ItemInstance.DurabilityPoint : 0)}.100.0.1";
             }
@@ -3742,7 +3735,7 @@ namespace OpenNos.GameObject
                         }
 
                         IEnumerable<MinilandObjectDTO> currentlySavedMinilandObjectEntries = DAOFactory.MinilandObjectDAO.LoadByCharacterId(CharacterId).ToList();
-                        foreach (MinilandObjectDTO mobjToDelete in currentlySavedMinilandObjectEntries.Except(MinilandObjects))
+                        foreach (MinilandObjectDTO mobjToDelete in currentlySavedMinilandObjectEntries.Except(Miniland.MapDesignObjects))
                         {
                             DAOFactory.MinilandObjectDAO.DeleteById(mobjToDelete.MinilandObjectId);
                         }
@@ -3812,7 +3805,9 @@ namespace OpenNos.GameObject
                     DAOFactory.QuicklistEntryDAO.InsertOrUpdate(quicklistEntry);
                 }
 
-                foreach (MinilandObjectDTO mobjEntry in (IEnumerable<MinilandObjectDTO>)MinilandObjects.ToList())
+                IEnumerable<MinilandObjectDTO> minilandobjectEntriesToInsertOrUpdate = Miniland.MapDesignObjects.ToList();
+
+                foreach (MinilandObjectDTO mobjEntry in minilandobjectEntriesToInsertOrUpdate)
                 {
                     MinilandObjectDTO mobj = mobjEntry;
                     DAOFactory.MinilandObjectDAO.InsertOrUpdate(ref mobj);
@@ -4504,8 +4499,8 @@ namespace OpenNos.GameObject
                 s.GroupId = null;
                 }
             s.Time = 300;
-            s.Session.SendPacket(s.Session.Character.GenerateBsInfo(1, 2, s.Time, 5));
-            s.Session.SendPacket(s.Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("SEARCH_ARENA_TEAM"), 10));
+                        s.Session.SendPacket(s.Session.Character.GenerateBsInfo(1, 2, s.Time, 8));
+                        s.Session.SendPacket(s.Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("SEARCH_ARENA_TEAM"), 10));
                                 });
                 }
                 ServerManager.Instance.ArenaMembers.Remove(memb);
