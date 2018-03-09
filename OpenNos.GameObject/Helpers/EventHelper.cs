@@ -23,6 +23,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using OpenNos.GameObject.Networking;
+using OpenNos.GameObject.Event.ARENA;
 using OpenNos.Master.Library.Client;
 using OpenNos.Master.Library.Data;
 
@@ -97,7 +98,7 @@ namespace OpenNos.GameObject.Helpers
                             break;
 
                         case EventType.TALENTARENA:
-                            TalentArena.Run();
+                            ArenaEvent.GenerateTalentArena();
                             break;
                         case EventType.CALIGOR:
                             CaligorRaid.Run();

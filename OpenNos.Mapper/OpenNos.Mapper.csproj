@@ -78,7 +78,7 @@
     <Compile Include="Mappers\MapTypeMapper.cs" />
     <Compile Include="Mappers\MateMapper.cs" />
     <Compile Include="Mappers\MinigameLogMapper.cs" />
-    <Compile Include="Mappers\MinilandObjectMapper.cs" />
+    <Compile Include="Mappers\MapDesignObjectMapper.cs" />
     <Compile Include="Mappers\ShopSkillMapper.cs" />
     <Compile Include="Mappers\StaticBonusMapper.cs" />
     <Compile Include="Mappers\StaticBuffMapper.cs" />

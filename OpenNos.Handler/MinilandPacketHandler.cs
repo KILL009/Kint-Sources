@@ -66,7 +66,7 @@ namespace OpenNos.Handler
         public void MinigamePlay(MinigamePacket packet)
         {
             ClientSession client = ServerManager.Instance.Sessions.FirstOrDefault(s => s.Character?.Miniland == Session.Character.MapInstance);
-            MinilandObject mlobj = client?.Character.MinilandObjects.Find(s => s.ItemInstance.ItemVNum == packet.MinigameVNum);
+            MapDesignObject mlobj = Session.CurrentMapInstance?.MapDesignObjects.FirstOrDefault(s => s.ItemInstance.ItemVNum == packet.MinigameVNum);
             if (mlobj != null)
             {
                 const bool full = false;
@@ -278,11 +278,11 @@ namespace OpenNos.Handler
             ItemInstance minilandobject = Session.Character.Inventory.LoadBySlotAndType<ItemInstance>(addObjPacket.Slot, InventoryType.Miniland);
             if (minilandobject != null)
             {
-                if (Session.Character.MinilandObjects.All(s => s.ItemInstanceId != minilandobject.Id))
+                if (Session.Character.MapInstance.MapDesignObjects.All(s => s.ItemInstanceId != minilandobject.Id))
                 {
                     if (Session.Character.MinilandState == MinilandState.Lock)
                     {
-                        MinilandObject minilandobj = new MinilandObject
+                        MapDesignObject minilandobj = new MapDesignObject
                         {
                             CharacterId = Session.Character.CharacterId,
                             ItemInstance = minilandobject,
@@ -316,7 +316,7 @@ namespace OpenNos.Handler
                                     break;
                             }
 
-                            MinilandObject min = Session.Character.MinilandObjects.Find(s => s.ItemInstance.Item.ItemType == ItemType.House && s.ItemInstance.Item.ItemSubType == minilandobject.Item.ItemSubType);
+                            MapDesignObject min = Session.Character.MapInstance.MapDesignObjects.FirstOrDefault(s => s.ItemInstance.Item.ItemType == ItemType.House && s.ItemInstance.Item.ItemSubType == minilandobject.Item.ItemSubType);
                             if (min != null)
                             {
                                 MinilandRemoveObject(new RmvobjPacket { Slot = min.ItemInstance.Slot });

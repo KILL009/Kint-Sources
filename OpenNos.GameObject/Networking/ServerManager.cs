@@ -157,6 +157,8 @@ namespace OpenNos.GameObject.Networking
 
         public Guid WorldId { get; private set; }
 
+        public List<ArenaMember> ArenaMembers { get; set; } = new List<ArenaMember>();
+
         public ThreadSafeSortedList<long, ClientSession> CharacterScreenSessions { get; set; }
         public long MaxBankGold { get; set; }
         public long MaxGold { get; set; }
@@ -182,6 +184,7 @@ namespace OpenNos.GameObject.Networking
                 session.SendPacket(session.Character.GenerateCond());
                 session.SendPackets(UserInterfaceHelper.GenerateVb());
 
+                session.Character.LeaveTalentArena();
                 session.SendPacket("eff_ob -1 -1 0 4269");
                 session.SendPacket(UserInterfaceHelper.GenerateDialog($"#revival^2 #revival^1 {Language.Instance.GetMessageFromKey("ASK_REVIVE_PVP")}"));
                 ReviveTask(session);
@@ -340,6 +343,7 @@ namespace OpenNos.GameObject.Networking
                         session.Character.CloseShop();
                     }
 
+                    session.Character.LeaveTalentArena();
                     if (!noAggroLoss)
                     {
                         session.CurrentMapInstance.RemoveMonstersTarget(session.Character.CharacterId);

@@ -4,9 +4,9 @@ using System;
 
 namespace OpenNos.Mapper.Mappers
 {
-    public class MinilandObjectMapper
+    public class MapDesignObjectMapper
     {
-        public MinilandObjectMapper()
+        public MapDesignObjectMapper()
         {
 
         }

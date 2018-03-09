@@ -22,6 +22,7 @@ namespace OpenNos.Domain
         TimeSpaceInstance,
         RaidInstance,
         FamilyRaidInstance,
+        TalentArenaMapInstance,
         Act4ShipAngel,
         Act4ShipDemon,
         Act4Morcos,

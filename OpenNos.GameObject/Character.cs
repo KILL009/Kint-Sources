@@ -529,6 +529,7 @@ namespace OpenNos.GameObject
         public int WareHouseSize { get; set; }
 
         public int WaterResistance { get; set; }
+        public byte TicketLeft { get; set; }
         public long LastTargetType { get; set; }
         public long LastTargetId { get; set; }
 
@@ -775,6 +776,11 @@ namespace OpenNos.GameObject
             {
                 Session.CurrentMapInstance?.Broadcast(Session, $"pidx 1 1.{CharacterId}", ReceiverType.AllExceptMe);
             }
+        }
+
+        public string GenerateBsInfo(byte type, int arenaeventtype, int time, byte titletype)
+        {
+            return $"bsinfo {type} {arenaeventtype} {time} {titletype}";
         }
 
         public void ChangeSex()
@@ -4356,6 +4362,13 @@ namespace OpenNos.GameObject
             return (int)(lowBaseGold * ServerManager.Instance.Configuration.RateGold * actMultiplier * eqMultiplier);
         }
 
+        public void OpenBank()
+        {
+            Session.SendPacket($"gb 3 {Session.Account.BankGold / 1000} {Session.Character.Gold} 0 0");
+            Session.SendPacket("s_memo 6 Welcome to the Cuarry Bank. You can deposit or withdraw 1,000 to 100 billion gold.");
+        }
+
+
         private int GetHXP(NpcMonsterDTO monster, Group group)
         {
             int partySize = 1;
@@ -4476,6 +4489,29 @@ namespace OpenNos.GameObject
         }
 
         private double XpLoad() => CharacterHelper.XPData[Level - 1];
+
+        public void LeaveTalentArena()
+        {
+            ArenaMember memb = ServerManager.Instance.ArenaMembers.FirstOrDefault(s => s.Session == Session);
+           if(memb !=null)
+            {
+                if (memb.GroupId != null)
+                {
+                    ServerManager.Instance.ArenaMembers.Where(s => s.GroupId == memb.GroupId).ToList().ForEach(s =>
+                    {
+                  if (ServerManager.Instance.ArenaMembers.Where(g => g.GroupId == memb.GroupId).Count() == 2)
+                   {
+                s.GroupId = null;
+                }
+            s.Time = 300;
+            s.Session.SendPacket(s.Session.Character.GenerateBsInfo(1, 2, s.Time, 5));
+            s.Session.SendPacket(s.Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("SEARCH_ARENA_TEAM"), 10));
+                                });
+                }
+                ServerManager.Instance.ArenaMembers.Remove(memb);
+            }
+          Session.SendPacket(Session.Character.GenerateBsInfo(2, 2, 0, 0));
+        }
 
         #endregion
     }

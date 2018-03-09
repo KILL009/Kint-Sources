@@ -324,6 +324,43 @@ namespace OpenNos.GameObject
                     }
                     break;
 
+                case 135:
+
+                    if (!ServerManager.Instance.StartedEvents.Contains(EventType.TALENTARENA))
+                    {
+                        Session.SendPacket(npc?.Say(Language.Instance.GetMessageFromKey("ARENA_NOT_OPEN"), 10));
+                    }
+                    else
+                    {
+                        var tickets = 5 - Session.Character.GeneralLogs.Count(s => s.LogType == "TalentArena" && s.Timestamp.Date == DateTime.Today);
+                        if (ServerManager.Instance.ArenaMembers.All(s => s.Session != Session) && tickets > 0)
+                        {
+                            if (ServerManager.Instance.IsCharacterMemberOfGroup(Session.Character.CharacterId))
+                            {
+                                Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("TALENT_ARENA_GROUP"), 0));
+                                Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("TALENT_ARENA_GROUP"), 10));
+                            }
+                            else
+                            {
+                                Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("ARENA_TICKET_LEFT"), tickets), 10));
+                                ServerManager.Instance.ArenaMembers.Add(new ArenaMember
+                                {
+                                    ArenaType = EventType.TALENTARENA,
+                                    Session = Session,
+                                    GroupId = null,
+                                    Time = 0
+                                });
+                            }
+                        }
+                        else
+                        {
+                            Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("TALENT_ARENA_NO_MORE_TICKET"), 0));
+                            Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("TALENT_ARENA_NO_MORE_TICKET"), 10));
+                        }
+                    }
+
+                    break;
+
                 case 150:
                     if (npc != null)
                     {

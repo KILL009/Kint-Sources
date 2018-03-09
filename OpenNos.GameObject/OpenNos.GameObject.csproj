@@ -123,16 +123,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Act4Stat.cs" />
+    <Compile Include="ArenaMember.cs" />
     <Compile Include="Buff\Buff.cs" />
     <Compile Include="Buff\BCard.cs" />
     <Compile Include="Buff\Card.cs" />
     <Compile Include="Event\ACT4\Act4Raid.cs" />
     <Compile Include="Event\ACT4\Act4Ship.cs" />
     <Compile Include="Event\ACT4\CaligorRaid.cs" />
+    <Compile Include="Event\ARENA\ArenaEvent.cs" />
     <Compile Include="Event\EventWave.cs" />
     <Compile Include="Event\GAMES\MeteoriteGame.cs" />
-    <Compile Include="Event\TALENTARENA\TalentArena.cs" />
-    <Compile Include="Event\TALENTARENA\TalentArenaBattle.cs" />
     <Compile Include="Helpers\MallAPIHelper.cs" />
     <Compile Include="Helpers\MateHelper.cs" />
     <Compile Include="Helpers\StaticPacketHelper.cs" />
@@ -155,6 +155,7 @@
     <Compile Include="MonsterToSummon.cs" />
     <Compile Include="Packets\ClientPackets\BlDelPacket.cs" />
     <Compile Include="Packets\ClientPackets\BlInsPacket.cs" />
+    <Compile Include="Packets\ClientPackets\BscPacket.cs" />
     <Compile Include="Packets\ClientPackets\BtkPacket.cs" />
     <Compile Include="Packets\ClientPackets\CreateFamilyPacket.cs" />
     <Compile Include="Packets\ClientPackets\EscapePacket.cs" />

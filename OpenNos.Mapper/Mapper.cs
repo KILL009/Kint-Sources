@@ -54,7 +54,7 @@ namespace OpenNos.Mapper
 
         private MateMapper _mateMapper;
 
-        private MinilandObjectMapper _minilandObjectMapper;
+        private MapDesignObjectMapper _MapDesignObjectMapper;
 
         private NpcMonsterMapper _npcMonsterMapper;
 
@@ -129,7 +129,7 @@ namespace OpenNos.Mapper
             _mapTypeMapMapper = new MapTypeMapMapper();
             _mapTypeMapper = new MapTypeMapper();
             _mateMapper = new MateMapper();
-            _minilandObjectMapper = new MinilandObjectMapper();
+            _MapDesignObjectMapper = new MapDesignObjectMapper();
             _npcMonsterMapper = new NpcMonsterMapper();
             _npcMonsterSkillMapper = new NpcMonsterSkillMapper();
             _penaltyLogMapper = new PenaltyLogMapper();
@@ -206,7 +206,7 @@ namespace OpenNos.Mapper
 
         public MateMapper MateMapper => _mateMapper;
 
-        public MinilandObjectMapper MinilandObjectMapper => _minilandObjectMapper;
+        public MapDesignObjectMapper MinilandObjectMapper => _minilandObjectMapper;
 
         public NpcMonsterMapper NpcMonsterMapper => _npcMonsterMapper;
 
