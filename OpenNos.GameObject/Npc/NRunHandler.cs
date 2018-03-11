@@ -332,7 +332,7 @@ namespace OpenNos.GameObject
                     }
                     else
                     {
-                        var tickets = 3 - Session.Character.GeneralLogs.Count(s => s.LogType == "TalentArena" && s.Timestamp.Date == DateTime.Today);
+                        var tickets = 5 - Session.Character.GeneralLogs.Count(s => s.LogType == "TalentArena" && s.Timestamp.Date == DateTime.Today);
                         if (ServerManager.Instance.ArenaMembers.All(s => s.Session != Session) && tickets > 0)
                         {
                             if (ServerManager.Instance.IsCharacterMemberOfGroup(Session.Character.CharacterId))

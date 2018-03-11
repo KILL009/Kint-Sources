@@ -355,6 +355,11 @@ namespace OpenNos.GameObject.Networking
 
                     session.Character.IsChangingMapInstance = true;
 
+                    if (session.Character.IsSitting)
+                  {
+                      session.Character.IsSitting = false;
+                   }
+
                     // cleanup sending queue to avoid sending uneccessary packets to it
                     session.ClearLowPriorityQueue();
 
