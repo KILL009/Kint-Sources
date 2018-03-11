@@ -385,10 +385,7 @@ namespace OpenNos.GameObject.Helpers
             return $"ta_f 0 {victoriousteam} 2 2 0 2 3 1 2";
         }
 
-        public string GenerateTaM(int type, int timer)
-        {
-            return $"ta_m {type} 0 0 {timer} 0";
-        }
+       
 
         public static string GenerateRemovePacket(short slot) => $"{slot}.-1.0.0.0";
 

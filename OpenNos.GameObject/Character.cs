@@ -2141,13 +2141,16 @@ namespace OpenNos.GameObject
 
         public void GenerateMiniland()
         {
-            if (Miniland == null)
+            if (Miniland != null)
             {
+                return;
+            }
+            { 
                 Miniland = ServerManager.GenerateMapInstance(20001, MapInstanceType.NormalInstance, new InstanceBag());
                 foreach (MinilandObjectDTO obj in DAOFactory.MinilandObjectDAO.LoadByCharacterId(CharacterId))
                 {
                     MapDesignObject mapobj = (MapDesignObject)obj;
-                    if (mapobj.ItemInstanceId != null)
+                    if (mapobj.ItemInstanceId == null)
                     {
                         ItemInstance item = Inventory.GetItemInstanceById((Guid)mapobj.ItemInstanceId);
                         if (item != null)
@@ -2160,9 +2163,23 @@ namespace OpenNos.GameObject
             }
         }
 
-       
+        public string GenerateTaM(int type, int timer)
+        {
+            ConcurrentBag<ArenaTeamMember> tm = ServerManager.Instance.ArenaTeams.FirstOrDefault(s => s.Any(o => o.Session == Session));
+            int score1 = 0;
+            int score2 = 0;
+            if(tm !=null)
+           {
+                ArenaTeamMember tmem = tm.FirstOrDefault(s => s.Session == Session);
+               IEnumerable<long> ids = tm.Where(s => tmem.ArenaTeamType == s.ArenaTeamType).Select(s => s.Session.Character.CharacterId);
+                score1 = MapInstance.InstanceBag.DeadList.Count(s => ids.Contains(s));
+                score2 = MapInstance.InstanceBag.DeadList.Count(s => !ids.Contains(s));
+            }
+            return $"ta_m {type} {score1} {score2} {timer} 0";
+        }
 
-        public string GenerateMinilandPoint() => $"mlpt {MinilandPoint} 100";
+
+public string GenerateMinilandPoint() => $"mlpt {MinilandPoint} 100";
 
         public string GenerateMinimapPosition() => MapInstance.MapInstanceType == MapInstanceType.TimeSpaceInstance
             || MapInstance.MapInstanceType == MapInstanceType.RaidInstance

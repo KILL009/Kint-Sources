@@ -193,7 +193,7 @@ namespace OpenNos.GameObject.Networking
             }
         }
 
-       
+
 
         // PacketHandler -> with Callback?
         public void AskRevive(long characterId)
@@ -243,6 +243,91 @@ namespace OpenNos.GameObject.Networking
                         ReviveTask(session);
                         break;
 
+                    case MapInstanceType.TalentArenaMapInstance:
+                        ConcurrentBag<ArenaTeamMember> team = Instance.ArenaTeams.FirstOrDefault(s => s.Any(o => o.Session == session));
+                        var member = team?.FirstOrDefault(s => s.Session == session);
+                        if (member != null)
+                        {
+                            if (member.LastSummoned == null)
+                            {
+                                session.CurrentMapInstance.InstanceBag.DeadList.Add(session.Character.CharacterId);
+                                member.Dead = true;
+                                team.ToList().Where(s => s.LastSummoned != null).ToList().ForEach(s =>
+                                {
+                                    s.LastSummoned = null;
+                                    s.Session.Character.PositionX = s.ArenaTeamType == ArenaTeamType.ERENIA ? (short)120 : (short)19;
+                                    s.Session.Character.PositionY = s.ArenaTeamType == ArenaTeamType.ERENIA ? (short)39 : (short)40;
+                                    session.CurrentMapInstance.Broadcast(s.Session.Character.GenerateTp());
+                                    s.Session.SendPacket(UserInterfaceHelper.Instance.GenerateTaSt(TalentArenaOptionType.Watch));
+                                });
+                                var killer = team.OrderBy(s => s.Order).FirstOrDefault(s => !s.Dead && s.ArenaTeamType != member.ArenaTeamType);
+                                session.CurrentMapInstance.Broadcast(session.Character.GenerateSay(string.Format("TEAM_WINNER_ARENA_ROUND", killer?.Session.Character.Name, killer?.ArenaTeamType), 10));
+                                session.CurrentMapInstance.Broadcast(UserInterfaceHelper.GenerateMsg(string.Format("TEAM_WINNER_ARENA_ROUND", killer?.Session.Character.Name, killer?.ArenaTeamType), 0));
+                                session.CurrentMapInstance.Sessions.Except(team.Where(s => s.ArenaTeamType == killer?.ArenaTeamType).Select(s => s.Session)).ToList().ForEach(o =>
+                                {
+                                    if (killer?.ArenaTeamType == ArenaTeamType.ERENIA)
+                                    {
+                                        o.SendPacket(killer.Session.Character.GenerateTaM(2));
+                                        o.SendPacket(killer.Session.Character.GenerateTaP(2, true));
+                                    }
+                                    else
+                                    {
+                                        o.SendPacket(member.Session.Character.GenerateTaM(2));
+                                        o.SendPacket(member.Session.Character.GenerateTaP(2, true));
+                                    }
+
+                                    o.SendPacket($"taw_d {member.Session.Character.CharacterId}");
+                                    o.SendPacket(member.Session.Character.GenerateSay(string.Format("WINNER_ARENA_ROUND", killer?.Session.Character.Name, killer?.ArenaTeamType, member.Session.Character.Name), 10));
+                                    o.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format("WINNER_ARENA_ROUND", killer?.Session.Character.Name, killer?.ArenaTeamType, member.Session.Character.Name), 0));
+                                });
+                            }
+
+                            member.Session.Character.PositionX = member.ArenaTeamType == ArenaTeamType.ERENIA ? (short)120 : (short)19;
+                            member.Session.Character.PositionY = member.ArenaTeamType == ArenaTeamType.ERENIA ? (short)39 : (short)40;
+                            session.CurrentMapInstance.Broadcast(member.Session, member.Session.Character.GenerateTp());
+                            session.SendPacket(UserInterfaceHelper.Instance.GenerateTaSt(TalentArenaOptionType.Watch));
+                            team.Replace(friends => friends.ArenaTeamType == member.ArenaTeamType).ToList().ForEach(friends => { friends.Session.SendPacket(friends.Session.Character.GenerateTaFc(0)); });
+                            team.ToList().ForEach(arenauser =>
+                            {
+                                arenauser.Session.SendPacket(arenauser.Session.Character.GenerateTaP(2, true));
+                                arenauser.Session.SendPacket(arenauser.Session.Character.GenerateTaM(2));
+                            });
+
+                            session.Character.Hp = (int)session.Character.HPLoad();
+                            session.Character.Mp = (int)session.Character.MPLoad();
+                            session.CurrentMapInstance?.Broadcast(session, session.Character.GenerateRevive());
+                            session.SendPacket(session.Character.GenerateStat());
+                        }
+
+                        break;
+
+                    default:
+                        session.Character.LeaveTalentArena();
+                        session.SendPacket(UserInterfaceHelper.GenerateDialog($"#revival^2 #revival^1 {Language.Instance.GetMessageFromKey("ASK_REVIVE_PVP")}"));
+                        Task.Factory.StartNew(async () =>
+                        {
+                            var revive = true;
+                            for (int i = 1; i <= 30; i++)
+                            {
+                                await Task.Delay(1000);
+                                if (session.Character.Hp <= 0)
+                                {
+                                    continue;
+                                }
+
+                                revive = false;
+                                break;
+                            }
+
+                            if (revive)
+                            {
+                                Instance.ReviveFirstPosition(session.Character.CharacterId);
+                            }
+                        });
+                        break;
+                
+            
+        
                     case MapInstanceType.RaidInstance:
                         List<long> save = session.CurrentMapInstance.InstanceBag.DeadList.ToList();
                         if (session.CurrentMapInstance.InstanceBag.Lives - session.CurrentMapInstance.InstanceBag.DeadList.Count < 0)
@@ -300,7 +385,7 @@ namespace OpenNos.GameObject.Networking
                         ReviveTask(session);
                         break;
 
-                    default:
+                    
                         Instance.ReviveFirstPosition(session.Character.CharacterId);
                         break;
                 }
