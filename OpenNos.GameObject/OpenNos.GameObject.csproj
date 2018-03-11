@@ -187,6 +187,7 @@
     <Compile Include="Packets\ClientPackets\ShoppingPacket.cs" />
     <Compile Include="Packets\ClientPackets\SortOpenPacket.cs" />
     <Compile Include="Packets\ClientPackets\SuctlPacket.cs" />
+    <Compile Include="Packets\ClientPackets\TaCallPacket.cs" />
     <Compile Include="Packets\ClientPackets\UseItemPacket.cs" />
     <Compile Include="Packets\CommandPackets\Act4ConnectPacket.cs" />
     <Compile Include="Packets\CommandPackets\Act4StatPacket.cs" />
