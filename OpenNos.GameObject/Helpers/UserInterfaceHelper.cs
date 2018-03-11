@@ -66,7 +66,7 @@ namespace OpenNos.GameObject.Helpers
             return $"ta_p {tatype} {(byte)type} 5 5 {groups.TrimEnd(' ')}";
         }
 
-        public string GenerateTaSt(TalentArenaOptionType watch) => $"ta_st {(byte)watch}";
+        
 
         public static string GenerateFrank(byte type)
         {
@@ -161,6 +161,8 @@ namespace OpenNos.GameObject.Helpers
             }
             return packet;
         }
+
+        public string GenerateTaSt(TalentArenaOptionType watch) => $"ta_st {(byte)watch}";
 
         public string GenerateFStashRemove(short slot) => $"f_stash {GenerateRemovePacket(slot)}";
 

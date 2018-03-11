@@ -6,6 +6,8 @@ using OpenNos.GameObject.Packets.ServerPackets;
 using OpenNos.GameObject.Networking;
 using System;
 using System.Linq;
+using System.Collections.Concurrent;
+using System.Reactive.Linq;
 using OpenNos.Core.Extensions;
 
 namespace OpenNos.Handler
@@ -41,8 +43,53 @@ namespace OpenNos.Handler
                         }
                     }
 
-                    Session.Character.LeaveTalentArena(true);
+                    Session.Character.LeaveTalentArena();
                     break;
+            }
+        }
+
+        public void Call(TaCallPacket packet)
+        {
+            ConcurrentBag<ArenaTeamMember> arenateam = ServerManager.Instance.ArenaTeams.FirstOrDefault(s => s.Any(o => o.Session == Session));
+            if (arenateam != null && Session.CurrentMapInstance.MapInstanceType == MapInstanceType.TalentArenaMapInstance)
+            {
+                ClientSession client = arenateam.OrderBy(s => s.Order).Where(s => s.Session != Session && s.ArenaTeamType == arenateam?.FirstOrDefault(e => e.Session == Session)?.ArenaTeamType).Skip(packet.CalledIndex).FirstOrDefault().Session;
+                ArenaTeamMember memb = arenateam.FirstOrDefault(s => s.Session == client);
+                if (client != null && client.CurrentMapInstance == Session.CurrentMapInstance && memb != null && memb.LastSummoned == null)
+                {
+                    arenateam.FirstOrDefault(s => s.Session == client).LastSummoned = DateTime.Now;
+                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId, 4432));
+                    for (int i = 0; i < 3; i++)
+                    {
+                        Observable.Timer(TimeSpan.FromSeconds(i)).Subscribe(o =>
+                        {
+                            client.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("ARENA_CALLED"), 3 - i), 0));
+                            client.SendPacket(client.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("ARENA_CALLED"), 3 - i), 10));
+                        });
+                    }
+                    short X = Session.Character.PositionX;
+                    short Y = Session.Character.PositionY;
+                    byte timer = 30;
+                    Observable.Timer(TimeSpan.FromSeconds(3)).Subscribe(o =>
+                    {
+
+                        Session.CurrentMapInstance.Broadcast($"ta_t 0 {client.Character.CharacterId} {timer}");
+                        client.Character.PositionX = X;
+                        client.Character.PositionY = Y;
+                        Session.CurrentMapInstance.Broadcast(client.Character.GenerateTp());
+
+                        client.SendPacket(UserInterfaceHelper.Instance.GenerateTaSt(TalentArenaOptionType.Nothing));
+                    });
+
+                    Observable.Timer(TimeSpan.FromSeconds(timer + 3)).Subscribe(o =>
+                    {
+                        arenateam.FirstOrDefault(s => s.Session == client).LastSummoned = null;
+                        client.Character.PositionX = memb.ArenaTeamType == ArenaTeamType.ERENIA ? (short)120 : (short)19;
+                        client.Character.PositionY = memb.ArenaTeamType == ArenaTeamType.ERENIA ? (short)39 : (short)40;
+                        Session?.CurrentMapInstance.Broadcast(client.Character.GenerateTp());
+                        client.SendPacket(UserInterfaceHelper.Instance.GenerateTaSt(TalentArenaOptionType.Watch));
+                    });
+                }
             }
         }
 

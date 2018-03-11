@@ -108,6 +108,7 @@
     <Compile Include="ShellEffectLevelType.cs" />
     <Compile Include="ShellWeaponEffectType.cs" />
     <Compile Include="StaticBonusType.cs" />
+    <Compile Include="TalentArenaOptionType.cs" />
     <Compile Include="TargetHitType.cs" />
     <Compile Include="UpgradeProtection.cs" />
     <Compile Include="RarifyProtection.cs" />

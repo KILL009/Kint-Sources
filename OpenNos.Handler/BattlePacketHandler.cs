@@ -20,6 +20,7 @@ using OpenNos.GameObject.Battle;
 using OpenNos.GameObject.Helpers;
 using OpenNos.GameObject.Networking;
 using OpenNos.Master.Library.Client;
+using System.Collections.Concurrent;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -790,10 +791,14 @@ namespace OpenNos.Handler
                                                 character);
                                         }
                                     }
-                                    else if (Session.CurrentMapInstance.Map.MapTypes.Any(m =>
-                                        m.MapTypeId == (short)MapTypeEnum.PVPMap))
+
+                                   
+                               
+                                    else if (Session.CurrentMapInstance.IsPVP)
                                     {
-                                        if (Session.Character.Group == null
+                                        ConcurrentBag<ArenaTeamMember> team = null;
+                                                                               if (Session.CurrentMapInstance.MapInstanceType == MapInstanceType.TalentArenaMapInstance)
+                                            if (Session.Character.Group == null
                                             || !Session.Character.Group.IsMemberOfGroup(character.Character.CharacterId)
                                         )
                                         {
@@ -955,8 +960,7 @@ namespace OpenNos.Handler
                                                                 ski.Skill), playerToAttack);
                                                     }
                                                 }
-                                                else if (Session.CurrentMapInstance.Map.MapTypes.Any(m =>
-                                                    m.MapTypeId == (short)MapTypeEnum.PVPMap))
+                                                else if (Session.CurrentMapInstance.IsPVP)
                                                 {
                                                     if (Session.Character.Group == null
                                                         || !Session.Character.Group.IsMemberOfGroup(playerToAttack
@@ -1004,8 +1008,7 @@ namespace OpenNos.Handler
                                                                     Session, ski.Skill), character);
                                                         }
                                                     }
-                                                    else if (Session.CurrentMapInstance.Map.MapTypes.Any(m =>
-                                                        m.MapTypeId == (short)MapTypeEnum.PVPMap))
+                                                    else if (Session.CurrentMapInstance.IsPVP)
                                                     {
                                                         if (Session.Character.Group == null
                                                             || !Session.Character.Group.IsMemberOfGroup(character
@@ -1075,8 +1078,7 @@ namespace OpenNos.Handler
                                                                 playerToAttack);
                                                         }
                                                     }
-                                                    else if (Session.CurrentMapInstance.Map.MapTypes.Any(m =>
-                                                        m.MapTypeId == (short)MapTypeEnum.PVPMap))
+                                                    else if (Session.CurrentMapInstance.IsPVP)
                                                     {
                                                         if (Session.Character.Group == null
                                                             || !Session.Character.Group.IsMemberOfGroup(playerToAttack
@@ -1120,8 +1122,7 @@ namespace OpenNos.Handler
                                                                     character);
                                                             }
                                                         }
-                                                        else if (Session.CurrentMapInstance.Map.MapTypes.Any(m =>
-                                                            m.MapTypeId == (short)MapTypeEnum.PVPMap))
+                                                        else if(Session.CurrentMapInstance.IsPVP)
                                                         {
                                                             if (Session.Character.Group == null
                                                                 || !Session.Character.Group.IsMemberOfGroup(
@@ -1188,8 +1189,7 @@ namespace OpenNos.Handler
                                                             Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                                         }
                                                     }
-                                                    else if (Session.CurrentMapInstance.Map.MapTypes.Any(m =>
-                                                        m.MapTypeId == (short)MapTypeEnum.PVPMap))
+                                                    else if (Session.CurrentMapInstance.IsPVP)
                                                     {
                                                         if (Session.Character.Group == null
                                                             || !Session.Character.Group.IsMemberOfGroup(playerToAttack
@@ -1240,8 +1240,7 @@ namespace OpenNos.Handler
                                                                         Session, ski.Skill), character);
                                                             }
                                                         }
-                                                        else if (Session.CurrentMapInstance.Map.MapTypes.Any(m =>
-                                                            m.MapTypeId == (short)MapTypeEnum.PVPMap))
+                                                        else if (Session.CurrentMapInstance.IsPVP)
                                                         {
                                                             if (Session.Character.Group == null
                                                                 || !Session.Character.Group.IsMemberOfGroup(
@@ -1307,8 +1306,7 @@ namespace OpenNos.Handler
                                                             Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                                         }
                                                     }
-                                                    else if (Session.CurrentMapInstance.Map.MapTypes.Any(m =>
-                                                        m.MapTypeId == (short)MapTypeEnum.PVPMap))
+                                                    else if (Session.CurrentMapInstance.IsPVP)
                                                     {
                                                         if (Session.Character.Group == null
                                                             || !Session.Character.Group.IsMemberOfGroup(playerToAttack
@@ -1391,8 +1389,7 @@ namespace OpenNos.Handler
                                                             Session.SendPacket(StaticPacketHelper.Cancel(2, targetId));
                                                         }
                                                     }
-                                                    else if (Session.CurrentMapInstance.Map.MapTypes.Any(m =>
-                                                        m.MapTypeId == (short)MapTypeEnum.PVPMap))
+                                                    else if (Session.CurrentMapInstance.IsPVP)
                                                     {
                                                         if (Session.Character.Group == null
                                                             || !Session.Character.Group.IsMemberOfGroup(playerToAttack
@@ -1731,8 +1728,7 @@ namespace OpenNos.Handler
                                             character);
                                     }
                                 }
-                                else if (Session.CurrentMapInstance.Map.MapTypes.Any(m =>
-                                    m.MapTypeId == (short)MapTypeEnum.PVPMap))
+                                else if (Session.CurrentMapInstance.IsPVP)
                                 {
                                     if (Session.Character.Group == null
                                         || !Session.Character.Group.IsMemberOfGroup(character.Character.CharacterId))

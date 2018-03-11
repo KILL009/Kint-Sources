@@ -159,6 +159,8 @@ namespace OpenNos.GameObject.Networking
 
         public List<ArenaMember> ArenaMembers { get; set; } = new List<ArenaMember>();
 
+        public List<ConcurrentBag<ArenaTeamMember>> ArenaTeams { get; set; } = new List<ConcurrentBag<ArenaTeamMember>>();
+
         public ThreadSafeSortedList<long, ClientSession> CharacterScreenSessions { get; set; }
         public long MaxBankGold { get; set; }
         public long MaxGold { get; set; }

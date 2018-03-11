@@ -831,16 +831,7 @@ namespace OpenNos.Import.Console
             {
                 DAOFactory.MapTypeDAO.Insert(ref mt21);
             }
-            MapTypeDTO mt22 = new MapTypeDTO
-            {
-                MapTypeId = (short)MapTypeEnum.PVPMap,
-                MapTypeName = "PVPMap",
-                PotionDelay = 300
-            };
-            if (list.All(s => s.MapTypeId != mt22.MapTypeId))
-            {
-                DAOFactory.MapTypeDAO.Insert(ref mt22);
-            }
+           
             MapTypeDTO mt23 = new MapTypeDTO
             {
                 MapTypeId = (short)MapTypeEnum.Citadel,
@@ -975,12 +966,7 @@ namespace OpenNos.Import.Console
                     mapTypeId = (short)MapTypeEnum.CleftOfDarkness;
                     objectset = true;
                 }
-                else if (i == 9305)
-                {
-                    // "PVPMap"
-                    mapTypeId = (short)MapTypeEnum.PVPMap;
-                    objectset = true;
-                }
+               
                 else if (i == 130 && i == 131)
                 {
                     // "Citadel"

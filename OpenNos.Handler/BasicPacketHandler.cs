@@ -31,6 +31,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using OpenNos.ChatLog.Networking;
 using OpenNos.ChatLog.Shared;
+using System.Collections.Concurrent;
 using OpenNos.XMLModel.Models.Quest;
 using OpenNos.Core.Extensions;
 using static OpenNos.Domain.AdditionalTypes;
@@ -1835,16 +1836,74 @@ namespace OpenNos.Handler
             }
             bool isMuted = Session.Character.MuteMessage();
             string message = sayPacket.Message;
+
+            if (Session.CurrentMapInstance.MapInstanceType == MapInstanceType.TalentArenaMapInstance)
+          {
+                ConcurrentBag < ArenaTeamMember > member = ServerManager.Instance.ArenaTeams.FirstOrDefault(s => s.Any(e => e.Session == Session));
+                if (member != null)
+            {
+                    ArenaTeamMember member2 = member.FirstOrDefault(o => o.Session == Session);
+                    member.Where(s => s.ArenaTeamType == member2.ArenaTeamType && s != member2).Where(s => s.ArenaTeamType == member.FirstOrDefault(o => o.Session == Session).ArenaTeamType).ToList().ForEach(o => o.Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("MUTED_FEMALE"), 1)));
+             }
+               }
+               else
+             {
+                Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("MUTED_FEMALE"), 1));
+                }
+
+            if (Session.CurrentMapInstance.MapInstanceType == MapInstanceType.TalentArenaMapInstance)
+              {
+                ConcurrentBag < ArenaTeamMember > member = ServerManager.Instance.ArenaTeams.FirstOrDefault(s => s.Any(e => e.Session == Session));
+                if (member != null)
+          {
+                    ArenaTeamMember member2 = member.FirstOrDefault(o => o.Session == Session);
+                    member.Where(s => s.ArenaTeamType == member2.ArenaTeamType && s != member2).Where(s => s.ArenaTeamType == member.FirstOrDefault(o => o.Session == Session).ArenaTeamType).ToList().ForEach(o => o.Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("MUTED_MALE"), 1)));
+               }
+               }
+             else
+            {
+               Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("MUTED_MALE"), 1));
+          }
+
             if (!isMuted)
             {
                 byte type = 0;
                 if (Session.Character.Authority == AuthorityType.Moderator)
                 {
                     type = 12;
-                    Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateSay(message.Trim(), 1), ReceiverType.AllExceptMe);
+                    if (Session.CurrentMapInstance.MapInstanceType == MapInstanceType.TalentArenaMapInstance)
+                          {
+                        ConcurrentBag < ArenaTeamMember > member = ServerManager.Instance.ArenaTeams.FirstOrDefault(s => s.Any(e => e.Session == Session));
+                           if (member != null)
+                             {
+                            ArenaTeamMember member2 = member.FirstOrDefault(o => o.Session == Session);
+                           member.Where(s => s.ArenaTeamType == member2.ArenaTeamType && s != member2).Where(s => s.ArenaTeamType == member.FirstOrDefault(o => o.Session == Session).ArenaTeamType).ToList().ForEach(o => o.Session.SendPacket(Session.Character.GenerateSay(message.Trim(), 1)));
+                       }
+
+                      }
+
+                     else
+                    {
+
+                        Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateSay(message.Trim(), 1), ReceiverType.AllExceptMe);
+                                            }
                     message = $"[Support {Session.Character.Name}]: {message}";
                 }
-                Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateSay(message.Trim(), type), ReceiverType.AllExceptMe);
+                if (Session.CurrentMapInstance.MapInstanceType == MapInstanceType.TalentArenaMapInstance)
+                                    {
+                    ConcurrentBag < ArenaTeamMember > member = ServerManager.Instance.ArenaTeams.FirstOrDefault(s => s.Any(e => e.Session == Session));
+                     if (member != null)
+                        {
+                        ArenaTeamMember member2 = member.FirstOrDefault(o => o.Session == Session);
+                        member.Where(s => s.ArenaTeamType == member2.ArenaTeamType && s != member2).ToList().ForEach(o => o.Session.SendPacket(Session.Character.GenerateSay(message.Trim(), 1)));
+                   }
+
+                  }
+
+                  else
+                {
+                    Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateSay(message.Trim(), type), ReceiverType.AllExceptMe);
+                     }
             }
         }
 

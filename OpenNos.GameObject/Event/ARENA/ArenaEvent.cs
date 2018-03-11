@@ -160,7 +160,7 @@ namespace OpenNos.GameObject.Event.ARENA
                                         int i = Array.IndexOf(arenamembers, o) + 1;
                                         o.Session.Character.Hp = (int)o.Session.Character.HPLoad();
                                         o.Session.Character.Mp = (int)o.Session.Character.MPLoad();
-                                        ServerManager.Instance.ChangeMapInstance(o.Session.Character.CharacterId, map.MapInstanceId, o.GroupId == member.GroupId ? 125 : 14,
+                                        ServerManager.Instance.ChangeMapInstance(o.Session.Character.CharacterId, map.MapInstanceId, o.GroupId == member.GroupId ? 125 : 14, 
                                             (o.GroupId == member.GroupId ? 37 : 38) + i % 3 * 2);
                                         o.Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("SELECT_ORDER_ARENA_TIME"), 0));
                                         o.Session.SendPacket(o.Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("SELECT_ORDER_ARENA_TIME"), 10));
