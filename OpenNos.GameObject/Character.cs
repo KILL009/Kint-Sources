@@ -4498,12 +4498,12 @@ namespace OpenNos.GameObject
                     {
                   if (ServerManager.Instance.ArenaMembers.Where(g => g.GroupId == memb.GroupId).Count() == 2)
                    {
-                s.GroupId = null;
-                }
-            s.Time = 300;
+                         s.GroupId = null;
+                  }
+                        s.Time = 300;
                         s.Session.SendPacket(s.Session.Character.GenerateBsInfo(1, 2, s.Time, 8));
-                        s.Session.SendPacket(s.Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("SEARCH_ARENA_TEAM"), 10));
-                                });
+                        s.Session.SendPacket(s.Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("ARENA_TEAM_LEAVE"), 11));
+                    });
                 }
                 ServerManager.Instance.ArenaMembers.Remove(memb);
             }
