@@ -328,7 +328,7 @@ namespace OpenNos.GameObject
 
                     if (!ServerManager.Instance.StartedEvents.Contains(EventType.TALENTARENA))
                     {
-                        Session.SendPacket(npc?.Say(Language.Instance.GetMessageFromKey("ARENA_NOT_OPEN"), 10));
+                        Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("ARENA_NOT_OPEN"), 10));
                     }
                     else
                     {

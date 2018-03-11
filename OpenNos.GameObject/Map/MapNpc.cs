@@ -98,6 +98,11 @@ namespace OpenNos.GameObject
 
         #region Methods
 
+        public string GenerateSay(string message, int type)
+       {
+            return $"say 2 {MapNpcId} 2 {message}";
+       }
+
         public string GenerateIn(InRespawnType respawnType = InRespawnType.NoEffect)
         {
             if (!IsDisabled)

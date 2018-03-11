@@ -66,6 +66,7 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ArenaTeamType.cs" />
     <Compile Include="AttackType.cs" />
     <Compile Include="BazaarListType.cs" />
     <Compile Include="BuffType.cs" />

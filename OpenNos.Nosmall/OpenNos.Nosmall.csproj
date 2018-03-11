@@ -96,7 +96,7 @@
     </Reference>
     <Reference Include="OpenNos.SCS, Version=1.2.6498.40635, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\OpenNos.Master.Server\bin\Debug\OpenNos.SCS.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\OpenNos\OpenNos.SCS.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

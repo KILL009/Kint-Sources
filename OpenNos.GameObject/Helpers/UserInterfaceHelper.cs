@@ -16,6 +16,7 @@ using OpenNos.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Concurrent;
 using OpenNos.GameObject.Networking;
 
 namespace OpenNos.GameObject.Helpers
@@ -43,6 +44,28 @@ namespace OpenNos.GameObject.Helpers
         public static string GenerateDelay(int delay, int type, string argument) => $"delay {delay} {type} {argument}";
 
         public static string GenerateDialog(string dialog) => $"dlg {dialog}";
+
+        public string GenerateTaP(byte tatype, ConcurrentBag<ArenaTeamMember> arenateam2, ArenaTeamType type, bool showOponent)
+        {
+            List<ArenaTeamMember> arenateam = arenateam2.OrderBy(s => s.ArenaTeamType).ToList();
+            string groups = string.Empty;
+            for (byte i = 0; i< 6; i++)
+            {
+               ArenaTeamMember arenamembers = arenateam.FirstOrDefault(s => (i < 3 ? s.ArenaTeamType == type : s.ArenaTeamType != type) && s.Order == i % 3);
+                if (arenamembers != null && (i > 2 ? showOponent : true))
+                {
+                    groups += $"1.{arenamembers.Session.Character.CharacterId}.{(byte)arenamembers.Session.Character.Class}.{(byte)arenamembers.Session.Character.Gender}.{(byte)arenamembers.Session.Character.Morph} ";
+                }
+                else
+                {
+                    groups += $"-1.-1.-1.-1.-1 ";
+                }
+            }
+
+            return $"ta_p {tatype} 2 5 5 {groups.TrimEnd(' ')}";
+       }
+
+        public string GenerateTaSt(TalentArenaOptionType watch) => $"ta_st {(byte)watch}";
 
         public static string GenerateFrank(byte type)
         {
@@ -352,6 +375,11 @@ namespace OpenNos.GameObject.Helpers
                 Core.Logger.Error(ex);
                 return string.Empty;
             }
+        }
+
+        public string GenerateTaM(int type, int timer)
+        {
+            return $"ta_m {type} 0 0 {timer} 0";
         }
 
         public static string GenerateRemovePacket(short slot) => $"{slot}.-1.0.0.0";
