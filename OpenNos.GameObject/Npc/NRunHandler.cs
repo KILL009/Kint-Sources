@@ -21,6 +21,7 @@ using OpenNos.GameObject.Helpers;
 using OpenNos.Master.Library.Client;
 using OpenNos.GameObject.Networking;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -324,6 +325,33 @@ namespace OpenNos.GameObject
                     }
                     break;
 
+                case 137:
+                    Session.SendPacket("taw_open");
+                    break;
+
+                case 138:
+                    ConcurrentBag<ArenaTeamMember> at = ServerManager.Instance.ArenaTeams.OrderBy(s => rand.Next()).FirstOrDefault();
+                    if (at != null)
+                    {
+                        ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, at.FirstOrDefault(s => s.Session != null).Session.CurrentMapInstance.MapInstanceId, 69, 100);
+
+                        var zenas = at.OrderBy(s => s.Order).FirstOrDefault(s => s.Session != null && !s.Dead && s.ArenaTeamType == ArenaTeamType.ZENAS);
+                        var erenia = at.OrderBy(s => s.Order).FirstOrDefault(s => s.Session != null && !s.Dead && s.ArenaTeamType == ArenaTeamType.ERENIA);
+                        Session.SendPacket(erenia.Session.Character.GenerateTaM(0));
+                        Session.SendPacket(erenia.Session.Character.GenerateTaM(3));
+                        Session.SendPacket("taw_sv 0");
+                        Session.SendPacket(zenas.Session.Character.GenerateTaP(0, true));
+                        Session.SendPacket(erenia.Session.Character.GenerateTaP(2, true));
+                        Session.SendPacket(zenas.Session.Character.GenerateTaFc(0));
+                        Session.SendPacket(erenia.Session.Character.GenerateTaFc(1));
+                    }
+                    else
+                    {
+                        Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("NO_TALENT_ARENA")));
+                    }
+
+                    break;
+
                 case 135:
 
                     if (!ServerManager.Instance.StartedEvents.Contains(EventType.TALENTARENA))
@@ -332,7 +360,7 @@ namespace OpenNos.GameObject
                     }
                     else
                     {
-                        var tickets = 5 - Session.Character.GeneralLogs.Count(s => s.LogType == "TalentArena" && s.Timestamp.Date == DateTime.Today);
+                        var tickets = 5 - Session.Character.GeneralLogs.CountLinq(s => s.LogType == "TalentArena" && s.Timestamp.Date == DateTime.Today);
                         if (ServerManager.Instance.ArenaMembers.All(s => s.Session != Session) && tickets > 0)
                         {
                             if (ServerManager.Instance.IsCharacterMemberOfGroup(Session.Character.CharacterId))

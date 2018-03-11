@@ -529,9 +529,11 @@ namespace OpenNos.GameObject
         public int WareHouseSize { get; set; }
 
         public int WaterResistance { get; set; }
-        public byte TicketLeft { get; set; }
+      
         public long LastTargetType { get; set; }
+
         public long LastTargetId { get; set; }
+       
 
         #endregion
 
@@ -2168,8 +2170,8 @@ namespace OpenNos.GameObject
             ConcurrentBag<ArenaTeamMember> tm = ServerManager.Instance.ArenaTeams.FirstOrDefault(s => s.Any(o => o.Session == Session));
             int score1 = 0;
             int score2 = 0;
-            if(tm !=null)
-           {
+            if (tm != null)
+            {
                 ArenaTeamMember tmem = tm.FirstOrDefault(s => s.Session == Session);
                IEnumerable<long> ids = tm.Where(s => tmem.ArenaTeamType == s.ArenaTeamType).Select(s => s.Session.Character.CharacterId);
                 score1 = MapInstance.InstanceBag.DeadList.Count(s => ids.Contains(s));
@@ -2178,6 +2180,32 @@ namespace OpenNos.GameObject
             return $"ta_m {type} {score1} {score2} {timer} 0";
         }
 
+        public string GenerateTaF(byte victoriousteam)
+        {
+            ConcurrentBag<ArenaTeamMember> tm = ServerManager.Instance.ArenaTeams.FirstOrDefault(s => s.Any(o => o.Session == Session));
+            int score1 = 0;
+            int score2 = 0;
+            int life1 = 0;
+            int life2 = 0;
+            int call1 = 0;
+            int call2 = 0;
+            ArenaTeamType atype = ArenaTeamType.ERENIA;
+            if (tm != null)
+            {
+                ArenaTeamMember tmem = tm.FirstOrDefault(s => s.Session == Session);
+                atype = tmem.ArenaTeamType;
+                IEnumerable<long> ids = tm.Where(s => tmem.ArenaTeamType == s.ArenaTeamType).Select(s => s.Session.Character.CharacterId);
+                ConcurrentBag<ArenaTeamMember> oposit = tm.Where(s => tmem.ArenaTeamType != s.ArenaTeamType);
+                ConcurrentBag<ArenaTeamMember> own = tm.Where(s => tmem.ArenaTeamType != s.ArenaTeamType);
+                score1 = 3 - MapInstance.InstanceBag.DeadList.Count(s => ids.Contains(s));
+                score2 = 3 - MapInstance.InstanceBag.DeadList.Count(s => !ids.Contains(s));
+                life1 = 3 - own.Count(s => s.Dead);
+                life2 = 3 - oposit.Count(s => s.Dead);
+                call1 = 5 - own.Sum(s => s.SummonCount);
+                call2 = 5 - oposit.Sum(s => s.SummonCount);
+           }
+            return $"ta_f 0 {victoriousteam} {(byte)atype} {score1} {life1} {call1} {score2} {life2} {call2}";
+        }
 
 public string GenerateMinilandPoint() => $"mlpt {MinilandPoint} 100";
 

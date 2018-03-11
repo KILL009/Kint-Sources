@@ -380,13 +380,7 @@ namespace OpenNos.GameObject.Helpers
             }
         }
 
-        public string GenerateTaF(byte victoriousteam)
-        {
-            return $"ta_f 0 {victoriousteam} 2 2 0 2 3 1 2";
-        }
-
        
-
         public static string GenerateRemovePacket(short slot) => $"{slot}.-1.0.0.0";
 
         public static string GenerateRl(byte type)
