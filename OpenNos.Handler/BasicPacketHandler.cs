@@ -1877,7 +1877,7 @@ namespace OpenNos.Handler
                            if (member != null)
                              {
                             ArenaTeamMember member2 = member.FirstOrDefault(o => o.Session == Session);
-                           member.Where(s => s.ArenaTeamType == member2.ArenaTeamType && s != member2).Where(s => s.ArenaTeamType == member.FirstOrDefault(o => o.Session == Session).ArenaTeamType).ToList().ForEach(o => o.Session.SendPacket(Session.Character.GenerateSay(message.Trim(), 1)));
+                           member.Where(s => s.ArenaTeamType == member2.ArenaTeamType && s != member2).Where(s => s.ArenaTeamType == member.FirstOrDefault(o => o.Session == Session).ArenaTeamType).ToList().ForEach(o => o.Session.SendPacket(Session.Character.GenerateSay(message.Trim(), type)));
                        }
 
                       }

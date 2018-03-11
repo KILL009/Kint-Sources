@@ -63,7 +63,7 @@ namespace OpenNos.GameObject.Helpers
                 }
             }
 
-            return $"ta_p {tatype} {(byte)type} 5 5 {groups.TrimEnd(' ')}";
+            return $"ta_p {tatype} {(byte)type} {5 - arenateam.Where(s => s.ArenaTeamType == type).Sum(s => s.SummonCount)} {5 - arenateam.Where(s => s.ArenaTeamType != type).Sum(s => s.SummonCount)} {groups.TrimEnd(' ')}";
         }
 
         

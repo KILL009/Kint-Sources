@@ -7,6 +7,7 @@ using OpenNos.GameObject.Networking;
 using System;
 using System.Linq;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Reactive.Linq;
 using OpenNos.Core.Extensions;
 
@@ -53,10 +54,13 @@ namespace OpenNos.Handler
             ConcurrentBag<ArenaTeamMember> arenateam = ServerManager.Instance.ArenaTeams.FirstOrDefault(s => s.Any(o => o.Session == Session));
             if (arenateam != null && Session.CurrentMapInstance.MapInstanceType == MapInstanceType.TalentArenaMapInstance)
             {
-                ClientSession client = arenateam.OrderBy(s => s.Order).Where(s => s.Session != Session && s.ArenaTeamType == arenateam?.FirstOrDefault(e => e.Session == Session)?.ArenaTeamType).Skip(packet.CalledIndex).FirstOrDefault().Session;
+                IEnumerable<ArenaTeamMember> ownteam = arenateam.Where(s => s.ArenaTeamType == arenateam?.FirstOrDefault(e => e.Session == Session)?.ArenaTeamType);
+                ClientSession client = ownteam.Where(s => s.Session != Session).OrderBy(s => s.Order).Skip(packet.CalledIndex).FirstOrDefault().Session;
                 ArenaTeamMember memb = arenateam.FirstOrDefault(s => s.Session == client);
-                if (client != null && client.CurrentMapInstance == Session.CurrentMapInstance && memb != null && memb.LastSummoned == null)
+                if (client != null && client.CurrentMapInstance == Session.CurrentMapInstance && memb != null && memb.LastSummoned == null && ownteam.Sum(s => s.SummonCount) < 5)
                 {
+                    memb.SummonCount++;
+                    arenateam.ToList().ForEach(arenauser => { arenauser.Session.SendPacket(UserInterfaceHelper.Instance.GenerateTaP(2, arenateam, arenauser.ArenaTeamType, true)); });
                     arenateam.FirstOrDefault(s => s.Session == client).LastSummoned = DateTime.Now;
                     Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId, 4432));
                     for (int i = 0; i < 3; i++)
@@ -78,17 +82,18 @@ namespace OpenNos.Handler
                         client.Character.PositionY = Y;
                         Session.CurrentMapInstance.Broadcast(client.Character.GenerateTp());
 
+
                         client.SendPacket(UserInterfaceHelper.Instance.GenerateTaSt(TalentArenaOptionType.Nothing));
                     });
 
                     Observable.Timer(TimeSpan.FromSeconds(timer + 3)).Subscribe(o =>
-                    {
+                      {
                         arenateam.FirstOrDefault(s => s.Session == client).LastSummoned = null;
                         client.Character.PositionX = memb.ArenaTeamType == ArenaTeamType.ERENIA ? (short)120 : (short)19;
                         client.Character.PositionY = memb.ArenaTeamType == ArenaTeamType.ERENIA ? (short)39 : (short)40;
                         Session?.CurrentMapInstance.Broadcast(client.Character.GenerateTp());
                         client.SendPacket(UserInterfaceHelper.Instance.GenerateTaSt(TalentArenaOptionType.Watch));
-                    });
+                     });
                 }
             }
         }

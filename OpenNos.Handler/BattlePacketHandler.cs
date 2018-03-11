@@ -791,13 +791,11 @@ namespace OpenNos.Handler
                                                 character);
                                         }
                                     }
-
-                                   
-                               
+                                    
                                     else if (Session.CurrentMapInstance.IsPVP)
                                     {
                                         ConcurrentBag<ArenaTeamMember> team = null;
-                                                                               if (Session.CurrentMapInstance.MapInstanceType == MapInstanceType.TalentArenaMapInstance)
+                                     if (Session.CurrentMapInstance.MapInstanceType == MapInstanceType.TalentArenaMapInstance)
                                             if (Session.Character.Group == null
                                             || !Session.Character.Group.IsMemberOfGroup(character.Character.CharacterId)
                                         )
