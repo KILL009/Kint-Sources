@@ -26,6 +26,7 @@ namespace OpenNos.Domain
         METEORITEGAME,
         TALENTARENA,
         MASTERARENA,
+        ICEBREAKER,
         CALIGOR
     }
 }

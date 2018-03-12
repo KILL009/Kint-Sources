@@ -134,6 +134,7 @@
     <Compile Include="Event\ARENA\ArenaEvent.cs" />
     <Compile Include="Event\EventWave.cs" />
     <Compile Include="Event\GAMES\MeteoriteGame.cs" />
+    <Compile Include="Event\ICEBREAKER\IceBreaker.cs" />
     <Compile Include="Helpers\MallAPIHelper.cs" />
     <Compile Include="Helpers\MateHelper.cs" />
     <Compile Include="Helpers\StaticPacketHelper.cs" />

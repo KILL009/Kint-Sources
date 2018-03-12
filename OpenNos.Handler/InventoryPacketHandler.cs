@@ -191,6 +191,7 @@ namespace OpenNos.Handler
         [Packet("exc_list")]
         public void ExchangeList(string packet)
         {
+           
             string[] packetsplit = packet.Split(' ');
             if (!long.TryParse(packetsplit[2], out long gold))
             {
