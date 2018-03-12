@@ -1,18 +1,4 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-using OpenNos.Core.Networking.Communication.Scs.Client;
+﻿using OpenNos.Core.Networking.Communication.Scs.Client;
 using OpenNos.Core.Networking.Communication.Scs.Communication;
 using OpenNos.Core.Networking.Communication.Scs.Communication.Messengers;
 using System.Runtime.Remoting.Messaging;
@@ -34,7 +20,7 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Communication
         /// <summary>
         /// Reference to the client object that is used to connect/disconnect.
         /// </summary>
-        private readonly IConnectableClient _client;
+        private readonly IConnectableClient client;
 
         #endregion
 
@@ -45,7 +31,11 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Communication
         /// </summary>
         /// <param name="clientMessenger">Messenger object that is used to send/receive messages</param>
         /// <param name="client">Reference to the client object that is used to connect/disconnect</param>
-        public AutoConnectRemoteInvokeProxy(RequestReplyMessenger<TMessenger> clientMessenger, IConnectableClient client) : base(clientMessenger) => _client = client;
+        public AutoConnectRemoteInvokeProxy(RequestReplyMessenger<TMessenger> clientMessenger, IConnectableClient client)
+            : base(clientMessenger)
+        {
+            this.client = client;
+        }
 
         #endregion
 
@@ -58,21 +48,21 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Communication
         /// <returns>Method invoke return message (to RealProxy base class)</returns>
         public override IMessage Invoke(IMessage msg)
         {
-            if (_client.CommunicationState == CommunicationStates.Connected)
+            if (client.CommunicationState == CommunicationStates.Connected)
             {
                 // If already connected, behave as base class (RemoteInvokeProxy).
                 return base.Invoke(msg);
             }
 
             // Connect, call method and finally disconnect
-            _client.Connect();
+            client.Connect();
             try
             {
                 return base.Invoke(msg);
             }
             finally
             {
-                _client.Disconnect();
+                client.Disconnect();
             }
         }
 

@@ -1,25 +1,10 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-using OpenNos.DAL;
+﻿using OpenNos.DAL;
 using OpenNos.Data;
 using OpenNos.Domain;
 using OpenNos.Master.Library.Client;
 using OpenNos.Master.Library.Data;
 using System;
 using System.Collections.Generic;
-using OpenNos.GameObject.Networking;
 
 namespace OpenNos.GameObject
 {
@@ -27,26 +12,9 @@ namespace OpenNos.GameObject
     {
         #region Instantiation
 
-        public Family() => FamilyCharacters = new List<FamilyCharacter>();
-        public Family(FamilyDTO input)
+        public Family()
         {
             FamilyCharacters = new List<FamilyCharacter>();
-            FamilyExperience = input.FamilyExperience;
-            FamilyHeadGender = input.FamilyHeadGender;
-            FamilyId = input.FamilyId;
-            FamilyLevel = input.FamilyLevel;
-            FamilyMessage = input.FamilyMessage;
-            LastFactionChange = input.LastFactionChange;
-            ManagerAuthorityType = input.ManagerAuthorityType;
-            ManagerCanGetHistory = input.ManagerCanGetHistory;
-            ManagerCanInvite = input.ManagerCanInvite;
-            ManagerCanNotice = input.ManagerCanNotice;
-            ManagerCanShout = input.ManagerCanShout;
-            MaxSize = input.MaxSize;
-            MemberAuthorityType = input.MemberAuthorityType;
-            MemberCanGetHistory = input.MemberCanGetHistory;
-            Name = input.Name;
-            WarehouseSize = input.WarehouseSize;
         }
 
         #endregion
@@ -56,6 +24,8 @@ namespace OpenNos.GameObject
         public MapInstance Act4Raid { get; set; }
 
         public MapInstance Act4RaidBossMap { get; set; }
+
+        public Act4RaidType Act4RaidType { get; set; }
 
         public List<FamilyCharacter> FamilyCharacters { get; set; }
 
@@ -69,9 +39,35 @@ namespace OpenNos.GameObject
 
         #region Methods
 
+        public override void Initialize()
+        {
+            // do nothing
+        }
+
+        public static Family FromDTO(FamilyDTO familyDTO)
+        {
+            Family family = new Family();
+            family.FamilyExperience = familyDTO.FamilyExperience;
+            family.FamilyHeadGender = familyDTO.FamilyHeadGender;
+            family.FamilyId = familyDTO.FamilyId;
+            family.FamilyLevel = familyDTO.FamilyLevel;
+            family.FamilyMessage = familyDTO.FamilyMessage;
+            family.ManagerAuthorityType = familyDTO.ManagerAuthorityType;
+            family.ManagerCanGetHistory = familyDTO.ManagerCanGetHistory;
+            family.ManagerCanInvite = familyDTO.ManagerCanInvite;
+            family.ManagerCanNotice = familyDTO.ManagerCanNotice;
+            family.ManagerCanShout = familyDTO.ManagerCanShout;
+            family.MaxSize = familyDTO.MaxSize;
+            family.MemberAuthorityType = familyDTO.MemberAuthorityType;
+            family.MemberCanGetHistory = familyDTO.MemberCanGetHistory;
+            family.Name = familyDTO.Name;
+            family.WarehouseSize = familyDTO.WarehouseSize;
+            return family;
+        }
+
         public void InsertFamilyLog(FamilyLogType logtype, string characterName = "", string characterName2 = "", string rainBowFamily = "", string message = "", byte level = 0, int experience = 0, int itemVNum = 0, byte upgrade = 0, int raidType = 0, FamilyAuthority authority = FamilyAuthority.Head, int righttype = 0, int rightvalue = 0)
         {
-            string value = string.Empty;
+            var value = string.Empty;
             switch (logtype)
             {
                 case FamilyLogType.DailyMessage:
@@ -123,7 +119,8 @@ namespace OpenNos.GameObject
                     value = $"{characterName}|{message}";
                     break;
             }
-            FamilyLogDTO log = new FamilyLogDTO
+
+            var log = new FamilyLogDTO
             {
                 FamilyId = FamilyId,
                 FamilyLogData = value,
@@ -132,7 +129,7 @@ namespace OpenNos.GameObject
             };
             DAOFactory.FamilyLogDAO.InsertOrUpdate(ref log);
             ServerManager.Instance.FamilyRefresh(FamilyId);
-            CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage
+            CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
             {
                 DestinationCharacterId = FamilyId,
                 SourceCharacterId = 0,
@@ -142,7 +139,11 @@ namespace OpenNos.GameObject
             });
         }
 
-        internal Family DeepCopy() => (Family)MemberwiseClone();
+        internal Family DeepCopy()
+        {
+            var clonedCharacter = (Family)MemberwiseClone();
+            return clonedCharacter;
+        }
 
         #endregion
     }

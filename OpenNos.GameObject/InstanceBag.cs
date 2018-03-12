@@ -1,32 +1,17 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.Concurrent;
-using System;
 
 namespace OpenNos.GameObject
 {
-    public class InstanceBag
+    public class InstanceBag : IDisposable
     {
         #region Instantiation
 
         public InstanceBag()
         {
             Clock = new Clock(1);
-            DeadList = new List<long>();
-            UnlockEvents = new List<EventContainer>();
+            DeadList = new ConcurrentBag<long>();
+            UnlockEvents = new ConcurrentBag<EventContainer>();
             ButtonLocker = new Locker();
             MonsterLocker = new Locker();
         }
@@ -43,7 +28,7 @@ namespace OpenNos.GameObject
 
         public long Creator { get; set; }
 
-        public List<long> DeadList { get; set; }
+        public ConcurrentBag<long> DeadList { get; set; }
 
         public byte EndState { get; set; }
 
@@ -61,11 +46,13 @@ namespace OpenNos.GameObject
 
         public int RoomsVisited { get; set; }
 
-        public List<EventContainer> UnlockEvents { get; set; }
+        public ConcurrentBag<EventContainer> UnlockEvents { get; set; }
 
         #endregion
 
         #region Methods
+
+        public void Dispose() => Clock.Dispose();
 
         public string GenerateScore() => $"rnsc {Point}";
 

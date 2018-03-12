@@ -1,19 +1,5 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-using OpenNos.SCS.Communication.Scs.Communication.EndPoints.Tcp;
-using OpenNos.SCS.Communication.ScsServices.Service;
+﻿using Hik.Communication.Scs.Communication.EndPoints.Tcp;
+using Hik.Communication.ScsServices.Service;
 using System;
 
 namespace OpenNos.Master.Library.Data
@@ -42,14 +28,11 @@ namespace OpenNos.Master.Library.Data
 
         public Guid Id { get; set; }
 
-        public SerializableWorldServer Serializable { get; }
+        public bool IsAct4 { get; set; }
 
-        public IScsServiceClient CommunicationServiceClient { get; set; }
+        public SerializableWorldServer Serializable { get; set; }
 
-        public IScsServiceClient ConfigurationServiceClient { get; set; }
-
-        public IScsServiceClient MailServiceClient { get; set; }
-
+        public IScsServiceClient ServiceClient { get; set; }
 
         public string WorldGroup { get; set; }
 

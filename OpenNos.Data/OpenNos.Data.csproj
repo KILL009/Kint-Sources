@@ -11,7 +11,9 @@
     <AssemblyName>OpenNos.Data</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp />
+    <StyleCopTreatErrorsAsWarnings>True</StyleCopTreatErrorsAsWarnings>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -22,8 +24,6 @@
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
-    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,38 +32,28 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
-    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <PlatformTarget>x64</PlatformTarget>
     <OutputPath>bin\x64\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
-    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <PlatformTarget>x64</PlatformTarget>
     <OutputPath>bin\x64\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
-    <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
-    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
-    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
-    <CodeAnalysisRuleSet>..\ProjectRuleset.ruleset</CodeAnalysisRuleSet>
-    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -72,29 +62,31 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="RestSharp, Version=106.2.1.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
-      <HintPath>..\packages\RestSharp.106.2.1\lib\net452\RestSharp.dll</HintPath>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\net47\System.ValueTuple.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\MappingBaseDTO.cs" />
     <Compile Include="Base\SynchronizableBaseDTO.cs" />
     <Compile Include="BazaarItemDTO.cs" />
     <Compile Include="BCardDTO.cs" />
-    <Compile Include="MaintenanceLogDTO.cs" />
+    <Compile Include="BoxItemDTO.cs" />
+    <Compile Include="LogChatDTO.cs" />
+    <Compile Include="LogCommandsDTO.cs" />
     <Compile Include="MallDTO.cs" />
-    <Compile Include="MinigameLogDTO.cs" />
-    <Compile Include="QuestDTO.cs" />
-    <Compile Include="QuestProgressDTO.cs" />
-    <Compile Include="RecipeListDTO.cs" />
     <Compile Include="RollGeneratedItemDTO.cs" />
     <Compile Include="CardDTO.cs" />
-    <Compile Include="CellonOptionDTO.cs" />
+    <Compile Include="EquipmentOptionDTO.cs" />
     <Compile Include="CharacterRelationDTO.cs" />
     <Compile Include="ComboDTO.cs" />
     <Compile Include="DropDTO.cs" />
@@ -103,7 +95,11 @@
     <Compile Include="FamilyDTO.cs" />
     <Compile Include="FamilyLogDTO.cs" />
     <Compile Include="GeneralLogDTO.cs" />
+    <Compile Include="Interfaces\IBoxInstance.cs" />
     <Compile Include="Interfaces\IMapDTO.cs" />
+    <Compile Include="Interfaces\IItemInstance.cs" />
+    <Compile Include="Interfaces\ISpecialistInstance.cs" />
+    <Compile Include="Interfaces\IWearableInstance.cs" />
     <Compile Include="MailDTO.cs" />
     <Compile Include="MapMonsterDTO.cs" />
     <Compile Include="MapNpcDTO.cs" />
@@ -117,7 +113,6 @@
     <Compile Include="RecipeItemDTO.cs" />
     <Compile Include="RespawnDTO.cs" />
     <Compile Include="RespawnMapTypeDTO.cs" />
-    <Compile Include="ShellEffectDTO.cs" />
     <Compile Include="ShopItemDTO.cs" />
     <Compile Include="ShopDTO.cs" />
     <Compile Include="ItemInstanceDTO.cs" />
@@ -133,11 +128,16 @@
     <Compile Include="SkillDTO.cs" />
     <Compile Include="ShopSkillDTO.cs" />
     <Compile Include="CharacterSkillDTO.cs" />
+    <Compile Include="SpecialistInstanceDTO.cs" />
     <Compile Include="StaticBonusDTO.cs" />
     <Compile Include="StaticBuffDTO.cs" />
     <Compile Include="TeleporterDTO.cs" />
     <Compile Include="ScriptedInstanceDTO.cs" />
+    <Compile Include="UsableInstanceDTO.cs" />
     <Compile Include="UserDTO.cs" />
+    <Compile Include="WearableInstanceDTO.cs" />
+    <Compile Include="WorldServerDTO.cs" />
+    <Compile Include="WorldServerGroupDTO.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenNos.Core\OpenNos.Core.csproj">
@@ -147,10 +147,6 @@
     <ProjectReference Include="..\OpenNos.Domain\OpenNos.Domain.csproj">
       <Project>{20addddd-dad9-44f3-9beb-026c73090660}</Project>
       <Name>OpenNos.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OpenNos.XMLModel\OpenNos.XMLModel.csproj">
-      <Project>{ce1bcbe7-edb7-4564-a11e-8d90868df9d0}</Project>
-      <Name>OpenNos.XMLModel</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

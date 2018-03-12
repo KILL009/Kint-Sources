@@ -1,26 +1,12 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-using OpenNos.Core;
+﻿using OpenNos.Core;
 using OpenNos.Data;
 using OpenNos.Domain;
 using OpenNos.GameObject.Helpers;
 using OpenNos.XMLModel.Models.ScriptedInstance;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using OpenNos.GameObject.Networking;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Text;
@@ -221,7 +207,7 @@ namespace OpenNos.GameObject
                 {
                     foreach (XMLModel.Objects.CreateMap createMap in Model.InstanceEvents.CreateMap)
                     {
-                        MapInstance mapInstance = ServerManager.GenerateMapInstance(createMap.VNum, mapinstancetype, new InstanceBag());
+                        MapInstance mapInstance = ServerManager.Instance.GenerateMapInstance(createMap.VNum, mapinstancetype, new InstanceBag());
                         mapInstance.Portals?.Clear();
                         mapInstance.MapIndexX = createMap.IndexX;
                         mapInstance.MapIndexY = createMap.IndexY;
@@ -249,7 +235,7 @@ namespace OpenNos.GameObject
                         Dispose();
                         _disposable.Dispose();
                     }
-                    if (InstanceBag.Clock.SecondsRemaining <= 0)
+                    if (InstanceBag.Clock.DeciSecondRemaining <= 0)
                     {
                         _mapInstanceDictionary.Values.ToList().ForEach(m => EventHelper.Instance.RunEvent(new EventContainer(m, EventActionType.SCRIPTEND, (byte)1)));
                         Dispose();
@@ -312,7 +298,7 @@ namespace OpenNos.GameObject
                         // SendMessage
                         if (createMap.OnLockerOpen.SendMessage != null)
                         {
-                            onLockerOpen.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.GenerateMsg(createMap.OnLockerOpen.SendMessage.Value, createMap.OnLockerOpen.SendMessage.Type)));
+                            onLockerOpen.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(createMap.OnLockerOpen.SendMessage.Value, createMap.OnLockerOpen.SendMessage.Type)));
                         }
 
                         // ChangePortalType
@@ -335,8 +321,8 @@ namespace OpenNos.GameObject
                     {
                         foreach (XMLModel.Events.OnAreaEntry onAreaEntry in createMap.OnAreaEntry)
                         {
-                            List<EventContainer> onAreaEntryEvents = new List<EventContainer>();
-                            onAreaEntryEvents.AddRange(summonMonster(mapInstance, onAreaEntry.SummonMonster));
+                            var onAreaEntryEvents = new ConcurrentBag<EventContainer>();
+                            summonMonster(mapInstance, onAreaEntry.SummonMonster).ForEach(s => onAreaEntryEvents.Add(s));
                             evts.Add(new EventContainer(mapInstance, EventActionType.SETAREAENTRY, new ZoneEvent() { X = onAreaEntry.PositionX, Y = onAreaEntry.PositionY, Range = onAreaEntry.Range, Events = onAreaEntryEvents }));
                         }
                     }
@@ -382,7 +368,7 @@ namespace OpenNos.GameObject
                 // SendMessage
                 if (createMap.OnCharacterDiscoveringMap.SendMessage != null)
                 {
-                    onDiscoverEvents.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.GenerateMsg(createMap.OnCharacterDiscoveringMap.SendMessage.Value, createMap.OnCharacterDiscoveringMap.SendMessage.Type)));
+                    onDiscoverEvents.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(createMap.OnCharacterDiscoveringMap.SendMessage.Value, createMap.OnCharacterDiscoveringMap.SendMessage.Type)));
                 }
 
                 // SendPacket
@@ -439,7 +425,7 @@ namespace OpenNos.GameObject
                 // SendMessage
                 if (onMapClean.SendMessage != null)
                 {
-                    onMapCleanEvents.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.GenerateMsg(onMapClean.SendMessage.Value, onMapClean.SendMessage.Type)));
+                    onMapCleanEvents.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(onMapClean.SendMessage.Value, onMapClean.SendMessage.Type)));
                 }
 
                 // SendPacket
@@ -467,12 +453,12 @@ namespace OpenNos.GameObject
             // OnMoveOnMap
             if (onMoveOnMap != null)
             {
-                List<EventContainer> waveEvent = new List<EventContainer>();
+                var waveEvent = new ConcurrentBag<EventContainer>();
 
                 // SendMessage
                 if (onMoveOnMap.SendMessage != null)
                 {
-                    evts.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.GenerateMsg(onMoveOnMap.SendMessage.Value, onMoveOnMap.SendMessage.Type)));
+                    evts.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(onMoveOnMap.SendMessage.Value, onMoveOnMap.SendMessage.Type)));
                 }
 
                 // SendPacket
@@ -492,7 +478,7 @@ namespace OpenNos.GameObject
                     {
                         if (onMoveOnMap.StartClock.OnStop.SendMessage != null)
                         {
-                            onStop.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.GenerateMsg(onMoveOnMap.StartClock.OnStop.SendMessage.Value, onMoveOnMap.StartClock.OnStop.SendMessage.Type)));
+                            onStop.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(onMoveOnMap.StartClock.OnStop.SendMessage.Value, onMoveOnMap.StartClock.OnStop.SendMessage.Type)));
                         }
                         if (onMoveOnMap.StartClock.OnStop.SendPacket != null)
                         {
@@ -528,7 +514,7 @@ namespace OpenNos.GameObject
                     {
                         if (onMoveOnMap.StartMapClock.OnStop.SendMessage != null)
                         {
-                            onStop.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.GenerateMsg(onMoveOnMap.StartMapClock.OnStop.SendMessage.Value, onMoveOnMap.StartMapClock.OnStop.SendMessage.Type)));
+                            onStop.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(onMoveOnMap.StartMapClock.OnStop.SendMessage.Value, onMoveOnMap.StartMapClock.OnStop.SendMessage.Type)));
                         }
                         if (onMoveOnMap.StartMapClock.OnStop.SendPacket != null)
                         {
@@ -559,12 +545,12 @@ namespace OpenNos.GameObject
                     foreach (XMLModel.Objects.Wave wave in onMoveOnMap.Wave)
                     {
                         // SummonMonster
-                        waveEvent.AddRange(summonMonster(mapInstance, wave.SummonMonster));
+                        summonMonster(mapInstance, wave.SummonMonster).ForEach(s => waveEvent.Add(s));
 
                         // SendMessage
                         if (wave.SendMessage != null)
                         {
-                            waveEvent.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.GenerateMsg(wave.SendMessage.Value, wave.SendMessage.Type)));
+                            waveEvent.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(wave.SendMessage.Value, wave.SendMessage.Type)));
                         }
 
                         evts.Add(new EventContainer(mapInstance, EventActionType.REGISTERWAVE, new EventWave(wave.Delay, waveEvent, wave.Offset)));
@@ -642,7 +628,7 @@ namespace OpenNos.GameObject
                         // SendMessage
                         if (spawn.OnFirstEnable.SendMessage != null)
                         {
-                            onFirst.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.GenerateMsg(spawn.OnFirstEnable.SendMessage.Value, spawn.OnFirstEnable.SendMessage.Type)));
+                            onFirst.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(spawn.OnFirstEnable.SendMessage.Value, spawn.OnFirstEnable.SendMessage.Type)));
                         }
 
                         // OnMapClean
@@ -759,7 +745,7 @@ namespace OpenNos.GameObject
                         // SendMessage
                         if (summon.OnDeath.SendMessage != null)
                         {
-                            evts.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.GenerateMsg(summon.OnDeath.SendMessage.Value, summon.OnDeath.SendMessage.Type)));
+                            evts.Add(new EventContainer(mapInstance, EventActionType.SENDPACKET, UserInterfaceHelper.Instance.GenerateMsg(summon.OnDeath.SendMessage.Value, summon.OnDeath.SendMessage.Type)));
                         }
 
                         // SendPacket
@@ -814,7 +800,7 @@ namespace OpenNos.GameObject
                         // Move
                         if (summon.OnNoticing.Move != null)
                         {
-                            List<EventContainer> events = new List<EventContainer>();
+                            var events = new ConcurrentBag<EventContainer>();
 
                             // Effect
                             if (summon.OnNoticing.Move.Effect != null)
@@ -869,7 +855,7 @@ namespace OpenNos.GameObject
                     }
 
                     NpcAmount++;
-                    NpcToSummon npcToSummon = new NpcToSummon(summon.VNum, new MapCell() { X = positionX, Y = positionY }, -1, summon.IsMate, summon.IsProtected);
+                    NpcToSummon npcToSummon = new NpcToSummon(summon.VNum, new MapCell() { X = positionX, Y = positionY }, -1, new ConcurrentBag<EventContainer>(), summon.IsProtected, summon.IsMate);
 
                     // OnDeath
                     if (summon.OnDeath != null)
@@ -931,25 +917,5 @@ namespace OpenNos.GameObject
         }
 
         #endregion
-
-        // Use as a idea of what is left to do
-        //private void remnants()
-        //{
-        //    switch (mapEvent.Name)
-        //    {
-        //        case "SummonMonsters":
-        //            evts.Add(new EventContainer(mapInstance, EventActionType.SPAWNMONSTERS, mapInstance.Map.GenerateMonsters(short.Parse(mapEvent?.Attributes["VNum"].Value), short.Parse(mapEvent?.Attributes["Amount"].Value), move, new List<EventContainer>(), isBonus, isHostile, isBoss)));
-        //            break;
-        //        case "SummonNpcs":
-        //            evts.Add(new EventContainer(mapInstance, EventActionType.SPAWNNPCS, mapInstance.Map.GenerateNpcs(short.Parse(mapEvent?.Attributes["VNum"].Value), short.Parse(mapEvent?.Attributes["Amount"].Value), new List<EventContainer>(), isMate, isProtected)));
-        //            break;
-        //        case "StopClock":
-        //            evts.Add(new EventContainer(mapInstance, EventActionType.STOPCLOCK, null));
-        //            break;
-        //        case "StopMapClock":
-        //            evts.Add(new EventContainer(mapInstance, EventActionType.STOPMAPCLOCK, null));
-        //            break;
-        //    }
-        //}
     }
 }

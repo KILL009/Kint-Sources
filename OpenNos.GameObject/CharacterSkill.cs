@@ -1,20 +1,5 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-using OpenNos.Data;
+﻿using OpenNos.Data;
 using System;
-using OpenNos.GameObject.Networking;
 
 namespace OpenNos.GameObject
 {
@@ -22,7 +7,7 @@ namespace OpenNos.GameObject
     {
         #region Members
 
-        private Skill _skill;
+        private Skill skill;
 
         #endregion
 
@@ -54,13 +39,16 @@ namespace OpenNos.GameObject
             get; set;
         }
 
-        public Skill Skill => _skill ?? (_skill = ServerManager.GetSkill(SkillVNum));
+        public Skill Skill => skill ?? (skill = ServerManager.Instance.GetSkill(SkillVNum));
 
         #endregion
 
         #region Methods
 
-        public bool CanBeUsed() => Skill != null && LastUse.AddMilliseconds(Skill.Cooldown * 100) < DateTime.Now;
+        public bool CanBeUsed()
+        {
+            return Skill != null && LastUse.AddMilliseconds(Skill.Cooldown * 100) < DateTime.Now;
+        }
 
         #endregion
     }

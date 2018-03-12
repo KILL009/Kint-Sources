@@ -1,18 +1,4 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-using System;
+﻿using System;
 
 namespace OpenNos.Core.Networking.Communication.ScsServices.Service
 {
@@ -46,7 +32,9 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Service
         /// Service class type. Must be delivered from ScsService and must implement TServiceInterface.
         /// </typeparam>
         /// <param name="service">An instance of TServiceClass.</param>
-        void AddService<TServiceInterface, TServiceClass>(TServiceClass service) where TServiceInterface : class where TServiceClass : ScsService, TServiceInterface;
+        void AddService<TServiceInterface, TServiceClass>(TServiceClass service)
+            where TServiceClass : ScsService, TServiceInterface
+            where TServiceInterface : class;
 
         /// <summary>
         /// Removes a previously added service object from this service application. It removes

@@ -1,23 +1,8 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-using OpenNos.Core;
+﻿using OpenNos.Core;
 using OpenNos.Domain;
 using OpenNos.GameObject;
 using OpenNos.GameObject.Helpers;
 using System;
-using OpenNos.GameObject.Networking;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -25,15 +10,24 @@ namespace OpenNos.Handler
 {
     public class MinilandPacketHandler : IPacketHandler
     {
+        #region Members
+
+        private readonly ClientSession session;
+
+        #endregion
+
         #region Instantiation
 
-        public MinilandPacketHandler(ClientSession session) => Session = session;
+        public MinilandPacketHandler(ClientSession session)
+        {
+            this.session = session;
+        }
 
         #endregion
 
         #region Properties
 
-        private ClientSession Session { get; }
+        private ClientSession Session => session;
 
         #endregion
 
@@ -45,16 +39,16 @@ namespace OpenNos.Handler
         /// <param name="mJoinPacket"></param>
         public void JoinMiniland(MJoinPacket mJoinPacket)
         {
-            ClientSession sess = ServerManager.Instance.GetSessionByCharacterId(mJoinPacket.CharacterId);
+            var sess = ServerManager.Instance.GetSessionByCharacterId(mJoinPacket.CharacterId);
             if (sess?.Character != null)
             {
-                if (sess.Character.MinilandState == MinilandState.Open)
+                if (sess.Character.MinilandState == MinilandState.OPEN)
                 {
                     ServerManager.Instance.JoinMiniland(Session, sess);
                 }
                 else
                 {
-                    Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("MINILAND_CLOSED_BY_FRIEND")));
+                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("MINILAND_CLOSED_BY_FRIEND")));
                 }
             }
         }
@@ -65,230 +59,244 @@ namespace OpenNos.Handler
         /// <param name="packet"></param>
         public void MinigamePlay(MinigamePacket packet)
         {
-            ClientSession client = ServerManager.Instance.Sessions.FirstOrDefault(s => s.Character?.Miniland == Session.Character.MapInstance);
-            MapDesignObject mlobj = Session.CurrentMapInstance?.MapDesignObjects.FirstOrDefault(s => s.ItemInstance.ItemVNum == packet.MinigameVNum);
-            if (mlobj != null)
+            var client = ServerManager.Instance.Sessions.FirstOrDefault(s => s.Character?.Miniland == Session.Character.MapInstance);
+            var mlobj = Session.CurrentMapInstance?.MapDesignObjects.FirstOrDefault(s => s.ItemInstance.ItemVNum == packet.MinigameVNum);
+            if (mlobj == null)
             {
-                const bool full = false;
-                byte game = (byte)(mlobj.ItemInstance.Item.EquipmentSlot);
-                switch (packet.Type)
-                {
-                    //play
-                    case 1:
-                        if (mlobj.ItemInstance.DurabilityPoint <= 0)
-                        {
-                            Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_ENOUGH_DURABILITY_POINT"), 0));
-                            return;
-                        }
-                        if (Session.Character.MinilandPoint <= 0)
-                        {
-                            Session.SendPacket($"qna #mg^1^7^3125^1^1 {Language.Instance.GetMessageFromKey("NOT_ENOUGH_MINILAND_POINT")}");
-                        }
-                        Session.Character.MapInstance.Broadcast(UserInterfaceHelper.GenerateGuri(2, 1, Session.Character.CharacterId));
-                        Session.Character.CurrentMinigame = (short)(game == 0 ? 5102 : game == 1 ? 5103 : game == 2 ? 5105 : game == 3 ? 5104 : game == 4 ? 5113 : 5112);
-                        Session.SendPacket($"mlo_st {game}");
-                        break;
+                return;
+            }
 
-                    //stop
-                    case 2:
-                        Session.Character.CurrentMinigame = 0;
-                        Session.Character.MapInstance.Broadcast(UserInterfaceHelper.GenerateGuri(6, 1, Session.Character.CharacterId));
-                        break;
+            const bool FULL = false;
+            var game = (byte)(mlobj.ItemInstance.Item.EquipmentSlot == 0 ? 4 + mlobj.ItemInstance.ItemVNum % 10 : (int)mlobj.ItemInstance.Item.EquipmentSlot / 3);
+            switch (packet.Type)
+            {
+                //play
+                case 1:
+                    if (mlobj.ItemInstance.DurabilityPoint <= 0)
+                    {
+                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_ENOUGH_DURABILITY_POINT"), 0));
+                        return;
+                    }
 
-                    case 3:
-                        Session.Character.CurrentMinigame = 0;
-                        Session.Character.MapInstance.Broadcast(UserInterfaceHelper.GenerateGuri(6, 1, Session.Character.CharacterId));
-                        int Level = -1;
-                        for (short i = 0; i < getMinilandMaxPoint(game).Length; i++)
+                    if (Session.Character.MinilandPoint <= 0)
+                    {
+                        Session.SendPacket($"qna #mg^1^7^3125^1^1 {Language.Instance.GetMessageFromKey("NOT_ENOUGH_MINILAND_POINT")}");
+                    }
+
+                    Session.Character.MapInstance.Broadcast(UserInterfaceHelper.Instance.GenerateGuri(2, 1, Session.Character.CharacterId));
+                    Session.Character.CurrentMinigame = (short)(game == 0 ? 5102 : game == 1 ? 5103 : game == 2 ? 5105 : game == 3 ? 5104 : game == 4 ? 5113 : 5112);
+                    Session.SendPacket($"mlo_st {game}");
+                    break;
+
+                //stop
+                case 2:
+                    Session.Character.CurrentMinigame = 0;
+                    Session.Character.MapInstance.Broadcast(UserInterfaceHelper.Instance.GenerateGuri(6, 1, Session.Character.CharacterId));
+                    break;
+
+                case 3:
+                    Session.Character.CurrentMinigame = 0;
+                    Session.Character.MapInstance.Broadcast(UserInterfaceHelper.Instance.GenerateGuri(6, 1, Session.Character.CharacterId));
+                    var Level = -1;
+                    for (short i = 0; i < GetMinilandMaxPoint(game).Count(); i++)
+                    {
+                        if (packet.Point > GetMinilandMaxPoint(game)[i])
                         {
-                            if (packet.Point > getMinilandMaxPoint(game)[i])
+                            Level = i;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                    Session.SendPacket(Level != -1
+                        ? $"mlo_lv {Level}"
+                        : $"mg 3 {game} {packet.MinigameVNum} 0 0");
+                    break;
+
+                // select gift
+                case 4:
+                    if (Session.Character.MinilandPoint >= 100)
+                    {
+                        var obj = GetMinilandGift(packet.MinigameVNum, (int)packet.Point);
+                        if (obj != null)
+                        {
+                            Session.SendPacket($"mlo_rw {obj.VNum} {obj.Amount}");
+                            Session.SendPacket(Session.Character.GenerateMinilandPoint());
+                            List<ItemInstance> inv = Session.Character.Inventory.AddNewToInventory(obj.VNum, obj.Amount);
+                            Session.Character.MinilandPoint -= 100;
+                            if (!inv.Any())
                             {
-                                Level = i;
+                                Session.Character.SendGift(Session.Character.CharacterId, obj.VNum, obj.Amount, 0, 0, false);
                             }
-                            else
-                            {
-                                break;
-                            }
-                        }
-                        Session.SendPacket(Level != -1
-                            ? $"mlo_lv {Level}"
-                            : $"mg 3 {game} {packet.MinigameVNum} 0 0");
-                        break;
 
-                    // select gift
-                    case 4:
-                        if (Session.Character.MinilandPoint >= 100)
-                        {
-                            Gift obj = getMinilandGift(packet.MinigameVNum, (int)packet.Point);
-                            if (obj != null)
+                            if (client != Session)
                             {
-                                Session.SendPacket($"mlo_rw {obj.VNum} {obj.Amount}");
-                                Session.SendPacket(Session.Character.GenerateMinilandPoint());
-                                List<ItemInstance> inv = Session.Character.Inventory.AddNewToInventory(obj.VNum, obj.Amount);
-                                Session.Character.MinilandPoint -= 100;
-                                if (inv.Count == 0)
+                                switch (packet.Point)
                                 {
-                                    Session.Character.SendGift(Session.Character.CharacterId, obj.VNum, obj.Amount, 0, 0, false);
-                                }
+                                    case 0:
+                                        mlobj.Level1BoxAmount++;
+                                        break;
 
-                                if (client != Session)
-                                {
-                                    switch (packet.Point)
-                                    {
-                                        case 0:
-                                            mlobj.Level1BoxAmount++;
-                                            break;
+                                    case 1:
+                                        mlobj.Level2BoxAmount++;
+                                        break;
 
-                                        case 1:
-                                            mlobj.Level2BoxAmount++;
-                                            break;
+                                    case 2:
+                                        mlobj.Level3BoxAmount++;
+                                        break;
 
-                                        case 2:
-                                            mlobj.Level3BoxAmount++;
-                                            break;
+                                    case 3:
+                                        mlobj.Level4BoxAmount++;
+                                        break;
 
-                                        case 3:
-                                            mlobj.Level4BoxAmount++;
-                                            break;
-
-                                        case 4:
-                                            mlobj.Level5BoxAmount++;
-                                            break;
-                                    }
+                                    case 4:
+                                        mlobj.Level5BoxAmount++;
+                                        break;
                                 }
                             }
                         }
-                        break;
+                    }
 
-                    case 5:
+                    break;
+
+                case 5:
+                    Session.SendPacket(Session.Character.GenerateMloMg(mlobj, packet));
+                    break;
+
+                //refill
+                case 6:
+                    if (packet.Point == null)
+                    {
+                        return;
+                    }
+
+                    if (Session.Character.Gold > packet.Point)
+                    {
+                        Session.Character.Gold -= (int)packet.Point;
+                        Session.SendPacket(Session.Character.GenerateGold());
+                        mlobj.ItemInstance.DurabilityPoint += (int)(packet.Point / 100);
+                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey(string.Format("REFILL_MINIGAME", (int)packet.Point / 100))));
                         Session.SendPacket(Session.Character.GenerateMloMg(mlobj, packet));
-                        break;
+                    }
 
-                    //refill
-                    case 6:
-                        if (packet.Point == null || packet.Point < 0)
+                    break;
+
+                //gift
+                case 7:
+                    Session.SendPacket(
+                        $"mlo_pmg {packet.MinigameVNum} {Session.Character.MinilandPoint} {(mlobj.ItemInstance.DurabilityPoint < 1000 ? 1 : 0)} {(FULL ? 1 : 0)} {(mlobj.Level1BoxAmount > 0 ? $"392 {mlobj.Level1BoxAmount}" : "0 0")} {(mlobj.Level2BoxAmount > 0 ? $"393 {mlobj.Level2BoxAmount}" : "0 0")} {(mlobj.Level3BoxAmount > 0 ? $"394 {mlobj.Level3BoxAmount}" : "0 0")} {(mlobj.Level4BoxAmount > 0 ? $"395 {mlobj.Level4BoxAmount}" : "0 0")} {(mlobj.Level5BoxAmount > 0 ? $"396 {mlobj.Level5BoxAmount}" : "0 0")} 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0");
+                    break;
+
+                //get gift
+                case 8:
+                    var amount = 0;
+                    switch (packet.Point)
+                    {
+                        case 0:
+                            amount = mlobj.Level1BoxAmount;
+                            break;
+
+                        case 1:
+                            amount = mlobj.Level2BoxAmount;
+                            break;
+
+                        case 2:
+                            amount = mlobj.Level3BoxAmount;
+                            break;
+
+                        case 3:
+                            amount = mlobj.Level4BoxAmount;
+                            break;
+
+                        case 4:
+                            amount = mlobj.Level5BoxAmount;
+                            break;
+                    }
+
+#warning need to get fixed
+                    List<Gift> gifts = new List<Gift>();
+                    for (int i = 0; i < amount; i++)
+                    {
+                        var gift = GetMinilandGift(packet.MinigameVNum, (int)packet.Point);
+                        if (gift != null)
                         {
-                            return;
-                        }
-                        if (Session.Character.Gold > packet.Point)
-                        {
-                            Session.Character.Gold -= (int)packet.Point;
-                            Session.SendPacket(Session.Character.GenerateGold());
-                            mlobj.ItemInstance.DurabilityPoint += (int)(packet.Point / 100);
-                            Session.SendPacket(UserInterfaceHelper.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("REFILL_MINIGAME"), (int)packet.Point / 100)));
-                            Session.SendPacket(Session.Character.GenerateMloMg(mlobj, packet));
-                        }
-                        break;
-
-                    //gift
-                    case 7:
-                        Session.SendPacket($"mlo_pmg {packet.MinigameVNum} {Session.Character.MinilandPoint} {(mlobj.ItemInstance.DurabilityPoint < 1000 ? 1 : 0)} {(full ? 1 : 0)} {(mlobj.Level1BoxAmount > 0 ? $"392 {mlobj.Level1BoxAmount}" : "0 0")} {(mlobj.Level2BoxAmount > 0 ? $"393 {mlobj.Level2BoxAmount}" : "0 0")} {(mlobj.Level3BoxAmount > 0 ? $"394 {mlobj.Level3BoxAmount}" : "0 0")} {(mlobj.Level4BoxAmount > 0 ? $"395 {mlobj.Level4BoxAmount}" : "0 0")} {(mlobj.Level5BoxAmount > 0 ? $"396 {mlobj.Level5BoxAmount}" : "0 0")} 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0");
-                        break;
-
-                    //get gift
-                    case 8:
-                        int amount = 0;
-                        switch (packet.Point)
-                        {
-                            case 0:
-                                amount = mlobj.Level1BoxAmount;
-                                break;
-
-                            case 1:
-                                amount = mlobj.Level2BoxAmount;
-                                break;
-
-                            case 2:
-                                amount = mlobj.Level3BoxAmount;
-                                break;
-
-                            case 3:
-                                amount = mlobj.Level4BoxAmount;
-                                break;
-
-                            case 4:
-                                amount = mlobj.Level5BoxAmount;
-                                break;
-                        }
-                        List<Gift> gifts = new List<Gift>();
-                        for (int i = 0; i < amount; i++)
-                        {
-                            Gift gift = getMinilandGift(packet.MinigameVNum, (int)packet.Point);
-                            if (gift != null)
+                            if (gifts.Any(o => o.VNum == gift.VNum))
                             {
-                                if (gifts.Any(o => o.VNum == gift.VNum))
-                                {
-                                    gifts.First(o => o.Amount == gift.Amount).Amount += gift.Amount;
-                                }
-                                else
-                                {
-                                    gifts.Add(gift);
-                                }
-                            }
-                        }
-                        string str = string.Empty;
-                        for (int i = 0; i < 9; i++)
-                        {
-                            if (gifts.Count > i)
-                            {
-                                short itemVNum = gifts[i].VNum;
-                                byte itemAmount = gifts[i].Amount;
-                                List<ItemInstance> inv = Session.Character.Inventory.AddNewToInventory(itemVNum, itemAmount);
-                                if (inv.Count > 0)
-                                {
-                                    Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: {ServerManager.GetItem(itemVNum).Name} x {itemAmount}", 12));
-                                }
-                                else
-                                {
-                                    Session.Character.SendGift(Session.Character.CharacterId, itemVNum, itemAmount, 0, 0, false);
-                                }
-                                str += $" {itemVNum} {itemAmount}";
+                                gifts.FirstOrDefault(o => o.Amount == gift.Amount).Amount += gift.Amount;
                             }
                             else
                             {
-                                str += " 0 0";
+                                gifts.Add(gift);
                             }
                         }
-                        Session.SendPacket($"mlo_pmg {packet.MinigameVNum} {Session.Character.MinilandPoint} {(mlobj.ItemInstance.DurabilityPoint < 1000 ? 1 : 0)} {(full ? 1 : 0)} {(mlobj.Level1BoxAmount > 0 ? $"392 {mlobj.Level1BoxAmount}" : "0 0")} {(mlobj.Level2BoxAmount > 0 ? $"393 {mlobj.Level2BoxAmount}" : "0 0")} {(mlobj.Level3BoxAmount > 0 ? $"394 {mlobj.Level3BoxAmount}" : "0 0")} {(mlobj.Level4BoxAmount > 0 ? $"395 {mlobj.Level4BoxAmount}" : "0 0")} {(mlobj.Level5BoxAmount > 0 ? $"396 {mlobj.Level5BoxAmount}" : "0 0")}{str}");
-                        break;
+                    }
 
-                    //coupon
-                    case 9:
-                        List<ItemInstance> items = Session.Character.Inventory.Where(s => s.ItemVNum == 1269 || s.ItemVNum == 1271).OrderBy(s => s.Slot).ToList();
-                        if (items.Count > 0)
+                    var str = string.Empty;
+                    for (int i = 0; i < 9; i++)
+                    {
+                        if (gifts.Count > i)
                         {
-                            short itemVNum = items[0].ItemVNum;
-                            Session.Character.Inventory.RemoveItemAmount(itemVNum);
-                            int point = itemVNum == 1269 ? 300 : 500;
-                            mlobj.ItemInstance.DurabilityPoint += point;
-                            Session.SendPacket(UserInterfaceHelper.GenerateInfo(string.Format(Language.Instance.GetMessageFromKey("REFILL_MINIGAME"), point)));
-                            Session.SendPacket(Session.Character.GenerateMloMg(mlobj, packet));
+                            List<ItemInstance> inv = Session.Character.Inventory.AddNewToInventory(gifts.ElementAt(i).VNum, gifts.ElementAt(i).Amount);
+                            if (inv.Any())
+                            {
+                                Session.SendPacket(Session.Character.GenerateSay(
+                                    $"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: {ServerManager.Instance.GetItem(gifts.ElementAt(i).VNum).Name} x {gifts.ElementAt(i).Amount}", 12));
+                            }
+                            else
+                            {
+                                Session.Character.SendGift(Session.Character.CharacterId, gifts.ElementAt(i).VNum, gifts.ElementAt(i).Amount, 0, 0, false);
+                            }
+
+                            str += $" {gifts.ElementAt(i).VNum} {gifts.ElementAt(i).Amount}";
                         }
-                        break;
-                }
+                        else
+                        {
+                            str += " 0 0";
+                        }
+                    }
+
+                    Session.SendPacket(
+                        $"mlo_pmg {packet.MinigameVNum} {Session.Character.MinilandPoint} {(mlobj.ItemInstance.DurabilityPoint < 1000 ? 1 : 0)} {(FULL ? 1 : 0)} {(mlobj.Level1BoxAmount > 0 ? $"392 {mlobj.Level1BoxAmount}" : "0 0")} {(mlobj.Level2BoxAmount > 0 ? $"393 {mlobj.Level2BoxAmount}" : "0 0")} {(mlobj.Level3BoxAmount > 0 ? $"394 {mlobj.Level3BoxAmount}" : "0 0")} {(mlobj.Level4BoxAmount > 0 ? $"395 {mlobj.Level4BoxAmount}" : "0 0")} {(mlobj.Level5BoxAmount > 0 ? $"396 {mlobj.Level5BoxAmount}" : "0 0")}{str}");
+                    break;
+
+                //coupon
+                case 9:
+                    List<ItemInstance> items = Session.Character.Inventory.Select(s => s.Value).Where(s => s.ItemVNum == 1269 || s.ItemVNum == 1271).OrderBy(s => s.Slot).ToList();
+                    if (items.Count > 0)
+                    {
+                        Session.Character.Inventory.RemoveItemAmount(items.ElementAt(0).ItemVNum);
+                        var point = items.ElementAt(0).ItemVNum == 1269 ? 300 : 500;
+                        mlobj.ItemInstance.DurabilityPoint += point;
+                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey(string.Format("REFILL_MINIGAME", point))));
+                        Session.SendPacket(Session.Character.GenerateMloMg(mlobj, packet));
+                    }
+
+                    break;
             }
         }
 
         /// <summary>
         /// addobj packet
         /// </summary>
-        /// <param name="addObjPacket"></param>
-        public void MinilandAddObject(AddObjPacket addObjPacket)
+        /// <param name="packet"></param>
+        public void MinilandAddObject(AddobjPacket packet)
         {
-            ItemInstance minilandobject = Session.Character.Inventory.LoadBySlotAndType<ItemInstance>(addObjPacket.Slot, InventoryType.Miniland);
+            var minilandobject = Session.Character.Inventory.LoadBySlotAndType<ItemInstance>(packet.Slot, InventoryType.Miniland);
             if (minilandobject != null)
             {
                 if (Session.Character.MapInstance.MapDesignObjects.All(s => s.ItemInstanceId != minilandobject.Id))
                 {
-                    if (Session.Character.MinilandState == MinilandState.Lock)
+                    if (Session.Character.MinilandState == MinilandState.LOCK)
                     {
-                        MapDesignObject minilandobj = new MapDesignObject
+                        var minilandobj = new MapDesignObject
                         {
                             CharacterId = Session.Character.CharacterId,
                             ItemInstance = minilandobject,
                             ItemInstanceId = minilandobject.Id,
-                            MapX = addObjPacket.PositionX,
-                            MapY = addObjPacket.PositionY,
+                            MapX = packet.PositionX,
+                            MapY = packet.PositionY,
                             Level1BoxAmount = 0,
                             Level2BoxAmount = 0,
                             Level3BoxAmount = 0,
@@ -316,17 +324,18 @@ namespace OpenNos.Handler
                                     break;
                             }
 
-                            MapDesignObject min = Session.Character.MapInstance.MapDesignObjects.FirstOrDefault(s => s.ItemInstance.Item.ItemType == ItemType.House && s.ItemInstance.Item.ItemSubType == minilandobject.Item.ItemSubType);
+                            var min = Session.Character.MapInstance.MapDesignObjects.FirstOrDefault(s => s.ItemInstance.Item.ItemType == ItemType.House && s.ItemInstance.Item.ItemSubType == minilandobject.Item.ItemSubType);
                             if (min != null)
                             {
                                 MinilandRemoveObject(new RmvobjPacket { Slot = min.ItemInstance.Slot });
                             }
                         }
 
-                        if (minilandobject.Item.IsMinilandObject)
+                        if (minilandobject.Item.IsWarehouse)
                         {
                             Session.Character.WareHouseSize = minilandobject.Item.MinilandObjectPoint;
                         }
+
                         Session.Character.MapInstance.MapDesignObjects.Add(minilandobj);
                         Session.SendPacket(minilandobj.GenerateEffect(false));
                         Session.SendPacket(Session.Character.GenerateMinilandPoint());
@@ -334,12 +343,12 @@ namespace OpenNos.Handler
                     }
                     else
                     {
-                        Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("MINILAND_NEED_LOCK"), 0));
+                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("MINILAND_NEED_LOCK"), 0));
                     }
                 }
                 else
                 {
-                    Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("ALREADY_THIS_MINILANDOBJECT"), 0));
+                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("ALREADY_THIS_MINILANDOBJECT"), 0));
                 }
             }
         }
@@ -354,7 +363,7 @@ namespace OpenNos.Handler
             {
                 case 1:
                     Session.SendPacket($"mlintro {mlEditPacket.Parameters.Replace(' ', '^')}");
-                    Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("MINILAND_INFO_CHANGED")));
+                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("MINILAND_INFO_CHANGED")));
                     break;
 
                 case 2:
@@ -363,20 +372,20 @@ namespace OpenNos.Handler
 
                     switch (state)
                     {
-                        case MinilandState.Private:
-                            Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("MINILAND_PRIVATE"), 0));
+                        case MinilandState.PRIVATE:
+                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("MINILAND_PRIVATE"), 0));
 
-                            //Need to be review to permit one friend limit on the miniland
+                            // Need to be review to permit one friend limit on the miniland
                             Session.Character.Miniland.Sessions.Where(s => s.Character != Session.Character).ToList().ForEach(s => ServerManager.Instance.ChangeMap(s.Character.CharacterId, s.Character.MapId, s.Character.MapX, s.Character.MapY));
                             break;
 
-                        case MinilandState.Lock:
-                            Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("MINILAND_LOCK"), 0));
+                        case MinilandState.LOCK:
+                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("MINILAND_LOCK"), 0));
                             Session.Character.Miniland.Sessions.Where(s => s.Character != Session.Character).ToList().ForEach(s => ServerManager.Instance.ChangeMap(s.Character.CharacterId, s.Character.MapId, s.Character.MapX, s.Character.MapY));
                             break;
 
-                        case MinilandState.Open:
-                            Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("MINILAND_PUBLIC"), 0));
+                        case MinilandState.OPEN:
+                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("MINILAND_PUBLIC"), 0));
                             break;
                     }
 
@@ -391,29 +400,33 @@ namespace OpenNos.Handler
         /// <param name="packet"></param>
         public void MinilandRemoveObject(RmvobjPacket packet)
         {
-            ItemInstance minilandobject = Session.Character.Inventory.LoadBySlotAndType<ItemInstance>(packet.Slot, InventoryType.Miniland);
-            if (minilandobject != null)
+            var minilandobject = Session.Character.Inventory.LoadBySlotAndType<ItemInstance>(packet.Slot, InventoryType.Miniland);
+            if (minilandobject == null)
             {
-                if (Session.Character.MinilandState == MinilandState.Lock)
+                return;
+            }
+
+            if (Session.Character.MinilandState == MinilandState.LOCK)
+            {
+                var minilandObject = Session.Character.MapInstance.MapDesignObjects.FirstOrDefault(s => s.ItemInstanceId == minilandobject.Id);
+                if (minilandObject == null)
                 {
-                    MapDesignObject minilandObject = Session.Character.MapInstance.MapDesignObjects.FirstOrDefault(s => s.ItemInstanceId == minilandobject.Id);
-                    if (minilandObject != null)
-                        if (minilandObject != null)
-                    {
-                        if (minilandobject.Item.IsMinilandObject)
-                        {
-                            Session.Character.WareHouseSize = 0;
-                        }
-                            Session.Character.MapInstance.MapDesignObjects.Remove(minilandObject);
-                            Session.SendPacket(minilandObject.GenerateEffect(true));
-                            Session.SendPacket(Session.Character.GenerateMinilandPoint());
-                            Session.SendPacket(minilandObject.GenerateMapDesignObject(true));
-                        }
+                    return;
                 }
-                else
+
+                if (minilandobject.Item.IsWarehouse)
                 {
-                    Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("MINILAND_NEED_LOCK"), 0));
+                    Session.Character.WareHouseSize = 0;
                 }
+
+                Session.Character.MapInstance.MapDesignObjects = Session.Character.MapInstance.MapDesignObjects.Replace(s => s != minilandObject);
+                Session.SendPacket(minilandObject.GenerateEffect(true));
+                Session.SendPacket(Session.Character.GenerateMinilandPoint());
+                Session.SendPacket(minilandObject.GenerateMapDesignObject(true));
+            }
+            else
+            {
+                Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("MINILAND_NEED_LOCK"), 0));
             }
         }
 
@@ -423,18 +436,18 @@ namespace OpenNos.Handler
         /// <param name="packet"></param>
         public void UseMinilandObject(UseobjPacket packet)
         {
-            ClientSession client = ServerManager.Instance.Sessions.FirstOrDefault(s => s.Character?.Miniland == Session.Character.MapInstance);
-            ItemInstance minilandObjectItem = client?.Character.Inventory.LoadBySlotAndType<ItemInstance>(packet.Slot, InventoryType.Miniland);
+            var client = ServerManager.Instance.Sessions.FirstOrDefault(s => s.Character?.Miniland == Session.Character.MapInstance);
+            var minilandObjectItem = client?.Character.Inventory.LoadBySlotAndType<ItemInstance>(packet.Slot, InventoryType.Miniland);
             if (minilandObjectItem != null)
             {
-                MapDesignObject minilandObject = client.Character.MapInstance.MapDesignObjects.FirstOrDefault(s => s.ItemInstanceId == minilandObjectItem.Id);
+                var minilandObject = client.Character.MapInstance.MapDesignObjects.FirstOrDefault(s => s.ItemInstanceId == minilandObjectItem.Id);
                 if (minilandObject != null)
                 {
-                    if (!minilandObjectItem.Item.IsMinilandObject)
+                    if (!minilandObjectItem.Item.IsWarehouse)
                     {
-                        byte game = (byte)(minilandObject.ItemInstance.Item.EquipmentSlot == 0 ? 4 + (minilandObject.ItemInstance.ItemVNum % 10) : (int)minilandObject.ItemInstance.Item.EquipmentSlot / 3);
-                        const bool full = false;
-                        Session.SendPacket($"mlo_info {(client == Session ? 1 : 0)} {minilandObjectItem.ItemVNum} {packet.Slot} {Session.Character.MinilandPoint} {(minilandObjectItem.DurabilityPoint < 1000 ? 1 : 0)} {(full ? 1 : 0)} 0 {getMinilandMaxPoint(game)[0]} {getMinilandMaxPoint(game)[0] + 1} {getMinilandMaxPoint(game)[1]} {getMinilandMaxPoint(game)[1] + 1} {getMinilandMaxPoint(game)[2]} {getMinilandMaxPoint(game)[2] + 2} {getMinilandMaxPoint(game)[3]} {getMinilandMaxPoint(game)[3] + 1} {getMinilandMaxPoint(game)[4]} {getMinilandMaxPoint(game)[4] + 1} {getMinilandMaxPoint(game)[5]}");
+                        var game = (byte)(minilandObject.ItemInstance.Item.EquipmentSlot == 0 ? 4 + minilandObject.ItemInstance.ItemVNum % 10 : (int)minilandObject.ItemInstance.Item.EquipmentSlot / 3);
+                        var full = false;
+                        Session.SendPacket($"mlo_info {(client == Session ? 1 : 0)} {minilandObjectItem.ItemVNum} {packet.Slot} {Session.Character.MinilandPoint} {(minilandObjectItem.DurabilityPoint < 1000 ? 1 : 0)} {(full ? 1 : 0)} 0 {GetMinilandMaxPoint(game)[0]} {GetMinilandMaxPoint(game)[0] + 1} {GetMinilandMaxPoint(game)[1]} {GetMinilandMaxPoint(game)[1] + 1} {GetMinilandMaxPoint(game)[2]} {GetMinilandMaxPoint(game)[2] + 2} {GetMinilandMaxPoint(game)[3]} {GetMinilandMaxPoint(game)[3] + 1} {GetMinilandMaxPoint(game)[4]} {GetMinilandMaxPoint(game)[4] + 1} {GetMinilandMaxPoint(game)[5]}");
                     }
                     else
                     {
@@ -444,10 +457,10 @@ namespace OpenNos.Handler
             }
         }
 
-        private static Gift getMinilandGift(short game, int point)
+        private static Gift GetMinilandGift(short game, int point)
         {
             List<Gift> gifts = new List<Gift>();
-            Random rand = new Random();
+            var rand = new Random();
             switch (game)
             {
                 case 3117:
@@ -457,7 +470,6 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(2099, 3));
                             gifts.Add(new Gift(2100, 3));
                             gifts.Add(new Gift(2102, 3));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 1:
@@ -466,14 +478,12 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(1033, 2));
                             gifts.Add(new Gift(1034, 2));
                             gifts.Add(new Gift(2205, 1));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 2:
                             gifts.Add(new Gift(2205, 1));
                             gifts.Add(new Gift(2189, 1));
                             gifts.Add(new Gift(2034, 2));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 3:
@@ -481,7 +491,6 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(2189, 1));
                             gifts.Add(new Gift(2034, 2));
                             gifts.Add(new Gift(2105, 1));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 4:
@@ -489,9 +498,9 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(2189, 1));
                             gifts.Add(new Gift(2034, 2));
                             gifts.Add(new Gift(2193, 1));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
                     }
+
                     break;
 
                 case 3118:
@@ -501,20 +510,17 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(2099, 3));
                             gifts.Add(new Gift(2100, 3));
                             gifts.Add(new Gift(2102, 3));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 1:
                             gifts.Add(new Gift(2206, 1));
                             gifts.Add(new Gift(2032, 3));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 2:
                             gifts.Add(new Gift(2206, 1));
                             gifts.Add(new Gift(2106, 1));
                             gifts.Add(new Gift(2038, 2));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 3:
@@ -522,7 +528,6 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(2190, 1));
                             gifts.Add(new Gift(2039, 2));
                             gifts.Add(new Gift(2109, 1));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 4:
@@ -530,9 +535,9 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(2190, 1));
                             gifts.Add(new Gift(2040, 2));
                             gifts.Add(new Gift(2194, 1));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
                     }
+
                     break;
 
                 case 3119:
@@ -542,20 +547,17 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(2099, 3));
                             gifts.Add(new Gift(2100, 3));
                             gifts.Add(new Gift(2102, 3));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 1:
                             gifts.Add(new Gift(2027, 15));
                             gifts.Add(new Gift(2207, 1));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 2:
                             gifts.Add(new Gift(2207, 1));
                             gifts.Add(new Gift(2046, 2));
                             gifts.Add(new Gift(2191, 1));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 3:
@@ -563,7 +565,6 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(2047, 2));
                             gifts.Add(new Gift(2191, 1));
                             gifts.Add(new Gift(2117, 1));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 4:
@@ -571,9 +572,9 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(2048, 2));
                             gifts.Add(new Gift(2191, 1));
                             gifts.Add(new Gift(2195, 1));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
                     }
+
                     break;
 
                 case 3120:
@@ -583,20 +584,17 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(2099, 3));
                             gifts.Add(new Gift(2100, 3));
                             gifts.Add(new Gift(2102, 3));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 1:
                             gifts.Add(new Gift(2208, 1));
                             gifts.Add(new Gift(2017, 10));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 2:
                             gifts.Add(new Gift(2208, 1));
                             gifts.Add(new Gift(2192, 1));
                             gifts.Add(new Gift(2042, 2));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 3:
@@ -604,7 +602,6 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(2192, 1));
                             gifts.Add(new Gift(2043, 2));
                             gifts.Add(new Gift(2118, 1));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 4:
@@ -612,9 +609,9 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(2192, 1));
                             gifts.Add(new Gift(2044, 2));
                             gifts.Add(new Gift(2196, 1));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
                     }
+
                     break;
 
                 case 3121:
@@ -628,28 +625,24 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(1032, 3));
                             gifts.Add(new Gift(1033, 3));
                             gifts.Add(new Gift(1034, 3));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 1:
                             gifts.Add(new Gift(2034, 3));
                             gifts.Add(new Gift(2205, 1));
                             gifts.Add(new Gift(2189, 1));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 2:
                             gifts.Add(new Gift(2035, 3));
                             gifts.Add(new Gift(2193, 1));
                             gifts.Add(new Gift(2275, 1));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 3:
                             gifts.Add(new Gift(2036, 3));
                             gifts.Add(new Gift(2193, 1));
                             gifts.Add(new Gift(1028, 1));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 4:
@@ -658,9 +651,9 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(1028, 1));
                             gifts.Add(new Gift(1029, 1));
                             gifts.Add(new Gift(2197, 1));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
                     }
+
                     break;
 
                 case 3122:
@@ -671,28 +664,24 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(2100, 4));
                             gifts.Add(new Gift(2102, 4));
                             gifts.Add(new Gift(2032, 4));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 1:
                             gifts.Add(new Gift(2038, 3));
                             gifts.Add(new Gift(2206, 1));
                             gifts.Add(new Gift(2190, 1));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 2:
                             gifts.Add(new Gift(2039, 3));
                             gifts.Add(new Gift(2194, 1));
                             gifts.Add(new Gift(2105, 1));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 3:
                             gifts.Add(new Gift(2040, 3));
                             gifts.Add(new Gift(2194, 1));
                             gifts.Add(new Gift(1028, 1));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 4:
@@ -701,9 +690,9 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(1028, 1));
                             gifts.Add(new Gift(1029, 1));
                             gifts.Add(new Gift(2198, 1));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
                     }
+
                     break;
 
                 case 3123:
@@ -714,28 +703,24 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(2100, 4));
                             gifts.Add(new Gift(2102, 4));
                             gifts.Add(new Gift(2047, 15));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 1:
                             gifts.Add(new Gift(2046, 3));
                             gifts.Add(new Gift(2205, 1));
                             gifts.Add(new Gift(2189, 1));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 2:
                             gifts.Add(new Gift(2047, 3));
                             gifts.Add(new Gift(2195, 1));
                             gifts.Add(new Gift(2117, 1));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 3:
                             gifts.Add(new Gift(2048, 3));
                             gifts.Add(new Gift(2195, 1));
                             gifts.Add(new Gift(1028, 1));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 4:
@@ -744,9 +729,9 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(1028, 1));
                             gifts.Add(new Gift(1029, 1));
                             gifts.Add(new Gift(2199, 1));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
                     }
+
                     break;
 
                 case 3124:
@@ -757,28 +742,24 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(2100, 4));
                             gifts.Add(new Gift(2102, 4));
                             gifts.Add(new Gift(2017, 10));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 1:
                             gifts.Add(new Gift(2042, 3));
                             gifts.Add(new Gift(2192, 1));
                             gifts.Add(new Gift(2189, 1));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 2:
                             gifts.Add(new Gift(2043, 3));
                             gifts.Add(new Gift(2196, 1));
                             gifts.Add(new Gift(2118, 1));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 3:
                             gifts.Add(new Gift(2044, 3));
                             gifts.Add(new Gift(2196, 1));
                             gifts.Add(new Gift(1028, 1));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 4:
@@ -787,9 +768,9 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(1028, 1));
                             gifts.Add(new Gift(1029, 1));
                             gifts.Add(new Gift(2200, 1));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
                     }
+
                     break;
 
                 case 3125:
@@ -799,19 +780,16 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(2034, 4));
                             gifts.Add(new Gift(2189, 2));
                             gifts.Add(new Gift(2205, 2));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 1:
                             gifts.Add(new Gift(2035, 4));
                             gifts.Add(new Gift(2105, 2));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 2:
                             gifts.Add(new Gift(2036, 4));
                             gifts.Add(new Gift(2193, 2));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 3:
@@ -821,7 +799,6 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(2226, 2));
                             gifts.Add(new Gift(1028, 2));
                             gifts.Add(new Gift(1029, 2));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 4:
@@ -830,9 +807,9 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(2034, 2));
                             gifts.Add(new Gift(2226, 2));
                             gifts.Add(new Gift(1030, 2));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
                     }
+
                     break;
 
                 case 3126:
@@ -842,19 +819,16 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(2038, 4));
                             gifts.Add(new Gift(2106, 2));
                             gifts.Add(new Gift(2206, 2));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 1:
                             gifts.Add(new Gift(2039, 4));
                             gifts.Add(new Gift(2109, 2));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 2:
                             gifts.Add(new Gift(2040, 4));
                             gifts.Add(new Gift(2194, 2));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 3:
@@ -864,7 +838,6 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(2231, 2));
                             gifts.Add(new Gift(1028, 2));
                             gifts.Add(new Gift(1029, 2));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 4:
@@ -873,9 +846,9 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(2231, 2));
                             gifts.Add(new Gift(2202, 1));
                             gifts.Add(new Gift(1030, 2));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
                     }
+
                     break;
 
                 case 3127:
@@ -884,19 +857,16 @@ namespace OpenNos.Handler
                         case 0:
                             gifts.Add(new Gift(2046, 4));
                             gifts.Add(new Gift(2207, 2));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 1:
                             gifts.Add(new Gift(2047, 4));
                             gifts.Add(new Gift(2117, 2));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 2:
                             gifts.Add(new Gift(2048, 4));
                             gifts.Add(new Gift(2195, 2));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 3:
@@ -905,7 +875,6 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(2199, 2));
                             gifts.Add(new Gift(1028, 2));
                             gifts.Add(new Gift(1029, 2));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 4:
@@ -913,9 +882,9 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(2195, 2));
                             gifts.Add(new Gift(2203, 1));
                             gifts.Add(new Gift(1030, 2));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
                     }
+
                     break;
 
                 case 3128:
@@ -925,19 +894,16 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(2042, 4));
                             gifts.Add(new Gift(2192, 2));
                             gifts.Add(new Gift(2208, 2));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 1:
                             gifts.Add(new Gift(2043, 4));
                             gifts.Add(new Gift(2118, 2));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 2:
                             gifts.Add(new Gift(2044, 4));
                             gifts.Add(new Gift(2196, 2));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 3:
@@ -946,7 +912,6 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(2200, 2));
                             gifts.Add(new Gift(1028, 2));
                             gifts.Add(new Gift(1029, 2));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 4:
@@ -954,9 +919,9 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(2196, 2));
                             gifts.Add(new Gift(2204, 1));
                             gifts.Add(new Gift(1030, 2));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
                     }
+
                     break;
 
                 // GM mini-game
@@ -967,19 +932,16 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(2042, 4));
                             gifts.Add(new Gift(2192, 2));
                             gifts.Add(new Gift(2208, 2));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 1:
                             gifts.Add(new Gift(2043, 4));
                             gifts.Add(new Gift(2118, 2));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 2:
                             gifts.Add(new Gift(2044, 4));
                             gifts.Add(new Gift(2196, 2));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 3:
@@ -988,7 +950,6 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(2200, 2));
                             gifts.Add(new Gift(1028, 2));
                             gifts.Add(new Gift(1029, 2));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 4:
@@ -996,9 +957,9 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(2196, 2));
                             gifts.Add(new Gift(2204, 1));
                             gifts.Add(new Gift(1030, 2));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
                     }
+
                     break;
 
                 case 3131:
@@ -1008,19 +969,16 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(2042, 4));
                             gifts.Add(new Gift(2192, 2));
                             gifts.Add(new Gift(2208, 2));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 1:
                             gifts.Add(new Gift(2043, 4));
                             gifts.Add(new Gift(2118, 2));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 2:
                             gifts.Add(new Gift(2044, 4));
                             gifts.Add(new Gift(2196, 2));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 3:
@@ -1029,7 +987,6 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(2200, 2));
                             gifts.Add(new Gift(1028, 2));
                             gifts.Add(new Gift(1029, 2));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
 
                         case 4:
@@ -1037,37 +994,50 @@ namespace OpenNos.Handler
                             gifts.Add(new Gift(2196, 2));
                             gifts.Add(new Gift(2204, 1));
                             gifts.Add(new Gift(1030, 2));
-                            gifts.Add(new Gift(1013, (byte)(point + 1)));
                             break;
                     }
+
                     break;
             }
+
             return gifts.OrderBy(s => rand.Next()).FirstOrDefault();
         }
 
-        private static int[] getMinilandMaxPoint(byte game)
+        private static int[] GetMinilandMaxPoint(byte game)
         {
+            int[] points;
             switch (game)
             {
                 case 0:
-                    return new[] { 999, 4999, 7999, 11999, 15999, 1000000 };
+                    points = new[] { 999, 4999, 7999, 11999, 15999, 1000000 };
+                    break;
 
                 case 1:
-                    return new[] { 999, 4999, 9999, 13999, 17999, 1000000 };
+                    points = new[] { 999, 4999, 9999, 13999, 17999, 1000000 };
+                    break;
 
                 case 2:
-                    return new[] { 999, 3999, 7999, 14999, 24999, 1000000 };
+                    points = new[] { 999, 3999, 7999, 14999, 24999, 1000000 };
+                    break;
 
                 case 3:
-                    return new[] { 999, 3999, 7999, 11999, 19999, 1000000 };
+                    points = new[] { 999, 3999, 7999, 11999, 19999, 1000000 };
+                    break;
 
                 case 4:
+                    points = new[] { 999, 4999, 7999, 11999, 15999, 1000000 };
+                    break;
+
                 case 5:
-                    return new[] { 999, 4999, 7999, 11999, 15999, 1000000 };
+                    points = new[] { 999, 4999, 7999, 11999, 15999, 1000000 };
+                    break;
 
                 default:
-                    return new[] { 999, 4999, 7999, 14999, 24999, 1000000 };
+                    points = new[] { 999, 4999, 7999, 14999, 24999, 1000000 };
+                    break;
             }
+
+            return points;
         }
 
         #endregion

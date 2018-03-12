@@ -1,35 +1,22 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-using OpenNos.Core;
+﻿using OpenNos.Core;
 using OpenNos.Core.Networking.Communication.Scs.Communication.EndPoints.Tcp;
 using OpenNos.Core.Networking.Communication.Scs.Server;
+using OpenNos.Domain;
 using System;
-using OpenNos.GameObject.Networking;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace OpenNos.GameObject
 {
-    public class NetworkManager<EncryptorT> : SessionManager where EncryptorT : CryptographyBase
+    public class NetworkManager<EncryptorT> : SessionManager
+        where EncryptorT : EncryptionBase
     {
         #region Members
 
-        private readonly EncryptorT _encryptor;
-        private readonly CryptographyBase _fallbackEncryptor;
-        private readonly IScsServer _server;
-        private IDictionary<string, DateTime> _connectionLog;
+        private IDictionary<string, DateTime> connectionLog;
+        private EncryptorT encryptor;
+        private EncryptionBase fallbackEncryptor;
+        private IScsServer server;
 
         #endregion
 
@@ -37,31 +24,37 @@ namespace OpenNos.GameObject
 
         public NetworkManager(string ipAddress, int port, Type packetHandler, Type fallbackEncryptor, bool isWorldServer) : base(packetHandler, isWorldServer)
         {
-            _encryptor = (EncryptorT)Activator.CreateInstance(typeof(EncryptorT));
+            encryptor = (EncryptorT)Activator.CreateInstance(typeof(EncryptorT));
 
             if (fallbackEncryptor != null)
             {
-                _fallbackEncryptor = (CryptographyBase)Activator.CreateInstance(fallbackEncryptor);
+                this.fallbackEncryptor = (EncryptionBase)Activator.CreateInstance(fallbackEncryptor); // reflection, TODO: optimize.
             }
 
-            _server = ScsServerFactory.CreateServer(new ScsTcpEndPoint(ipAddress, port));
+            server = ScsServerFactory.CreateServer(new ScsTcpEndPoint(ipAddress, port));
 
             // Register events of the server to be informed about clients
-            _server.ClientConnected += onServerClientConnected;
-            _server.ClientDisconnected += onServerClientDisconnected;
-            _server.WireProtocolFactory = new WireProtocolFactory<EncryptorT>();
+            server.ClientConnected += OnServerClientConnected;
+            server.ClientDisconnected += OnServerClientDisconnected;
+            server.WireProtocolFactory = new WireProtocolFactory<EncryptorT>();
 
             // Start the server
-            _server.Start();
+            server.Start();
 
-            Logger.Info(Language.Instance.GetMessageFromKey("STARTED"), memberName: "NetworkManager");
+            Logger.Log.Info(Language.Instance.GetMessageFromKey("STARTED"));
         }
 
         #endregion
 
         #region Properties
 
-        private IDictionary<string, DateTime> ConnectionLog => _connectionLog ?? (_connectionLog = new Dictionary<string, DateTime>());
+        private IDictionary<string, DateTime> ConnectionLog
+        {
+            get
+            {
+                return connectionLog ?? (connectionLog = new Dictionary<string, DateTime>());
+            }
+        }
 
         #endregion
 
@@ -69,44 +62,43 @@ namespace OpenNos.GameObject
 
         public override void StopServer()
         {
-            _server.Stop();
-            _server.ClientConnected -= onServerClientDisconnected;
-            _server.ClientDisconnected -= onServerClientConnected;
+            server.Stop();
+            server.ClientConnected -= OnServerClientDisconnected;
+            server.ClientDisconnected -= OnServerClientConnected;
         }
 
         protected override ClientSession IntializeNewSession(INetworkClient client)
         {
-            if (!checkGeneralLog(client))
+            if (!CheckGeneralLog(client))
             {
-                Logger.Warn(string.Format(Language.Instance.GetMessageFromKey("FORCED_DISCONNECT"), client.ClientId));
-                client.Initialize(_fallbackEncryptor);
-                client.SendPacket($"fail {Language.Instance.GetMessageFromKey("CONNECTION_LOST")}");
+                Logger.Log.WarnFormat(Language.Instance.GetMessageFromKey("FORCED_DISCONNECT"), client.ClientId);
+                client.Initialize(fallbackEncryptor);
+                client.SendPacket($"failc {(byte)LoginFailType.CantConnect}");
                 client.Disconnect();
                 return null;
             }
 
-            ClientSession session = new ClientSession(client);
-            session.Initialize(_encryptor, _packetHandler, IsWorldServer);
+            var session = new ClientSession(client);
+            session.Initialize(encryptor, _packetHandler, IsWorldServer);
 
             return session;
         }
 
-        private bool checkGeneralLog(INetworkClient client)
+        private bool CheckGeneralLog(INetworkClient client)
         {
-            if (!client.IpAddress.Contains("127.0.0.1") && ServerManager.Instance.ChannelId != 51)
+            if (!client.IpAddress.Contains("127.0.0.1"))
             {
-                if (ConnectionLog.Count > 0)
+                if (ConnectionLog.Any())
                 {
                     foreach (KeyValuePair<string, DateTime> item in ConnectionLog.Where(cl => cl.Key.Contains(client.IpAddress.Split(':')[1]) && (DateTime.Now - cl.Value).TotalSeconds > 3).ToList())
-                    {
                         ConnectionLog.Remove(item.Key);
-                    }
                 }
 
                 if (ConnectionLog.Any(c => c.Key.Contains(client.IpAddress.Split(':')[1])))
                 {
                     return false;
                 }
+
                 ConnectionLog.Add(client.IpAddress, DateTime.Now);
                 return true;
             }
@@ -114,9 +106,15 @@ namespace OpenNos.GameObject
             return true;
         }
 
-        private void onServerClientConnected(object sender, ServerClientEventArgs e) => AddSession(e.Client as NetworkClient);
+        private void OnServerClientConnected(object sender, ServerClientEventArgs e)
+        {
+            AddSession(e.Client as NetworkClient);
+        }
 
-        private void onServerClientDisconnected(object sender, ServerClientEventArgs e) => RemoveSession(e.Client as NetworkClient);
+        private void OnServerClientDisconnected(object sender, ServerClientEventArgs e)
+        {
+            RemoveSession(e.Client as NetworkClient);
+        }
 
         #endregion
     }

@@ -8,7 +8,10 @@ namespace OpenNos.DAL.EF.Migrations
 
         public override void Down() => DropColumn("dbo.Character", "MaxMateCount");
 
-        public override void Up() => AddColumn("dbo.Character", "MaxMateCount", c => c.Byte(nullable: false));
+        public override void Up()
+        {
+            AddColumn("dbo.Character", "MaxMateCount", c => c.Byte(nullable: false));
+        }
 
         #endregion
     }

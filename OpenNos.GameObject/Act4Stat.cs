@@ -6,12 +6,12 @@ namespace OpenNos.GameObject
     {
         #region Members
 
-        private DateTime _latestUpdate;
-        private DateTime _nextMonth;
+        private readonly DateTime nextMonth;
 
-        private int _percentage;
+        private DateTime latestUpdate;
+        private int percentage;
 
-        private short _totalTime;
+        private short totalTime;
 
         #endregion
 
@@ -19,16 +19,19 @@ namespace OpenNos.GameObject
 
         public Act4Stat()
         {
-            DateTime olddate = DateTime.Now.AddMonths(1);
-            _nextMonth = new DateTime(olddate.Year, olddate.Month, 1, 0, 0, 0, olddate.Kind);
-            _latestUpdate = DateTime.Now;
+            var olddate = DateTime.Now.AddMonths(1);
+            nextMonth = new DateTime(olddate.Year, olddate.Month, 1, 0, 0, 0, olddate.Kind);
+            latestUpdate = DateTime.Now;
         }
 
         #endregion
 
         #region Properties
 
-        public short CurrentTime => Mode == 0 ? (short)0 : (short)(_latestUpdate.AddSeconds(_totalTime) - DateTime.Now).TotalSeconds;
+        public short CurrentTime
+        {
+            get { return Mode == 0 ? (short)0 : (short)(latestUpdate.AddSeconds(totalTime) - DateTime.Now).TotalSeconds; }
+        }
 
         public bool IsBerios { get; set; }
 
@@ -38,23 +41,23 @@ namespace OpenNos.GameObject
 
         public bool IsMorcos { get; set; }
 
-        public int MinutesUntilReset => (int)(_nextMonth - DateTime.Now).TotalMinutes;
+        public int MinutesUntilReset => (int)(nextMonth - DateTime.Now).TotalMinutes;
 
         public byte Mode { get; set; }
 
         public int Percentage
         {
-            get => Mode == 0 ? _percentage : 0;
-            set => _percentage = value;
+            get { return Mode == 0 ? percentage : 0; }
+            set { percentage = value; }
         }
 
         public short TotalTime
         {
-            get => Mode == 0 ? (short)0 : _totalTime;
+            get { return Mode == 0 ? (short)0 : totalTime; }
             set
             {
-                _latestUpdate = DateTime.Now;
-                _totalTime = value;
+                latestUpdate = DateTime.Now;
+                totalTime = value;
             }
         }
 

@@ -1,23 +1,9 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-using OpenNos.Core.Networking.Communication.Scs.Communication;
+﻿using OpenNos.Core.Networking.Communication.Scs.Communication;
 using OpenNos.Core.Networking.Communication.Scs.Communication.Channels;
 using OpenNos.Core.Networking.Communication.Scs.Communication.Messages;
 using OpenNos.Core.Networking.Communication.Scs.Communication.Protocols;
-using OpenNos.Core.Threading;
 using System;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 
 namespace OpenNos.Core.Networking.Communication.Scs.Client
@@ -32,21 +18,21 @@ namespace OpenNos.Core.Networking.Communication.Scs.Client
         /// <summary>
         /// Default timeout value for connecting a server.
         /// </summary>
-        private const int DEFAULTTIMEOUT = 15000;
-
-        /// <summary>
-        /// This timer is used to send PingMessage messages to server periodically.
-        /// </summary>
-        private readonly Timer _pingTimer;
+        private const int DEFAULT_CONNECTION_ATTEMPT_TIMEOUT = 15000;
 
         /// <summary>
         /// The communication channel that is used by client to send and receive messages.
         /// </summary>
-        private ICommunicationChannel _communicationChannel;
+        private ICommunicationChannel communicationChannel;
 
-        private bool _disposed;
+        private bool disposed;
 
-        private IScsWireProtocol _wireProtocol;
+        /// <summary>
+        /// This timer is used to send PingMessage messages to server periodically.
+        /// </summary>
+        private IDisposable pingTimer;
+
+        private IScsWireProtocol wireProtocol;
 
         #endregion
 
@@ -57,9 +43,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Client
         /// </summary>
         protected ScsClientBase()
         {
-            _pingTimer = new Timer(30000);
-            _pingTimer.Elapsed += PingTimer_Elapsed;
-            ConnectTimeout = DEFAULTTIMEOUT;
+            ConnectTimeout = DEFAULT_CONNECTION_ATTEMPT_TIMEOUT;
             WireProtocol = WireProtocolManager.GetDefaultWireProtocol();
         }
 
@@ -92,15 +76,18 @@ namespace OpenNos.Core.Networking.Communication.Scs.Client
 
         #region Properties
 
-        /// <inheritdoc/>
-        public ICommunicationChannel CommunicationChannel => _communicationChannel;
-
         /// <summary>
         /// Gets the communication state of the Client.
         /// </summary>
-        public CommunicationStates CommunicationState => _communicationChannel != null
-                           ? _communicationChannel.CommunicationState
+        public CommunicationStates CommunicationState
+        {
+            get
+            {
+                return communicationChannel != null
+                           ? communicationChannel.CommunicationState
                            : CommunicationStates.Disconnected;
+            }
+        }
 
         /// <summary>
         /// Timeout for connecting to a server (as milliseconds). Default value: 15 seconds (15000 ms).
@@ -110,23 +97,38 @@ namespace OpenNos.Core.Networking.Communication.Scs.Client
         /// <summary>
         /// Gets the time of the last succesfully received message.
         /// </summary>
-        public DateTime LastReceivedMessageTime => _communicationChannel != null
-                           ? _communicationChannel.LastReceivedMessageTime
+        public DateTime LastReceivedMessageTime
+        {
+            get
+            {
+                return communicationChannel != null
+                           ? communicationChannel.LastReceivedMessageTime
                            : DateTime.MinValue;
+            }
+        }
 
         /// <summary>
         /// Gets the time of the last succesfully received message.
         /// </summary>
-        public DateTime LastSentMessageTime => _communicationChannel != null
-                           ? _communicationChannel.LastSentMessageTime
+        public DateTime LastSentMessageTime
+        {
+            get
+            {
+                return communicationChannel != null
+                           ? communicationChannel.LastSentMessageTime
                            : DateTime.MinValue;
+            }
+        }
 
         /// <summary>
         /// Gets/sets wire protocol that is used while reading and writing messages.
         /// </summary>
         public IScsWireProtocol WireProtocol
         {
-            get => _wireProtocol;
+            get
+            {
+                return wireProtocol;
+            }
 
             set
             {
@@ -135,7 +137,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Client
                     throw new ApplicationException("Wire protocol can not be changed while connected to server.");
                 }
 
-                _wireProtocol = value;
+                wireProtocol = value;
             }
         }
 
@@ -143,7 +145,10 @@ namespace OpenNos.Core.Networking.Communication.Scs.Client
 
         #region Methods
 
-        public async Task ClearLowPriorityQueueAsync() => await _communicationChannel.ClearLowPriorityQueueAsync().ConfigureAwait(false);
+        public async Task ClearLowPriorityQueue()
+        {
+            await communicationChannel.ClearLowPriorityQueue();
+        }
 
         /// <summary>
         /// Connects to server.
@@ -151,13 +156,19 @@ namespace OpenNos.Core.Networking.Communication.Scs.Client
         public void Connect()
         {
             WireProtocol.Reset();
-            _communicationChannel = CreateCommunicationChannel();
-            _communicationChannel.WireProtocol = WireProtocol;
-            _communicationChannel.Disconnected += CommunicationChannel_Disconnected;
-            _communicationChannel.MessageReceived += CommunicationChannel_MessageReceived;
-            _communicationChannel.MessageSent += CommunicationChannel_MessageSent;
-            _communicationChannel.Start();
-            _pingTimer.Start();
+            communicationChannel = CreateCommunicationChannel();
+            communicationChannel.WireProtocol = WireProtocol;
+            communicationChannel.Disconnected += CommunicationChannel_Disconnected;
+            communicationChannel.MessageReceived += CommunicationChannel_MessageReceived;
+            communicationChannel.MessageSent += CommunicationChannel_MessageSent;
+            communicationChannel.Start();
+            pingTimer = Observable
+            .Interval(TimeSpan.FromSeconds(30))
+            .Subscribe(
+                x =>
+                {
+                    PingTimer_Elapsed();
+                });
             OnConnected();
         }
 
@@ -171,7 +182,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Client
                 return;
             }
 
-            _communicationChannel.Disconnect();
+            communicationChannel.Disconnect();
         }
 
         /// <summary>
@@ -179,11 +190,11 @@ namespace OpenNos.Core.Networking.Communication.Scs.Client
         /// </summary>
         public void Dispose()
         {
-            if (!_disposed)
+            if (!disposed)
             {
                 Dispose(true);
                 GC.SuppressFinalize(this);
-                _disposed = true;
+                disposed = true;
             }
         }
 
@@ -191,7 +202,6 @@ namespace OpenNos.Core.Networking.Communication.Scs.Client
         /// Sends a message to the server.
         /// </summary>
         /// <param name="message">Message to be sent</param>
-        /// <param name="priority">Priority of message to send</param>
         /// <exception cref="CommunicationStateException">
         /// Throws a CommunicationStateException if client is not connected to the server.
         /// </exception>
@@ -202,7 +212,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Client
                 throw new CommunicationStateException("Client is not connected to the server.");
             }
 
-            _communicationChannel.SendMessage(message, priority);
+            communicationChannel.SendMessage(message, priority);
         }
 
         /// <summary>
@@ -216,7 +226,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Client
             if (disposing)
             {
                 Disconnect();
-                _pingTimer.Dispose();
+                pingTimer.Dispose();
             }
         }
 
@@ -234,13 +244,19 @@ namespace OpenNos.Core.Networking.Communication.Scs.Client
         /// Raises MessageReceived event.
         /// </summary>
         /// <param name="message">Received message</param>
-        protected virtual void OnMessageReceived(IScsMessage message) => MessageReceived?.Invoke(this, new MessageEventArgs(message, DateTime.Now));
+        protected virtual void OnMessageReceived(IScsMessage message)
+        {
+            MessageReceived?.Invoke(this, new MessageEventArgs(message, DateTime.Now));
+        }
 
         /// <summary>
         /// Raises MessageSent event.
         /// </summary>
         /// <param name="message">Received message</param>
-        protected virtual void OnMessageSent(IScsMessage message) => MessageSent?.Invoke(this, new MessageEventArgs(message, DateTime.Now));
+        protected virtual void OnMessageSent(IScsMessage message)
+        {
+            MessageSent?.Invoke(this, new MessageEventArgs(message, DateTime.Now));
+        }
 
         /// <summary>
         /// Handles Disconnected event of _communicationChannel object.
@@ -249,7 +265,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Client
         /// <param name="e">Event arguments</param>
         private void CommunicationChannel_Disconnected(object sender, EventArgs e)
         {
-            _pingTimer.Stop();
+            pingTimer.Dispose();
             OnDisconnected();
         }
 
@@ -273,14 +289,17 @@ namespace OpenNos.Core.Networking.Communication.Scs.Client
         /// </summary>
         /// <param name="sender">Source of event</param>
         /// <param name="e">Event arguments</param>
-        private void CommunicationChannel_MessageSent(object sender, MessageEventArgs e) => OnMessageSent(e.Message);
+        private void CommunicationChannel_MessageSent(object sender, MessageEventArgs e)
+        {
+            OnMessageSent(e.Message);
+        }
 
         /// <summary>
         /// Handles Elapsed event of _pingTimer to send PingMessage messages to server.
         /// </summary>
         /// <param name="sender">Source of event</param>
         /// <param name="e">Event arguments</param>
-        private void PingTimer_Elapsed(object sender, EventArgs e)
+        private void PingTimer_Elapsed()
         {
             if (CommunicationState != CommunicationStates.Connected)
             {
@@ -289,17 +308,16 @@ namespace OpenNos.Core.Networking.Communication.Scs.Client
 
             try
             {
-                DateTime lastMinute = DateTime.Now.AddMinutes(-1);
-                if (_communicationChannel.LastReceivedMessageTime > lastMinute || _communicationChannel.LastSentMessageTime > lastMinute)
+                var lastMinute = DateTime.Now.AddMinutes(-1);
+                if (communicationChannel.LastReceivedMessageTime > lastMinute || communicationChannel.LastSentMessageTime > lastMinute)
                 {
                     return;
                 }
 
-                _communicationChannel.SendMessage(new ScsPingMessage(), 10);
+                communicationChannel.SendMessage(new ScsPingMessage(), 10);
             }
-            catch (Exception)
+            catch
             {
-                // do nothing
             }
         }
 

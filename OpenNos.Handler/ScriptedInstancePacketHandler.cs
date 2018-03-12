@@ -1,15 +1,14 @@
-﻿using OpenNos.Core;
+﻿using CloneExtensions;
+using OpenNos.Core;
 using OpenNos.Domain;
 using OpenNos.GameObject;
 using OpenNos.GameObject.Helpers;
 using OpenNos.GameObject.Packets.ServerPackets;
-using OpenNos.GameObject.Networking;
 using System;
-using System.Linq;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reactive.Linq;
-using OpenNos.Core.Extensions;
 
 namespace OpenNos.Handler
 {
@@ -17,7 +16,10 @@ namespace OpenNos.Handler
     {
         #region Instantiation
 
-        public ScriptedInstancePacketHandler(ClientSession session) => Session = session;
+        public ScriptedInstancePacketHandler(ClientSession session)
+        {
+            Session = session;
+        }
 
         #endregion
 
@@ -44,7 +46,7 @@ namespace OpenNos.Handler
                         }
                     }
 
-                    Session.Character.LeaveTalentArena();
+                    Session.Character.LeaveTalentArena(true);
                     break;
             }
         }
@@ -52,93 +54,157 @@ namespace OpenNos.Handler
         public void Call(TaCallPacket packet)
         {
             ConcurrentBag<ArenaTeamMember> arenateam = ServerManager.Instance.ArenaTeams.FirstOrDefault(s => s.Any(o => o.Session == Session));
-            if (arenateam != null && Session.CurrentMapInstance.MapInstanceType == MapInstanceType.TalentArenaMapInstance)
+            if (arenateam == null || Session.CurrentMapInstance.MapInstanceType != MapInstanceType.TalentArenaMapInstance)
             {
-                IEnumerable<ArenaTeamMember> ownteam = arenateam.Where(s => s.ArenaTeamType == arenateam?.FirstOrDefault(e => e.Session == Session)?.ArenaTeamType);
-                ClientSession client = ownteam.Where(s => s.Session != Session).OrderBy(s => s.Order).Skip(packet.CalledIndex).FirstOrDefault().Session;
-                ArenaTeamMember memb = arenateam.FirstOrDefault(s => s.Session == client);
-                if (client != null && client.CurrentMapInstance == Session.CurrentMapInstance && memb != null && memb.LastSummoned == null && ownteam.Sum(s => s.SummonCount) < 5)
-                {
-                    memb.SummonCount++;
-                    arenateam.ToList().ForEach(arenauser => { arenauser.Session.SendPacket(UserInterfaceHelper.Instance.GenerateTaP(2, arenateam, arenauser.ArenaTeamType, true)); });
-                    arenateam.FirstOrDefault(s => s.Session == client).LastSummoned = DateTime.Now;
-                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId, 4432));
-                    for (int i = 0; i < 3; i++)
-                    {
-                        Observable.Timer(TimeSpan.FromSeconds(i)).Subscribe(o =>
-                        {
-                            client.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("ARENA_CALLED"), 3 - i), 0));
-                            client.SendPacket(client.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("ARENA_CALLED"), 3 - i), 10));
-                        });
-                    }
-                    short X = Session.Character.PositionX;
-                    short Y = Session.Character.PositionY;
-                    byte timer = 30;
-                    Observable.Timer(TimeSpan.FromSeconds(3)).Subscribe(o =>
-                    {
-
-                        Session.CurrentMapInstance.Broadcast($"ta_t 0 {client.Character.CharacterId} {timer}");
-                        client.Character.PositionX = X;
-                        client.Character.PositionY = Y;
-                        Session.CurrentMapInstance.Broadcast(client.Character.GenerateTp());
-
-
-                        client.SendPacket(UserInterfaceHelper.Instance.GenerateTaSt(TalentArenaOptionType.Nothing));
-                    });
-
-                    Observable.Timer(TimeSpan.FromSeconds(timer + 3)).Subscribe(o =>
-                    {
-                        DateTime? lastsummoned = arenateam.FirstOrDefault(s => s.Session == client).LastSummoned;
-                          if (lastsummoned != null && ((DateTime)lastsummoned).AddSeconds(timer) < DateTime.Now)
-                      {
-                            arenateam.FirstOrDefault(s => s.Session == client).LastSummoned = null;
-                            client.Character.PositionX = memb.ArenaTeamType == ArenaTeamType.ERENIA ? (short)120 : (short)19;
-                            client.Character.PositionY = memb.ArenaTeamType == ArenaTeamType.ERENIA ? (short)39 : (short)40;
-                            Session?.CurrentMapInstance.Broadcast(client.Character.GenerateTp());
-                            client.SendPacket(UserInterfaceHelper.Instance.GenerateTaSt(TalentArenaOptionType.Watch));
-                      }
-                    });
-                }
+                return;
             }
+
+            IEnumerable<ArenaTeamMember> ownteam = arenateam.Replace(s => s.ArenaTeamType == arenateam?.FirstOrDefault(e => e.Session == Session)?.ArenaTeamType);
+            var client = ownteam.Where(s => s.Session != Session).OrderBy(s => s.Order).Skip(packet.CalledIndex).FirstOrDefault()?.Session;
+            var memb = arenateam.FirstOrDefault(s => s.Session == client);
+            if (client == null || client.CurrentMapInstance != Session.CurrentMapInstance || memb == null || memb.LastSummoned != null || ownteam.Sum(s => s.SummonCount) >= 5)
+            {
+                return;
+            }
+
+            memb.SummonCount++;
+            arenateam.ToList().ForEach(arenauser => { arenauser.Session.SendPacket(arenauser.Session.Character.GenerateTaP(2, true)); });
+            var arenaTeamMember = arenateam.FirstOrDefault(s => s.Session == client);
+            if (arenaTeamMember != null)
+            {
+                arenaTeamMember.LastSummoned = DateTime.Now;
+            }
+
+            Session.CurrentMapInstance.Broadcast(Session.Character.GenerateEff(4432));
+            for (int i = 0; i < 3; i++)
+            {
+                Observable.Timer(TimeSpan.FromSeconds(i)).Subscribe(o =>
+                {
+                    client.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("ARENA_CALLED"), 3 - i), 0));
+                    client.SendPacket(client.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("ARENA_CALLED"), 3 - i), 10));
+                });
+            }
+
+            var x = Session.Character.PositionX;
+            var y = Session.Character.PositionY;
+            const byte TIMER = 30;
+            Observable.Timer(TimeSpan.FromSeconds(3)).Subscribe(o =>
+            {
+                Session.CurrentMapInstance.Broadcast($"ta_t 0 {client.Character.CharacterId} {TIMER}");
+                client.Character.PositionX = x;
+                client.Character.PositionY = y;
+                Session.CurrentMapInstance.Broadcast(client.Character.GenerateTp());
+
+                client.SendPacket(UserInterfaceHelper.Instance.GenerateTaSt(TalentArenaOptionType.Nothing));
+            });
+
+            Observable.Timer(TimeSpan.FromSeconds(TIMER + 3)).Subscribe(o =>
+            {
+                DateTime? lastsummoned = arenateam.FirstOrDefault(s => s.Session == client)?.LastSummoned;
+                if (lastsummoned == null || ((DateTime)lastsummoned).AddSeconds(TIMER) >= DateTime.Now)
+                {
+                    return;
+                }
+
+                var firstOrDefault = arenateam.FirstOrDefault(s => s.Session == client);
+                if (firstOrDefault != null)
+                {
+                    firstOrDefault.LastSummoned = null;
+                }
+
+                client.Character.PositionX = memb.ArenaTeamType == ArenaTeamType.ERENIA ? (short)120 : (short)19;
+                client.Character.PositionY = memb.ArenaTeamType == ArenaTeamType.ERENIA ? (short)39 : (short)40;
+                Session?.CurrentMapInstance.Broadcast(client.Character.GenerateTp());
+                client.SendPacket(UserInterfaceHelper.Instance.GenerateTaSt(TalentArenaOptionType.Watch));
+            });
         }
 
         /// <summary>
         /// RSelPacket packet
         /// </summary>
-        /// <param name="escapePacket"></param>
-        public void Escape(EscapePacket escapePacket)
+        /// <param name="packet"></param>
+        public void Escape(EscapePacket packet)
         {
-            if (Session.CurrentMapInstance.MapInstanceType == MapInstanceType.TimeSpaceInstance)
+            switch (Session.CurrentMapInstance.MapInstanceType)
             {
-                ServerManager.Instance.ChangeMap(Session.Character.CharacterId, Session.Character.MapId, Session.Character.MapX, Session.Character.MapY);
-                Session.Character.Timespace = null;
-            }
+                case MapInstanceType.TimeSpaceInstance:
+                    ServerManager.Instance.ChangeMap(Session.Character.CharacterId, Session.Character.MapId, Session.Character.MapX, Session.Character.MapY);
+                    break;
 
-            else if (Session.CurrentMapInstance.MapInstanceType == MapInstanceType.TalentArenaMapInstance)
-           {
-                ServerManager.Instance.TeleportOnRandomPlaceInMap(Session, ServerManager.Instance.ArenaInstance.MapInstanceId);
-           }
+                case MapInstanceType.TalentArenaMapInstance:
+                    ServerManager.Instance.TeleportOnRandomPlaceInMap(Session, ServerManager.Instance.ArenaInstance.MapInstanceId);
+                    break;
 
-            else if (Session.CurrentMapInstance.MapInstanceType == MapInstanceType.RaidInstance)
-            {
-                ServerManager.Instance.ChangeMap(Session.Character.CharacterId, Session.Character.MapId, Session.Character.MapX, Session.Character.MapY);
-                Session.Character.Group?.Characters.ForEach(
-                session => session.SendPacket(session.Character.Group.GenerateRdlst()));
-                Session.SendPacket(Session.Character.GenerateRaid(1, true));
-                Session.SendPacket(Session.Character.GenerateRaid(2, true));
-                Session.Character.Group?.LeaveGroup(Session);
+                case MapInstanceType.RaidInstance:
+                    ServerManager.Instance.ChangeMap(Session.Character.CharacterId, Session.Character.MapId, Session.Character.MapX, Session.Character.MapY);
+                    Session.Character.Group?.Characters.ToList().ForEach(
+                        session =>
+                        {
+                            session.SendPacket(session.Character.Group.GenerateRdlst());
+                        });
+                    Session.SendPacket(Session.Character.GenerateRaid(1, true));
+                    Session.SendPacket(Session.Character.GenerateRaid(2, true));
+                    Session.Character.Group?.LeaveGroup(Session);
+                    break;
             }
         }
 
         /// <summary>
         /// mkraid packet
         /// </summary>
-        /// <param name="mkRaidPacket"></param>
-        public void GenerateRaid(MkRaidPacket mkRaidPacket)
+        /// <param name="packet"></param>
+        public void GenerateRaid(MkraidPacket packet)
         {
+            /*if (Session.Character == null || Session.Character.Group == null || Session.Character.Group.Raid == null || !Session.Character.Group.IsLeader(Session))
+            {
+                return;
+            }
+
+            if (Session.Character.Group.CharacterCount >= 1)
+            {
+                if (Session.Character.Group.Raid.FirstMap == null)
+                {
+                    Session.Character.Group.Raid.LoadScript(MapInstanceType.RaidInstance);
+                }
+
+                if (Session.Character.Group.Raid.FirstMap == null)
+                {
+                    return;
+                }
+
+                Session.Character.Group.Raid.FirstMap.InstanceBag.Lock = true;
+                if (ServerManager.Instance.GroupList.Any(s => s.GroupId == Session.Character.Group.GroupId))
+                {
+                    ServerManager.Instance.GroupList.Remove(Session.Character.Group);
+                }
+
+                Session.Character.Group.Characters.Replace(s => s.CurrentMapInstance.MapInstanceId != Session.CurrentMapInstance.MapInstanceId).ToList().ForEach(session =>
+                {
+                    Session.Character.Group.LeaveGroup(session);
+                    session.SendPacket(session.Character.GenerateRaid(1, true));
+                    session.SendPacket(session.Character.GenerateRaid(2, true));
+                });
+
+                Session.Character.Group.Raid.FirstMap.InstanceBag.Lives = (short)Session.Character.Group.CharacterCount;
+                Session.Character.Group.Characters.ToList().ForEach(session =>
+                {
+                    ServerManager.Instance.ChangeMapInstance(session.Character.CharacterId, session.Character.Group.Raid.FirstMap.MapInstanceId, session.Character.Group.Raid.StartX,
+                        session.Character.Group.Raid.StartY);
+                    session.SendPacket("raidbf 0 0 25");
+                    session.SendPacket(session.Character.Group.GeneraterRaidmbf());
+                    session.SendPacket(session.Character.GenerateRaid(5, false));
+                    session.SendPacket(session.Character.GenerateRaid(4, false));
+                    session.SendPacket(session.Character.GenerateRaid(3, false));
+                });
+            }
+            else
+            {
+                Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg("RAID_TEAM_NOT_READY", 0));
+            }*/
+
             if (Session.Character.Group?.Raid != null && Session.Character.Group.IsLeader(Session))
             {
-                if (Session.Character.Group.CharacterCount > 4 && Session.Character.Group.Characters.All(s => s.CurrentMapInstance.Portals.Any(p => p.Type == (short)PortalType.Raid)))
+                if (Session.Character.Group.CharacterCount > 0 && Session.Character.Group.Characters.All(s => s.CurrentMapInstance.Portals.Any(p => p.Type == (short)PortalType.Raid)))
                 {
                     if (Session.Character.Group.Raid.FirstMap == null)
                     {
@@ -161,26 +227,24 @@ namespace OpenNos.Handler
 
                     Session.Character.Group.Raid.InstanceBag.Lives = (short)Session.Character.Group.CharacterCount;
 
-                    foreach (ClientSession session in Session.Character.Group.Characters.GetAllItems())
+                    Session.Character.Group.Characters.ToList().ForEach(session =>
                     {
                         if (session != null)
                         {
                             ServerManager.Instance.ChangeMapInstance(session.Character.CharacterId, session.Character.Group.Raid.FirstMap.MapInstanceId, session.Character.Group.Raid.StartX, session.Character.Group.Raid.StartY);
                             session.SendPacket("raidbf 0 0 25");
-                            session.SendPacket(session.Character.Group.GeneraterRaidmbf(session));
+                            session.SendPacket(session.Character.Group.GeneraterRaidmbf());
                             session.SendPacket(session.Character.GenerateRaid(5, false));
                             session.SendPacket(session.Character.GenerateRaid(4, false));
                             session.SendPacket(session.Character.GenerateRaid(3, false));
                         }
-                    }
+                    });
 
                     ServerManager.Instance.GroupList.Remove(Session.Character.Group);
-
-                    Logger.LogUserEvent("RAID_START", Session.GenerateIdentity(), $"RaidId: {Session.Character.Group.GroupId}");
                 }
                 else
                 {
-                    Session.SendPacket(UserInterfaceHelper.GenerateMsg("RAID_TEAM_NOT_READY", 0));
+                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg("RAID_TEAM_NOT_READY", 0));
                 }
             }
         }
@@ -188,51 +252,56 @@ namespace OpenNos.Handler
         /// <summary>
         /// RSelPacket packet
         /// </summary>
-        /// <param name="rSelPacket"></param>
-        public void GetGift(RSelPacket rSelPacket)
+        /// <param name="packet"></param>
+        public void GetGift(RSelPacket packet)
         {
-            if (Session.Character.Timespace?.FirstMap?.MapInstanceType == MapInstanceType.TimeSpaceInstance)
+            if (Session.CurrentMapInstance.MapInstanceType != MapInstanceType.TimeSpaceInstance)
             {
-                Guid mapInstanceId = ServerManager.GetBaseMapInstanceIdByMapId(Session.Character.MapId);
-                if (Session.Character.Timespace?.FirstMap.InstanceBag.EndState == 5)
+                return;
+            }
+
+            var mapInstanceId = ServerManager.Instance.GetBaseMapInstanceIdByMapId(Session.Character.MapId);
+            var map = ServerManager.Instance.GetMapInstance(mapInstanceId);
+            var si = map.ScriptedInstances.FirstOrDefault(s => s.PositionX == Session.Character.MapX && s.PositionY == Session.Character.MapY);
+            if (si == null || map.InstanceBag.EndState != 5)
+            {
+                return;
+            }
+
+            Session.Character.GetReput(si.Reputation);
+
+            Session.Character.Gold = Session.Character.Gold + si.Gold > ServerManager.Instance.MaxGold ? ServerManager.Instance.MaxGold : Session.Character.Gold + si.Gold;
+            Session.SendPacket(Session.Character.GenerateGold());
+            Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("GOLD_TS_END"), si.Gold), 10));
+
+            var rand = new Random().Next(si.DrawItems.Count);
+            var repay = "repay ";
+            Session.Character.GiftAdd(si.DrawItems[rand].VNum, si.DrawItems[rand].Amount);
+
+            for (int i = 0; i < 3; i++)
+            {
+                var gift = si.GiftItems.ElementAtOrDefault(i);
+                repay += gift == null ? "-1.0.0 " : $"{gift.VNum}.0.{gift.Amount} ";
+                if (gift != null)
                 {
-                    Session.Character.SetReputation(Session.Character.Timespace.Reputation);
-
-                    Session.Character.Gold = Session.Character.Gold + Session.Character.Timespace.Gold > ServerManager.Instance.Configuration.MaxGold ? ServerManager.Instance.Configuration.MaxGold : Session.Character.Gold + Session.Character.Timespace.Gold;
-                    Session.SendPacket(Session.Character.GenerateGold());
-                    Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("GOLD_TS_END"), Session.Character.Timespace.Gold), 10));
-
-                    int rand = new Random().Next(Session.Character.Timespace.DrawItems.Count);
-                    string repay = "repay ";
-                    Session.Character.GiftAdd(Session.Character.Timespace.DrawItems[rand].VNum, Session.Character.Timespace.DrawItems[rand].Amount);
-
-                    for (int i = 0; i < 3; i++)
-                    {
-                        Gift gift = Session.Character.Timespace.GiftItems.ElementAtOrDefault(i);
-                        repay += gift == null ? "-1.0.0 " : $"{gift.VNum}.0.{gift.Amount} ";
-                        if (gift != null)
-                        {
-                            Session.Character.GiftAdd(gift.VNum, gift.Amount);
-                        }
-                    }
-
-                    // TODO: Add HasAlreadyDone
-                    for (int i = 0; i < 2; i++)
-                    {
-                        Gift gift = Session.Character.Timespace.SpecialItems.ElementAtOrDefault(i);
-                        repay += gift == null ? "-1.0.0 " : $"{gift.VNum}.0.{gift.Amount} ";
-                        if (gift != null)
-                        {
-                            Session.Character.GiftAdd(gift.VNum, gift.Amount);
-                        }
-                    }
-
-                    repay += $"{Session.Character.Timespace.DrawItems[rand].VNum}.0.{Session.Character.Timespace.DrawItems[rand].Amount}";
-                    Session.SendPacket(repay);
-                    Session.Character.Timespace.FirstMap.InstanceBag.EndState = 6;
-                    Session.Character.Timespace = null;
+                    Session.Character.GiftAdd(gift.VNum, gift.Amount);
                 }
             }
+
+            // TODO: Add HasAlreadyDone
+            for (int i = 0; i < 2; i++)
+            {
+                var gift = si.SpecialItems.ElementAtOrDefault(i);
+                repay += gift == null ? "-1.0.0 " : $"{gift.VNum}.0.{gift.Amount} ";
+                if (gift != null)
+                {
+                    Session.Character.GiftAdd(gift.VNum, gift.Amount);
+                }
+            }
+
+            repay += $"{si.DrawItems[rand].VNum}.0.{si.DrawItems[rand].Amount}";
+            Session.SendPacket(repay);
+            map.InstanceBag.EndState = 6;
         }
 
         /// <summary>
@@ -241,53 +310,50 @@ namespace OpenNos.Handler
         /// <param name="treqPacket"></param>
         public void GetTreq(TreqPacket treqPacket)
         {
-            ScriptedInstance timespace = Session.CurrentMapInstance.ScriptedInstances.Find(s => treqPacket.X == s.PositionX && treqPacket.Y == s.PositionY).Copy();
+            var timespace = Session.CurrentMapInstance.ScriptedInstances.FirstOrDefault(s => treqPacket.X == s.PositionX && treqPacket.Y == s.PositionY).GetClone();
 
-            if (timespace != null)
-            {
-                if (treqPacket.StartPress == 1 || treqPacket.RecordPress == 1)
-                {
-                    enterInstance(timespace);
-                }
-                else
-                {
-                    Session.SendPacket(timespace.GenerateRbr());
-                }
-            }
-        }
-
-        private void enterInstance(ScriptedInstance instance)
-        {
-            instance.LoadScript(MapInstanceType.TimeSpaceInstance);
-            if (instance.FirstMap == null)
+            if (timespace == null)
             {
                 return;
             }
 
-            foreach (Gift gift in instance.RequiredItems)
+            if (treqPacket.StartPress == 1 || treqPacket.RecordPress == 1)
             {
-                if (Session.Character.Inventory.CountItem(gift.VNum) < gift.Amount)
+                timespace.LoadScript(MapInstanceType.TimeSpaceInstance);
+                if (timespace.FirstMap == null)
                 {
-                    Session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_REQUIERED_ITEM"), ServerManager.GetItem(gift.VNum).Name), 0));
                     return;
                 }
-                Session.Character.Inventory.RemoveItemAmount(gift.VNum, gift.Amount);
+
+                foreach (Gift i in timespace.RequiredItems)
+                {
+                    if (Session.Character.Inventory.CountItem(i.VNum) < i.Amount)
+                    {
+                        Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("NOT_ENOUGH_REQUIERED_ITEM"), ServerManager.Instance.GetItem(i.VNum).Name), 0));
+                        return;
+                    }
+
+                    Session.Character.Inventory.RemoveItemAmount(i.VNum, i.Amount);
+                }
+
+                if (timespace.LevelMinimum > Session.Character.Level)
+                {
+                    Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_REQUIERED_LEVEL"), 0));
+                    return;
+                }
+
+                Session.Character.MapX = timespace.PositionX;
+                Session.Character.MapY = timespace.PositionY;
+                ServerManager.Instance.TeleportOnRandomPlaceInMap(Session, timespace.FirstMap.MapInstanceId);
+                timespace.FirstMap.InstanceBag.Creator = Session.Character.CharacterId;
+                Session.SendPackets(timespace.GenerateMinimap());
+                Session.SendPacket(timespace.GenerateMainInfo());
+                Session.SendPacket(timespace.FirstMap.InstanceBag.GenerateScore());
             }
-            if (instance.LevelMinimum > Session.Character.Level)
+            else
             {
-                Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_REQUIERED_LEVEL"), 0));
-                return;
+                Session.SendPacket(timespace.GenerateRbr());
             }
-
-            Session.Character.MapX = instance.PositionX;
-            Session.Character.MapY = instance.PositionY;
-            ServerManager.Instance.TeleportOnRandomPlaceInMap(Session, instance.FirstMap.MapInstanceId);
-            instance.InstanceBag.Creator = Session.Character.CharacterId;
-            Session.SendPackets(instance.GenerateMinimap());
-            Session.SendPacket(instance.GenerateMainInfo());
-            Session.SendPacket(instance.FirstMap.InstanceBag.GenerateScore());
-
-            Session.Character.Timespace = instance;
         }
 
         /// <summary>
@@ -298,61 +364,56 @@ namespace OpenNos.Handler
         {
             foreach (ScriptedInstance portal in Session.CurrentMapInstance.ScriptedInstances)
             {
-                if (Session.Character.PositionY >= portal.PositionY - 1 && Session.Character.PositionY <= portal.PositionY + 1
-                    && Session.Character.PositionX >= portal.PositionX - 1 && Session.Character.PositionX <= portal.PositionX + 1)
+                if (Session.Character.PositionY < portal.PositionY - 1 || Session.Character.PositionY > portal.PositionY + 1 || Session.Character.PositionX < portal.PositionX - 1 ||
+                    Session.Character.PositionX > portal.PositionX + 1)
                 {
-                    switch (packet.Value)
-                    {
-                        case 0:
-                            if (Session.Character.Group?.Characters.Any(s => !s.CurrentMapInstance.InstanceBag.Lock && s.CurrentMapInstance.MapInstanceType == MapInstanceType.TimeSpaceInstance && s.Character.MapId == portal.MapId && s.Character.CharacterId != Session.Character.CharacterId && s.Character.MapX == portal.PositionX && s.Character.MapY == portal.PositionY) == true)
-                            {
-                                Session.SendPacket(UserInterfaceHelper.GenerateDialog($"#wreq^3^{Session.Character.CharacterId} #wreq^0^1 {Language.Instance.GetMessageFromKey("ASK_JOIN_TEAM_TS")}"));
-                            }
-                            else
-                            {
-                                Session.SendPacket(portal.GenerateRbr());
-                            }
-                            break;
+                    continue;
+                }
 
-                        case 1:
-                            if (!packet.Param.HasValue)
-                            {
-                                enterInstance(portal);
-                            }
-                            else if (packet.Param.HasValue && packet.Param.Value == 1)
-                            {
-                                GetTreq(new TreqPacket()
-                                {
-                                    X = portal.PositionX,
-                                    Y = portal.PositionY,
-                                    RecordPress = packet.Param,
-                                    StartPress = 1
-                                });
-                            }
-                            break;
+                switch (packet.Value)
+                {
+                    case 0:
+                        if (Session.Character.Group != null && Session.Character.Group.Characters.Any(s => !s.CurrentMapInstance.InstanceBag.Lock && s.CurrentMapInstance.MapInstanceType == MapInstanceType.TimeSpaceInstance && s.Character.MapId == portal.MapId && s.Character.CharacterId != Session.Character.CharacterId && s.Character.MapX == portal.PositionX && s.Character.MapY == portal.PositionY))
+                        {
+                            Session.SendPacket(UserInterfaceHelper.Instance.GenerateDialog($"#wreq^3^{Session.Character.CharacterId} #wreq^0^1 {Language.Instance.GetMessageFromKey("ASK_JOIN_TEAM_TS")}"));
+                        }
+                        else
+                        {
+                            Session.SendPacket(portal.GenerateRbr());
+                        }
 
-                        case 3:
-                            ClientSession clientSession = Session.Character.Group?.Characters.Find(s => s.Character.CharacterId == packet.Param);
-                            if (clientSession != null)
-                            {
-                                if (portal.LevelMinimum > Session.Character.Level)
-                                {
-                                    Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_REQUIERED_LEVEL"), 0));
-                                    return;
-                                }
+                        break;
 
-                                
-                                Session.Character.MapX = portal.PositionX;
-                                Session.Character.MapY = portal.PositionY;
-                                ServerManager.Instance.TeleportOnRandomPlaceInMap(Session, Character.CurrentMapInstance.MapInstanceId);
-                                Session.SendPacket(portal.GenerateMainInfo());
-                                Session.SendPackets(portal.GenerateMinimap());
-                                Session.SendPacket(portal.FirstMap.InstanceBag.GenerateScore());
-                                Session.Character.Timespace = portal;
+                    case 1:
+                        byte.TryParse(packet.Param.ToString(), out byte record);
+                        GetTreq(new TreqPacket()
+                        {
+                            X = portal.PositionX,
+                            Y = portal.PositionY,
+                            RecordPress = record,
+                            StartPress = 1
+                        });
+                        break;
+
+                    case 3:
+                        var character = (Session.Character.Group?.Characters).FirstOrDefault(s => s.Character.CharacterId == packet.Param);
+                        if (character != null)
+                        {
+                            if (portal.LevelMinimum > Session.Character.Level)
+                            {
+                                Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_REQUIERED_LEVEL"), 0));
+                                return;
                             }
-                            // TODO: Implement
-                            break;
-                    }
+
+                            Session.Character.MapX = portal.PositionX;
+                            Session.Character.MapY = portal.PositionY;
+                            ServerManager.Instance.TeleportOnRandomPlaceInMap(Session, character.CurrentMapInstance.MapInstanceId);
+                            Session.SendPacket(portal.GenerateMainInfo());
+                            Session.SendPackets(portal.GenerateMinimap());
+                            Session.SendPacket(portal.FirstMap.InstanceBag.GenerateScore());
+                        }
+
+                        break;
                 }
             }
         }
@@ -363,36 +424,52 @@ namespace OpenNos.Handler
         /// <param name="packet"></param>
         public void Git(GitPacket packet)
         {
-            MapButton button = Session.CurrentMapInstance.Buttons.Find(s => s.MapButtonId == packet.ButtonId);
-            if (button != null)
+            var button = Session.CurrentMapInstance.Buttons.FirstOrDefault(s => s.MapButtonId == packet.ButtonId);
+            if (button == null)
             {
-                Session.CurrentMapInstance.Broadcast(StaticPacketHelper.Out(UserType.Object, button.MapButtonId));
-                button.RunAction();
-                Session.CurrentMapInstance.Broadcast(button.GenerateIn());
+                return;
             }
+
+            Session.CurrentMapInstance.Broadcast(button.GenerateOut());
+            button.RunAction();
+            Session.CurrentMapInstance.Broadcast(button.GenerateIn());
         }
 
         /// <summary>
         /// rxitPacket packet
         /// </summary>
         /// <param name="rxitPacket"></param>
-        public void InstanceExit(RaidExitPacket rxitPacket)
+        public void InstanceExit(RxitPacket rxitPacket)
         {
-            if (rxitPacket?.State == 1 && (Session.CurrentMapInstance?.MapInstanceType == MapInstanceType.TimeSpaceInstance || Session.CurrentMapInstance?.MapInstanceType == MapInstanceType.RaidInstance))
+            if (rxitPacket == null || rxitPacket.State != 1 || Session.Character == null /* Not In-Game */ || Session.CurrentMapInstance.MapInstanceType != MapInstanceType.RaidInstance /* Not In-Raid */)
             {
-                if (Session.CurrentMapInstance.InstanceBag.Lock)
-                {
-                    //5seed
-                    Session.CurrentMapInstance.InstanceBag.DeadList.Add(Session.Character.CharacterId);
-                    Session.SendPacket(Session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("DIGNITY_LOST"), 20), 11));
-                    Session.Character.Dignity = Session.Character.Dignity < -980 ? -1000 : Session.Character.Dignity - 20;
-                }
-                else
-                {
-                    //1seed
-                }
-                ServerManager.Instance.GroupLeave(Session);
-                ServerManager.Instance.ChangeMap(Session.Character.CharacterId, Session.Character.MapId, Session.Character.MapX, Session.Character.MapY);
+                return;
+            }
+
+            ServerManager.Instance.ChangeMap(Session.Character.CharacterId, Session.Character.MapId, Session.Character.MapX, Session.Character.MapY);
+            GroupPacketHandler.RaidGroupLeave(Session);
+        }
+
+        public void SearchName(TawPacket packet)
+        {
+            ConcurrentBag<ArenaTeamMember> at = ServerManager.Instance.ArenaTeams.FirstOrDefault(s => s.Any(o => o.Session.Character.Name == packet.Username));
+            if (at != null)
+            {
+                ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, at.FirstOrDefault(s => s.Session != null).Session.CurrentMapInstance.MapInstanceId, 69, 100);
+
+                var zenas = at.OrderBy(s => s.Order).FirstOrDefault(s => s.Session != null && !s.Dead && s.ArenaTeamType == ArenaTeamType.ZENAS);
+                var erenia = at.OrderBy(s => s.Order).FirstOrDefault(s => s.Session != null && !s.Dead && s.ArenaTeamType == ArenaTeamType.ERENIA);
+                Session.SendPacket(Session.Character.GenerateTaM(0));
+                Session.SendPacket(Session.Character.GenerateTaM(3));
+                Session.SendPacket("taw_sv 0");
+                Session.SendPacket(zenas?.Session.Character.GenerateTaP(0, true));
+                Session.SendPacket(erenia?.Session.Character.GenerateTaP(2, true));
+                Session.SendPacket(zenas?.Session.Character.GenerateTaFc(0));
+                Session.SendPacket(erenia?.Session.Character.GenerateTaFc(1));
+            }
+            else
+            {
+                Session.SendPacket(UserInterfaceHelper.Instance.GenerateInfo(Language.Instance.GetMessageFromKey("USER_NOT_FOUND_IN_ARENA")));
             }
         }
 

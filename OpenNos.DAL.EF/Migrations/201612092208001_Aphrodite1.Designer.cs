@@ -10,17 +10,17 @@ namespace OpenNos.DAL.EF.Migrations
     public sealed partial class Aphrodite1 : IMigrationMetadata
     {
         private readonly ResourceManager Resources = new ResourceManager(typeof(Aphrodite1));
-        
+
         string IMigrationMetadata.Id
         {
             get { return "201612092208001_Aphrodite1"; }
         }
-        
+
         string IMigrationMetadata.Source
         {
             get { return null; }
         }
-        
+
         string IMigrationMetadata.Target
         {
             get { return Resources.GetString("Target"); }

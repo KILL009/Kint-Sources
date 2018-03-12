@@ -1,29 +1,9 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-using OpenNos.Core;
-using OpenNos.Data;
+﻿using OpenNos.Data;
 using OpenNos.Domain;
 using OpenNos.GameObject.Helpers;
-using OpenNos.GameObject.Networking;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Linq;
-using OpenNos.PathFinder;
-using static OpenNos.Domain.BCardType;
 
 namespace OpenNos.GameObject
 {
@@ -31,63 +11,36 @@ namespace OpenNos.GameObject
     {
         #region Members
 
-        private NpcMonster _monster;
+        private NpcMonster monster;
 
-        private bool _noAttack;
-        private bool _noMove;
-        private Character _owner;
-        public readonly object PveLockObject;
+        private Character owner;
 
         #endregion
 
         #region Instantiation
 
-        public Mate(MateDTO input)
+        public Mate()
         {
-            PveLockObject = new object();
-            Buff = new ThreadSafeSortedList<short, Buff>();
-            Attack = input.Attack;
-            CanPickUp = input.CanPickUp;
-            CharacterId = input.CharacterId;
-            Defence = input.Defence;
-            Direction = input.Direction;
-            Experience = input.Experience;
-            Hp = input.Hp;
-            IsSummonable = input.IsSummonable;
-            IsTeamMember = input.IsTeamMember;
-            Level = input.Level;
-            Loyalty = input.Loyalty;
-            MapX = input.MapX;
-            MapY = input.MapY;
-            MateId = input.MateId;
-            MateType = input.MateType;
-            Mp = input.Mp;
-            Name = input.Name;
-            NpcMonsterVNum = input.NpcMonsterVNum;
-            Skin = input.Skin;
-            GenerateMateTransportId();
         }
 
         public Mate(Character owner, NpcMonster npcMonster, byte level, MateType matetype)
         {
-            PveLockObject = new object();
-            Buff = new ThreadSafeSortedList<short, Buff>();
             NpcMonsterVNum = npcMonster.NpcMonsterVNum;
             Monster = npcMonster;
-            Level = level;
-            Hp = MaxHp;
-            Mp = MaxMp;
+            Hp = npcMonster.MaxHP;
+            Mp = npcMonster.MaxMP;
             Name = npcMonster.Name;
             MateType = matetype;
+            Level = level;
             Loyalty = 1000;
-            PositionY = (short)(owner.PositionY + 1);
-            PositionX = (short)(owner.PositionX + 1);
-            MapX = (short)(owner.PositionX + 1);
-            MapY = (short)(owner.PositionY + 1);
-            Direction = 2;
+            PositionX = owner.PositionX;
+            PositionY = owner.PositionY;
+            MapX = PositionX;
+            MapY = PositionY;
+            Direction = owner.Direction;
             CharacterId = owner.CharacterId;
             Owner = owner;
-            GenerateMateTransportId();
+            GeneateMateTransportId();
         }
 
         #endregion
@@ -98,41 +51,40 @@ namespace OpenNos.GameObject
 
         public ItemInstance BootsInstance { get; set; }
 
-        public ThreadSafeSortedList<short, Buff> Buff { get; }
-
-        public int BaseDamage => BaseDamageLoad();
-
         public ItemInstance GlovesInstance { get; set; }
 
         public bool IsSitting { get; set; }
 
         public bool IsUsingSp { get; set; }
 
-        public DateTime LastSpeedChange { get; set; }
+        public int MateTransportId { get; set; }
 
-        public int MagicalDefense => MagicalDefenseLoad();
+        public int MaxHp => Monster.MaxHP;
 
-        public int MateTransportId { get; private set; }
-
-        public int MaxHp => HpLoad();
-
-        public int MaxMp => MpLoad();
-
-        public int MeleeDefense => MeleeDefenseLoad();
-
-        public int MeleeDefenseDodge => MeleeDefenseDodgeLoad();
+        public int MaxMp => Monster.MaxMP;
 
         public NpcMonster Monster
         {
-            get => _monster ?? ServerManager.GetNpc(NpcMonsterVNum);
-
-            set => _monster = value;
+            get
+            {
+                return monster ?? ServerManager.Instance.GetNpc(NpcMonsterVNum);
+            }
+            set
+            {
+                monster = value;
+            }
         }
 
         public Character Owner
         {
-            get => _owner ?? ServerManager.Instance.GetSessionByCharacterId(CharacterId)?.Character;
-            set => _owner = value;
+            get
+            {
+                return owner ?? ServerManager.Instance.GetSessionByCharacterId(CharacterId).Character;
+            }
+            set
+            {
+                owner = value;
+            }
         }
 
         public byte PetId { get; set; }
@@ -141,103 +93,62 @@ namespace OpenNos.GameObject
 
         public short PositionY { get; set; }
 
-        public int RangeDefense => RangeDefenseLoad();
-
-        public int RangeDefenseDodge => RangeDefenseDodgeLoad();
-
-        public Skill[] Skills { get; set; }
-
-        public byte Speed
-        {
-            get
-            {
-                byte bonusSpeed = (byte)(GetBuff(CardType.Move, (byte)AdditionalTypes.Move.SetMovementNegated)[0]
-                                          + GetBuff(CardType.Move,
-                                              (byte)AdditionalTypes.Move.MovementSpeedIncreased)[0]
-                                          + GetBuff(CardType.Move,
-                                              (byte)AdditionalTypes.Move.MovementSpeedDecreased)[0]);
-
-                if (Monster.Speed + bonusSpeed > 59)
-                {
-                    return 59;
-                }
-
-                return (byte)(Monster.Speed + bonusSpeed);
-            }
-            set
-            {
-                LastSpeedChange = DateTime.Now;
-                Monster.Speed = value > 59 ? (byte)59 : value;
-            }
-        }
-
         public ItemInstance SpInstance { get; set; }
 
         public ItemInstance WeaponInstance { get; set; }
-        public DateTime LastMonsterAggro { get; set; }
-        public Node[][] BrushFireJagged { get; set; }
 
         #endregion
 
         #region Methods
 
-        public void AddBuff(Buff indicator)
+        public void GeneateMateTransportId()
         {
-            if (indicator?.Card != null)
-            {
-                Buff[indicator.Card.CardId] = indicator;
-                indicator.RemainingTime = indicator.Card.Duration;
-                indicator.Start = DateTime.Now;
-
-                indicator.Card.BCards.ForEach(c => c.ApplyBCards(this));
-                Observable.Timer(TimeSpan.FromMilliseconds(indicator.Card.Duration * 100)).Subscribe(o =>
-                {
-                    RemoveBuff(indicator.Card.CardId);
-                    if (indicator.Card.TimeoutBuff != 0
-                        && ServerManager.RandomNumber() < indicator.Card.TimeoutBuffChance)
-                    {
-                        AddBuff(new Buff(indicator.Card.TimeoutBuff, Monster.Level));
-                    }
-                });
-                _noAttack |= indicator.Card.BCards.Any(s =>
-                    s.Type == (byte)CardType.SpecialAttack
-                    && s.SubType.Equals((byte)AdditionalTypes.SpecialAttack.NoAttack / 10));
-                _noMove |= indicator.Card.BCards.Any(s =>
-                    s.Type == (byte)CardType.Move
-                    && s.SubType.Equals((byte)AdditionalTypes.Move.MovementImpossible / 10));
-            }
-        }
-
-        public void GenerateMateTransportId()
-        {
-            int nextId = ServerManager.Instance.MateIds.Count > 0 ? ServerManager.Instance.MateIds.Last() + 1 : 2000000;
+            int nextId = ServerManager.Instance.MateIds.Any() ? ServerManager.Instance.MateIds.Last() + 1 : 10000;
             ServerManager.Instance.MateIds.Add(nextId);
             MateTransportId = nextId;
         }
 
         public string GenerateCMode(short morphId) => $"c_mode 2 {MateTransportId} {morphId} 0 0";
 
-        public string GenerateCond() => $"cond 2 {MateTransportId} 0 0 {Speed}";
+        public string GenerateCond() => $"cond 2 {MateTransportId} 0 0 {Monster.Speed}";
 
-        public string GenerateEInfo() =>
-            $"e_info 10 {NpcMonsterVNum} {Level} {Monster.Element} {Monster.AttackClass} {Monster.ElementRate} {Monster.AttackUpgrade} {Monster.DamageMinimum} {Monster.DamageMaximum} {Monster.Concentrate} {Monster.CriticalChance} {Monster.CriticalRate} {Monster.DefenceUpgrade} {Monster.CloseDefence} {Monster.DefenceDodge} {Monster.DistanceDefence} {Monster.DistanceDefenceDodge} {Monster.MagicDefence} {Monster.FireResistance} {Monster.WaterResistance} {Monster.LightResistance} {Monster.DarkResistance} {Monster.MaxHP} {Monster.MaxMP} -1 {Name.Replace(' ', '^')}";
+        public EffectPacket GenerateEff(int effectid)
+        {
+            return new EffectPacket
+            {
+                EffectType = 2,
+                CharacterId = MateTransportId,
+                Id = effectid
+            };
+        }
+
+        public string GenerateEInfo()
+        {
+            return $"e_info 10 {NpcMonsterVNum} {Level} {Monster.Element} {Monster.AttackClass} {Monster.ElementRate} {Monster.AttackUpgrade} {Monster.DamageMinimum} {Monster.DamageMaximum} {Monster.Concentrate} {Monster.CriticalChance} {Monster.CriticalRate} {Monster.DefenceUpgrade} {Monster.CloseDefence} {Monster.DefenceDodge} {Monster.DistanceDefence} {Monster.DistanceDefenceDodge} {Monster.MagicDefence} {Monster.FireResistance} {Monster.WaterResistance} {Monster.LightResistance} {Monster.DarkResistance} {Monster.MaxHP} {Monster.MaxMP} -1 {Name.Replace(' ', '^')}";
+        }
 
         public string GenerateIn(bool foe = false, bool isAct4 = false)
         {
-            string name = Name.Replace(' ', '^');
+            var name = Name.Replace(' ', '^');
             if (foe)
             {
                 name = "!§$%&/()=?*+~#";
             }
 
-            int faction = 0;
+            var faction = 0;
             if (isAct4)
             {
                 faction = (byte)Owner.Faction + 2;
             }
 
-            return
-                $"in 2 {NpcMonsterVNum} {MateTransportId} {PositionX} {PositionY} {Direction} {(int)(Hp / (float)MaxHp * 100)} {(int)(Mp / (float)MaxMp * 100)} 0 {faction} 3 {CharacterId} 1 0 {(IsUsingSp && SpInstance != null ? SpInstance.Item.Morph : (Skin != 0 ? Skin : -1))} {name} 0 -1 0 0 0 0 0 0 0 0";
+            if (MateType == MateType.Partner)
+            {
+                return $"in 2 {NpcMonsterVNum} {MateTransportId} {(IsTeamMember ? PositionX : MapX)} {(IsTeamMember ? PositionY : MapY)} {Direction} {(int)(Hp / (float)MaxHp * 100)} {(int)(Mp / (float)MaxMp * 100)} 0 {faction} 3 {CharacterId} 1 0 {(IsUsingSp && SpInstance != null ? SpInstance.Item.Morph : (Skin != 0 ? Skin : -1))} {name} 0 -1 0 0 0 0 0 0 0 0";
+            }
+            else
+            {
+                return $"in 2 {NpcMonsterVNum} {MateTransportId} {(IsTeamMember ? PositionX : MapX)} {(IsTeamMember ? PositionY : MapY)} {Direction} {(int)(Hp / (float)MaxHp * 100)} {(int)(Mp / (float)MaxMp * 100)} 0 {faction} 3 {CharacterId} 1 0 0 {name} 0 -1 0 0 0 0 0 0 0 0";
+            }
         }
 
         public string GenerateOut() => $"out 2 {MateTransportId}";
@@ -248,167 +159,107 @@ namespace OpenNos.GameObject
             return $"rest 2 {MateTransportId} {(IsSitting ? 1 : 0)}";
         }
 
+        public string GenerateSay(string message, int type) => $"say 2 {MateTransportId} 2 {message}";
+
         public string GenerateScPacket()
         {
-            double xp = XpLoad();
-            if (xp > int.MaxValue)
-            {
-                xp = (int)(xp / 100);
-            }
-
             switch (MateType)
             {
                 case MateType.Partner:
-                    return
-                        $"sc_n {PetId} {NpcMonsterVNum} {MateTransportId} {Level} {Loyalty} {Experience} {(WeaponInstance != null ? $"{WeaponInstance.ItemVNum}.{WeaponInstance.Rare}.{WeaponInstance.Upgrade}" : "-1")} {(ArmorInstance != null ? $"{ArmorInstance.ItemVNum}.{ArmorInstance.Rare}.{ArmorInstance.Upgrade}" : "-1")} {(GlovesInstance != null ? $"{GlovesInstance.ItemVNum}.0.0" : "-1")} {(BootsInstance != null ? $"{BootsInstance.ItemVNum}.0.0" : "-1")} 0 0 1 {WeaponInstance?.Upgrade ?? 0} {Monster.DamageMinimum + BaseDamage + (WeaponInstance?.DamageMinimum ?? 0)} {Monster.DamageMaximum + BaseDamage + (WeaponInstance?.DamageMaximum ?? 0)} {Monster.Concentrate + (WeaponInstance?.HitRate ?? 0)} {Monster.CriticalChance + (WeaponInstance?.CriticalLuckRate ?? 0)} {Monster.CriticalRate + (WeaponInstance?.CriticalRate ?? 0)} {ArmorInstance?.Upgrade ?? 0} {Monster.CloseDefence + MeleeDefense + (ArmorInstance?.CloseDefence ?? 0) + (GlovesInstance?.CloseDefence ?? 0) + (BootsInstance?.CloseDefence ?? 0)} {Monster.DefenceDodge + MeleeDefenseDodge + (ArmorInstance?.DefenceDodge ?? 0) + (GlovesInstance?.DefenceDodge ?? 0) + (BootsInstance?.DefenceDodge ?? 0)} {Monster.DistanceDefence + RangeDefense + (ArmorInstance?.DistanceDefence ?? 0) + (GlovesInstance?.DistanceDefence ?? 0) + (BootsInstance?.DistanceDefence ?? 0)} {Monster.DistanceDefenceDodge + RangeDefenseDodge + (ArmorInstance?.DistanceDefenceDodge ?? 0) + (GlovesInstance?.DistanceDefenceDodge ?? 0) + (BootsInstance?.DistanceDefenceDodge ?? 0)} {Monster.MagicDefence + MagicalDefense + (ArmorInstance?.MagicDefence ?? 0) + (GlovesInstance?.MagicDefence ?? 0) + (BootsInstance?.MagicDefence ?? 0)} {0 /*SP Element*/} {Monster.FireResistance + (GlovesInstance?.FireResistance ?? 0) + (BootsInstance?.FireResistance ?? 0)} {Monster.WaterResistance + (GlovesInstance?.WaterResistance ?? 0) + (BootsInstance?.WaterResistance ?? 0)} {Monster.LightResistance + (GlovesInstance?.LightResistance ?? 0) + (BootsInstance?.LightResistance ?? 0)} {Monster.DarkResistance + (GlovesInstance?.DarkResistance ?? 0) + (BootsInstance?.DarkResistance ?? 0)} {Hp} {MaxHp} {Mp} {MaxMp} 0 {xp} {(IsUsingSp ? SpInstance.Item.Name.Replace(' ', '^') : Name.Replace(' ', '^'))} {(IsUsingSp && SpInstance != null ? SpInstance.Item.Morph : Skin != 0 ? Skin : -1)} {(IsSummonable ? 1 : 0)} {(SpInstance != null ? $"{SpInstance.ItemVNum}.100" : "-1")} {(SpInstance != null ? "0.0 0.0 0.0" : "-1 -1 -1")}";
+                    return $"sc_n {PetId} {NpcMonsterVNum} {MateTransportId} {Level} {Loyalty} {GetRealEXP(Experience)} {(WeaponInstance != null ? $"{WeaponInstance.ItemVNum}.{WeaponInstance.Rare}.{WeaponInstance.Upgrade}" : "-1")} {(ArmorInstance != null ? $"{ArmorInstance.ItemVNum}.{ArmorInstance.Rare}.{ArmorInstance.Upgrade}" : "-1")} {(GlovesInstance != null ? $"{GlovesInstance.ItemVNum}.0.0" : "-1")} {(BootsInstance != null ? $"{BootsInstance.ItemVNum}.0.0" : "-1")} 0 0 1 0 142 174 232 4 70 0 73 158 86 158 69 0 0 0 0 0 2641 2641 1065 1065 0 285816 {(SpInstance != null ? "SP_NAME" : Name.Replace(' ', '^'))} {SpInstance?.Item.Morph ?? (Skin != 0 ? Skin : -1)} {(IsSummonable ? 1 : 0)} {(SpInstance != null ? $"{SpInstance.ItemVNum}.100" : "-1")} -1 -1 -1";
 
                 case MateType.Pet:
-                    return
-                        $"sc_p {PetId} {NpcMonsterVNum} {MateTransportId} {Level} {Loyalty} {Experience} 0 {Monster.AttackUpgrade + Attack} {Monster.DamageMinimum + BaseDamage} {Monster.DamageMaximum + BaseDamage} {Monster.Concentrate} {Monster.CriticalChance} {Monster.CriticalRate} {Monster.DefenceUpgrade + Defence} {Monster.CloseDefence + MeleeDefense} {Monster.DefenceDodge + MeleeDefenseDodge} {Monster.DistanceDefence + RangeDefense} {Monster.DistanceDefenceDodge + RangeDefenseDodge} {Monster.MagicDefence + MagicalDefense} {Monster.Element} {Monster.FireResistance} {Monster.WaterResistance} {Monster.LightResistance} {Monster.DarkResistance} {Hp} {MaxHp} {Mp} {MaxMp} 0 {xp} {(CanPickUp ? 1 : 0)} {Name.Replace(' ', '^')} {(IsSummonable ? 1 : 0)}";
+                    return $"sc_p {PetId} {NpcMonsterVNum} {MateTransportId} {Level} {Loyalty} {GetRealEXP(Experience)} 0 {Monster.AttackUpgrade} {Monster.DamageMinimum} {Monster.DamageMaximum} {Monster.Concentrate} {Monster.CriticalChance} {Monster.CriticalRate} {Monster.DefenceUpgrade} {Monster.CloseDefence} {Monster.DefenceDodge} {Monster.DistanceDefence} {Monster.DistanceDefenceDodge} {Monster.MagicDefence} {Monster.Element} {Monster.FireResistance} {Monster.WaterResistance} {Monster.LightResistance} {Monster.DarkResistance} {Hp} {MaxHp} {Mp} {MaxMp} 0 15 {(CanPickUp ? 1 : 0)} {Name.Replace(' ', '^')} {(IsSummonable ? 1 : 0)}";
             }
 
             return string.Empty;
         }
 
-        public string GenerateStatInfo() =>
-            $"st 2 {MateTransportId} {Level} 0 {(int)((float)Hp / (float)MaxHp * 100)} {(int)((float)Mp / (float)MaxMp * 100)} {Hp} {Mp}{Buff.GetAllItems().Aggregate(string.Empty, (current, buff) => current + $" {buff.Card.CardId}.{buff.Level}")}";
+        public string GenerateStatInfo()
+        {
+            return $"st 2 {MateTransportId} {Level} 0 {(int)((float)Hp / (float)MaxHp * 100)} {(int)((float)Mp / (float)MaxMp * 100)} {Hp} {Mp}";
+        }
 
         public void GenerateXp(int xp)
         {
-            if (Level < ServerManager.Instance.Configuration.MaxLevel)
+            if (Level < ServerManager.Instance.MaxLevel)
             {
                 Experience += xp;
                 if (Experience >= XpLoad())
                 {
+                    if (Level == 98)
+                        Experience = 0;
                     if (Level + 1 < Owner.Level)
                     {
                         Experience = (long)(Experience - XpLoad());
                         Level++;
+
                         Hp = MaxHp;
                         Mp = MaxMp;
-                        Owner.MapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Npc, MateTransportId, 4732),
-                            PositionX, PositionY);
-                        Owner.MapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Npc, MateTransportId, 4798),
-                            PositionX, PositionY);
+                        Owner.MapInstance?.Broadcast(GenerateEff(6), PositionX, PositionY);
+                        Owner.MapInstance?.Broadcast(GenerateEff(198), PositionX, PositionY);
                     }
                 }
             }
 
-            Owner.Session.SendPacket(GenerateScPacket());
+            ServerManager.Instance.GetSessionByCharacterId(Owner.CharacterId).SendPacket(GenerateScPacket());
         }
 
-        public string GenPski()
+        public long GetRealEXP(long exp)
         {
-            string skills = string.Empty;
-            if (Skills != null)
+            var final = 0;
+
+            switch (MateType)
             {
-                foreach (Skill s in Skills)
-                {
-                    skills += $" {s.SkillVNum}";
-                }
-            }
-
-            return $"pski{skills}";
-        }
-
-        public int[] GetBuff(CardType type, byte subtype)
-        {
-            int value1 = 0;
-            int value2 = 0;
-
-            foreach (Buff buff in Buff.Where(s => s?.Card?.BCards != null))
-            {
-                foreach (BCard entry in buff.Card.BCards.Where(s =>
-                    s.Type.Equals((byte)type) && s.SubType.Equals(subtype)
-                                               && (s.CastType != 1
-                                                   || (s.CastType == 1 &&
-                                                       buff.Start.AddMilliseconds(buff.Card.Delay * 100) <
-                                                       DateTime.Now))))
-                {
-                    if (entry.IsLevelScaled)
+                case MateType.Pet:
                     {
-                        if (entry.IsLevelDivided)
-                        {
-                            value1 += buff.Level / entry.FirstData;
-                        }
+                        var Percent = (int)((float)(exp / XpLoad()) * 100);
+
+                        if (Percent < 6)
+                            final = 0;
+                        else if (Percent >= 6 && Percent < 13)
+                            final = 1;
+                        else if (Percent >= 13 && Percent < 20)
+                            final = 2;
+                        else if (Percent >= 20 && Percent < 26)
+                            final = 3;
+                        else if (Percent >= 26 && Percent < 33)
+                            final = 4;
+                        else if (Percent >= 33 && Percent < 40)
+                            final = 5;
+                        else if (Percent >= 40 && Percent < 46)
+                            final = 6;
+                        else if (Percent >= 46 && Percent < 53)
+                            final = 7;
+                        else if (Percent >= 53 && Percent < 60)
+                            final = 8;
+                        else if (Percent >= 60 && Percent < 66)
+                            final = 9;
+                        else if (Percent >= 66 && Percent < 73)
+                            final = 10;
+                        else if (Percent >= 73 && Percent < 80)
+                            final = 11;
+                        else if (Percent >= 80 && Percent < 86)
+                            final = 12;
+                        else if (Percent >= 86 && Percent < 93)
+                            final = 13;
+                        else if (Percent >= 93 && Percent < 100)
+                            final = 14;
                         else
-                        {
-                            value1 += entry.FirstData * buff.Level;
-                        }
-                    }
-                    else
-                    {
-                        value1 += entry.FirstData;
-                    }
+                            final = 15;
 
-                    value2 += entry.SecondData;
-                }
+                        return final;
+                    }
+                case MateType.Partner:
+                    return exp;
             }
 
-            return new[] { value1, value2 };
+            return 0;
         }
 
-        public List<ItemInstance> GetInventory()
+        public override void Initialize()
         {
-            switch (PetId)
-            {
-                case 0:
-                    return Owner.Inventory.Where(s => s.Type == InventoryType.FirstPartnerInventory);
-
-                case 1:
-                    return Owner.Inventory.Where(s => s.Type == InventoryType.SecondPartnerInventory);
-
-                case 2:
-                    return Owner.Inventory.Where(s => s.Type == InventoryType.ThirdPartnerInventory);
-            }
-
-            return new List<ItemInstance>();
         }
-
-        public int HpLoad()
-        {
-            double multiplicator = 1.0;
-            int hp = 0;
-
-            multiplicator += GetBuff(CardType.BearSpirit, (byte)AdditionalTypes.BearSpirit.IncreaseMaximumHP)[0]
-                             / 100D;
-            multiplicator += GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.IncreasesMaximumHP)[0] / 100D;
-            hp += GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.MaximumHPIncreased)[0];
-            hp -= GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.MaximumHPDecreased)[0];
-            hp += GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.MaximumHPMPIncreased)[0];
-
-            // Monster Bonus HP
-            hp += (int)(Monster.MaxHP - MateHelper.Instance.HpData[Monster.Level]);
-
-            return (int)((MateHelper.Instance.HpData[Level] + hp) * multiplicator);
-        }
-
-        public int BaseDamageLoad()
-        {
-            return MateHelper.Instance.DamageData[GetMateType(), Level > 0 ? Level - 1 : 0];
-        }
-        public int MeleeDefenseLoad()
-        {
-            return MateHelper.Instance.MeleeDefenseData[GetMateType(), Level > 0 ? Level - 1 : 0];
-        }
-        public int MeleeDefenseDodgeLoad()
-        {
-            return MateHelper.Instance.MeleeDefenseDodgeData[GetMateType(), Level > 0 ? Level - 1 : 0];
-        }
-        public int RangeDefenseLoad()
-        {
-            return MateHelper.Instance.RangeDefenseData[GetMateType(), Level > 0 ? Level - 1 : 0];
-        }
-        public int RangeDefenseDodgeLoad()
-        {
-            return MateHelper.Instance.RangeDefenseDodgeData[GetMateType(), Level > 0 ? Level - 1 : 0];
-        }
-        public int MagicalDefenseLoad()
-        {
-            return MateHelper.Instance.MagicDefenseData[GetMateType(), Level > 0 ? Level - 1 : 0];
-        }
-
-        public string GenerateRc(int characterHealth) => $"rc 2 {MateTransportId} {characterHealth} 0";
 
         /// <summary>
         /// Checks if the current character is in range of the given position
@@ -417,8 +268,10 @@ namespace OpenNos.GameObject
         /// <param name="yCoordinate">The y coordinate of the object to check.</param>
         /// <param name="range">The range of the coordinates to be maximal distanced.</param>
         /// <returns>True if the object is in Range, False if not.</returns>
-        public bool IsInRange(int xCoordinate, int yCoordinate, int range) =>
-            Math.Abs(PositionX - xCoordinate) <= range && Math.Abs(PositionY - yCoordinate) <= range;
+        public bool IsInRange(int xCoordinate, int yCoordinate, int range)
+        {
+            return Math.Abs(PositionX - xCoordinate) <= range && Math.Abs(PositionY - yCoordinate) <= range;
+        }
 
         public void LoadInventory()
         {
@@ -428,48 +281,32 @@ namespace OpenNos.GameObject
                 return;
             }
 
-            WeaponInstance = inv.Find(s => s.Item.EquipmentSlot == EquipmentType.MainWeapon);
-            ArmorInstance = inv.Find(s => s.Item.EquipmentSlot == EquipmentType.Armor);
-            GlovesInstance = inv.Find(s => s.Item.EquipmentSlot == EquipmentType.Gloves);
-            BootsInstance = inv.Find(s => s.Item.EquipmentSlot == EquipmentType.Boots);
-            SpInstance = inv.Find(s => s.Item.EquipmentSlot == EquipmentType.Sp);
+            WeaponInstance = inv.FirstOrDefault(s => s.Item.EquipmentSlot == EquipmentType.MainWeapon);
+            ArmorInstance = inv.FirstOrDefault(s => s.Item.EquipmentSlot == EquipmentType.Armor);
+            GlovesInstance = inv.FirstOrDefault(s => s.Item.EquipmentSlot == EquipmentType.Gloves);
+            BootsInstance = inv.FirstOrDefault(s => s.Item.EquipmentSlot == EquipmentType.Boots);
+            SpInstance = inv.FirstOrDefault(s => s.Item.EquipmentSlot == EquipmentType.Sp);
         }
 
-        public int MpLoad()
+        private List<ItemInstance> GetInventory()
         {
-            int mp = 0;
-            double multiplicator = 1.0;
-            multiplicator += GetBuff(CardType.BearSpirit, (byte)AdditionalTypes.BearSpirit.IncreaseMaximumMP)[0]
-                             / 100D;
-            multiplicator += GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.IncreasesMaximumMP)[0] / 100D;
-            mp += GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.MaximumMPIncreased)[0];
-            mp -= GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.MaximumHPDecreased)[0];
-            mp += GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.MaximumHPMPIncreased)[0];
-
-            // Monster Bonus MP
-            mp += (int)(Monster.MaxMP - (Monster.Race == 0
-                             ? MateHelper.Instance.PrimaryMpData[Monster.Level]
-                             : MateHelper.Instance.SecondaryMpData[Monster.Level]));
-
-            return (int)(((Monster.Race == 0
-                               ? MateHelper.Instance.PrimaryMpData[Level]
-                               : MateHelper.Instance.SecondaryMpData[Level]) + mp) * multiplicator);
-        }
-
-        private void RemoveBuff(short id)
-        {
-            Buff indicator = Buff[id];
-
-            if (indicator != null)
+            List<ItemInstance> items = new List<ItemInstance>();
+            switch (PetId)
             {
-                Buff.Remove(id);
-                _noAttack &= !indicator.Card.BCards.Any(s =>
-                    s.Type == (byte)CardType.SpecialAttack
-                    && s.SubType.Equals((byte)AdditionalTypes.SpecialAttack.NoAttack / 10));
-                _noMove &= !indicator.Card.BCards.Any(s =>
-                    s.Type == (byte)CardType.Move
-                    && s.SubType.Equals((byte)AdditionalTypes.Move.MovementImpossible / 10));
+                case 0:
+                    items = Owner.Inventory.Select(s => s.Value).Where(s => s.Type == InventoryType.FirstPartnerInventory).ToList();
+                    break;
+
+                case 1:
+                    items = Owner.Inventory.Select(s => s.Value).Where(s => s.Type == InventoryType.SecondPartnerInventory).ToList();
+                    break;
+
+                case 2:
+                    items = Owner.Inventory.Select(s => s.Value).Where(s => s.Type == InventoryType.ThirdPartnerInventory).ToList();
+                    break;
             }
+
+            return items;
         }
 
         private double XpLoad()
@@ -485,36 +322,5 @@ namespace OpenNos.GameObject
         }
 
         #endregion
-
-        public void UpdateBushFire()
-        {
-            BrushFireJagged = BestFirstSearch.LoadBrushFireJagged(new GridPos
-            {
-                X = PositionX,
-                Y = PositionY
-            }, Owner.Session.CurrentMapInstance.Map.JaggedGrid);
-        }
-
-        public void GetDamage(int damage)
-        {
-            Owner.LastDefence = DateTime.Now;
-            Owner.Dispose();
-
-            Hp -= damage;
-            if (Hp < 0)
-            {
-                Hp = 0;
-            }
-
-        }
-
-        private byte GetMateType()
-        {
-            byte b = 0;
-
-            // Set b according to the desired Mate Type, Race or VNum
-
-            return b;
-        }
     }
 }

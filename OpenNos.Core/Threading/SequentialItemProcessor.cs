@@ -1,18 +1,4 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -76,7 +62,10 @@ namespace OpenNos.Core.Threading
 
         #region Methods
 
-        public void ClearQueue() => _queue.Clear();
+        public void ClearQueue()
+        {
+            _queue.Clear();
+        }
 
         /// <summary>
         /// Adds an item to queue to process the item.
@@ -96,7 +85,7 @@ namespace OpenNos.Core.Threading
 
                 if (!_isProcessing)
                 {
-                    _currentProcessTask = Task.Factory.StartNew(processItem);
+                    _currentProcessTask = Task.Factory.StartNew(ProcessItem);
                 }
             }
         }
@@ -104,7 +93,10 @@ namespace OpenNos.Core.Threading
         /// <summary>
         /// Starts processing of items.
         /// </summary>
-        public void Start() => _isRunning = true;
+        public void Start()
+        {
+            _isRunning = true;
+        }
 
         /// <summary>
         /// Stops processing of items and waits stopping of current item.
@@ -138,7 +130,7 @@ namespace OpenNos.Core.Threading
         /// <summary>
         /// This method runs on a new seperated Task (thread) to process items on the queue.
         /// </summary>
-        private void processItem()
+        private void ProcessItem()
         {
             // Try to get an item from queue to process it.
             TItem itemToProcess;
@@ -171,7 +163,7 @@ namespace OpenNos.Core.Threading
                 }
 
                 // Start a new task
-                _currentProcessTask = Task.Factory.StartNew(processItem);
+                _currentProcessTask = Task.Factory.StartNew(ProcessItem);
             }
         }
 

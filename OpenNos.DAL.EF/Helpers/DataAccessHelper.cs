@@ -1,18 +1,5 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-using OpenNos.Core;
+﻿using OpenNos.Core;
+using OpenNos.DAL.EF.DB;
 using System;
 using System.Data;
 using System.Data.Common;
@@ -23,13 +10,13 @@ namespace OpenNos.DAL.EF.Helpers
     {
         #region Members
 
-        private static OpenNosContext _context;
+        private static OpenNosContext context;
 
         #endregion
 
         #region Properties
 
-        private static OpenNosContext Context => _context ?? (_context = CreateContext());
+        private static OpenNosContext Context => context ?? (context = CreateContext());
 
         #endregion
 
@@ -43,7 +30,8 @@ namespace OpenNos.DAL.EF.Helpers
         public static DbTransaction BeginTransaction()
         {
             // an open connection is needed for a transaction
-            if (Context.Database.Connection.State == ConnectionState.Broken || Context.Database.Connection.State == ConnectionState.Closed)
+            if (Context.Database.Connection.State == ConnectionState.Broken ||
+                Context.Database.Connection.State == ConnectionState.Closed)
             {
                 Context.Database.Connection.Open();
             }
@@ -62,10 +50,10 @@ namespace OpenNos.DAL.EF.Helpers
         /// </summary>
         public static void DisposeContext()
         {
-            if (_context != null)
+            if (context != null)
             {
-                _context.Dispose();
-                _context = null;
+                context.Dispose();
+                context = null;
             }
         }
 
@@ -77,14 +65,15 @@ namespace OpenNos.DAL.EF.Helpers
                 {
                     context.Database.Initialize(true);
                     context.Database.Connection.Open();
-                    Logger.Info(Language.Instance.GetMessageFromKey("DATABASE_INITIALIZED"));
+                    Logger.Log.Info(Language.Instance.GetMessageFromKey("DATABASE_INITIALIZED"));
                 }
                 catch (Exception ex)
                 {
-                    Logger.LogEventError("DATABASE_INITIALIZATION", "Database Error", ex);
-                    Logger.LogEventError("DATABASE_INITIALIZATION", Language.Instance.GetMessageFromKey("DATABASE_NOT_UPTODATE"));
+                    Logger.Log.Error("Database Error", ex);
+                    Logger.Log.Error(Language.Instance.GetMessageFromKey("DATABASE_NOT_UPTODATE"));
                     return false;
                 }
+
                 return true;
             }
         }

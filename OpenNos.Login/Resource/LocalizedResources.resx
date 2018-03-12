@@ -117,15 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ALREADY_CONNECTED" xml:space="preserve">
-    <value>Account is already connected.</value>
-  </data>
-  <data name="BANNED" xml:space="preserve">
-    <value>You have been banned. Reason {0}, until {1}</value>
-  </data>
-  <data name="CLIENT_CLOSED" xml:space="preserve">
-    <value>Connection closed by Client.</value>
-  </data>
   <data name="CONNECTION_CLOSED" xml:space="preserve">
     <value>Connection closed.</value>
   </data>
@@ -133,63 +124,48 @@
     <value>Config loaded!</value>
   </data>
   <data name="CONNECTION" xml:space="preserve">
-    <value>CONNECT {0} Connected -- SessionId: {1}</value>
+    <value>The user {0} has logged in -- SessionId: {1}</value>
   </data>
   <data name="DATABASE_INITIALIZED" xml:space="preserve">
-    <value>Database has been initialized!</value>
+    <value>The database has been initialized!</value>
   </data>
   <data name="DISCONNECT" xml:space="preserve">
-    <value>Client disconnected! ClientId = </value>
+    <value>Client disconnected. ClientId = </value>
   </data>
   <data name="FORCED_DISCONNECT" xml:space="preserve">
-    <value>Forced Disconnecting of client {0}, too much connections.</value>
-  </data>
-  <data name="IDERROR" xml:space="preserve">
-    <value>Wrong Id or Password!</value>
+    <value>Forced disconnection of the client {0}, too many connections.</value>
   </data>
   <data name="MESSAGE_RECEIVED" xml:space="preserve">
-    <value>Message received {0} on client {1}</value>
+    <value>Message received {0} from client {1}</value>
   </data>
   <data name="MSG_SENT" xml:space="preserve">
-    <value>Message sent to client </value>
+    <value>Message sent to the client.</value>
   </data>
   <data name="NEW_CONNECT" xml:space="preserve">
-    <value>New client connected. ClientId = </value>
-  </data>
-  <data name="NOTVALIDATE" xml:space="preserve">
-    <value>Account not validate!</value>
+    <value>New client connected! ClientId = </value>
   </data>
   <data name="PACKET_FAILURE" xml:space="preserve">
     <value>Failed to send packet {0} to client {1}, {2}.</value>
   </data>
   <data name="STARTED" xml:space="preserve">
-    <value>LoginServer started successfully.</value>
+    <value>Login server started successfully.</value>
   </data>
   <data name="TOO_BIG" xml:space="preserve">
-    <value>Message is too big ({0} bytes). Max allowed length is {1} bytes.</value>
-  </data>
-  <data name="CONNECTION_LOST" xml:space="preserve">
-    <value>Connection to the server has been lost.</value>
+    <value>The message is too big ({0} bytes). Max allowed length is {1} byte/s.</value>
   </data>
   <data name="DATABASE_NOT_UPTODATE" xml:space="preserve">
-    <value>Database may not be up to date. Please consider updating your database.</value>
+    <value>The database may not be up to date. Please consider updating your database.</value>
   </data>
   <data name="CLIENT_DISCONNECTED" xml:space="preserve">
     <value>Connection closed.</value>
   </data>
-  <data name="MAINTENANCE" xml:space="preserve">
-    <value>Server is currently under maintenance. Maintenance estimated time: {0} reason: {1}</value>
-  </data>
   <data name="CORRUPT_PACKET" xml:space="preserve">
-    <value>Packet with Header {0} is corrupt or PacketDefinition is invalid. Content: {1} </value>
+    <value>A packet with the header {0} is corrupt or the PacketDefinition is invalid: {1} </value>
   </data>
   <data name="API_INITIALIZED" xml:space="preserve">
-    <value>Master Server communication has been initialized.</value>
+    <value>Master server communication has been initialized.</value>
   </data>
   <data name="RETRY_CONNECTION" xml:space="preserve">
-    <value>Cannot connect to Master Server! Trying again in 5 seconds...</value>
-  </data>
-  <data name="NO_WORLDSERVERS" xml:space="preserve">
-    <value>404: No world servers found! please try again later.</value>
+    <value>Can not connect to the master server! try again in 5 seconds...</value>
   </data>
 </root>

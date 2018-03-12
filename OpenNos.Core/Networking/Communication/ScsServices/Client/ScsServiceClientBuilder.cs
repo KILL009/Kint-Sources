@@ -1,25 +1,11 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-using OpenNos.Core.Networking.Communication.Scs.Communication.EndPoints;
+﻿using OpenNos.Core.Networking.Communication.Scs.Communication.EndPoints;
 
 namespace OpenNos.Core.Networking.Communication.ScsServices.Client
 {
     /// <summary>
     /// This class is used to build service clients to remotely invoke methods of a SCS service.
     /// </summary>
-    public static class ScsServiceClientBuilder
+    public class ScsServiceClientBuilder
     {
         #region Methods
 
@@ -33,7 +19,10 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Client
         /// client has no methods to be invoked by server
         /// </param>
         /// <returns>Created client object to connect to the server</returns>
-        public static IScsServiceClient<T> CreateClient<T>(ScsEndPoint endpoint, object clientObject = null) where T : class => new ScsServiceClient<T>(endpoint.CreateClient(), clientObject);
+        public static IScsServiceClient<T> CreateClient<T>(ScsEndPoint endpoint, object clientObject = null) where T : class
+        {
+            return new ScsServiceClient<T>(endpoint.CreateClient(), clientObject);
+        }
 
         /// <summary>
         /// Creates a client to connect to a SCS service.
@@ -45,7 +34,10 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Client
         /// client has no methods to be invoked by server
         /// </param>
         /// <returns>Created client object to connect to the server</returns>
-        public static IScsServiceClient<T> CreateClient<T>(string endpointAddress, object clientObject = null) where T : class => CreateClient<T>(ScsEndPoint.CreateEndPoint(endpointAddress), clientObject);
+        public static IScsServiceClient<T> CreateClient<T>(string endpointAddress, object clientObject = null) where T : class
+        {
+            return CreateClient<T>(ScsEndPoint.CreateEndPoint(endpointAddress), clientObject);
+        }
 
         #endregion
     }

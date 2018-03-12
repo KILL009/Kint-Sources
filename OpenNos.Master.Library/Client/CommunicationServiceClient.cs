@@ -1,24 +1,11 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
+﻿using Hik.Communication.Scs.Communication;
+using Hik.Communication.Scs.Communication.EndPoints.Tcp;
+using Hik.Communication.ScsServices.Client;
 using OpenNos.Core;
 using OpenNos.DAL;
+using OpenNos.Data;
 using OpenNos.Master.Library.Data;
 using OpenNos.Master.Library.Interface;
-using OpenNos.SCS.Communication.Scs.Communication;
-using OpenNos.SCS.Communication.Scs.Communication.EndPoints.Tcp;
-using OpenNos.SCS.Communication.ScsServices.Client;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -29,11 +16,9 @@ namespace OpenNos.Master.Library.Client
     {
         #region Members
 
-        private static CommunicationServiceClient _instance;
-
-        private readonly IScsServiceClient<ICommunicationService> _client;
-
-        private readonly CommunicationClient _commClient;
+        private static CommunicationServiceClient instance;
+        private IScsServiceClient<ICommunicationService> client;
+        private CommunicationClient commClient;
 
         #endregion
 
@@ -41,21 +26,20 @@ namespace OpenNos.Master.Library.Client
 
         public CommunicationServiceClient()
         {
-            string ip = ConfigurationManager.AppSettings["MasterIP"];
-            int port = Convert.ToInt32(ConfigurationManager.AppSettings["MasterPort"]);
-            _commClient = new CommunicationClient();
-            _client = ScsServiceClientBuilder.CreateClient<ICommunicationService>(new ScsTcpEndPoint(ip, port), _commClient);
-            System.Threading.Thread.Sleep(1000);
-            while (_client.CommunicationState != CommunicationStates.Connected)
+            var ip = ConfigurationManager.AppSettings["MasterIP"];
+            var port = Convert.ToInt32(ConfigurationManager.AppSettings["MasterPort"]);
+            commClient = new CommunicationClient();
+            client = ScsServiceClientBuilder.CreateClient<ICommunicationService>(new ScsTcpEndPoint(ip, port), commClient);
+            while (client.CommunicationState != CommunicationStates.Connected)
             {
                 try
                 {
-                    _client.Connect();
+                    client.Connect();
                 }
-                catch (Exception)
+                catch
                 {
-                    Logger.Error(Language.Instance.GetMessageFromKey("RETRY_CONNECTION"), memberName: nameof(CommunicationServiceClient));
-                    System.Threading.Thread.Sleep(1000);
+                    Logger.Log.Error(Language.Instance.GetMessageFromKey("RETRY_CONNECTION"));
+                    System.Threading.Thread.Sleep(5000);
                 }
             }
         }
@@ -72,7 +56,7 @@ namespace OpenNos.Master.Library.Client
 
         public event EventHandler FamilyRefresh;
 
-        public event EventHandler GlobalEvent;
+        public event EventHandler MailSent;
 
         public event EventHandler MessageSentToCharacter;
 
@@ -84,115 +68,184 @@ namespace OpenNos.Master.Library.Client
 
         public event EventHandler ShutdownEvent;
 
-        public event EventHandler RestartEvent;
-
-        public event EventHandler StaticBonusRefresh;
-
         #endregion
 
         #region Properties
 
-        public static CommunicationServiceClient Instance => _instance ?? (_instance = new CommunicationServiceClient());
+        public static CommunicationServiceClient Instance => instance ?? (instance = new CommunicationServiceClient());
 
-        public CommunicationStates CommunicationState => _client.CommunicationState;
+        public CommunicationStates CommunicationState => client.CommunicationState;
 
         #endregion
 
         #region Methods
 
-        public bool Authenticate(string authKey) => _client.ServiceProxy.Authenticate(authKey);
+        public bool Authenticate(string authKey) => client.ServiceProxy.Authenticate(authKey);
 
-        public void Cleanup() => _client.ServiceProxy.Cleanup();
+        public void Cleanup() => client.ServiceProxy.Cleanup();
 
-        public void CleanupOutdatedSession() => _client.ServiceProxy.CleanupOutdatedSession();
+        public bool ConnectAccount(Guid worldId, long accountId, long sessionId)
+        {
+            return client.ServiceProxy.ConnectAccount(worldId, accountId, sessionId);
+        }
 
-        public bool ConnectAccount(Guid worldId, long accountId, int sessionId) => _client.ServiceProxy.ConnectAccount(worldId, accountId, sessionId);
+        public bool ConnectAccountInternal(Guid worldId, long accountId, int sessionId)
+        {
+            return client.ServiceProxy.ConnectAccountInternal(worldId, accountId, sessionId);
+        }
 
-        public bool ConnectAccountCrossServer(Guid worldId, long accountId, int sessionId) => _client.ServiceProxy.ConnectAccountCrossServer(worldId, accountId, sessionId);
+        public bool ConnectCharacter(Guid worldId, long characterId)
+        {
+            return client.ServiceProxy.ConnectCharacter(worldId, characterId);
+        }
 
-        public bool ConnectCharacter(Guid worldId, long characterId) => _client.ServiceProxy.ConnectCharacter(worldId, characterId);
+        public void DisconnectAccount(long accountId)
+        {
+            client.ServiceProxy.DisconnectAccount(accountId);
+        }
 
-        public void DisconnectAccount(long accountId) => _client.ServiceProxy.DisconnectAccount(accountId);
+        public void DisconnectCharacter(Guid worldId, long characterId)
+        {
+            client.ServiceProxy.DisconnectCharacter(worldId, characterId);
+        }
 
-        public void DisconnectCharacter(Guid worldId, long characterId) => _client.ServiceProxy.DisconnectCharacter(worldId, characterId);
+        public SerializableWorldServer GetAct4ChannelInfo(string worldGroup)
+        {
+            return client.ServiceProxy.GetAct4ChannelInfo(worldGroup);
+        }
 
-        public int? GetChannelIdByWorldId(Guid worldId) => _client.ServiceProxy.GetChannelIdByWorldId(worldId);
+        public int? GetChannelIdByWorldId(Guid worldId)
+        {
+            return client.ServiceProxy.GetChannelIdByWorldId(worldId);
+        }
 
-        public bool IsAccountConnected(long accountId) => _client.ServiceProxy.IsAccountConnected(accountId);
+        public SerializableWorldServer GetPreviousChannelByAccountId(long accountId)
+        {
+            return client.ServiceProxy.GetPreviousChannelByAccountId(accountId);
+        }
 
-        public bool IsCharacterConnected(string worldGroup, long characterId) => _client.ServiceProxy.IsCharacterConnected(worldGroup, characterId);
+        public bool IsAccountConnected(long accountId)
+        {
+            return client.ServiceProxy.IsAccountConnected(accountId);
+        }
 
-        public bool IsCrossServerLoginPermitted(long accountId, int sessionId) => _client.ServiceProxy.IsCrossServerLoginPermitted(accountId, sessionId);
+        public bool IsCharacterConnected(string worldGroup, long characterId)
+        {
+            return client.ServiceProxy.IsCharacterConnected(worldGroup, characterId);
+        }
 
-        public bool IsLoginPermitted(long accountId, int sessionId) => _client.ServiceProxy.IsLoginPermitted(accountId, sessionId);
+        public bool IsCrossServerLoginPermitted(long accountId, int sessionId)
+        {
+            return client.ServiceProxy.IsCrossServerLoginPermitted(accountId, sessionId);
+        }
 
-        public void KickSession(long? accountId, int? sessionId) => _client.ServiceProxy.KickSession(accountId, sessionId);
+        public bool IsLoginPermitted(long accountId, long sessionId)
+        {
+            return client.ServiceProxy.IsLoginPermitted(accountId, sessionId);
+        }
 
-        public void PulseAccount(long accountId) => _client.ServiceProxy.PulseAccount(accountId);
+        public void KickSession(long? accountId, long? sessionId)
+        {
+            client.ServiceProxy.KickSession(accountId, sessionId);
+        }
 
-        public void RefreshPenalty(int penaltyId) => _client.ServiceProxy.RefreshPenalty(penaltyId);
+        public void PulseAccount(long accountId) => client.ServiceProxy.PulseAccount(accountId);
 
-        public void RegisterAccountLogin(long accountId, int sessionId, string ipAddress) => _client.ServiceProxy.RegisterAccountLogin(accountId, sessionId, ipAddress);
+        public void RefreshPenalty(int penaltyId) => client.ServiceProxy.RefreshPenalty(penaltyId);
 
-        public void RegisterCrossServerAccountLogin(long accountId, int sessionId) => _client.ServiceProxy.RegisterCrossServerAccountLogin(accountId, sessionId);
+        public void RegisterAccountLogin(long accountId, long sessionId, string accountName)
+        {
+            client.ServiceProxy.RegisterAccountLogin(accountId, sessionId, accountName);
+        }
 
-        public int? RegisterWorldServer(SerializableWorldServer worldServer) => _client.ServiceProxy.RegisterWorldServer(worldServer);
+        public void RegisterInternalAccountLogin(long accountId, int sessionId)
+        {
+            client.ServiceProxy.RegisterInternalAccountLogin(accountId, sessionId);
+        }
 
-        public void Restart(string worldGroup) => _client.ServiceProxy.Restart(worldGroup);
+        public int? RegisterWorldServer(SerializableWorldServer worldServer)
+        {
+            return client.ServiceProxy.RegisterWorldServer(worldServer);
+        }
 
-        public long[][] RetrieveOnlineCharacters(long characterId) => _client.ServiceProxy.RetrieveOnlineCharacters(characterId);
+        public string RetrieveRegisteredWorldServers(long sessionId)
+        {
+            return client.ServiceProxy.RetrieveRegisteredWorldServers(sessionId);
+        }
 
-        public string RetrieveOriginWorld(long accountId) => _client.ServiceProxy.RetrieveOriginWorld(accountId);
+        public IEnumerable<string> RetrieveServerStatistics()
+        {
+            return client.ServiceProxy.RetrieveServerStatistics();
+        }
 
-        public string RetrieveRegisteredWorldServers(string username, int sessionId, bool ignoreUserName) => _client.ServiceProxy.RetrieveRegisteredWorldServers(username, sessionId, ignoreUserName);
+        public void SendMail(string worldGroup, MailDTO mail)
+        {
+            client.ServiceProxy.SendMail(worldGroup, mail);
+        }
 
-        public IEnumerable<string> RetrieveServerStatistics() => _client.ServiceProxy.RetrieveServerStatistics();
+        public int? SendMessageToCharacter(SCSCharacterMessage message)
+        {
+            return client.ServiceProxy.SendMessageToCharacter(message);
+        }
 
-        public void RunGlobalEvent(Domain.EventType eventType) => _client.ServiceProxy.RunGlobalEvent(eventType);
+        public void Shutdown(string worldGroup) => client.ServiceProxy.Shutdown(worldGroup);
 
-        public int? SendMessageToCharacter(SCSCharacterMessage message) => _client.ServiceProxy.SendMessageToCharacter(message);
+        public void UnregisterWorldServer(Guid worldId)
+        {
+            client.ServiceProxy.UnregisterWorldServer(worldId);
+        }
 
-        public void Shutdown(string worldGroup) => _client.ServiceProxy.Shutdown(worldGroup);
+        public void UpdateBazaar(string worldGroup, long bazaarItemId)
+        {
+            client.ServiceProxy.UpdateBazaar(worldGroup, bazaarItemId);
+        }
 
-        public void UnregisterWorldServer(Guid worldId) => _client.ServiceProxy.UnregisterWorldServer(worldId);
+        public void UpdateFamily(string worldGroup, long familyId)
+        {
+            client.ServiceProxy.UpdateFamily(worldGroup, familyId);
+        }
 
-        public void UpdateBazaar(string worldGroup, long bazaarItemId) => _client.ServiceProxy.UpdateBazaar(worldGroup, bazaarItemId);
-
-        public void UpdateFamily(string worldGroup, long familyId) => _client.ServiceProxy.UpdateFamily(worldGroup, familyId);
-
-        public void UpdateRelation(string worldGroup, long relationId) => _client.ServiceProxy.UpdateRelation(worldGroup, relationId);
+        public void UpdateRelation(string worldGroup, long relationId)
+        {
+            client.ServiceProxy.UpdateRelation(worldGroup, relationId);
+        }
 
         internal void OnCharacterConnected(long characterId)
         {
-            string characterName = DAOFactory.CharacterDAO.LoadById(characterId)?.Name;
+            var characterName = DAOFactory.CharacterDAO.FirstOrDefault(s => s.CharacterId == characterId)?.Name;
             CharacterConnectedEvent?.Invoke(new Tuple<long, string>(characterId, characterName), null);
         }
 
         internal void OnCharacterDisconnected(long characterId)
         {
-            string characterName = DAOFactory.CharacterDAO.LoadById(characterId)?.Name;
+            var characterName = DAOFactory.CharacterDAO.FirstOrDefault(s => s.CharacterId == characterId)?.Name;
             CharacterDisconnectedEvent?.Invoke(new Tuple<long, string>(characterId, characterName), null);
         }
 
-        internal void OnKickSession(long? accountId, int? sessionId) => SessionKickedEvent?.Invoke(new Tuple<long?, long?>(accountId, sessionId), null);
+        internal void OnKickSession(long? accountId, long? sessionId)
+        {
+            SessionKickedEvent?.Invoke(new Tuple<long?, long?>(accountId, sessionId), null);
+        }
 
-        internal void OnRunGlobalEvent(Domain.EventType eventType) => GlobalEvent?.Invoke(eventType, null);
+        internal void OnSendMail(MailDTO mail) => MailSent?.Invoke(mail, null);
 
-        internal void OnSendMessageToCharacter(SCSCharacterMessage message) => MessageSentToCharacter?.Invoke(message, null);
+        internal void OnSendMessageToCharacter(SCSCharacterMessage message)
+        {
+            MessageSentToCharacter?.Invoke(message, null);
+        }
 
         internal void OnShutdown() => ShutdownEvent?.Invoke(null, null);
-
-        internal void OnRestart() => RestartEvent?.Invoke(null, null);
 
         internal void OnUpdateBazaar(long bazaarItemId) => BazaarRefresh?.Invoke(bazaarItemId, null);
 
         internal void OnUpdateFamily(long familyId) => FamilyRefresh?.Invoke(familyId, null);
 
-        internal void OnUpdatePenaltyLog(int penaltyLogId) => PenaltyLogRefresh?.Invoke(penaltyLogId, null);
+        internal void OnUpdatePenaltyLog(int penaltyLogId)
+        {
+            PenaltyLogRefresh?.Invoke(penaltyLogId, null);
+        }
 
         internal void OnUpdateRelation(long relationId) => RelationRefresh?.Invoke(relationId, null);
-
-        internal void OnUpdateStaticBonus(long characterId) => StaticBonusRefresh?.Invoke(characterId, null);
 
         #endregion
     }

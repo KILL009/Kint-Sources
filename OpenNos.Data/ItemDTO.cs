@@ -1,24 +1,9 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-using OpenNos.Domain;
-using System;
+﻿using OpenNos.Domain;
+using System.ComponentModel.DataAnnotations;
 
 namespace OpenNos.Data
 {
-    [Serializable]
-    public class ItemDTO
+    public class ItemDTO : MappingBaseDTO
     {
         #region Properties
 
@@ -66,6 +51,24 @@ namespace OpenNos.Data
 
         public short FireResistance { get; set; }
 
+        public bool Flag1 { get; set; }
+
+        public bool Flag2 { get; set; }
+
+        public bool Flag3 { get; set; }
+
+        public bool Flag4 { get; set; }
+
+        public bool Flag5 { get; set; }
+
+        public bool Flag6 { get; set; }
+
+        public bool Flag7 { get; set; }
+
+        public bool Flag8 { get; set; }
+
+        public bool Flag9 { get; set; }
+
         public byte Height { get; set; }
 
         public short HitRate { get; set; }
@@ -73,8 +76,6 @@ namespace OpenNos.Data
         public short Hp { get; set; }
 
         public short HpRegeneration { get; set; }
-
-        public bool IsBlocked { get; set; }
 
         public bool IsColored { get; set; }
 
@@ -84,13 +85,13 @@ namespace OpenNos.Data
 
         public bool IsHeroic { get; set; }
 
-        public bool IsHolder { get; set; }
-
-        public bool IsMinilandObject { get; set; }
+        public bool IsMinilandActionable { get; set; }
 
         public bool IsSoldable { get; set; }
 
         public bool IsTradable { get; set; }
+
+        public bool IsWarehouse { get; set; }
 
         public byte ItemSubType { get; set; }
 
@@ -152,6 +153,7 @@ namespace OpenNos.Data
 
         public InventoryType Type { get; set; }
 
+        [Key]
         public short VNum { get; set; }
 
         public short WaitDelay { get; set; }

@@ -1,19 +1,6 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-using OpenNos.GameObject.Helpers;
+﻿using OpenNos.Data;
 using System;
+using System.Collections.Generic;
 
 namespace OpenNos.GameObject
 {
@@ -21,16 +8,15 @@ namespace OpenNos.GameObject
     {
         #region Members
 
+        public List<EquipmentOptionDTO> EquipmentOptions;
         protected ItemInstance _itemInstance;
-
-        private readonly object _lockObject = new object();
-        private long _transportId;
+        private long transportId;
 
         #endregion
 
         #region Instantiation
 
-        protected MapItem(short x, short y)
+        public MapItem(short x, short y)
         {
             PositionX = x;
             PositionY = y;
@@ -52,25 +38,26 @@ namespace OpenNos.GameObject
 
         public short PositionY { get; set; }
 
-        public long TransportId
+        public virtual long TransportId
         {
             get
             {
-                lock (_lockObject)
+                if (transportId == 0)
                 {
-                    if (_transportId == 0)
-                    {
-                        _transportId = TransportFactory.Instance.GenerateTransportId();
-                    }
-                    return _transportId;
+                    // create transportId thru factory
+                    // TODO: Review has some problems, aka. issue corresponding to
+                    //       weird/multiple/missplaced drops
+                    transportId = TransportFactory.Instance.GenerateTransportId();
                 }
+
+                return transportId;
             }
 
-            private set
+            set
             {
-                if (value != _transportId)
+                if (value != transportId)
                 {
-                    _transportId = value;
+                    transportId = value;
                 }
             }
         }
@@ -79,7 +66,12 @@ namespace OpenNos.GameObject
 
         #region Methods
 
-        public string GenerateIn() => StaticPacketHelper.In(Domain.UserType.Object, ItemVNum, TransportId, PositionX, PositionY, this is MonsterMapItem monsterMapItem && monsterMapItem.GoldAmount > 1 ? monsterMapItem.GoldAmount : Amount, 0, 0, 0, 0, false);
+        public string GenerateIn()
+        {
+            return $"in 9 {ItemVNum} {TransportId} {PositionX} {PositionY} {(this is MonsterMapItem && ((MonsterMapItem)this).GoldAmount > 1 ? ((MonsterMapItem)this).GoldAmount : Amount)} 0 0 -1";
+        }
+
+        public string GenerateOut(long id) => $"out 9 {id}";
 
         public abstract ItemInstance GetItemInstance();
 

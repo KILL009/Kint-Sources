@@ -1,18 +1,4 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-using OpenNos.Core.Networking.Communication.Scs.Client;
+﻿using OpenNos.Core.Networking.Communication.Scs.Client;
 using OpenNos.Core.Networking.Communication.Scs.Communication.EndPoints.Tcp;
 using OpenNos.Core.Networking.Communication.Scs.Server;
 using System;
@@ -37,11 +23,11 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.EndPoints
             // Check if end point address is null
             if (string.IsNullOrEmpty(endPointAddress))
             {
-                throw new ArgumentNullException(nameof(endPointAddress));
+                throw new ArgumentNullException("endPointAddress");
             }
 
             // If not protocol specified, assume TCP.
-            string endPointAddr = endPointAddress;
+            var endPointAddr = endPointAddress;
             if (!endPointAddr.Contains("://"))
             {
                 endPointAddr = "tcp://" + endPointAddr;
@@ -55,8 +41,8 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.EndPoints
             }
 
             // Split end point, find protocol and address
-            string protocol = splittedEndPoint[0].Trim().ToLower();
-            string address = splittedEndPoint[1].Trim();
+            var protocol = splittedEndPoint[0].Trim().ToLower();
+            var address = splittedEndPoint[1].Trim();
             switch (protocol)
             {
                 case "tcp":

@@ -1,26 +1,10 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-using OpenNos.Core.Networking.Communication.Scs.Client;
+﻿using OpenNos.Core.Networking.Communication.Scs.Client;
 using OpenNos.Core.Networking.Communication.Scs.Communication;
-using OpenNos.Core.Networking.Communication.Scs.Communication.Channels;
 using OpenNos.Core.Networking.Communication.Scs.Communication.Messages;
 using OpenNos.Core.Networking.Communication.Scs.Communication.Messengers;
 using OpenNos.Core.Networking.Communication.ScsServices.Communication;
 using OpenNos.Core.Networking.Communication.ScsServices.Communication.Messages;
 using System;
-using System.Linq;
 using System.Reflection;
 
 namespace OpenNos.Core.Networking.Communication.ScsServices.Client
@@ -36,25 +20,25 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Client
         /// <summary>
         /// Underlying IScsClient object to communicate with server.
         /// </summary>
-        private readonly IScsClient _client;
+        private readonly IScsClient client;
 
         /// <summary>
         /// The client object that is used to call method invokes in client side. May be null if
         /// client has no methods to be invoked by server.
         /// </summary>
-        private readonly object _clientObject;
+        private readonly object clientObject;
 
         /// <summary>
         /// This object is used to create a transparent proxy to invoke remote methods on server.
         /// </summary>
-        private readonly AutoConnectRemoteInvokeProxy<T, IScsClient> _realServiceProxy;
+        private readonly AutoConnectRemoteInvokeProxy<T, IScsClient> realServiceProxy;
 
         /// <summary>
         /// Messenger object to send/receive messages over _client.
         /// </summary>
-        private readonly RequestReplyMessenger<IScsClient> _requestReplyMessenger;
+        private readonly RequestReplyMessenger<IScsClient> requestReplyMessenger;
 
-        private bool _disposed;
+        private bool disposed;
 
         #endregion
 
@@ -70,17 +54,17 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Client
         /// </param>
         public ScsServiceClient(IScsClient client, object clientObject)
         {
-            _client = client;
-            _clientObject = clientObject;
+            this.client = client;
+            this.clientObject = clientObject;
 
-            _client.Connected += Client_Connected;
-            _client.Disconnected += Client_Disconnected;
+            this.client.Connected += Client_Connected;
+            this.client.Disconnected += Client_Disconnected;
 
-            _requestReplyMessenger = new RequestReplyMessenger<IScsClient>(client);
-            _requestReplyMessenger.MessageReceived += RequestReplyMessenger_MessageReceived;
+            requestReplyMessenger = new RequestReplyMessenger<IScsClient>(client);
+            requestReplyMessenger.MessageReceived += RequestReplyMessenger_MessageReceived;
 
-            _realServiceProxy = new AutoConnectRemoteInvokeProxy<T, IScsClient>(_requestReplyMessenger, this);
-            ServiceProxy = (T)_realServiceProxy.GetTransparentProxy();
+            realServiceProxy = new AutoConnectRemoteInvokeProxy<T, IScsClient>(requestReplyMessenger, this);
+            ServiceProxy = (T)realServiceProxy.GetTransparentProxy();
         }
 
         #endregion
@@ -101,27 +85,30 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Client
 
         #region Properties
 
-        /// <inheritdoc/>
-        public ICommunicationChannel CommunicationChannel => _client.CommunicationChannel;
-
         /// <summary>
         /// Gets the current communication state.
         /// </summary>
-        public CommunicationStates CommunicationState => _client.CommunicationState;
+        public CommunicationStates CommunicationState => client.CommunicationState;
 
         /// <summary>
         /// Timeout for connecting to a server (as milliseconds). Default value: 15 seconds (15000 ms).
         /// </summary>
         public int ConnectTimeout
         {
-            get => _client.ConnectTimeout;
-            set => _client.ConnectTimeout = value;
+            get
+            {
+                return client.ConnectTimeout;
+            }
+            set
+            {
+                client.ConnectTimeout = value;
+            }
         }
 
         /// <summary>
         /// Reference to the service proxy to invoke remote service methods.
         /// </summary>
-        public T ServiceProxy { get; }
+        public T ServiceProxy { get; private set; }
 
         /// <summary>
         /// Timeout value when invoking a service method. If timeout occurs before end of remote
@@ -130,8 +117,14 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Client
         /// </summary>
         public int Timeout
         {
-            get => _requestReplyMessenger.Timeout;
-            set => _requestReplyMessenger.Timeout = value;
+            get
+            {
+                return requestReplyMessenger.Timeout;
+            }
+            set
+            {
+                requestReplyMessenger.Timeout = value;
+            }
         }
 
         #endregion
@@ -141,32 +134,25 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Client
         /// <summary>
         /// Connects to server.
         /// </summary>
-        public void Connect() => _client.Connect();
+        public void Connect() => client.Connect();
 
         /// <summary>
         /// Disconnects from server. Does nothing if already disconnected.
         /// </summary>
-        public void Disconnect() => _client.Disconnect();
+        public void Disconnect() => client.Disconnect();
 
         /// <summary>
         /// Calls Disconnect method.
         /// </summary>
         public void Dispose()
         {
-            if (!_disposed)
+            if (!disposed)
             {
                 Dispose(true);
                 GC.SuppressFinalize(this);
-                _disposed = true;
+                disposed = true;
             }
         }
-
-        /// <summary>
-        /// Gets a service proxy for the specified <typeparamref name="TServiceInterface"/>.
-        /// </summary>
-        /// <typeparam name="TServiceInterface">the service interface type</typeparam>
-        /// <returns></returns>
-        public TServiceInterface GetServiceProxy<TServiceInterface>() => (TServiceInterface)new AutoConnectRemoteInvokeProxy<TServiceInterface, IScsClient>(_requestReplyMessenger, this).GetTransparentProxy();
 
         protected virtual void Dispose(bool disposing)
         {
@@ -183,7 +169,7 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Client
         /// <param name="e">Event arguments</param>
         private void Client_Connected(object sender, EventArgs e)
         {
-            _requestReplyMessenger.Start();
+            requestReplyMessenger.Start();
             OnConnected();
         }
 
@@ -194,7 +180,7 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Client
         /// <param name="e">Event arguments</param>
         private void Client_Disconnected(object sender, EventArgs e)
         {
-            _requestReplyMessenger.Stop();
+            requestReplyMessenger.Stop();
             OnDisconnected();
         }
 
@@ -203,7 +189,7 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Client
         /// </summary>
         private void OnConnected()
         {
-            EventHandler handler = Connected;
+            var handler = Connected;
             handler?.Invoke(this, EventArgs.Empty);
         }
 
@@ -212,7 +198,7 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Client
         /// </summary>
         private void OnDisconnected()
         {
-            EventHandler handler = Disconnected;
+            var handler = Disconnected;
             handler?.Invoke(this, EventArgs.Empty);
         }
 
@@ -225,14 +211,14 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Client
         private void RequestReplyMessenger_MessageReceived(object sender, MessageEventArgs e)
         {
             // Cast message to ScsRemoteInvokeMessage and check it
-            ScsRemoteInvokeMessage invokeMessage = e.Message as ScsRemoteInvokeMessage;
+            var invokeMessage = e.Message as ScsRemoteInvokeMessage;
             if (invokeMessage == null)
             {
                 return;
             }
 
             // Check client object.
-            if (_clientObject == null)
+            if (clientObject == null)
             {
                 SendInvokeResponse(invokeMessage, null, new ScsRemoteException("Client does not wait for method invocations by server."));
                 return;
@@ -242,18 +228,18 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Client
             object returnValue;
             try
             {
-                // reflection?
-                Type type = _clientObject.GetType();
-                MethodInfo method = type.GetMethod(invokeMessage.MethodName) ?? type.GetInterfaces().Select(t => t.GetMethod(invokeMessage.MethodName)).FirstOrDefault(m => m != null);
-                returnValue = method.Invoke(_clientObject, invokeMessage.Parameters);
+                var type = clientObject.GetType();
+                var method = type.GetMethod(invokeMessage.MethodName);
+                returnValue = method.Invoke(clientObject, invokeMessage.Parameters);
             }
             catch (TargetInvocationException ex)
             {
-                Exception innerEx = ex.InnerException;
+                var innerEx = ex.InnerException;
                 if (innerEx != null)
                 {
                     SendInvokeResponse(invokeMessage, null, new ScsRemoteException(innerEx.Message, innerEx));
                 }
+
                 return;
             }
             catch (Exception ex)
@@ -276,16 +262,16 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Client
         {
             try
             {
-                _requestReplyMessenger.SendMessage(new ScsRemoteInvokeReturnMessage
-                {
-                    RepliedMessageId = requestMessage.MessageId,
-                    ReturnValue = returnValue,
-                    RemoteException = exception
-                }, 10);
+                requestReplyMessenger.SendMessage(
+                    new ScsRemoteInvokeReturnMessage
+                    {
+                        RepliedMessageId = requestMessage.MessageId,
+                        ReturnValue = returnValue,
+                        RemoteException = exception
+                    }, 10);
             }
-            catch (Exception ex)
+            catch
             {
-                Logger.Error("Invoke response failed to send", ex);
             }
         }
 

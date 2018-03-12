@@ -1,3 +1,4 @@
+using OpenNos.DAL.EF.DB;
 using System.Data.Entity.Migrations;
 
 namespace OpenNos.DAL.EF.Migrations
@@ -6,7 +7,10 @@ namespace OpenNos.DAL.EF.Migrations
     {
         #region Instantiation
 
-        public Configuration() => AutomaticMigrationsEnabled = false;
+        public Configuration()
+        {
+            AutomaticMigrationsEnabled = false;
+        }
 
         #endregion
     }

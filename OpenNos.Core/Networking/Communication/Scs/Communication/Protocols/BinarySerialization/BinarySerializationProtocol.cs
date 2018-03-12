@@ -1,18 +1,4 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-using OpenNos.Core.Networking.Communication.Scs.Communication.Messages;
+﻿using OpenNos.Core.Networking.Communication.Scs.Communication.Messages;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -44,12 +30,12 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Protocols.Bina
         /// </summary>
         private const int MAX_MESSAGE_LENGTH = 128 * 1024 * 1024; // 128 Megabytes.
 
-        private bool _disposed;
+        private bool disposed;
 
         /// <summary>
         /// This MemoryStream object is used to collect receiving bytes to build messages.
         /// </summary>
-        private MemoryStream _receiveMemoryStream;
+        private MemoryStream receiveMemoryStream;
 
         #endregion
 
@@ -58,7 +44,10 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Protocols.Bina
         /// <summary>
         /// Creates a new instance of BinarySerializationProtocol.
         /// </summary>
-        public BinarySerializationProtocol() => _receiveMemoryStream = new MemoryStream();
+        public BinarySerializationProtocol()
+        {
+            receiveMemoryStream = new MemoryStream();
+        }
 
         #endregion
 
@@ -78,7 +67,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Protocols.Bina
         public IEnumerable<IScsMessage> CreateMessages(byte[] receivedBytes)
         {
             // Write all received bytes to the _receiveMemoryStream
-            _receiveMemoryStream.Write(receivedBytes, 0, receivedBytes.Length);
+            receiveMemoryStream.Write(receivedBytes, 0, receivedBytes.Length);
 
             // Create a list to collect messages
             List<IScsMessage> messages = new List<IScsMessage>();
@@ -94,11 +83,11 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Protocols.Bina
 
         public void Dispose()
         {
-            if (!_disposed)
+            if (!disposed)
             {
                 Dispose(true);
                 GC.SuppressFinalize(this);
-                _disposed = true;
+                disposed = true;
             }
         }
 
@@ -116,7 +105,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Protocols.Bina
             byte[] serializedMessage = SerializeMessage(message);
 
             // Check for message length
-            int messageLength = serializedMessage.Length;
+            var messageLength = serializedMessage.Length;
             if (messageLength > MAX_MESSAGE_LENGTH)
             {
                 throw new CommunicationException("Message is too big (" + messageLength + " bytes). Max allowed length is " + MAX_MESSAGE_LENGTH + " bytes.");
@@ -138,9 +127,9 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Protocols.Bina
         /// </summary>
         public void Reset()
         {
-            if (_receiveMemoryStream.Length > 0)
+            if (receiveMemoryStream.Length > 0)
             {
-                _receiveMemoryStream = new MemoryStream();
+                receiveMemoryStream = new MemoryStream();
             }
         }
 
@@ -163,7 +152,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Protocols.Bina
                 deserializeMemoryStream.Position = 0;
 
                 // Deserialize the message
-                BinaryFormatter binaryFormatter = new BinaryFormatter
+                var binaryFormatter = new BinaryFormatter
                 {
                     AssemblyFormat = FormatterAssemblyStyle.Simple,
                     Binder = new DeserializationAppDomainBinder()
@@ -178,7 +167,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Protocols.Bina
         {
             if (disposing)
             {
-                _receiveMemoryStream.Dispose();
+                receiveMemoryStream.Dispose();
             }
         }
 
@@ -210,14 +199,15 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Protocols.Bina
         private static byte[] ReadByteArray(Stream stream, int length)
         {
             byte[] buffer = new byte[length];
-            int totalRead = 0;
+            var totalRead = 0;
             while (totalRead < length)
             {
-                int read = stream.Read(buffer, totalRead, length - totalRead);
+                var read = stream.Read(buffer, totalRead, length - totalRead);
                 if (read <= 0)
                 {
                     throw new EndOfStreamException("Can not read from stream! Input stream is closed.");
                 }
+
                 totalRead += read;
             }
 
@@ -251,71 +241,67 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Protocols.Bina
         private bool ReadSingleMessage(ICollection<IScsMessage> messages)
         {
             // Go to the begining of the stream
-            _receiveMemoryStream.Position = 0;
+            receiveMemoryStream.Position = 0;
 
             // If stream has less than 4 bytes, that means we can not even read length of the message
             // So, return false to wait more bytes from remore application.
-            if (_receiveMemoryStream.Length < 4)
+            if (receiveMemoryStream.Length < 4)
             {
                 return false;
             }
 
             // Read length of the message
-            int messageLength = Convert.ToInt32(_receiveMemoryStream.Length); // fix, always read to end TODO: implement framing
+            var messageLength = Convert.ToInt32(receiveMemoryStream.Length); // fix, always read to end TODO: implement framing
             if (messageLength > MAX_MESSAGE_LENGTH)
             {
                 throw new Exception("Message is too big (" + messageLength + " bytes). Max allowed length is " + MAX_MESSAGE_LENGTH + " bytes.");
             }
 
-            // If message is zero-length (It must not be but good approach to check it)
-            /*
-            if (messageLength == 0)
+            ////If message is zero-length (It must not be but good approach to check it)
+            /*if (messageLength == 0)
             {
-                // if no more bytes, return immediately
+                //if no more bytes, return immediately
                 if (_receiveMemoryStream.Length == 4)
                 {
                     _receiveMemoryStream = new MemoryStream(); //Clear the stream
                     return false;
                 }
 
-                // Create a new memory stream from current except first 4-bytes.
+                //Create a new memory stream from current except first 4-bytes.
                 var bytes = _receiveMemoryStream.ToArray();
                 _receiveMemoryStream = new MemoryStream();
                 _receiveMemoryStream.Write(bytes, 4, bytes.Length - 4);
                 return true;
-            }
-            */
+            }*/
 
-            // If all bytes of the message is not received yet, return to wait more bytes
-            /*
-            if (_receiveMemoryStream.Length < (4 + messageLength))
+            ////If all bytes of the message is not received yet, return to wait more bytes
+            /*if (_receiveMemoryStream.Length < (4 + messageLength))
             {
                 _receiveMemoryStream.Position = _receiveMemoryStream.Length;
                 return false;
-            }
-            */
+            }*/
 
             // Read bytes of serialized message and deserialize it
-            byte[] serializedMessageBytes = ReadByteArray(_receiveMemoryStream, messageLength);
+            byte[] serializedMessageBytes = ReadByteArray(receiveMemoryStream, messageLength);
             messages.Add(DeserializeMessage(serializedMessageBytes));
 
             // Read remaining bytes to an array
-            if (_receiveMemoryStream.Length != _receiveMemoryStream.Position)
+            if (receiveMemoryStream.Length != receiveMemoryStream.Position)
             {
-                byte[] remainingBytes = ReadByteArray(_receiveMemoryStream, (int)_receiveMemoryStream.Length);
+                byte[] remainingBytes = ReadByteArray(receiveMemoryStream, (int)receiveMemoryStream.Length);
 
                 // Re-create the receive memory stream and write remaining bytes
-                _receiveMemoryStream = new MemoryStream();
-                _receiveMemoryStream.Write(remainingBytes, 0, remainingBytes.Length);
+                receiveMemoryStream = new MemoryStream();
+                receiveMemoryStream.Write(remainingBytes, 0, remainingBytes.Length);
             }
             else
             {
                 // nothing left, just recreate
-                _receiveMemoryStream = new MemoryStream();
+                receiveMemoryStream = new MemoryStream();
             }
 
             // Return true to re-call this method to try to read next message
-            return _receiveMemoryStream.Length > 0;
+            return receiveMemoryStream.Length > 0;
         }
 
         #endregion
@@ -332,7 +318,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Protocols.Bina
 
             public override Type BindToType(string assemblyName, string typeName)
             {
-                string toAssemblyName = assemblyName.Split(',')[0];
+                var toAssemblyName = assemblyName.Split(',')[0];
                 return (from assembly in AppDomain.CurrentDomain.GetAssemblies()
                         where assembly.FullName.Split(',')[0] == toAssemblyName
                         select assembly.GetType(typeName)).FirstOrDefault();

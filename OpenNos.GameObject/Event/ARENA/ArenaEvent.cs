@@ -2,7 +2,6 @@
 using OpenNos.Data;
 using OpenNos.Domain;
 using OpenNos.GameObject.Helpers;
-using OpenNos.GameObject.Networking;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -93,7 +92,7 @@ namespace OpenNos.GameObject.Event.ARENA
                                 return;
                             }
 
-                            MapInstance map = ServerManager.GenerateMapInstance(2015, MapInstanceType.TalentArenaMapInstance, new InstanceBag());
+                            MapInstance map = ServerManager.Instance.GenerateMapInstance(2015, MapInstanceType.TalentArenaMapInstance, new InstanceBag());
                             map.IsPVP = true;
                             ConcurrentBag<ArenaTeamMember> arenaTeam = new ConcurrentBag<ArenaTeamMember>();
                             ServerManager.Instance.ArenaTeams.Add(arenaTeam);
@@ -160,12 +159,12 @@ namespace OpenNos.GameObject.Event.ARENA
                                         int i = Array.IndexOf(arenamembers, o) + 1;
                                         o.Session.Character.Hp = (int)o.Session.Character.HPLoad();
                                         o.Session.Character.Mp = (int)o.Session.Character.MPLoad();
-                                        ServerManager.ChangeMapInstance(o.Session.Character.CharacterId, map.MapInstanceId, o.GroupId == member.GroupId ? 125 : 14, 
+                                        ServerManager.Instance.ChangeMapInstance(o.Session.Character.CharacterId, map.MapInstanceId, o.GroupId == member.GroupId ? 125 : 14,
                                             (o.GroupId == member.GroupId ? 37 : 38) + i % 3 * 2);
-                                        o.Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("SELECT_ORDER_ARENA_TIME"), 0));
+                                        o.Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("SELECT_ORDER_ARENA_TIME"), 0));
                                         o.Session.SendPacket(o.Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("SELECT_ORDER_ARENA_TIME"), 10));
                                         o.Session.SendPacket(o.Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("SELECT_ORDER_ARENA"), 10));
-                                        o.Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("SELECT_ORDER_ARENA"), 0));
+                                        o.Session.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(Language.Instance.GetMessageFromKey("SELECT_ORDER_ARENA"), 0));
                                         o.Session.SendPacket(o.Session.Character.GenerateTaM(0));
                                         o.Session.SendPacket("ta_sv 0");
                                         o.Session.SendPacket(UserInterfaceHelper.Instance.GenerateTaSt(TalentArenaOptionType.Watch));
@@ -409,11 +408,11 @@ namespace OpenNos.GameObject.Event.ARENA
 
                                                 arenaTeam.ToList().ForEach(arenauser =>
                                                 {
-                                                    Observable.Timer(TimeSpan.FromSeconds(2)).Subscribe(WinZenas =>
-                                                    {
-                                                        SendRewards(arenauser, arenauser.ArenaTeamType == ArenaTeamType.ZENAS);
-                                                    });
-
+													Observable.Timer(TimeSpan.FromSeconds(2)).Subscribe(WinZenas =>
+													{
+														SendRewards(arenauser, arenauser.ArenaTeamType == ArenaTeamType.ZENAS);
+													});
+                                                    
                                                 });
                                                 map.Sessions.Except(arenamembers.Select(x => x.Session)).ToList().ForEach(x =>
                                                 {

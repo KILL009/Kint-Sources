@@ -1,17 +1,3 @@
-/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
 using OpenNos.Core;
 using OpenNos.DAL;
 using OpenNos.Data;
@@ -21,7 +7,6 @@ using OpenNos.GameObject.Packets.ClientPackets;
 using OpenNos.Master.Library.Client;
 using System;
 using System.Configuration;
-using System.Linq;
 
 namespace OpenNos.Handler
 {
@@ -29,29 +14,34 @@ namespace OpenNos.Handler
     {
         #region Members
 
-        private readonly ClientSession _session;
+        private readonly ClientSession session;
 
         #endregion
 
         #region Instantiation
 
-        public LoginPacketHandler(ClientSession session) => _session = session;
+        public LoginPacketHandler(ClientSession session)
+        {
+            this.session = session;
+        }
 
         #endregion
 
         #region Methods
 
-        public string BuildServersPacket(string username, int sessionId, bool ignoreUserName)
+        public string BuildServersPacket(long accountId, int sessionId)
         {
-            string channelpacket = CommunicationServiceClient.Instance.RetrieveRegisteredWorldServers(username, sessionId, ignoreUserName);
+            var channelpacket = CommunicationServiceClient.Instance.RetrieveRegisteredWorldServers(sessionId);
 
-            if (channelpacket == null || !channelpacket.Contains(':'))
+            if (channelpacket != null)
             {
-                Logger.Debug("Could not retrieve Worldserver groups. Please make sure they've already been registered.");
-                _session.SendPacket($"fail {Language.Instance.GetMessageFromKey("NO_WORLDSERVERS")}");
+                return channelpacket;
             }
 
-            return channelpacket;
+            Logger.Log.Error("Could not retrieve Worldserver groups. Please make sure they've already been registered.");
+            session.SendPacket($"failc {(byte)LoginFailType.Maintenance}");
+
+            return null;
         }
 
         /// <summary>
@@ -65,87 +55,80 @@ namespace OpenNos.Handler
                 return;
             }
 
-            UserDTO user = new UserDTO
+            var user = new UserDTO
             {
                 Name = loginPacket.Name,
-                Password = ConfigurationManager.AppSettings["UseOldCrypto"] == "true" ? CryptographyBase.Sha512(LoginCryptography.GetPassword(loginPacket.Password)).ToUpper() : loginPacket.Password
+                Password = loginPacket.Password
             };
-            AccountDTO loadedAccount = DAOFactory.AccountDAO.LoadByName(user.Name);
-            if (loadedAccount?.Password.ToUpper().Equals(user.Password) == true)
-            {
-                string ipAddress = _session.IpAddress;
-                DAOFactory.AccountDAO.WriteGeneralLog(loadedAccount.AccountId, ipAddress, null, GeneralLogType.Connection, "LoginServer");
 
-                //check if the account is connected
+            var loadedAccount = DAOFactory.AccountDAO.FirstOrDefault(s => s.Name.Equals(user.Name));
+            if (loadedAccount != null && loadedAccount.Password.ToUpper().Equals(user.Password))
+            {
+                // TODO LOG LOGIN
+
+                // check if the account is connected
                 if (!CommunicationServiceClient.Instance.IsAccountConnected(loadedAccount.AccountId))
                 {
-                    AuthorityType type = loadedAccount.Authority;
-                    PenaltyLogDTO penalty = DAOFactory.PenaltyLogDAO.LoadByAccount(loadedAccount.AccountId).FirstOrDefault(s => s.DateEnd > DateTime.Now && s.Penalty == PenaltyType.Banned);
+                    var type = loadedAccount.Authority;
+                    var penalty = DAOFactory.PenaltyLogDAO.FirstOrDefault(s => s.AccountId.Equals(loadedAccount.AccountId) && s.DateEnd > DateTime.Now && s.Penalty == PenaltyType.Banned);
                     if (penalty != null)
                     {
-                        _session.SendPacket($"fail {string.Format(Language.Instance.GetMessageFromKey("BANNED"), penalty.Reason, penalty.DateEnd.ToString("yyyy-MM-dd-HH:mm"))}");
+                        session.SendPacket($"failc {(byte)LoginFailType.Banned}");
                     }
                     else
                     {
                         switch (type)
                         {
+                            // TODO TO ENUM
                             case AuthorityType.Unconfirmed:
                                 {
-                                    _session.SendPacket($"fail {Language.Instance.GetMessageFromKey("NOTVALIDATE")}");
+                                    session.SendPacket($"failc {(byte)LoginFailType.AccountOrPasswordWrong}");
                                 }
+
                                 break;
 
                             case AuthorityType.Banned:
-                                {
-                                    _session.SendPacket($"fail {string.Format(Language.Instance.GetMessageFromKey("BANNED"), "Unknown", "Unknown")}");
-                                }
+                                session.SendPacket($"failc {(byte)LoginFailType.Banned}");
+
                                 break;
 
                             case AuthorityType.Closed:
-                                {
-                                    _session.SendPacket($"fail {Language.Instance.GetMessageFromKey("IDERROR")}");
-                                }
+                                session.SendPacket($"failc {(byte)LoginFailType.CantConnect}");
+
                                 break;
 
                             default:
                                 {
-                                    if (loadedAccount.Authority == AuthorityType.User || loadedAccount.Authority == AuthorityType.BitchNiggerFaggot)
-                                    {
-                                        MaintenanceLogDTO maintenanceLog = DAOFactory.MaintenanceLogDAO.LoadFirst();
-                                        if (maintenanceLog != null)
-                                        {
-                                            _session.SendPacket($"fail {string.Format(Language.Instance.GetMessageFromKey("MAINTENANCE"), maintenanceLog.DateEnd, maintenanceLog.Reason)}");
-                                            return;
-                                        }
-                                    }
+                                    var newSessionId = SessionFactory.Instance.GenerateSessionId();
+                                    Logger.Log.DebugFormat(Language.Instance.GetMessageFromKey("CONNECTION"), user.Name, newSessionId);
 
-                                    int newSessionId = SessionFactory.Instance.GenerateSessionId();
-                                    Logger.Debug(string.Format(Language.Instance.GetMessageFromKey("CONNECTION"), user.Name, newSessionId));
+                                    // TODO MAINTENANCE MODE (MASTER SERVER) IF MAINTENANCE
+                                    // _session.SendPacket($"failc 2"); inform communication service
+                                    // about new player from login server
                                     try
                                     {
-                                        ipAddress = ipAddress.Substring(6, ipAddress.LastIndexOf(':') - 6);
-                                        CommunicationServiceClient.Instance.RegisterAccountLogin(loadedAccount.AccountId, newSessionId, ipAddress);
+                                        CommunicationServiceClient.Instance.RegisterAccountLogin(loadedAccount.AccountId, newSessionId, loadedAccount.Name);
                                     }
                                     catch (Exception ex)
                                     {
-                                        Logger.Error("General Error SessionId: " + newSessionId, ex);
+                                        Logger.Log.Error("General Error SessionId: " + newSessionId, ex);
                                     }
-                                    string[] clientData = loginPacket.ClientData.Split('.');
-                                    bool ignoreUserName = short.TryParse(clientData[3], out short clientVersion) ? (clientVersion < 3075 || ConfigurationManager.AppSettings["UseOldCrypto"] == "true") : false;
-                                    _session.SendPacket(BuildServersPacket(user.Name, newSessionId, ignoreUserName));
+
+                                    session.SendPacket(BuildServersPacket(loadedAccount.AccountId, newSessionId));
                                 }
+
                                 break;
                         }
                     }
                 }
                 else
                 {
-                    _session.SendPacket($"fail {Language.Instance.GetMessageFromKey("ALREADY_CONNECTED")}");
+                    session.SendPacket($"failc {(byte)LoginFailType.AlreadyConnected}");
                 }
             }
             else
             {
-                _session.SendPacket($"fail {Language.Instance.GetMessageFromKey("IDERROR")}");
+                session.SendPacket($"failc {(byte)LoginFailType.AccountOrPasswordWrong}");
             }
         }
 

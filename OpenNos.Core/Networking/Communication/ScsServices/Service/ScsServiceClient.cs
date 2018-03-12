@@ -1,18 +1,4 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-using OpenNos.Core.Networking.Communication.Scs.Communication;
+﻿using OpenNos.Core.Networking.Communication.Scs.Communication;
 using OpenNos.Core.Networking.Communication.Scs.Communication.EndPoints;
 using OpenNos.Core.Networking.Communication.Scs.Communication.Messengers;
 using OpenNos.Core.Networking.Communication.Scs.Server;
@@ -32,17 +18,17 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Service
         /// <summary>
         /// This object is used to send messages to client.
         /// </summary>
-        private readonly RequestReplyMessenger<IScsServerClient> _requestReplyMessenger;
+        private readonly RequestReplyMessenger<IScsServerClient> requestReplyMessenger;
 
         /// <summary>
         /// Reference to underlying IScsServerClient object.
         /// </summary>
-        private readonly IScsServerClient _serverClient;
+        private readonly IScsServerClient serverClient;
 
         /// <summary>
         /// Last created proxy object to invoke remote medhods.
         /// </summary>
-        private RealProxy _realProxy;
+        private RealProxy realProxy;
 
         #endregion
 
@@ -55,9 +41,9 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Service
         /// <param name="requestReplyMessenger">RequestReplyMessenger to send messages</param>
         public ScsServiceClient(IScsServerClient serverClient, RequestReplyMessenger<IScsServerClient> requestReplyMessenger)
         {
-            _serverClient = serverClient;
-            _serverClient.Disconnected += Client_Disconnected;
-            _requestReplyMessenger = requestReplyMessenger;
+            this.serverClient = serverClient;
+            this.serverClient.Disconnected += Client_Disconnected;
+            this.requestReplyMessenger = requestReplyMessenger;
         }
 
         #endregion
@@ -76,17 +62,17 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Service
         /// <summary>
         /// Unique identifier for this client.
         /// </summary>
-        public long ClientId => _serverClient.ClientId;
+        public long ClientId => serverClient.ClientId;
 
         /// <summary>
         /// Gets the communication state of the Client.
         /// </summary>
-        public CommunicationStates CommunicationState => _serverClient.CommunicationState;
+        public CommunicationStates CommunicationState => serverClient.CommunicationState;
 
         /// <summary>
         /// Gets endpoint of remote application.
         /// </summary>
-        public ScsEndPoint RemoteEndPoint => _serverClient.RemoteEndPoint;
+        public ScsEndPoint RemoteEndPoint => serverClient.RemoteEndPoint;
 
         #endregion
 
@@ -95,7 +81,7 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Service
         /// <summary>
         /// Closes client connection.
         /// </summary>
-        public void Disconnect() => _serverClient.Disconnect();
+        public void Disconnect() => serverClient.Disconnect();
 
         /// <summary>
         /// Gets the client proxy interface that provides calling client methods remotely.
@@ -104,8 +90,8 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Service
         /// <returns>Client interface</returns>
         public T GetClientProxy<T>() where T : class
         {
-            _realProxy = new RemoteInvokeProxy<T, IScsServerClient>(_requestReplyMessenger);
-            return (T)_realProxy.GetTransparentProxy();
+            realProxy = new RemoteInvokeProxy<T, IScsServerClient>(requestReplyMessenger);
+            return (T)realProxy.GetTransparentProxy();
         }
 
         /// <summary>
@@ -115,7 +101,7 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Service
         /// <param name="e">Event arguments</param>
         private void Client_Disconnected(object sender, EventArgs e)
         {
-            _requestReplyMessenger.Stop();
+            requestReplyMessenger.Stop();
             OnDisconnected();
         }
 

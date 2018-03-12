@@ -1,36 +1,22 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-using OpenNos.Core.Networking.Communication.Scs.Communication.Channels;
+﻿using OpenNos.Core.Networking.Communication.Scs.Communication.Channels;
 using OpenNos.Core.Networking.Communication.Scs.Communication.Protocols;
 using System;
+using System.Collections.Concurrent;
+using System.Linq;
 
 namespace OpenNos.Core.Networking.Communication.Scs.Server
 {
     /// <summary>
     /// This class provides base functionality for server Classs.
     /// </summary>
-    public abstract class ScsServerBase : IScsServer, IDisposable
+    public abstract class ScsServerBase : IScsServer
     {
         #region Members
 
         /// <summary>
         /// This object is used to listen incoming connections.
         /// </summary>
-        private IConnectionListener _connectionListener;
-
-        private bool _disposed;
+        private IConnectionListener connectionListener;
 
         #endregion
 
@@ -41,7 +27,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Server
         /// </summary>
         protected ScsServerBase()
         {
-            Clients = new ThreadSafeSortedList<long, IScsServerClient>();
+            Clients = new ConcurrentDictionary<long, IScsServerClient>();
             WireProtocolFactory = WireProtocolManager.GetDefaultWireProtocolFactory();
         }
 
@@ -66,7 +52,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Server
         /// <summary>
         /// A collection of clients that are connected to the server.
         /// </summary>
-        public ThreadSafeSortedList<long, IScsServerClient> Clients { get; }
+        public ConcurrentDictionary<long, IScsServerClient> Clients { get; private set; }
 
         /// <summary>
         /// Gets/sets wire protocol that is used while reading and writing messages.
@@ -77,24 +63,14 @@ namespace OpenNos.Core.Networking.Communication.Scs.Server
 
         #region Methods
 
-        public void Dispose()
-        {
-            if (!_disposed)
-            {
-                Dispose(true);
-                GC.SuppressFinalize(this);
-                _disposed = true;
-            }
-        }
-
         /// <summary>
         /// Starts the server.
         /// </summary>
         public virtual void Start()
         {
-            _connectionListener = CreateConnectionListener();
-            _connectionListener.CommunicationChannelConnected += ConnectionListener_CommunicationChannelConnected;
-            _connectionListener.Start();
+            connectionListener = CreateConnectionListener();
+            connectionListener.CommunicationChannelConnected += ConnectionListener_CommunicationChannelConnected;
+            connectionListener.Start();
         }
 
         /// <summary>
@@ -102,11 +78,13 @@ namespace OpenNos.Core.Networking.Communication.Scs.Server
         /// </summary>
         public virtual void Stop()
         {
-            _connectionListener?.Stop();
-            foreach (IScsServerClient client in Clients.GetAllItems())
+            if (connectionListener != null)
             {
-                client.Disconnect();
+                connectionListener.Stop();
             }
+
+            foreach (IScsServerClient client in Clients.Select(s => s.Value))
+                client.Disconnect();
         }
 
         /// <summary>
@@ -116,25 +94,23 @@ namespace OpenNos.Core.Networking.Communication.Scs.Server
         /// <returns></returns>
         protected abstract IConnectionListener CreateConnectionListener();
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                Clients.Dispose();
-            }
-        }
-
         /// <summary>
         /// Raises ClientConnected event.
         /// </summary>
         /// <param name="client">Connected client</param>
-        protected virtual void OnClientConnected(IScsServerClient client) => ClientConnected?.Invoke(this, new ServerClientEventArgs(client));
+        protected virtual void OnClientConnected(IScsServerClient client)
+        {
+            ClientConnected?.Invoke(this, new ServerClientEventArgs(client));
+        }
 
         /// <summary>
         /// Raises ClientDisconnected event.
         /// </summary>
         /// <param name="client">Disconnected client</param>
-        protected virtual void OnClientDisconnected(IScsServerClient client) => ClientDisconnected?.Invoke(this, new ServerClientEventArgs(client));
+        protected virtual void OnClientDisconnected(IScsServerClient client)
+        {
+            ClientDisconnected?.Invoke(this, new ServerClientEventArgs(client));
+        }
 
         /// <summary>
         /// Handles Disconnected events of all connected clients.
@@ -143,8 +119,8 @@ namespace OpenNos.Core.Networking.Communication.Scs.Server
         /// <param name="e">Event arguments</param>
         private void Client_Disconnected(object sender, EventArgs e)
         {
-            IScsServerClient client = (IScsServerClient)sender;
-            Clients.Remove(client.ClientId);
+            var client = (IScsServerClient)sender;
+            Clients.TryRemove(client.ClientId, out IScsServerClient value);
             OnClientDisconnected(client);
         }
 
@@ -155,7 +131,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Server
         /// <param name="e">Event arguments</param>
         private void ConnectionListener_CommunicationChannelConnected(object sender, CommunicationChannelEventArgs e)
         {
-            NetworkClient client = new NetworkClient(e.Channel)
+            var client = new NetworkClient(e.Channel)
             {
                 ClientId = ScsServerManager.GetClientId(),
                 WireProtocol = WireProtocolFactory.CreateWireProtocol()

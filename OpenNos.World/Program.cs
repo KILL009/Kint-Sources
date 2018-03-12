@@ -1,51 +1,31 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-using log4net;
+﻿using log4net;
 using OpenNos.Core;
+using OpenNos.DAL;
 using OpenNos.DAL.EF.Helpers;
+using OpenNos.Data;
 using OpenNos.GameObject;
 using OpenNos.Handler;
 using OpenNos.Master.Library.Client;
-using OpenNos.GameObject.Networking;
 using OpenNos.Master.Library.Data;
+using OpenNos.World.Resource;
 using System;
 using System.Configuration;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
-using OpenNos.ChatLog.Networking;
-using OpenNos.DAL;
-using OpenNos.Data;
-using System.Linq;
-using System.Net;
-
 
 namespace OpenNos.World
 {
-    public static class Program
+    public class Program
     {
         #region Members
 
-        private static readonly ManualResetEvent _run = new ManualResetEvent(true);
-
-        private static EventHandler _exitHandler;
-
-        private static bool _isDebug;
+        private static EventHandler exitHandler;
+        private static ManualResetEvent run = new ManualResetEvent(true);
 
         #endregion
 
@@ -72,87 +52,33 @@ namespace OpenNos.World
 
         public static void Main(string[] args)
         {
-#if DEBUG
-            _isDebug = true;
-            Thread.Sleep(1000);
-#endif
             CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo("en-US");
-            Console.Title = $"OpenNos World Server{(_isDebug ? " Development Environment" : string.Empty)}";
-
-            string isA4 = string.Empty;
-
-            bool ignoreStartupMessages = false;
-            foreach (string arg in args)
-            {
-                switch (arg)
-                {
-                    case "--nomsg":
-                        ignoreStartupMessages = true;
-                        break;
-                    case "--act4":
-                        isA4 = "Y";
-                        break;
-                }
-            }
 
             // initialize Logger
             Logger.InitializeLogger(LogManager.GetLogger(typeof(Program)));
+            var assembly = Assembly.GetExecutingAssembly();
+            var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
 
-            
-            // En: No longer required after --act4 argument implementation but you can re-enable it (optional)
-                //  Non più richiesto dopo l'implementazione dell'argomento --act4 ma si può riabilitare (opzionale)
-             
-            while (isA4 != "Y" && isA4 != "n")
-            {
-                Console.Write("Do you want to run this channel as Act4 mode? (Y/n): ");
-                isA4 = Console.ReadLine();
+            Console.Title = string.Format(LocalizedResources.WORLD_SERVER_CONSOLE_TITLE, 0, 0, 0, 0);
+            var port = Convert.ToInt16(ConfigurationManager.AppSettings["WorldPort"]);
+            var text = $"WORLD SERVER v{fileVersionInfo.ProductVersion}dev - PORT : {port} by SystemX64 Team";
 
-            }
-             
-             
-
-            int port;
-
-            if (isA4 == "Y")
-            {
-                port = Convert.ToInt32(ConfigurationManager.AppSettings["Act4Port"]);
-            }
-            else
-            {
-                port = Convert.ToInt32(ConfigurationManager.AppSettings["WorldPort"]);
-            }
-
-            if (!ignoreStartupMessages)
-            {
-                Assembly assembly = Assembly.GetExecutingAssembly();
-                FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
-                string text = $"WORLD SERVER v{fileVersionInfo.ProductVersion}dev - ";
-
-                if (isA4 == "Y")
-                {
-                    text += $"ACT4 MODE";
-                }
-                else
-                {
-                    text += $"PORT : {port}";
-                }
-
-                text += " by SystemX64 Team";
-                int offset = (Console.WindowWidth / 2) + (text.Length / 2);
-                string separator = new string('=', Console.WindowWidth);
-                Console.WriteLine(separator + string.Format("{0," + offset + "}\n", text) + separator);
-            }
+            var offset = Console.WindowWidth / 2 + text.Length / 2;
+            var separator = new string('=', Console.WindowWidth);
+            Console.WriteLine(separator + string.Format("{0," + offset + "}\n", text) + separator);
 
             // initialize api
-            string authKey = ConfigurationManager.AppSettings["MasterAuthKey"];
-            if (CommunicationServiceClient.Instance.Authenticate(authKey))
+            if (CommunicationServiceClient.Instance.Authenticate(ConfigurationManager.AppSettings["MasterAuthKey"]))
             {
-                Logger.Info(Language.Instance.GetMessageFromKey("API_INITIALIZED"));
+                Logger.Log.Info(Language.Instance.GetMessageFromKey("API_INITIALIZED"));
             }
 
             // initialize DB
             if (DataAccessHelper.Initialize())
             {
+                // register mappings for DAOs, Entity -> GameObject and GameObject -> Entity
+                RegisterMappings();
+
                 // initialilize maps
                 ServerManager.Instance.Initialize();
             }
@@ -164,85 +90,150 @@ namespace OpenNos.World
 
             // TODO: initialize ClientLinkManager initialize PacketSerialization
             PacketFactory.Initialize<WalkPacket>();
+            var ip = ConfigurationManager.AppSettings["IPADDRESS"];
+            if (bool.TryParse(ConfigurationManager.AppSettings["AutoReboot"], out bool autoreboot))
+            {
+                autoreboot = false;
+            }
 
             try
             {
-                _exitHandler += exitHandler;
-                AppDomain.CurrentDomain.UnhandledException += unhandledExceptionHandler;
-                NativeMethods.SetConsoleCtrlHandler(_exitHandler, true);
+                exitHandler += ExitHandler;
+                if (autoreboot)
+                {
+                    AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionHandler;
+                }
+
+                NativeMethods.SetConsoleCtrlHandler(exitHandler, true);
             }
             catch (Exception ex)
             {
-                Logger.Error("General Error", ex);
+                Logger.Log.Error("General Error", ex);
             }
-            NetworkManager<WorldCryptography> networkManager = null;
-        portloop:
+
+            portloop:
             try
             {
-                networkManager = new NetworkManager<WorldCryptography>(ConfigurationManager.AppSettings["IPAddress"], port, typeof(CommandPacketHandler), typeof(LoginCryptography), true);
+                NetworkManager<WorldEncryption> unused = new NetworkManager<WorldEncryption>(ConfigurationManager.AppSettings["IPADDRESS"], port, typeof(CommandPacketHandler), typeof(LoginEncryption), true);
             }
             catch (SocketException ex)
             {
                 if (ex.ErrorCode == 10048)
                 {
                     port++;
-                    Logger.Info("Port already in use! Incrementing...");
+                    Logger.Log.Info("Port already in use! Incrementing...");
                     goto portloop;
                 }
-                Logger.Error("General Error", ex);
-                Environment.Exit(ex.ErrorCode);
+
+                Logger.Log.Error("General Error", ex);
+                Environment.Exit(1);
             }
 
             ServerManager.Instance.ServerGroup = ConfigurationManager.AppSettings["ServerGroup"];
-            int sessionLimit = 100; // Needs workaround
-            int? newChannelId = CommunicationServiceClient.Instance.RegisterWorldServer(new SerializableWorldServer(ServerManager.Instance.WorldId, ConfigurationManager.AppSettings["IPAddress"], port, sessionLimit, ServerManager.Instance.ServerGroup));
+            var sessionLimit = Convert.ToInt32(ConfigurationManager.AppSettings["SessionLimit"]);
+            int? newChannelId = CommunicationServiceClient.Instance.RegisterWorldServer(new SerializableWorldServer(ServerManager.Instance.WorldId, ip, port, sessionLimit, ServerManager.Instance.ServerGroup));
 
             if (newChannelId.HasValue)
             {
                 ServerManager.Instance.ChannelId = newChannelId.Value;
-                MailServiceClient.Instance.Authenticate(authKey, ServerManager.Instance.WorldId);
-                ConfigurationServiceClient.Instance.Authenticate(authKey, ServerManager.Instance.WorldId);
-                ServerManager.Instance.Configuration = ConfigurationServiceClient.Instance.GetConfigurationObject();
-                if (ServerManager.Instance.Configuration.UseChatLogService)
-                {
-                    ChatLogServiceClient.Instance.Authenticate(ConfigurationManager.AppSettings["ChatLogKey"]);
-                }
-                ServerManager.Instance.MallApi = new GameObject.Helpers.MallAPIHelper(ServerManager.Instance.Configuration.MallBaseURL);
+                ServerManager.Instance.IpAddress = ip;
+                ServerManager.Instance.Port = port;
+                ServerManager.Instance.AccountLimit = sessionLimit;
+                Console.Title = string.Format(Language.Instance.GetMessageFromKey("WORLD_SERVER_CONSOLE_TITLE"), ServerManager.Instance.ChannelId, ServerManager.Instance.Sessions.Count(), ServerManager.Instance.IpAddress, ServerManager.Instance.Port);
             }
             else
             {
-                Logger.Error("Could not retrieve ChannelId from Web API.");
+                Logger.Log.ErrorFormat("Could not retrieve ChannelId from Web API.");
                 Console.ReadKey();
             }
         }
 
-        private static bool exitHandler(CtrlType sig)
+        private static bool ExitHandler(CtrlType sig)
         {
-            string serverGroup = ConfigurationManager.AppSettings["ServerGroup"];
-            int port = Convert.ToInt32(ConfigurationManager.AppSettings["WorldPort"]);
             CommunicationServiceClient.Instance.UnregisterWorldServer(ServerManager.Instance.WorldId);
 
-            ServerManager.Shout(string.Format(Language.Instance.GetMessageFromKey("SHUTDOWN_SEC"), 5));
+            ServerManager.Instance.Shout(string.Format(Language.Instance.GetMessageFromKey("SHUTDOWN_SEC"), 5));
             ServerManager.Instance.SaveAll();
-
             Thread.Sleep(5000);
             return false;
         }
 
-        private static void unhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)
+        private static void RegisterMappings()
+        {
+            // register mappings for items
+            DAOFactory.IteminstanceDAO.RegisterMapping(typeof(BoxInstance));
+            DAOFactory.IteminstanceDAO.RegisterMapping(typeof(SpecialistInstance));
+            DAOFactory.IteminstanceDAO.RegisterMapping(typeof(WearableInstance));
+            DAOFactory.IteminstanceDAO.InitializeMapper(typeof(ItemInstance));
+
+            // entities
+            DAOFactory.AccountDAO.RegisterMapping(typeof(Account)).InitializeMapper();
+            DAOFactory.EquipmentOptionDAO.RegisterMapping(typeof(EquipmentOptionDTO)).InitializeMapper();
+            DAOFactory.CharacterDAO.RegisterMapping(typeof(Character)).InitializeMapper();
+            DAOFactory.CharacterRelationDAO.RegisterMapping(typeof(CharacterRelationDTO)).InitializeMapper();
+            DAOFactory.CharacterSkillDAO.RegisterMapping(typeof(CharacterSkill)).InitializeMapper();
+            DAOFactory.ComboDAO.RegisterMapping(typeof(ComboDTO)).InitializeMapper();
+            DAOFactory.DropDAO.RegisterMapping(typeof(DropDTO)).InitializeMapper();
+            DAOFactory.GeneralLogDAO.RegisterMapping(typeof(GeneralLogDTO)).InitializeMapper();
+            DAOFactory.ItemDAO.RegisterMapping(typeof(ItemDTO)).InitializeMapper();
+            DAOFactory.BazaarItemDAO.RegisterMapping(typeof(BazaarItemDTO)).InitializeMapper();
+            DAOFactory.MailDAO.RegisterMapping(typeof(MailDTO)).InitializeMapper();
+            DAOFactory.MallDAO.RegisterMapping(typeof(MallDTO)).InitializeMapper();
+            DAOFactory.RollGeneratedItemDAO.RegisterMapping(typeof(RollGeneratedItemDTO)).InitializeMapper();
+            DAOFactory.MapDAO.RegisterMapping(typeof(MapDTO)).InitializeMapper();
+            DAOFactory.MapMonsterDAO.RegisterMapping(typeof(MapMonster)).InitializeMapper();
+            DAOFactory.MapNpcDAO.RegisterMapping(typeof(MapNpc)).InitializeMapper();
+            DAOFactory.FamilyDAO.RegisterMapping(typeof(FamilyDTO)).InitializeMapper();
+            DAOFactory.FamilyCharacterDAO.RegisterMapping(typeof(FamilyCharacterDTO)).InitializeMapper();
+            DAOFactory.FamilyLogDAO.RegisterMapping(typeof(FamilyLogDTO)).InitializeMapper();
+            DAOFactory.MapTypeDAO.RegisterMapping(typeof(MapTypeDTO)).InitializeMapper();
+            DAOFactory.MapTypeMapDAO.RegisterMapping(typeof(MapTypeMapDTO)).InitializeMapper();
+            DAOFactory.NpcMonsterDAO.RegisterMapping(typeof(NpcMonster)).InitializeMapper();
+            DAOFactory.NpcMonsterSkillDAO.RegisterMapping(typeof(NpcMonsterSkill)).InitializeMapper();
+            DAOFactory.PenaltyLogDAO.RegisterMapping(typeof(PenaltyLogDTO)).InitializeMapper();
+            DAOFactory.PortalDAO.RegisterMapping(typeof(PortalDTO)).InitializeMapper();
+            DAOFactory.PortalDAO.RegisterMapping(typeof(Portal)).InitializeMapper();
+            DAOFactory.QuicklistEntryDAO.RegisterMapping(typeof(QuicklistEntryDTO)).InitializeMapper();
+            DAOFactory.RecipeDAO.RegisterMapping(typeof(Recipe)).InitializeMapper();
+            DAOFactory.RecipeItemDAO.RegisterMapping(typeof(RecipeItemDTO)).InitializeMapper();
+            DAOFactory.MinilandObjectDAO.RegisterMapping(typeof(MinilandObjectDTO)).InitializeMapper();
+            DAOFactory.MinilandObjectDAO.RegisterMapping(typeof(MapDesignObject)).InitializeMapper();
+            DAOFactory.RespawnDAO.RegisterMapping(typeof(RespawnDTO)).InitializeMapper();
+            DAOFactory.RespawnMapTypeDAO.RegisterMapping(typeof(RespawnMapTypeDTO)).InitializeMapper();
+            DAOFactory.ShopDAO.RegisterMapping(typeof(Shop)).InitializeMapper();
+            DAOFactory.ShopItemDAO.RegisterMapping(typeof(ShopItemDTO)).InitializeMapper();
+            DAOFactory.ShopSkillDAO.RegisterMapping(typeof(ShopSkillDTO)).InitializeMapper();
+            DAOFactory.CardDAO.RegisterMapping(typeof(CardDTO)).InitializeMapper();
+            DAOFactory.BCardDAO.RegisterMapping(typeof(BCardDTO)).InitializeMapper();
+            DAOFactory.CardDAO.RegisterMapping(typeof(Card)).InitializeMapper();
+            DAOFactory.BCardDAO.RegisterMapping(typeof(BCard)).InitializeMapper();
+            DAOFactory.SkillDAO.RegisterMapping(typeof(Skill)).InitializeMapper();
+            DAOFactory.MateDAO.RegisterMapping(typeof(MateDTO)).InitializeMapper();
+            DAOFactory.MateDAO.RegisterMapping(typeof(Mate)).InitializeMapper();
+            DAOFactory.TeleporterDAO.RegisterMapping(typeof(TeleporterDTO)).InitializeMapper();
+            DAOFactory.StaticBonusDAO.RegisterMapping(typeof(StaticBonusDTO)).InitializeMapper();
+            DAOFactory.StaticBuffDAO.RegisterMapping(typeof(StaticBuffDTO)).InitializeMapper();
+            DAOFactory.FamilyDAO.RegisterMapping(typeof(Family)).InitializeMapper();
+            DAOFactory.FamilyCharacterDAO.RegisterMapping(typeof(FamilyCharacter)).InitializeMapper();
+            DAOFactory.ScriptedInstanceDAO.RegisterMapping(typeof(ScriptedInstanceDTO)).InitializeMapper();
+            DAOFactory.ScriptedInstanceDAO.RegisterMapping(typeof(ScriptedInstance)).InitializeMapper();
+            DAOFactory.LogChatDAO.RegisterMapping(typeof(LogChatDTO)).InitializeMapper();
+            DAOFactory.LogCommandsDAO.RegisterMapping(typeof(LogCommandsDTO)).InitializeMapper();
+        }
+
+        // TODO SEND MAIL TO REVIEW EXCEPTION
+        private static void UnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)
         {
             ServerManager.Instance.InShutdown = true;
-            Logger.Error((Exception)e.ExceptionObject);
-
-            Logger.Debug("Server crashed! Rebooting gracefully...");
-            string serverGroup = ConfigurationManager.AppSettings["ServerGroup"];
-            int port = Convert.ToInt32(ConfigurationManager.AppSettings["WorldPort"]);
+            Logger.Log.Error((Exception)e.ExceptionObject);
+            Logger.Log.Debug(Language.Instance.GetMessageFromKey("SERVER_CRASH"));
             CommunicationServiceClient.Instance.UnregisterWorldServer(ServerManager.Instance.WorldId);
 
-            ServerManager.Shout(string.Format(Language.Instance.GetMessageFromKey("SHUTDOWN_SEC"), 5));
+            ServerManager.Instance.Shout(string.Format(Language.Instance.GetMessageFromKey("SHUTDOWN_SEC"), 5));
             ServerManager.Instance.SaveAll();
+            Thread.Sleep(5000);
 
-            Process.Start("OpenNos.World.exe", "--nomsg");
+            Process.Start(Process.GetCurrentProcess().ProcessName);
             Environment.Exit(1);
         }
 
@@ -250,7 +241,7 @@ namespace OpenNos.World
 
         #region Classes
 
-        public static class NativeMethods
+        public class NativeMethods
         {
             #region Methods
 

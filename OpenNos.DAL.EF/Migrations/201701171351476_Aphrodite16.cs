@@ -6,7 +6,10 @@ namespace OpenNos.DAL.EF.Migrations
     {
         #region Methods
 
-        public override void Down() => AddColumn("dbo.FamilyCharacter", "JoinDate", c => c.DateTime(nullable: false));
+        public override void Down()
+        {
+            AddColumn("dbo.FamilyCharacter", "JoinDate", c => c.DateTime(nullable: false));
+        }
 
         public override void Up() => DropColumn("dbo.FamilyCharacter", "JoinDate");
 

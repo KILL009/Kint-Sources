@@ -1,81 +1,63 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-using OpenNos.Core;
+﻿using OpenNos.Core;
 using OpenNos.DAL.EF;
-using OpenNos.DAL.Interface;
+using OpenNos.DAL.EF.Entities;
 using OpenNos.Data;
+using OpenNos.GameObject;
 using System;
 using System.Configuration;
 
 namespace OpenNos.DAL
 {
-    public static class DAOFactory
+    public class DAOFactory
     {
         #region Members
 
-        private static readonly bool _useMock;
-
-        private static IAccountDAO _accountDAO;
-        private static IBazaarItemDAO _bazaarItemDAO;
-        private static IBCardDAO _bcardDAO;
-        private static ICardDAO _cardDAO;
-        private static ICellonOptionDAO _cellonoptionDAO;
-        private static ICharacterDAO _characterDAO;
-        private static ICharacterRelationDAO _characterRelationDAO;
-        private static ICharacterSkillDAO _characterskillDAO;
-        private static IComboDAO _comboDAO;
-        private static IDropDAO _dropDAO;
-        private static IFamilyCharacterDAO _familycharacterDAO;
-        private static IFamilyDAO _familyDAO;
-        private static IFamilyLogDAO _familylogDAO;
-        private static IGeneralLogDAO _generallogDAO;
-        
-        private static IItemDAO _itemDAO;
-        private static IItemInstanceDAO _iteminstanceDAO;
-        private static IMailDAO _mailDAO;
-        private static IMaintenanceLogDAO _maintenanceLogDAO;
-        private static IMapDAO _mapDAO;
-        private static IMapMonsterDAO _mapmonsterDAO;
-        private static IMapNpcDAO _mapnpcDAO;
-        private static IMapTypeDAO _maptypeDAO;
-        private static IMapTypeMapDAO _maptypemapDAO;
-        private static IMateDAO _mateDAO;
-        private static IMinigameLogDAO _minigameLogDAO;
-        private static IMinilandObjectDAO _minilandobjectDAO;
-        private static INpcMonsterDAO _npcmonsterDAO;
-        private static INpcMonsterSkillDAO _npcmonsterskillDAO;
-        private static IPenaltyLogDAO _penaltylogDAO;
-        private static IPortalDAO _portalDAO;
-        private static IQuestDAO _questDAO;
-        private static IQuestProgressDAO _questProgressDAO;
-        private static IQuicklistEntryDAO _quicklistDAO;
-        private static IRecipeDAO _recipeDAO;
-        private static IRecipeItemDAO _recipeitemDAO;
-        private static IRecipeListDAO _recipeListDAO;
-        private static IRespawnDAO _respawnDAO;
-        private static IRespawnMapTypeDAO _respawnMapTypeDAO;
-        private static IRollGeneratedItemDAO _rollGeneratedItemDAO;
-        private static IScriptedInstanceDAO _scriptedinstanceDAO;
-        private static IShellEffectDAO _shelleffectDAO;
-        private static IShopDAO _shopDAO;
-        private static IShopItemDAO _shopitemDAO;
-        private static IShopSkillDAO _shopskillDAO;
-        private static ISkillDAO _skillDAO;
-        private static IStaticBonusDAO _staticBonusDAO;
-        private static IStaticBuffDAO _staticBuffDAO;
-        private static ITeleporterDAO _teleporterDAO;
+        private static readonly bool useMock;
+        private static IGenericDAO<Account, AccountDTO> accountDAO;
+        private static IGenericDAO<BazaarItem, BazaarItemDTO> bazaarItemDAO;
+        private static IGenericDAO<BCard, BCardDTO> bcardDAO;
+        private static IGenericDAO<Card, CardDTO> cardDAO;
+        private static IGenericDAO<Character, CharacterDTO> characterDAO;
+        private static IGenericDAO<CharacterRelation, CharacterRelationDTO> characterRelationDAO;
+        private static IGenericDAO<CharacterSkill, CharacterSkillDTO> characterskillDAO;
+        private static IGenericDAO<Combo, ComboDTO> comboDAO;
+        private static IGenericDAO<Drop, DropDTO> dropDAO;
+        private static IGenericDAO<EquipmentOption, EquipmentOptionDTO> equipmentOptionDAO;
+        private static IGenericDAO<FamilyCharacter, FamilyCharacterDTO> familycharacterDAO;
+        private static IGenericDAO<Family, FamilyDTO> familyDAO;
+        private static IGenericDAO<FamilyLog, FamilyLogDTO> familylogDAO;
+        private static IGenericDAO<GeneralLog, GeneralLogDTO> generallogDAO;
+        private static IGenericDAO<Item, ItemDTO> itemDAO;
+        private static ItemInstanceDAO<ItemInstance, ItemInstanceDTO> iteminstanceDAO;
+        private static IGenericDAO<LogChat, LogChatDTO> logChatDAO;
+        private static IGenericDAO<LogCommands, LogCommandsDTO> logCommandsDAO;
+        private static IGenericDAO<Mail, MailDTO> mailDAO;
+        private static IGenericDAO<Mall, MallDTO> mallDAO;
+        private static IGenericDAO<Map, MapDTO> mapDAO;
+        private static IGenericDAO<MapMonster, MapMonsterDTO> mapmonsterDAO;
+        private static IGenericDAO<MapNpc, MapNpcDTO> mapnpcDAO;
+        private static IGenericDAO<MapType, MapTypeDTO> maptypeDAO;
+        private static IGenericDAO<MapTypeMap, MapTypeMapDTO> maptypemapDAO;
+        private static IGenericDAO<Mate, MateDTO> mateDAO;
+        private static IGenericDAO<MinilandObject, MinilandObjectDTO> minilandobjectDAO;
+        private static IGenericDAO<NpcMonster, NpcMonsterDTO> npcmonsterDAO;
+        private static IGenericDAO<NpcMonsterSkill, NpcMonsterSkillDTO> npcmonsterskillDAO;
+        private static IGenericDAO<PenaltyLog, PenaltyLogDTO> penaltylogDAO;
+        private static IGenericDAO<Portal, PortalDTO> portalDAO;
+        private static IGenericDAO<QuicklistEntry, QuicklistEntryDTO> quicklistDAO;
+        private static IGenericDAO<Recipe, RecipeDTO> recipeDAO;
+        private static IGenericDAO<RecipeItem, RecipeItemDTO> recipeitemDAO;
+        private static IGenericDAO<Respawn, RespawnDTO> respawnDAO;
+        private static IGenericDAO<RespawnMapType, RespawnMapTypeDTO> respawnMapTypeDAO;
+        private static IGenericDAO<RollGeneratedItem, RollGeneratedItemDTO> rollGeneratedItemDAO;
+        private static IGenericDAO<ScriptedInstance, ScriptedInstanceDTO> scriptedinstanceDAO;
+        private static IGenericDAO<Shop, ShopDTO> shopDAO;
+        private static IGenericDAO<ShopItem, ShopItemDTO> shopitemDAO;
+        private static IGenericDAO<ShopSkill, ShopSkillDTO> shopskillDAO;
+        private static IGenericDAO<Skill, SkillDTO> skillDAO;
+        private static IGenericDAO<StaticBonus, StaticBonusDTO> staticBonusDAO;
+        private static IGenericDAO<StaticBuff, StaticBuffDTO> staticBuffDAO;
+        private static IGenericDAO<Teleporter, TeleporterDTO> teleporterDAO;
 
         #endregion
 
@@ -85,11 +67,11 @@ namespace OpenNos.DAL
         {
             try
             {
-                _useMock = Convert.ToBoolean(ConfigurationManager.AppSettings["UseMock"]);
+                useMock = Convert.ToBoolean(ConfigurationManager.AppSettings["UseMock"]);
             }
             catch (Exception ex)
             {
-                Logger.Error("Database Error Server", ex);
+                Logger.Log.Error("Database Error Server", ex);
             }
         }
 
@@ -97,967 +79,226 @@ namespace OpenNos.DAL
 
         #region Properties
 
-        public static IAccountDAO AccountDAO
+        public static IGenericDAO<Account, AccountDTO> AccountDAO
         {
-            get
-            {
-                if (_accountDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _accountDAO = new Mock.AccountDAO();
-                    }
-                    else
-                    {
-                        _accountDAO = new DAO.AccountDAO();
-                    }
-                }
-
-                return _accountDAO;
-            }
+            get { return accountDAO ?? (accountDAO = new GenericDAO<Account, AccountDTO>()); }
         }
 
-        
-
-        public static IBazaarItemDAO BazaarItemDAO
+        public static IGenericDAO<BazaarItem, BazaarItemDTO> BazaarItemDAO
         {
-            get
-            {
-                if (_bazaarItemDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _bazaarItemDAO = new Mock.BazaarItemDAO();
-                    }
-                    else
-                    {
-                        _bazaarItemDAO = new DAO.BazaarItemDAO();
-                    }
-                }
-
-                return _bazaarItemDAO;
-            }
+            get { return bazaarItemDAO ?? (bazaarItemDAO = new GenericDAO<BazaarItem, BazaarItemDTO>()); }
         }
 
-        public static IBCardDAO BCardDAO
+        public static IGenericDAO<BCard, BCardDTO> BCardDAO
         {
-            get
-            {
-                if (_bcardDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _bcardDAO = new Mock.BCardDAO();
-                    }
-                    else
-                    {
-                        _bcardDAO = new DAO.BCardDAO();
-                    }
-                }
-
-                return _bcardDAO;
-            }
+            get { return bcardDAO ?? (bcardDAO = new GenericDAO<BCard, BCardDTO>()); }
         }
 
-        public static ICardDAO CardDAO
+        public static IGenericDAO<Card, CardDTO> CardDAO
         {
-            get
-            {
-                if (_cardDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _cardDAO = new Mock.CardDAO();
-                    }
-                    else
-                    {
-                        _cardDAO = new DAO.CardDAO();
-                    }
-                }
-
-                return _cardDAO;
-            }
+            get { return cardDAO ?? (cardDAO = new GenericDAO<Card, CardDTO>()); }
         }
 
-        public static ICellonOptionDAO CellonOptionDAO
+        public static IGenericDAO<Character, CharacterDTO> CharacterDAO
         {
-            get
-            {
-                if (_cellonoptionDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _cellonoptionDAO = new Mock.CellonOptionDAO();
-                    }
-                    else
-                    {
-                        _cellonoptionDAO = new DAO.CellonOptionDAO();
-                    }
-                }
-
-                return _cellonoptionDAO;
-            }
+            get { return characterDAO ?? (characterDAO = new GenericDAO<Character, CharacterDTO>()); }
         }
 
-        public static ICharacterDAO CharacterDAO
+        public static IGenericDAO<CharacterRelation, CharacterRelationDTO> CharacterRelationDAO
         {
-            get
-            {
-                if (_characterDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _characterDAO = new Mock.CharacterDAO();
-                    }
-                    else
-                    {
-                        _characterDAO = new DAO.CharacterDAO();
-                    }
-                }
-
-                return _characterDAO;
-            }
+            get { return characterRelationDAO ?? (characterRelationDAO = new GenericDAO<CharacterRelation, CharacterRelationDTO>()); }
         }
 
-        public static ICharacterRelationDAO CharacterRelationDAO
+        public static IGenericDAO<CharacterSkill, CharacterSkillDTO> CharacterSkillDAO
         {
-            get
-            {
-                if (_characterRelationDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _characterRelationDAO = new Mock.CharacterRelationDAO();
-                    }
-                    else
-                    {
-                        _characterRelationDAO = new DAO.CharacterRelationDAO();
-                    }
-                }
-
-                return _characterRelationDAO;
-            }
+            get { return characterskillDAO ?? (characterskillDAO = new GenericDAO<CharacterSkill, CharacterSkillDTO>()); }
         }
 
-
-        public static ICharacterSkillDAO CharacterSkillDAO
+        public static IGenericDAO<Combo, ComboDTO> ComboDAO
         {
-            get
-            {
-                if (_characterskillDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _characterskillDAO = new Mock.CharacterSkillDAO();
-                    }
-                    else
-                    {
-                        _characterskillDAO = new DAO.CharacterSkillDAO();
-                    }
-                }
-
-                return _characterskillDAO;
-            }
+            get { return comboDAO ?? (comboDAO = new GenericDAO<Combo, ComboDTO>()); }
         }
 
-        public static IComboDAO ComboDAO
+        public static IGenericDAO<Drop, DropDTO> DropDAO
         {
-            get
-            {
-                if (_comboDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _comboDAO = new Mock.ComboDAO();
-                    }
-                    else
-                    {
-                        _comboDAO = new DAO.ComboDAO();
-                    }
-                }
-
-                return _comboDAO;
-            }
+            get { return dropDAO ?? (dropDAO = new GenericDAO<Drop, DropDTO>()); }
         }
 
-        public static IDropDAO DropDAO
+        public static IGenericDAO<EquipmentOption, EquipmentOptionDTO> EquipmentOptionDAO
         {
-            get
-            {
-                if (_dropDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _dropDAO = new Mock.DropDAO();
-                    }
-                    else
-                    {
-                        _dropDAO = new DAO.DropDAO();
-                    }
-                }
-
-                return _dropDAO;
-            }
+            get { return equipmentOptionDAO ?? (equipmentOptionDAO = new GenericDAO<EquipmentOption, EquipmentOptionDTO>()); }
         }
 
-        public static IFamilyCharacterDAO FamilyCharacterDAO
+        public static IGenericDAO<FamilyCharacter, FamilyCharacterDTO> FamilyCharacterDAO
         {
-            get
-            {
-                if (_familycharacterDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _familycharacterDAO = new Mock.FamilyCharacterDAO();
-                    }
-                    else
-                    {
-                        _familycharacterDAO = new DAO.FamilyCharacterDAO();
-                    }
-                }
-
-                return _familycharacterDAO;
-            }
+            get { return familycharacterDAO ?? (familycharacterDAO = new GenericDAO<FamilyCharacter, FamilyCharacterDTO>()); }
         }
 
-        public static IFamilyDAO FamilyDAO
+        public static IGenericDAO<Family, FamilyDTO> FamilyDAO
         {
-            get
-            {
-                if (_familyDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _familyDAO = new Mock.FamilyDAO();
-                    }
-                    else
-                    {
-                        _familyDAO = new DAO.FamilyDAO();
-                    }
-                }
-
-                return _familyDAO;
-            }
+            get { return familyDAO ?? (familyDAO = new GenericDAO<Family, FamilyDTO>()); }
         }
 
-        public static IFamilyLogDAO FamilyLogDAO
+        public static IGenericDAO<FamilyLog, FamilyLogDTO> FamilyLogDAO
         {
-            get
-            {
-                if (_familylogDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _familylogDAO = new Mock.FamilyLogDAO();
-                    }
-                    else
-                    {
-                        _familylogDAO = new DAO.FamilyLogDAO();
-                    }
-                }
-
-                return _familylogDAO;
-            }
+            get { return familylogDAO ?? (familylogDAO = new GenericDAO<FamilyLog, FamilyLogDTO>()); }
         }
 
-        public static IGeneralLogDAO GeneralLogDAO
+        public static IGenericDAO<GeneralLog, GeneralLogDTO> GeneralLogDAO
         {
-            get
-            {
-                if (_generallogDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _generallogDAO = new Mock.GeneralLogDAO();
-                    }
-                    else
-                    {
-                        _generallogDAO = new DAO.GeneralLogDAO();
-                    }
-                }
-
-                return _generallogDAO;
-            }
+            get { return generallogDAO ?? (generallogDAO = new GenericDAO<GeneralLog, GeneralLogDTO>()); }
         }
 
-        public static IItemDAO ItemDAO
+        public static IGenericDAO<Item, ItemDTO> ItemDAO
         {
-            get
-            {
-                if (_itemDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _itemDAO = new Mock.ItemDAO();
-                    }
-                    else
-                    {
-                        _itemDAO = new DAO.ItemDAO();
-                    }
-                }
-
-                return _itemDAO;
-            }
+            get { return itemDAO ?? (itemDAO = new GenericDAO<Item, ItemDTO>()); }
         }
 
-        public static IItemInstanceDAO IteminstanceDAO
+        public static ItemInstanceDAO<ItemInstance, ItemInstanceDTO> IteminstanceDAO
         {
-            get
-            {
-                if (_iteminstanceDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _iteminstanceDAO = new Mock.ItemInstanceDAO();
-                    }
-                    else
-                    {
-                        _iteminstanceDAO = new DAO.ItemInstanceDAO();
-                    }
-                }
-
-                return _iteminstanceDAO;
-            }
+            get { return iteminstanceDAO ?? (iteminstanceDAO = new ItemInstanceDAO<ItemInstance, ItemInstanceDTO>()); }
         }
 
-        public static IMailDAO MailDAO
+        public static IGenericDAO<LogChat, LogChatDTO> LogChatDAO
         {
-            get
-            {
-                if (_mailDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _mailDAO = new Mock.MailDAO();
-                    }
-                    else
-                    {
-                        _mailDAO = new DAO.MailDAO();
-                    }
-                }
-
-                return _mailDAO;
-            }
+            get { return logChatDAO ?? (logChatDAO = new GenericDAO<LogChat, LogChatDTO>()); }
         }
 
-        public static IMaintenanceLogDAO MaintenanceLogDAO
+        public static IGenericDAO<LogCommands, LogCommandsDTO> LogCommandsDAO
         {
-            get
-            {
-                if (_maintenanceLogDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _maintenanceLogDAO = new Mock.MaintenanceLogDAO();
-                    }
-                    else
-                    {
-                        _maintenanceLogDAO = new DAO.MaintenanceLogDAO();
-                    }
-                }
-
-                return _maintenanceLogDAO;
-            }
+            get { return logCommandsDAO ?? (logCommandsDAO = new GenericDAO<LogCommands, LogCommandsDTO>()); }
         }
 
-        public static IMapDAO MapDAO
+        public static IGenericDAO<Mail, MailDTO> MailDAO
         {
-            get
-            {
-                if (_mapDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _mapDAO = new Mock.MapDAO();
-                    }
-                    else
-                    {
-                        _mapDAO = new DAO.MapDAO();
-                    }
-                }
-
-                return _mapDAO;
-            }
+            get { return mailDAO ?? (mailDAO = new GenericDAO<Mail, MailDTO>()); }
         }
 
-        public static IMapMonsterDAO MapMonsterDAO
+        public static IGenericDAO<Mall, MallDTO> MallDAO
         {
-            get
-            {
-                if (_mapmonsterDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _mapmonsterDAO = new Mock.MapMonsterDAO();
-                    }
-                    else
-                    {
-                        _mapmonsterDAO = new DAO.MapMonsterDAO();
-                    }
-                }
-
-                return _mapmonsterDAO;
-            }
+            get { return mallDAO ?? (mallDAO = new GenericDAO<Mall, MallDTO>()); }
         }
 
-        public static IMapNpcDAO MapNpcDAO
-        {
-            get
-            {
-                if (_mapnpcDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _mapnpcDAO = new Mock.MapNpcDAO();
-                    }
-                    else
-                    {
-                        _mapnpcDAO = new DAO.MapNpcDAO();
-                    }
-                }
+        public static IGenericDAO<Map, MapDTO> MapDAO => mapDAO ?? (mapDAO = new GenericDAO<Map, MapDTO>());
 
-                return _mapnpcDAO;
-            }
+        public static IGenericDAO<MapMonster, MapMonsterDTO> MapMonsterDAO
+        {
+            get { return mapmonsterDAO ?? (mapmonsterDAO = new GenericDAO<MapMonster, MapMonsterDTO>()); }
         }
 
-        public static IMapTypeDAO MapTypeDAO
+        public static IGenericDAO<MapNpc, MapNpcDTO> MapNpcDAO
         {
-            get
-            {
-                if (_maptypeDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _maptypeDAO = new Mock.MapTypeDAO();
-                    }
-                    else
-                    {
-                        _maptypeDAO = new DAO.MapTypeDAO();
-                    }
-                }
-
-                return _maptypeDAO;
-            }
+            get { return mapnpcDAO ?? (mapnpcDAO = new GenericDAO<MapNpc, MapNpcDTO>()); }
         }
 
-        public static IMapTypeMapDAO MapTypeMapDAO
+        public static IGenericDAO<MapType, MapTypeDTO> MapTypeDAO
         {
-            get
-            {
-                if (_maptypemapDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _maptypemapDAO = new Mock.MapTypeMapDAO();
-                    }
-                    else
-                    {
-                        _maptypemapDAO = new DAO.MapTypeMapDAO();
-                    }
-                }
-
-                return _maptypemapDAO;
-            }
+            get { return maptypeDAO ?? (maptypeDAO = new GenericDAO<MapType, MapTypeDTO>()); }
         }
 
-        public static IMateDAO MateDAO
+        public static IGenericDAO<MapTypeMap, MapTypeMapDTO> MapTypeMapDAO
         {
-            get
-            {
-                if (_mateDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _mateDAO = new Mock.MateDAO();
-                    }
-                    else
-                    {
-                        _mateDAO = new DAO.MateDAO();
-                    }
-                }
-
-                return _mateDAO;
-            }
+            get { return maptypemapDAO ?? (maptypemapDAO = new GenericDAO<MapTypeMap, MapTypeMapDTO>()); }
         }
 
-        public static IMinigameLogDAO MinigameLogDAO
+        public static IGenericDAO<Mate, MateDTO> MateDAO
         {
-            get
-            {
-                if (_minigameLogDAO == null)
-                {
-                    if (_useMock)
-                    {
-                       // _minigameLogDAO = new Mock.MinigameLogDAO();
-                    }
-                    else
-                    {
-                        _minigameLogDAO = new DAO.MinigameLogDAO();
-                    }
-                }
-
-                return _minigameLogDAO;
-            }
+            get { return mateDAO ?? (mateDAO = new GenericDAO<Mate, MateDTO>()); }
         }
 
-        public static IMinilandObjectDAO MinilandObjectDAO
+        public static IGenericDAO<MinilandObject, MinilandObjectDTO> MinilandObjectDAO
         {
-            get
-            {
-                if (_minilandobjectDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _minilandobjectDAO = new Mock.MinilandObjectDAO();
-                    }
-                    else
-                    {
-                        _minilandobjectDAO = new DAO.MinilandObjectDAO();
-                    }
-                }
-
-                return _minilandobjectDAO;
-            }
+            get { return minilandobjectDAO ?? (minilandobjectDAO = new GenericDAO<MinilandObject, MinilandObjectDTO>()); }
         }
 
-        public static INpcMonsterDAO NpcMonsterDAO
+        public static IGenericDAO<NpcMonster, NpcMonsterDTO> NpcMonsterDAO
         {
-            get
-            {
-                if (_npcmonsterDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _npcmonsterDAO = new Mock.NpcMonsterDAO();
-                    }
-                    else
-                    {
-                        _npcmonsterDAO = new DAO.NpcMonsterDAO();
-                    }
-                }
-
-                return _npcmonsterDAO;
-            }
+            get { return npcmonsterDAO ?? (npcmonsterDAO = new GenericDAO<NpcMonster, NpcMonsterDTO>()); }
         }
 
-        public static INpcMonsterSkillDAO NpcMonsterSkillDAO
+        public static IGenericDAO<NpcMonsterSkill, NpcMonsterSkillDTO> NpcMonsterSkillDAO
         {
-            get
-            {
-                if (_npcmonsterskillDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _npcmonsterskillDAO = new Mock.NpcMonsterSkillDAO();
-                    }
-                    else
-                    {
-                        _npcmonsterskillDAO = new DAO.NpcMonsterSkillDAO();
-                    }
-                }
-
-                return _npcmonsterskillDAO;
-            }
+            get { return npcmonsterskillDAO ?? (npcmonsterskillDAO = new GenericDAO<NpcMonsterSkill, NpcMonsterSkillDTO>()); }
         }
 
-        public static IPenaltyLogDAO PenaltyLogDAO
+        public static IGenericDAO<PenaltyLog, PenaltyLogDTO> PenaltyLogDAO
         {
-            get
-            {
-                if (_penaltylogDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _penaltylogDAO = new Mock.PenaltyLogDAO();
-                    }
-                    else
-                    {
-                        _penaltylogDAO = new DAO.PenaltyLogDAO();
-                    }
-                }
-
-                return _penaltylogDAO;
-            }
+            get { return penaltylogDAO ?? (penaltylogDAO = new GenericDAO<PenaltyLog, PenaltyLogDTO>()); }
         }
 
-        public static IPortalDAO PortalDAO
+        public static IGenericDAO<Portal, PortalDTO> PortalDAO
         {
-            get
-            {
-                if (_portalDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _portalDAO = new Mock.PortalDAO();
-                    }
-                    else
-                    {
-                        _portalDAO = new DAO.PortalDAO();
-                    }
-                }
-
-                return _portalDAO;
-            }
+            get { return portalDAO ?? (portalDAO = new GenericDAO<Portal, PortalDTO>()); }
         }
 
-        public static IQuestDAO QuestDAO
+        public static IGenericDAO<QuicklistEntry, QuicklistEntryDTO> QuicklistEntryDAO
         {
-            get
-            {
-                if (_questDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _questDAO = new Mock.QuestDAO();
-                    }
-                    else
-                    {
-                        _questDAO = new DAO.QuestDAO();
-                    }
-                }
-
-                return _questDAO;
-            }
+            get { return quicklistDAO ?? (quicklistDAO = new GenericDAO<QuicklistEntry, QuicklistEntryDTO>()); }
         }
 
-        public static IQuestProgressDAO QuestProgressDAO
+        public static IGenericDAO<Recipe, RecipeDTO> RecipeDAO
         {
-            get
-            {
-                if (_questProgressDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _questProgressDAO = new Mock.QuestProgressDAO();
-                    }
-                    else
-                    {
-                        _questProgressDAO = new DAO.QuestProgressDAO();
-                    }
-                }
-
-                return _questProgressDAO;
-            }
+            get { return recipeDAO ?? (recipeDAO = new GenericDAO<Recipe, RecipeDTO>()); }
         }
 
-        public static IQuicklistEntryDAO QuicklistEntryDAO
+        public static IGenericDAO<RecipeItem, RecipeItemDTO> RecipeItemDAO
         {
-            get
-            {
-                if (_quicklistDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _quicklistDAO = new Mock.QuicklistEntryDAO();
-                    }
-                    else
-                    {
-                        _quicklistDAO = new DAO.QuicklistEntryDAO();
-                    }
-                }
-
-                return _quicklistDAO;
-            }
+            get { return recipeitemDAO ?? (recipeitemDAO = new GenericDAO<RecipeItem, RecipeItemDTO>()); }
         }
 
-        public static IRecipeDAO RecipeDAO
+        public static IGenericDAO<Respawn, RespawnDTO> RespawnDAO
         {
-            get
-            {
-                if (_recipeDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _recipeDAO = new Mock.RecipeDAO();
-                    }
-                    else
-                    {
-                        _recipeDAO = new DAO.RecipeDAO();
-                    }
-                }
-
-                return _recipeDAO;
-            }
+            get { return respawnDAO ?? (respawnDAO = new GenericDAO<Respawn, RespawnDTO>()); }
         }
 
-        public static IRecipeItemDAO RecipeItemDAO
+        public static IGenericDAO<RespawnMapType, RespawnMapTypeDTO> RespawnMapTypeDAO
         {
-            get
-            {
-                if (_recipeitemDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _recipeitemDAO = new Mock.RecipeItemDAO();
-                    }
-                    else
-                    {
-                        _recipeitemDAO = new DAO.RecipeItemDAO();
-                    }
-                }
-
-                return _recipeitemDAO;
-            }
+            get { return respawnMapTypeDAO ?? (respawnMapTypeDAO = new GenericDAO<RespawnMapType, RespawnMapTypeDTO>()); }
         }
 
-        public static IRecipeListDAO RecipeListDAO
+        public static IGenericDAO<RollGeneratedItem, RollGeneratedItemDTO> RollGeneratedItemDAO
         {
-            get
-            {
-                if (_recipeListDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _recipeListDAO = new Mock.RecipeListDAO();
-                    }
-                    else
-                    {
-                        _recipeListDAO = new DAO.RecipeListDAO();
-                    }
-                }
-
-                return _recipeListDAO;
-            }
+            get { return rollGeneratedItemDAO ?? (rollGeneratedItemDAO = new GenericDAO<RollGeneratedItem, RollGeneratedItemDTO>()); }
         }
 
-        public static IRespawnDAO RespawnDAO
+        public static IGenericDAO<ScriptedInstance, ScriptedInstanceDTO> ScriptedInstanceDAO
         {
-            get
-            {
-                if (_respawnDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _respawnDAO = new Mock.RespawnDAO();
-                    }
-                    else
-                    {
-                        _respawnDAO = new DAO.RespawnDAO();
-                    }
-                }
-
-                return _respawnDAO;
-            }
+            get { return scriptedinstanceDAO ?? (scriptedinstanceDAO = new GenericDAO<ScriptedInstance, ScriptedInstanceDTO>()); }
         }
 
-        public static IRespawnMapTypeDAO RespawnMapTypeDAO
+        public static IGenericDAO<Shop, ShopDTO> ShopDAO
         {
-            get
-            {
-                if (_respawnMapTypeDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _respawnMapTypeDAO = new Mock.RespawnMapTypeDAO();
-                    }
-                    else
-                    {
-                        _respawnMapTypeDAO = new DAO.RespawnMapTypeDAO();
-                    }
-                }
-
-                return _respawnMapTypeDAO;
-            }
+            get { return shopDAO ?? (shopDAO = new GenericDAO<Shop, ShopDTO>()); }
         }
 
-        public static IRollGeneratedItemDAO RollGeneratedItemDAO
+        public static IGenericDAO<ShopItem, ShopItemDTO> ShopItemDAO
         {
-            get
-            {
-                if (_rollGeneratedItemDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _rollGeneratedItemDAO = new Mock.RollGeneratedItemDAO();
-                    }
-                    else
-                    {
-                        _rollGeneratedItemDAO = new DAO.RollGeneratedItemDAO();
-                    }
-                }
-
-                return _rollGeneratedItemDAO;
-            }
+            get { return shopitemDAO ?? (shopitemDAO = new GenericDAO<ShopItem, ShopItemDTO>()); }
         }
 
-        public static IScriptedInstanceDAO ScriptedInstanceDAO
+        public static IGenericDAO<ShopSkill, ShopSkillDTO> ShopSkillDAO
         {
-            get
-            {
-                if (_scriptedinstanceDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _scriptedinstanceDAO = new Mock.ScriptedInstanceDAO();
-                    }
-                    else
-                    {
-                        _scriptedinstanceDAO = new DAO.ScriptedInstanceDAO();
-                    }
-                }
-
-                return _scriptedinstanceDAO;
-            }
+            get { return shopskillDAO ?? (shopskillDAO = new GenericDAO<ShopSkill, ShopSkillDTO>()); }
         }
 
-        public static IShellEffectDAO ShellEffectDAO
+        public static IGenericDAO<Skill, SkillDTO> SkillDAO
         {
-            get
-            {
-                if (_shelleffectDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _shelleffectDAO = new Mock.ShellEffectDAO();
-                    }
-                    else
-                    {
-                        _shelleffectDAO = new DAO.ShellEffectDAO();
-                    }
-                }
-
-                return _shelleffectDAO;
-            }
+            get { return skillDAO ?? (skillDAO = new GenericDAO<Skill, SkillDTO>()); }
         }
 
-        public static IShopDAO ShopDAO
+        public static IGenericDAO<StaticBonus, StaticBonusDTO> StaticBonusDAO
         {
-            get
-            {
-                if (_shopDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _shopDAO = new Mock.ShopDAO();
-                    }
-                    else
-                    {
-                        _shopDAO = new DAO.ShopDAO();
-                    }
-                }
-
-                return _shopDAO;
-            }
+            get { return staticBonusDAO ?? (staticBonusDAO = new GenericDAO<StaticBonus, StaticBonusDTO>()); }
         }
 
-        public static IShopItemDAO ShopItemDAO
+        public static IGenericDAO<StaticBuff, StaticBuffDTO> StaticBuffDAO
         {
-            get
-            {
-                if (_shopitemDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _shopitemDAO = new Mock.ShopItemDAO();
-                    }
-                    else
-                    {
-                        _shopitemDAO = new DAO.ShopItemDAO();
-                    }
-                }
-
-                return _shopitemDAO;
-            }
+            get { return staticBuffDAO ?? (staticBuffDAO = new GenericDAO<StaticBuff, StaticBuffDTO>()); }
         }
 
-        public static IShopSkillDAO ShopSkillDAO
+        public static IGenericDAO<Teleporter, TeleporterDTO> TeleporterDAO
         {
-            get
-            {
-                if (_shopskillDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _shopskillDAO = new Mock.ShopSkillDAO();
-                    }
-                    else
-                    {
-                        _shopskillDAO = new DAO.ShopSkillDAO();
-                    }
-                }
-
-                return _shopskillDAO;
-            }
-        }
-
-        public static ISkillDAO SkillDAO
-        {
-            get
-            {
-                if (_skillDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _skillDAO = new Mock.SkillDAO();
-                    }
-                    else
-                    {
-                        _skillDAO = new DAO.SkillDAO();
-                    }
-                }
-
-                return _skillDAO;
-            }
-        }
-
-        public static IStaticBonusDAO StaticBonusDAO
-        {
-            get
-            {
-                if (_staticBonusDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _staticBonusDAO = new Mock.StaticBonusDAO();
-                    }
-                    else
-                    {
-                        _staticBonusDAO = new DAO.StaticBonusDAO();
-                    }
-                }
-
-                return _staticBonusDAO;
-            }
-        }
-
-        public static IStaticBuffDAO StaticBuffDAO
-        {
-            get
-            {
-                if (_staticBuffDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _staticBuffDAO = new Mock.StaticBuffDAO();
-                    }
-                    else
-                    {
-                        _staticBuffDAO = new DAO.StaticBuffDAO();
-                    }
-                }
-
-                return _staticBuffDAO;
-            }
-        }
-
-        public static ITeleporterDAO TeleporterDAO
-        {
-            get
-            {
-                if (_teleporterDAO == null)
-                {
-                    if (_useMock)
-                    {
-                        _teleporterDAO = new Mock.TeleporterDAO();
-                    }
-                    else
-                    {
-                        _teleporterDAO = new DAO.TeleporterDAO();
-                    }
-                }
-
-                return _teleporterDAO;
-            }
+            get { return teleporterDAO ?? (teleporterDAO = new GenericDAO<Teleporter, TeleporterDTO>()); }
         }
 
         #endregion

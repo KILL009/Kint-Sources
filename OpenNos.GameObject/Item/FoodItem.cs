@@ -1,21 +1,6 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-using OpenNos.Core;
+﻿using OpenNos.Core;
 using OpenNos.Data;
 using OpenNos.Domain;
-using OpenNos.GameObject.Helpers;
 using System;
 using System.Threading;
 
@@ -33,72 +18,23 @@ namespace OpenNos.GameObject
 
         #region Methods
 
-        public override void Use(ClientSession session, ref ItemInstance inv, byte Option = 0, string[] packetsplit = null)
+        public void Regenerate(ClientSession session, Item item, string[] packetsplit = null)
         {
-            if ((DateTime.Now - session.Character.LastPotion).TotalMilliseconds < 750)
-            {
-                return;
-            }
-            session.Character.LastPotion = DateTime.Now;
-            Item item = inv.Item;
-            switch (Effect)
-            {
-                default:
-                    if (session.Character.Hp <= 0)
-                    {
-                        return;
-                    }
-                    if (!session.Character.IsSitting)
-                    {
-                        session.Character.Rest();
-                    }
-                    int amount = session.Character.FoodAmount;
-                    if (amount < 5)
-                    {
-                        if (!session.Character.IsSitting)
-                        {
-                            return;
-                        }
-                        Thread workerThread = new Thread(() => regenerate(session, item));
-                        workerThread.Start();
-                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
-                    }
-                    else
-                    {
-                        session.SendPacket(session.Character.Gender == GenderType.Female
-                            ? session.Character.GenerateSay(Language.Instance.GetMessageFromKey("NOT_HUNGRY_FEMALE"), 1)
-                            : session.Character.GenerateSay(Language.Instance.GetMessageFromKey("NOT_HUNGRY_MALE"), 1));
-                    }
-                    if (amount == 0)
-                    {
-                        if (!session.Character.IsSitting)
-                        {
-                            return;
-                        }
-                        Thread workerThread2 = new Thread(() => sync(session));
-                        workerThread2.Start();
-                    }
-                    break;
-            }
-        }
-
-        private void regenerate(ClientSession session, Item item)
-        {
-            session.SendPacket(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 6001));
+            session.SendPacket(session.Character.GenerateEff(6000));
             session.Character.FoodAmount++;
             session.Character.MaxFood = 0;
             session.Character.FoodHp += item.Hp / 5;
             session.Character.FoodMp += item.Mp / 5;
             for (int i = 0; i < 5; i++)
-            {
                 Thread.Sleep(1800);
-            }
+
             session.Character.FoodHp = item.Hp / 5;
             session.Character.FoodMp = item.Mp / 5;
             session.Character.FoodAmount--;
         }
 
-        private void sync(ClientSession session)
+        // TODO REVIEW THAT
+        public void Sync(ClientSession session, Item item)
         {
             for (session.Character.MaxFood = 0; session.Character.MaxFood < 5; session.Character.MaxFood++)
             {
@@ -109,12 +45,14 @@ namespace OpenNos.GameObject
                     session.Character.FoodMp = 0;
                     return;
                 }
+
                 session.Character.Hp += session.Character.FoodHp;
                 session.Character.Mp += session.Character.FoodMp;
                 if (session.Character.FoodHp > 0 && session.Character.FoodHp > 0 && (session.Character.Hp < session.Character.HPLoad() || session.Character.Mp < session.Character.MPLoad()))
                 {
                     session.CurrentMapInstance?.Broadcast(session, session.Character.GenerateRc(session.Character.FoodHp));
                 }
+
                 if (session.IsConnected)
                 {
                     session.SendPacket(session.Character.GenerateStat());
@@ -123,7 +61,64 @@ namespace OpenNos.GameObject
                 {
                     return;
                 }
+
                 Thread.Sleep(1800);
+            }
+        }
+
+        public override void Use(ClientSession session, ref ItemInstance inv, byte Option = 0, string[] packetsplit = null)
+        {
+            if ((DateTime.Now - session.Character.LastPotion).TotalMilliseconds < 750)
+            {
+                return;
+            }
+
+            session.Character.LastPotion = DateTime.Now;
+            var item = inv.Item;
+            switch (Effect)
+            {
+                default:
+                    if (session.Character.Hp <= 0)
+                    {
+                        return;
+                    }
+
+                    if (!session.Character.IsSitting)
+                    {
+                        session.Character.Rest();
+                    }
+
+                    var amount = session.Character.FoodAmount;
+                    if (amount < 5)
+                    {
+                        if (!session.Character.IsSitting)
+                        {
+                            return;
+                        }
+
+                        var workerThread = new Thread(() => Regenerate(session, item));
+                        workerThread.Start();
+                        session.Character.Inventory.RemoveItemAmountFromInventory(1, inv.Id);
+                    }
+                    else
+                    {
+                        session.SendPacket(session.Character.Gender == GenderType.Female
+                            ? session.Character.GenerateSay(Language.Instance.GetMessageFromKey("NOT_HUNGRY_FEMALE"), 1)
+                            : session.Character.GenerateSay(Language.Instance.GetMessageFromKey("NOT_HUNGRY_MALE"), 1));
+                    }
+
+                    if (amount == 0)
+                    {
+                        if (!session.Character.IsSitting)
+                        {
+                            return;
+                        }
+
+                        var workerThread2 = new Thread(() => Sync(session, item));
+                        workerThread2.Start();
+                    }
+
+                    break;
             }
         }
 

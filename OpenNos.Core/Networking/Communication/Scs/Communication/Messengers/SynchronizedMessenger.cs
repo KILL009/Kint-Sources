@@ -1,20 +1,7 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-using OpenNos.Core.Networking.Communication.Scs.Communication.Messages;
+﻿using OpenNos.Core.Networking.Communication.Scs.Communication.Messages;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
@@ -24,7 +11,6 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
     /// operation. It extends RequestReplyMessenger. It is suitable to use in applications those want
     /// to receive messages by synchronized method calls instead of asynchronous MessageReceived event.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
     public class SynchronizedMessenger<T> : RequestReplyMessenger<T> where T : IMessenger
     {
         #region Members
@@ -32,18 +18,18 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
         /// <summary>
         /// This object is used to synchronize/wait threads.
         /// </summary>
-        private readonly ManualResetEventSlim _receiveWaiter;
+        private readonly ManualResetEventSlim receiveWaiter;
 
         /// <summary>
         /// A queue that is used to store receiving messages until Receive(...) method is called to
         /// get them.
         /// </summary>
-        private readonly Queue<IScsMessage> _receivingMessageQueue;
+        private readonly Queue<IScsMessage> receivingMessageQueue;
 
         /// <summary>
         /// This boolean value indicates the running state of this class.
         /// </summary>
-        private volatile bool _running;
+        private volatile bool running;
 
         #endregion
 
@@ -53,7 +39,8 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
         /// Creates a new SynchronizedMessenger object.
         /// </summary>
         /// <param name="messenger">A IMessenger object to be used to send/receive messages</param>
-        public SynchronizedMessenger(T messenger) : this(messenger, int.MaxValue)
+        public SynchronizedMessenger(T messenger)
+            : this(messenger, int.MaxValue)
         {
         }
 
@@ -62,10 +49,11 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
         /// </summary>
         /// <param name="messenger">A IMessenger object to be used to send/receive messages</param>
         /// <param name="incomingMessageQueueCapacity">capacity of the incoming message queue</param>
-        public SynchronizedMessenger(T messenger, int incomingMessageQueueCapacity) : base(messenger)
+        public SynchronizedMessenger(T messenger, int incomingMessageQueueCapacity)
+            : base(messenger)
         {
-            _receiveWaiter = new ManualResetEventSlim();
-            _receivingMessageQueue = new Queue<IScsMessage>();
+            receiveWaiter = new ManualResetEventSlim();
+            receivingMessageQueue = new Queue<IScsMessage>();
             IncomingMessageQueueCapacity = incomingMessageQueueCapacity;
         }
 
@@ -105,27 +93,27 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
         /// </exception>
         public IScsMessage ReceiveMessage(int timeout)
         {
-            while (_running)
+            while (running)
             {
-                lock (_receivingMessageQueue)
+                lock (receivingMessageQueue)
                 {
                     // Check if SynchronizedMessenger is running
-                    if (!_running)
+                    if (!running)
                     {
                         throw new Exception("SynchronizedMessenger is stopped. Can not receive message.");
                     }
 
                     // Get a message immediately if any message does exists
-                    if (_receivingMessageQueue.Count > 0)
+                    if (receivingMessageQueue.Any())
                     {
-                        return _receivingMessageQueue.Dequeue();
+                        return receivingMessageQueue.Dequeue();
                     }
 
-                    _receiveWaiter.Reset();
+                    receiveWaiter.Reset();
                 }
 
                 // Wait for a message
-                bool signalled = _receiveWaiter.Wait(timeout);
+                var signalled = receiveWaiter.Wait(timeout);
 
                 // If not signalled, throw exception
                 if (!signalled)
@@ -141,22 +129,23 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
         /// This method is used to receive a specific type of message from remote application. It
         /// waits until a message is received.
         /// </summary>
-        /// <typeparam name="TMessage"></typeparam>
         /// <returns>Received message</returns>
-        public TMessage ReceiveMessage<TMessage>() where TMessage : IScsMessage => ReceiveMessage<TMessage>(System.Threading.Timeout.Infinite);
+        public TMessage ReceiveMessage<TMessage>() where TMessage : IScsMessage
+        {
+            return ReceiveMessage<TMessage>(System.Threading.Timeout.Infinite);
+        }
 
         /// <summary>
         /// This method is used to receive a specific type of message from remote application. It
         /// waits until a message is received or timeout occurs.
         /// </summary>
-        /// <typeparam name="TMessage"></typeparam>
         /// <param name="timeout">
         /// Timeout value to wait if no message is received. Use -1 to wait indefinitely.
         /// </param>
         /// <returns>Received message</returns>
         public TMessage ReceiveMessage<TMessage>(int timeout) where TMessage : IScsMessage
         {
-            IScsMessage receivedMessage = ReceiveMessage(timeout);
+            var receivedMessage = ReceiveMessage(timeout);
             if (!(receivedMessage is TMessage))
             {
                 throw new Exception("Unexpected message received." +
@@ -172,10 +161,8 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
         /// </summary>
         public override void Start()
         {
-            lock (_receivingMessageQueue)
-            {
-                _running = true;
-            }
+            lock (receivingMessageQueue)
+                running = true;
 
             base.Start();
         }
@@ -187,10 +174,10 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
         {
             base.Stop();
 
-            lock (_receivingMessageQueue)
+            lock (receivingMessageQueue)
             {
-                _running = false;
-                _receiveWaiter.Set();
+                running = false;
+                receiveWaiter.Set();
             }
         }
 
@@ -200,14 +187,14 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Messengers
         /// <param name="message"></param>
         protected override void OnMessageReceived(IScsMessage message)
         {
-            lock (_receivingMessageQueue)
+            lock (receivingMessageQueue)
             {
-                if (_receivingMessageQueue.Count < IncomingMessageQueueCapacity)
+                if (receivingMessageQueue.Count < IncomingMessageQueueCapacity)
                 {
-                    _receivingMessageQueue.Enqueue(message);
+                    receivingMessageQueue.Enqueue(message);
                 }
 
-                _receiveWaiter.Set();
+                receiveWaiter.Set();
             }
         }
 

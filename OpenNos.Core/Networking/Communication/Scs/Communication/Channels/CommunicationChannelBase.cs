@@ -1,18 +1,4 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-using OpenNos.Core.Networking.Communication.Scs.Communication.EndPoints;
+﻿using OpenNos.Core.Networking.Communication.Scs.Communication.EndPoints;
 using OpenNos.Core.Networking.Communication.Scs.Communication.Messages;
 using OpenNos.Core.Networking.Communication.Scs.Communication.Protocols;
 using System;
@@ -90,7 +76,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels
 
         #region Methods
 
-        public abstract Task ClearLowPriorityQueueAsync();
+        public abstract Task ClearLowPriorityQueue();
 
         /// <summary>
         /// Disconnects from remote application and closes this channel.
@@ -101,7 +87,6 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels
         /// Sends a message to the remote application.
         /// </summary>
         /// <param name="message">Message to be sent</param>
-        /// <param name="priority">Priority of message to send</param>
         /// <exception cref="ArgumentNullException">
         /// Throws ArgumentNullException if message is null
         /// </exception>
@@ -109,9 +94,10 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels
         {
             if (message == null)
             {
-                throw new ArgumentNullException(nameof(message));
+                throw new ArgumentNullException("message");
             }
-            SendMessagePublic(message, priority);
+
+            SendMessagepublic(message, priority);
         }
 
         /// <summary>
@@ -119,7 +105,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels
         /// </summary>
         public void Start()
         {
-            StartPublic();
+            Startpublic();
             CommunicationState = CommunicationStates.Connected;
         }
 
@@ -132,27 +118,31 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels
         /// Raises MessageReceived event.
         /// </summary>
         /// <param name="message">Received message</param>
-        /// <param name="receivedTimestamp">Message reception timestamp</param>
-        protected virtual void OnMessageReceived(IScsMessage message, DateTime receivedTimestamp) => MessageReceived?.Invoke(this, new MessageEventArgs(message, receivedTimestamp));
+        protected virtual void OnMessageReceived(IScsMessage message, DateTime receivedTimestamp)
+        {
+            MessageReceived?.Invoke(this, new MessageEventArgs(message, receivedTimestamp));
+        }
 
         /// <summary>
         /// Raises MessageSent event.
         /// </summary>
         /// <param name="message">Received message</param>
-        protected virtual void OnMessageSent(IScsMessage message) => MessageSent?.Invoke(this, new MessageEventArgs(message, DateTime.Now));
+        protected virtual void OnMessageSent(IScsMessage message)
+        {
+            MessageSent?.Invoke(this, new MessageEventArgs(message, DateTime.Now));
+        }
 
         /// <summary>
         /// Sends a message to the remote application. This method is overrided by derived Classs to
         /// really send to message.
         /// </summary>
         /// <param name="message">Message to be sent</param>
-        /// <param name="priority">Priority of message to send</param>
-        protected abstract void SendMessagePublic(IScsMessage message, byte priority);
+        protected abstract void SendMessagepublic(IScsMessage message, byte priority);
 
         /// <summary>
         /// Starts the communication with remote application really.
         /// </summary>
-        protected abstract void StartPublic();
+        protected abstract void Startpublic();
 
         #endregion
     }

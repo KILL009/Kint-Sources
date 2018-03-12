@@ -8,7 +8,10 @@ namespace OpenNos.DAL.EF.Migrations
 
         public override void Down() => DropColumn("dbo.FamilyCharacter", "CharacterId");
 
-        public override void Up() => AddColumn("dbo.FamilyCharacter", "CharacterId", c => c.Long(nullable: false));
+        public override void Up()
+        {
+            AddColumn("dbo.FamilyCharacter", "CharacterId", c => c.Long(nullable: false));
+        }
 
         #endregion
     }

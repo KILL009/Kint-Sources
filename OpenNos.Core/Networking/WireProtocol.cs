@@ -1,19 +1,4 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-using OpenNos.Core.ExceptionExtensions;
-using OpenNos.Core.Networking.Communication.Scs.Communication.Messages;
+﻿using OpenNos.Core.Networking.Communication.Scs.Communication.Messages;
 using OpenNos.Core.Networking.Communication.Scs.Communication.Protocols;
 using System;
 using System.Collections.Generic;
@@ -31,14 +16,14 @@ namespace OpenNos.Core
         /// </summary>
         private const short MAX_MESSAGE_LENGTH = 4096;
 
-        private readonly IDictionary<string, DateTime> _connectionHistory;
+        private IDictionary<string, DateTime> connectionHistory;
 
-        private bool _disposed;
+        private bool disposed;
 
         /// <summary>
         /// This MemoryStream object is used to collect receiving bytes to build messages.
         /// </summary>
-        private MemoryStream _receiveMemoryStream;
+        private MemoryStream receiveMemoryStream;
 
         #endregion
 
@@ -46,8 +31,8 @@ namespace OpenNos.Core
 
         public WireProtocol()
         {
-            _receiveMemoryStream = new MemoryStream();
-            _connectionHistory = new Dictionary<string, DateTime>();
+            receiveMemoryStream = new MemoryStream();
+            connectionHistory = new Dictionary<string, DateTime>();
         }
 
         #endregion
@@ -57,13 +42,13 @@ namespace OpenNos.Core
         public IEnumerable<IScsMessage> CreateMessages(byte[] receivedBytes)
         {
             // Write all received bytes to the _receiveMemoryStream
-            _receiveMemoryStream.Write(receivedBytes, 0, receivedBytes.Length);
+            receiveMemoryStream.Write(receivedBytes, 0, receivedBytes.Length);
 
             // Create a list to collect messages
             List<IScsMessage> messages = new List<IScsMessage>();
 
             // Read all available messages and add to messages collection
-            while (readSingleMessage(messages))
+            while (ReadSingleMessage(messages))
             {
             }
 
@@ -73,26 +58,30 @@ namespace OpenNos.Core
 
         public void Dispose()
         {
-            if (!_disposed)
+            if (!disposed)
             {
                 Dispose(true);
                 GC.SuppressFinalize(this);
-                _disposed = true;
+                disposed = true;
             }
         }
 
         public byte[] GetBytes(IScsMessage message)
         {
             // Serialize the message to a byte array
-            ScsTextMessage textMessage = message as ScsTextMessage;
-            return textMessage != null ? Encoding.Default.GetBytes(textMessage.Text) : ((ScsRawDataMessage)message).MessageData;
+            var textMessage = message as ScsTextMessage;
+            byte[] bytes = textMessage != null ?
+                Encoding.Default.GetBytes(textMessage.Text) :
+                ((ScsRawDataMessage)message).MessageData;
+
+            return bytes;
         }
 
         public void Reset()
         {
-            if (_receiveMemoryStream.Length > 0)
+            if (receiveMemoryStream.Length > 0)
             {
-                _receiveMemoryStream = new MemoryStream();
+                receiveMemoryStream = new MemoryStream();
             }
         }
 
@@ -100,7 +89,7 @@ namespace OpenNos.Core
         {
             if (disposing)
             {
-                _receiveMemoryStream.Dispose();
+                receiveMemoryStream.Dispose();
             }
         }
 
@@ -116,11 +105,13 @@ namespace OpenNos.Core
         private static byte[] ReadByteArray(Stream stream, short length)
         {
             byte[] buffer = new byte[length];
-            int read = stream.Read(buffer, 0, length);
+
+            var read = stream.Read(buffer, 0, length);
             if (read <= 0)
             {
                 throw new EndOfStreamException("Can not read from stream! Input stream is closed.");
             }
+
             return buffer;
         }
 
@@ -134,47 +125,47 @@ namespace OpenNos.Core
         /// <exception cref="CommunicationException">
         /// Throws CommunicationException if message is bigger than maximum allowed message length.
         /// </exception>
-        private bool readSingleMessage(ICollection<IScsMessage> messages)
+        private bool ReadSingleMessage(ICollection<IScsMessage> messages)
         {
             // Go to the beginning of the stream
-            _receiveMemoryStream.Position = 0;
+            receiveMemoryStream.Position = 0;
 
             // check if message length is 0
-            if (_receiveMemoryStream.Length == 0)
+            if (receiveMemoryStream.Length == 0)
             {
                 return false;
             }
 
             // get length of frame
-            short frameLength = (short)_receiveMemoryStream.Length;
+            var frameLength = (short)receiveMemoryStream.Length;
 
             // Read length of the message
             if (frameLength > MAX_MESSAGE_LENGTH)
             {
-                throw new CommunicationException("Message is too big (" + frameLength + " bytes). Max allowed length is " + MAX_MESSAGE_LENGTH + " bytes.");
+                throw new Exception("Message is too big (" + frameLength + " bytes). Max allowed length is " + MAX_MESSAGE_LENGTH + " bytes.");
             }
 
             // Read bytes of serialized message and deserialize it
-            byte[] serializedMessageBytes = ReadByteArray(_receiveMemoryStream, frameLength);
+            byte[] serializedMessageBytes = ReadByteArray(receiveMemoryStream, frameLength);
             messages.Add(new ScsRawDataMessage(serializedMessageBytes));
 
             // Read remaining bytes to an array
-            if (_receiveMemoryStream.Length > frameLength)
+            if (receiveMemoryStream.Length > frameLength)
             {
-                byte[] remainingBytes = ReadByteArray(_receiveMemoryStream, (short)(_receiveMemoryStream.Length - frameLength));
+                byte[] remainingBytes = ReadByteArray(receiveMemoryStream, (short)(receiveMemoryStream.Length - frameLength));
 
                 // Re-create the receive memory stream and write remaining bytes
-                _receiveMemoryStream = new MemoryStream();
-                _receiveMemoryStream.Write(remainingBytes, 0, remainingBytes.Length);
+                receiveMemoryStream = new MemoryStream();
+                receiveMemoryStream.Write(remainingBytes, 0, remainingBytes.Length);
             }
             else
             {
                 // nothing left, just recreate
-                _receiveMemoryStream = new MemoryStream();
+                receiveMemoryStream = new MemoryStream();
             }
 
             // Return true to re-call this method to try to read next message
-            return _receiveMemoryStream.Length > 0;
+            return receiveMemoryStream.Length > 0;
         }
 
         #endregion

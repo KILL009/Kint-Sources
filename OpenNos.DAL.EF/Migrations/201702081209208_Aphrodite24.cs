@@ -8,7 +8,10 @@ namespace OpenNos.DAL.EF.Migrations
 
         public override void Down() => DropColumn("dbo.Character", "MinilandPoint");
 
-        public override void Up() => AddColumn("dbo.Character", "MinilandPoint", c => c.Short(nullable: false));
+        public override void Up()
+        {
+            AddColumn("dbo.Character", "MinilandPoint", c => c.Short(nullable: false));
+        }
 
         #endregion
     }

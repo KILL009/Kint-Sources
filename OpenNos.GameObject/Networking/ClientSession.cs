@@ -1,18 +1,4 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-using OpenNos.Core;
+﻿using OpenNos.Core;
 using OpenNos.Core.Handling;
 using OpenNos.Core.Networking.Communication.Scs.Communication.Messages;
 using OpenNos.Domain;
@@ -24,7 +10,6 @@ using System.Configuration;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reflection;
-using OpenNos.GameObject.Networking;
 
 namespace OpenNos.GameObject
 {
@@ -34,29 +19,21 @@ namespace OpenNos.GameObject
 
         public bool HealthStop;
 
-        private static CryptographyBase _encryptor;
-
-        private readonly INetworkClient _client;
-
-        private readonly Random _random;
-
-        private readonly ConcurrentQueue<byte[]> _receiveQueue;
-
-        private readonly object _receiveQueueObservable;
-
-        private readonly IList<string> _waitForPacketList = new List<string>();
-
-        private Character _character;
-
-        private IDictionary<string[], HandlerMethodReference> _handlerMethods;
-
-        private int _lastPacketId;
+        private static EncryptionBase encryptor;
+        private readonly INetworkClient client;
+        private readonly ConcurrentQueue<byte[]> receiveQueue;
+        private readonly IList<string> waitForPacketList = new List<string>();
+        private Character character;
+        private IDictionary<string, HandlerMethodReference> handlerMethods;
 
         // private byte countPacketReceived;
+        private long lastPacketReceive;
 
-        private long _lastPacketReceive;
+        private Random random;
+        private object receiveQueueObservable;
 
-        private int? _waitForPacketsAmount;
+        // Packetwait Packets
+        private int? waitForPacketsAmount;
 
         #endregion
 
@@ -64,27 +41,27 @@ namespace OpenNos.GameObject
 
         public ClientSession(INetworkClient client)
         {
-            // set the time of last received packet
-            _lastPacketReceive = DateTime.Now.Ticks;
+            // set last received
+            lastPacketReceive = DateTime.Now.Ticks;
 
             // lag mode
-            _random = new Random((int)client.ClientId);
+            random = new Random((int)client.ClientId);
 
             // initialize lagging mode
-            bool isLagMode = string.Equals(ConfigurationManager.AppSettings["LagMode"], "true", StringComparison.CurrentCultureIgnoreCase);
+            var isLagMode = ConfigurationManager.AppSettings["LagMode"].ToLower() == "true";
 
             // initialize network client
-            _client = client;
+            this.client = client;
 
             // absolutely new instantiated Client has no SessionId
             SessionId = 0;
 
             // register for NetworkClient events
-            _client.MessageReceived += OnNetworkClientMessageReceived;
+            this.client.MessageReceived += OnNetworkClientMessageReceived;
 
             // start observer for receiving packets
-            _receiveQueue = new ConcurrentQueue<byte[]>();
-            _receiveQueueObservable = Observable.Interval(new TimeSpan(0, 0, 0, 0, isLagMode ? 1000 : 10)).Subscribe(x => HandlePackets());
+            receiveQueue = new ConcurrentQueue<byte[]>();
+            receiveQueueObservable = Observable.Interval(new TimeSpan(0, 0, 0, 0, isLagMode ? 1000 : 10)).Subscribe(x => HandlePackets());
         }
 
         #endregion
@@ -97,92 +74,108 @@ namespace OpenNos.GameObject
         {
             get
             {
-                if (_character == null || !HasSelectedCharacter)
+                if (character == null || !HasSelectedCharacter)
                 {
                     // cant access an
-                    Logger.Warn("Uninitialized Character cannot be accessed.");
+                    Logger.Log.Warn("Uninitialized Character cannot be accessed.");
                 }
 
-                return _character;
+                return character;
             }
-            private set => _character = value;
+
+            private set
+            {
+                character = value;
+            }
         }
 
-        public long ClientId => _client.ClientId;
+        public long ClientId => client.ClientId;
 
         public MapInstance CurrentMapInstance { get; set; }
 
-        public IDictionary<string[], HandlerMethodReference> HandlerMethods
+        public IDictionary<string, HandlerMethodReference> HandlerMethods
         {
-            get => _handlerMethods ?? (_handlerMethods = new Dictionary<string[], HandlerMethodReference>());
-            private set => _handlerMethods = value;
+            get
+            {
+                return handlerMethods ?? (handlerMethods = new Dictionary<string, HandlerMethodReference>());
+            }
+
+            set
+            {
+                handlerMethods = value;
+            }
         }
 
         public bool HasCurrentMapInstance => CurrentMapInstance != null;
 
-        public bool HasSelectedCharacter { get; private set; }
+        public bool HasSelectedCharacter { get; set; }
 
-        public bool HasSession => _client != null;
+        public bool HasSession => client != null;
 
-        public string IpAddress => _client.IpAddress;
+        public string IpAddress => client.IpAddress.Contains("tcp://") ? client.IpAddress.Replace("tcp://", "") : client.IpAddress;
 
-        public bool IsAuthenticated { get; private set; }
+        public bool IsAuthenticated { get; set; }
 
-        public bool IsConnected => _client.IsConnected;
+        public bool IsConnected => client.IsConnected;
 
         public bool IsDisposing
         {
-            get => _client.IsDisposing;
-            internal set => _client.IsDisposing = value;
+            get
+            {
+                return client.IsDisposing;
+            }
+
+            set
+            {
+                client.IsDisposing = value;
+            }
         }
 
         public bool IsLocalhost => IpAddress.Contains("127.0.0.1");
 
         public bool IsOnMap => CurrentMapInstance != null;
 
+        public int LastKeepAliveIdentity { get; set; }
+
         public DateTime RegisterTime { get; internal set; }
 
-        public int SessionId { get; private set; }
+        public int SessionId { get; set; }
 
         #endregion
 
         #region Methods
 
-        public void ClearLowPriorityQueue() => _client.ClearLowPriorityQueueAsync();
+        public void ClearLowPriorityQueue() => client.ClearLowPriorityQueue();
 
         public void Destroy()
         {
-            // unregister from WCF events
+            // unregister from events
             CommunicationServiceClient.Instance.CharacterConnectedEvent -= OnOtherCharacterConnected;
             CommunicationServiceClient.Instance.CharacterDisconnectedEvent -= OnOtherCharacterDisconnected;
 
             // do everything necessary before removing client, DB save, Whatever
             if (HasSelectedCharacter)
             {
-                Logger.LogUserEvent("CHARACTER_LOGOUT", GenerateIdentity(), string.Empty);
                 Character.Dispose();
                 if (Character.MapInstance.MapInstanceType == MapInstanceType.TimeSpaceInstance || Character.MapInstance.MapInstanceType == MapInstanceType.RaidInstance)
                 {
                     Character.MapInstance.InstanceBag.DeadList.Add(Character.CharacterId);
                     if (Character.MapInstance.MapInstanceType == MapInstanceType.RaidInstance)
                     {
-                        Character?.Group?.Characters.ForEach(s =>
+                        Character?.Group?.Characters.ToList().ForEach(s =>
                         {
-                            if (s != null)
-                            {
-                                s.SendPacket(s.Character.Group.GeneraterRaidmbf(s));
-                                s.SendPacket(s.Character.Group.GenerateRdlst());
-                            }
+                            s.SendPacket(s.Character.Group.GeneraterRaidmbf());
+                            s.SendPacket(s.Character.Group.GenerateRdlst());
                         });
                     }
                 }
+
                 if (Character?.Miniland != null)
                 {
-                    ServerManager.RemoveMapInstance(Character.Miniland.MapInstanceId);
+                    ServerManager.Instance.RemoveMapInstance(Character.Miniland.MapInstanceId);
                 }
 
-                Character.CloseExchangeOrTrade();
-
+                // TODO Check why ExchangeInfo.TargetCharacterId is null Character.CloseTrade();
                 // disconnect client
                 CommunicationServiceClient.Instance.DisconnectCharacter(ServerManager.Instance.WorldId, Character.CharacterId);
 
@@ -203,21 +196,14 @@ namespace OpenNos.GameObject
             ClearReceiveQueue();
         }
 
-        public void Disconnect() => _client.Disconnect();
+        public void Disconnect() => client.Disconnect();
 
-        public string GenerateIdentity()
-        {
-            if (Character != null)
-            {
-                return $"Character: {Character.Name}";
-            }
-            return $"Account: {Account.Name}";
-        }
+        public string GenerateIdentity() => $"Account: {Account.Name}";
 
-        public void Initialize(CryptographyBase encryptor, Type packetHandler, bool isWorldServer)
+        public void Initialize(EncryptionBase encryptor, Type packetHandler, bool isWorldServer)
         {
-            _encryptor = encryptor;
-            _client.Initialize(encryptor);
+            ClientSession.encryptor = encryptor;
+            client.Initialize(encryptor);
 
             // dynamically create packethandler references
             GenerateHandlerReferences(packetHandler, isWorldServer);
@@ -228,37 +214,31 @@ namespace OpenNos.GameObject
             Account = account;
             if (crossServer)
             {
-                CommunicationServiceClient.Instance.ConnectAccountCrossServer(ServerManager.Instance.WorldId, account.AccountId, SessionId);
+                CommunicationServiceClient.Instance.ConnectAccountInternal(ServerManager.Instance.WorldId, account.AccountId, SessionId);
             }
             else
             {
                 CommunicationServiceClient.Instance.ConnectAccount(ServerManager.Instance.WorldId, account.AccountId, SessionId);
             }
+
             IsAuthenticated = true;
         }
 
-        public void ReceivePacket(string packet, bool ignoreAuthority = false)
-        {
-            string header = packet.Split(' ')[0];
-            TriggerHandler(header, $"{_lastPacketId} {packet}", false, ignoreAuthority);
-            _lastPacketId++;
-        }
-
+        // [Obsolete("Primitive string operations will be removed in future, use PacketDefinition
+        // SendPacket instead. SendPacket with string parameter should only be used for debugging.")]
         public void SendPacket(string packet, byte priority = 10)
         {
             if (!IsDisposing)
             {
-                _client.SendPacket(packet, priority);
+                client.SendPacket(packet, priority);
             }
         }
-
-        
 
         public void SendPacket(PacketDefinition packet, byte priority = 10)
         {
             if (!IsDisposing)
             {
-                _client.SendPacket(PacketFactory.Serialize(packet), priority);
+                client.SendPacket(PacketFactory.Serialize(packet), priority);
             }
         }
 
@@ -266,7 +246,10 @@ namespace OpenNos.GameObject
         {
             if (!IsDisposing)
             {
-                Observable.Timer(TimeSpan.FromMilliseconds(milliseconds)).Subscribe(o => SendPacket(packet));
+                Observable.Timer(TimeSpan.FromMilliseconds(milliseconds)).Subscribe(o =>
+                {
+                    SendPacket(packet);
+                });
             }
         }
 
@@ -274,15 +257,17 @@ namespace OpenNos.GameObject
         {
             if (!IsDisposing)
             {
-                _client.SendPacketFormat(packet, param);
+                client.SendPacketFormat(packet, param);
             }
         }
 
+        // [Obsolete("Primitive string operations will be removed in future, use PacketDefinition
+        // SendPacket instead. SendPacket with string parameter should only be used for debugging.")]
         public void SendPackets(IEnumerable<string> packets, byte priority = 10)
         {
             if (!IsDisposing)
             {
-                _client.SendPackets(packets, priority);
+                client.SendPackets(packets, priority);
             }
         }
 
@@ -290,30 +275,29 @@ namespace OpenNos.GameObject
         {
             if (!IsDisposing)
             {
-                packets.ToList().ForEach(s => _client.SendPacket(PacketFactory.Serialize(s), priority));
+                packets.ToList().ForEach(s => client.SendPacket(PacketFactory.Serialize(s), priority));
             }
         }
 
         public void SetCharacter(Character character)
         {
             Character = character;
-            HasSelectedCharacter = true;
 
-            Logger.LogUserEvent("CHARACTER_LOGIN", GenerateIdentity(), string.Empty);
-
-            // register CSC events
+            // register events
             CommunicationServiceClient.Instance.CharacterConnectedEvent += OnOtherCharacterConnected;
             CommunicationServiceClient.Instance.CharacterDisconnectedEvent += OnOtherCharacterDisconnected;
 
+            HasSelectedCharacter = true;
+
             // register for servermanager
             ServerManager.Instance.RegisterSession(this);
-            ServerManager.Instance.CharacterScreenSessions.Remove(character.AccountId);
             Character.SetSession(this);
+            Character.Buff = new ConcurrentBag<Buff>();
         }
 
         private void ClearReceiveQueue()
         {
-            while (_receiveQueue.TryDequeue(out byte[] outPacket))
+            while (receiveQueue.TryDequeue(out byte[] outPacket))
             {
                 // do nothing
             }
@@ -321,17 +305,17 @@ namespace OpenNos.GameObject
 
         private void GenerateHandlerReferences(Type type, bool isWorldServer)
         {
-            IEnumerable<Type> handlerTypes = !isWorldServer ? type.Assembly.GetTypes().Where(t => t.Name.Equals("LoginPacketHandler")) // shitty but it works
+            IEnumerable<Type> handlerTypes = !isWorldServer ? type.Assembly.GetTypes().Where(t => t.Name.Equals("LoginPacketHandler")) // shitty but it works, reflection?
                                                             : type.Assembly.GetTypes().Where(p =>
                                                             {
-                                                                Type interfaceType = type.GetInterfaces().FirstOrDefault();
+                                                                var interfaceType = type.GetInterfaces().FirstOrDefault();
                                                                 return interfaceType != null && !p.IsInterface && interfaceType.IsAssignableFrom(p);
                                                             });
 
             // iterate thru each type in the given assembly
             foreach (Type handlerType in handlerTypes)
             {
-                IPacketHandler handler = (IPacketHandler)Activator.CreateInstance(handlerType, this);
+                var handler = (IPacketHandler)Activator.CreateInstance(handlerType, this);
 
                 // include PacketDefinition
                 foreach (MethodInfo methodInfo in handlerType.GetMethods().Where(x => x.GetCustomAttributes(false).OfType<PacketAttribute>().Any() || x.GetParameters().FirstOrDefault()?.ParameterType.BaseType == typeof(PacketDefinition)))
@@ -339,9 +323,9 @@ namespace OpenNos.GameObject
                     List<PacketAttribute> packetAttributes = methodInfo.GetCustomAttributes(false).OfType<PacketAttribute>().ToList();
 
                     // assume PacketDefinition based handler method
-                    if (packetAttributes.Count == 0)
+                    if (!packetAttributes.Any())
                     {
-                        HandlerMethodReference methodReference = new HandlerMethodReference(DelegateBuilder.BuildDelegate<Action<object, object>>(methodInfo), handler, methodInfo.GetParameters().FirstOrDefault()?.ParameterType);
+                        var methodReference = new HandlerMethodReference(DelegateBuilder.BuildDelegate<Action<object, object>>(methodInfo), handler, methodInfo.GetParameters().FirstOrDefault()?.ParameterType);
                         HandlerMethods.Add(methodReference.Identification, methodReference);
                     }
                     else
@@ -349,7 +333,7 @@ namespace OpenNos.GameObject
                         // assume string based handler method
                         foreach (PacketAttribute packetAttribute in packetAttributes)
                         {
-                            HandlerMethodReference methodReference = new HandlerMethodReference(DelegateBuilder.BuildDelegate<Action<object, object>>(methodInfo), handler, packetAttribute);
+                            var methodReference = new HandlerMethodReference(DelegateBuilder.BuildDelegate<Action<object, object>>(methodInfo), handler, packetAttribute);
                             HandlerMethods.Add(methodReference.Identification, methodReference);
                         }
                     }
@@ -362,102 +346,124 @@ namespace OpenNos.GameObject
         /// </summary>
         private void HandlePackets()
         {
-            while (_receiveQueue.TryDequeue(out byte[] packetData))
+            while (receiveQueue.TryDequeue(out byte[] packetData))
             {
                 // determine first packet
-                if (_encryptor.HasCustomParameter && SessionId == 0)
+                if (encryptor.HasCustomParameter && SessionId == 0)
                 {
-                    string sessionPacket = _encryptor.DecryptCustomParameter(packetData);
+                    var sessionPacket = encryptor.DecryptCustomParameter(packetData);
+
                     string[] sessionParts = sessionPacket.Split(' ');
                     if (sessionParts.Length == 0)
                     {
                         return;
                     }
-                    if (!int.TryParse(sessionParts[0], out int packetId))
+
+                    if (!int.TryParse(sessionParts[0], out int lastka))
                     {
                         Disconnect();
                     }
-                    _lastPacketId = packetId;
+
+                    LastKeepAliveIdentity = lastka;
 
                     // set the SessionId if Session Packet arrives
                     if (sessionParts.Length < 2)
                     {
                         return;
                     }
-                    if (int.TryParse(sessionParts[1].Split('\\').FirstOrDefault(), out int sessid))
-                    {
-                        SessionId = sessid;
-                        Logger.Debug(string.Format(Language.Instance.GetMessageFromKey("CLIENT_ARRIVED"), SessionId));
 
-                        if (!_waitForPacketsAmount.HasValue)
-                        {
-                            TriggerHandler("OpenNos.EntryPoint", string.Empty, false);
-                        }
+                    if (!int.TryParse(sessionParts[1].Split('\\').FirstOrDefault(), out int sessid))
+                    {
+                        return;
                     }
+
+                    SessionId = sessid;
+                    Logger.Log.DebugFormat(Language.Instance.GetMessageFromKey("CLIENT_ARRIVED"), SessionId);
+
+                    if (!waitForPacketsAmount.HasValue)
+                    {
+                        TriggerHandler("OpenNos.EntryPoint", string.Empty, false);
+                    }
+
                     return;
                 }
 
-                string packetConcatenated = _encryptor.Decrypt(packetData, SessionId);
+                var packetConcatenated = encryptor.Decrypt(packetData, SessionId);
+
                 foreach (string packet in packetConcatenated.Split(new[] { (char)0xFF }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    string packetstring = packet.Replace('^', ' ');
+                    var packetstring = packet.Replace('^', ' ');
                     string[] packetsplit = packetstring.Split(' ');
 
-                    if (_encryptor.HasCustomParameter)
+                    if (encryptor.HasCustomParameter)
                     {
-                        string nextRawPacketId = packetsplit[0];
-                        if (!int.TryParse(nextRawPacketId, out int nextPacketId) && nextPacketId != _lastPacketId + 1)
+                        // keep alive
+                        var nextKeepAliveRaw = packetsplit[0];
+                        if (!int.TryParse(nextKeepAliveRaw, out int nextKeepaliveIdentity) && nextKeepaliveIdentity != LastKeepAliveIdentity + 1)
                         {
-                            Logger.Error(string.Format(Language.Instance.GetMessageFromKey("CORRUPTED_KEEPALIVE"), _client.ClientId));
-                            _client.Disconnect();
+                            Logger.Log.ErrorFormat(Language.Instance.GetMessageFromKey("CORRUPTED_KEEPALIVE"), client.ClientId);
+                            client.Disconnect();
                             return;
                         }
-                        if (nextPacketId == 0)
+
+                        if (nextKeepaliveIdentity == 0)
                         {
-                            if (_lastPacketId == ushort.MaxValue)
+                            if (LastKeepAliveIdentity == ushort.MaxValue)
                             {
-                                _lastPacketId = nextPacketId;
+                                LastKeepAliveIdentity = nextKeepaliveIdentity;
                             }
                         }
                         else
                         {
-                            _lastPacketId = nextPacketId;
+                            LastKeepAliveIdentity = nextKeepaliveIdentity;
                         }
 
-                        if (_waitForPacketsAmount.HasValue)
+                        if (waitForPacketsAmount.HasValue)
                         {
-                            _waitForPacketList.Add(packetstring);
+                            waitForPacketList.Add(packetstring);
                             string[] packetssplit = packetstring.Split(' ');
                             if (packetssplit.Length > 3 && packetsplit[1] == "DAC")
                             {
-                                _waitForPacketList.Add("0 CrossServerAuthenticate");
+                                waitForPacketList.Add("0 CrossServerAuthenticate");
                             }
-                            if (_waitForPacketList.Count == _waitForPacketsAmount)
+
+                            if (waitForPacketList.Count != waitForPacketsAmount)
                             {
-                                _waitForPacketsAmount = null;
-                                string queuedPackets = string.Join(" ", _waitForPacketList.ToArray());
-                                string header = queuedPackets.Split(' ', '^')[1];
-                                TriggerHandler(header, queuedPackets, true);
-                                _waitForPacketList.Clear();
-                                return;
+                                continue;
                             }
+
+                            waitForPacketsAmount = null;
+                            var queuedPackets = string.Join(" ", waitForPacketList.ToArray());
+                            var header = queuedPackets.Split(' ', '^')[1];
+                            TriggerHandler(header, queuedPackets, true);
+                            waitForPacketList.Clear();
+                            return;
                         }
-                        else if (packetsplit.Length > 1)
+
+                        if (packetsplit.Length <= 1)
                         {
-                            if (packetsplit[1].Length >= 1 && (packetsplit[1][0] == '/' || packetsplit[1][0] == ':' || packetsplit[1][0] == ';'))
-                            {
-                                packetsplit[1] = packetsplit[1][0].ToString();
-                                packetstring = packet.Insert(packet.IndexOf(' ') + 2, " ");
-                            }
-                            if (packetsplit[1] != "0")
-                            {
-                                TriggerHandler(packetsplit[1].Replace("#", string.Empty), packetstring, false);
-                            }
+                            continue;
+                        }
+
+                        if (packetsplit[1].Length >= 1 && (packetsplit[1][0] == '/' || packetsplit[1][0] == ':' || packetsplit[1][0] == ';'))
+                        {
+                            packetsplit[1] = packetsplit[1][0].ToString();
+                            packetstring = packet.Insert(packet.IndexOf(' ') + 2, " ");
+                        }
+
+                        if (packetsplit[1] != "0")
+                        {
+                            TriggerHandler(packetsplit[1].Replace("#", ""), packetstring, false);
                         }
                     }
                     else
                     {
-                        string packetHeader = packetstring.Split(' ')[0];
+                        var packetHeader = packetstring.Split(' ')[0];
+                        if (string.IsNullOrWhiteSpace(packetHeader))
+                        {
+                            Disconnect();
+                            return;
+                        }
 
                         // simple messaging
                         if (packetHeader[0] == '/' || packetHeader[0] == ':' || packetHeader[0] == ';')
@@ -466,7 +472,7 @@ namespace OpenNos.GameObject
                             packetstring = packet.Insert(packet.IndexOf(' ') + 2, " ");
                         }
 
-                        TriggerHandler(packetHeader.Replace("#", string.Empty), packetstring, false);
+                        TriggerHandler(packetHeader.Replace("#", ""), packetstring, false);
                     }
                 }
             }
@@ -479,105 +485,124 @@ namespace OpenNos.GameObject
         /// <param name="e"></param>
         private void OnNetworkClientMessageReceived(object sender, MessageEventArgs e)
         {
-            ScsRawDataMessage message = e.Message as ScsRawDataMessage;
-            if (message == null)
+            if (!(e.Message is ScsRawDataMessage message))
             {
                 return;
             }
-            if (message.MessageData.Length > 0 && message.MessageData.Length > 2)
+
+            if (message.MessageData.Any() && message.MessageData.Length > 2)
             {
-                _receiveQueue.Enqueue(message.MessageData);
+                receiveQueue.Enqueue(message.MessageData);
             }
-            _lastPacketReceive = e.ReceivedTimestamp.Ticks;
+
+            lastPacketReceive = e.ReceivedTimestamp.Ticks;
         }
 
         private void OnOtherCharacterConnected(object sender, EventArgs e)
         {
             Tuple<long, string> loggedInCharacter = (Tuple<long, string>)sender;
 
-            if (Character.IsFriendOfCharacter(loggedInCharacter.Item1) && Character != null && Character.CharacterId != loggedInCharacter.Item1)
+            if (Character.IsFriendOfCharacter(loggedInCharacter.Item1))
             {
-                _client.SendPacket(Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("CHARACTER_LOGGED_IN"), loggedInCharacter.Item2), 10));
-                _client.SendPacket(Character.GenerateFinfo(loggedInCharacter.Item1, true));
+                if (Character != null && Character.CharacterId != loggedInCharacter.Item1)
+                {
+                    client.SendPacket(Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("CHARACTER_LOGGED_IN"), loggedInCharacter.Item2), 10));
+                    client.SendPacket(Character.GenerateFinfo(loggedInCharacter.Item1, true));
+                }
             }
-            FamilyCharacter chara = Character.Family?.FamilyCharacters.Find(s => s.CharacterId == loggedInCharacter.Item1);
+
+            var chara = Character.Family?.FamilyCharacters.FirstOrDefault(s => s.CharacterId == loggedInCharacter.Item1);
             if (chara != null && loggedInCharacter.Item1 != Character?.CharacterId)
             {
-                _client.SendPacket(Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("CHARACTER_FAMILY_LOGGED_IN"), loggedInCharacter.Item2, Language.Instance.GetMessageFromKey(chara.Authority.ToString().ToUpper())), 10));
+                client.SendPacket(Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("CHARACTER_FAMILY_LOGGED_IN"), loggedInCharacter.Item2, Language.Instance.GetMessageFromKey(chara.Authority.ToString().ToUpper())), 10));
             }
         }
 
         private void OnOtherCharacterDisconnected(object sender, EventArgs e)
         {
             Tuple<long, string> loggedOutCharacter = (Tuple<long, string>)sender;
-            if (Character.IsFriendOfCharacter(loggedOutCharacter.Item1) && Character != null && Character.CharacterId != loggedOutCharacter.Item1)
+            if (!Character.IsFriendOfCharacter(loggedOutCharacter.Item1))
             {
-                _client.SendPacket(Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("CHARACTER_LOGGED_OUT"), loggedOutCharacter.Item2), 10));
-                _client.SendPacket(Character.GenerateFinfo(loggedOutCharacter.Item1, false));
+                return;
             }
+
+            if (Character == null || Character.CharacterId == loggedOutCharacter.Item1)
+            {
+                return;
+            }
+
+            client.SendPacket(Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("CHARACTER_LOGGED_OUT"), loggedOutCharacter.Item2), 10));
+            client.SendPacket(Character.GenerateFinfo(loggedOutCharacter.Item1, false));
         }
 
-        private void TriggerHandler(string packetHeader, string packet, bool force, bool ignoreAuthority = false)
+        private void TriggerHandler(string packetHeader, string packet, bool force)
         {
             if (ServerManager.Instance.InShutdown)
             {
                 return;
             }
+
             if (!IsDisposing)
             {
-                string[] key = HandlerMethods.Keys.FirstOrDefault(s => s.Any(m => string.Equals(m, packetHeader, StringComparison.CurrentCultureIgnoreCase)));
-                HandlerMethodReference methodReference = key != null ? HandlerMethods[key] : null;
+                var methodReference = HandlerMethods.ContainsKey(packetHeader) ? HandlerMethods[packetHeader] : null;
                 if (methodReference != null)
                 {
-                    if (methodReference.HandlerMethodAttribute != null && !force && methodReference.HandlerMethodAttribute.Amount > 1 && !_waitForPacketsAmount.HasValue)
+                    if (methodReference.HandlerMethodAttribute != null && !force && methodReference.HandlerMethodAttribute.Amount > 1 && !waitForPacketsAmount.HasValue)
                     {
                         // we need to wait for more
-                        _waitForPacketsAmount = methodReference.HandlerMethodAttribute.Amount;
-                        _waitForPacketList.Add(packet != string.Empty ? packet : $"1 {packetHeader} ");
+                        waitForPacketsAmount = methodReference.HandlerMethodAttribute.Amount;
+                        waitForPacketList.Add(packet != string.Empty ? packet : $"1 {packetHeader} ");
                         return;
                     }
+
                     try
                     {
-                        if (HasSelectedCharacter || methodReference.ParentHandler.GetType().Name == "CharacterScreenPacketHandler" || methodReference.ParentHandler.GetType().Name == "LoginPacketHandler")
+                        if (!HasSelectedCharacter && methodReference.ParentHandler.GetType().Name != "CharacterScreenPacketHandler" &&
+                            methodReference.ParentHandler.GetType().Name != "LoginPacketHandler")
                         {
-                            // call actual handler method
-                            if (methodReference.PacketDefinitionParameterType != null)
+                            return;
+                        }
+
+                        // call actual handler method
+                        if (methodReference.PacketDefinitionParameterType != null)
+                        {
+                            // check for the correct authority
+                            if (IsAuthenticated && (byte)methodReference.Authority > (byte)Account.Authority)
                             {
-                                //check for the correct authority
-                                if (!IsAuthenticated || Account.Authority >= methodReference.Authority || (Account.Authority == AuthorityType.BitchNiggerFaggot && methodReference.Authority == AuthorityType.User) || ignoreAuthority)
-                                {
-                                    PacketDefinition deserializedPacket = PacketFactory.Deserialize(packet, methodReference.PacketDefinitionParameterType, IsAuthenticated);
-                                    if (deserializedPacket != null || methodReference.PassNonParseablePacket)
-                                    {
-                                        methodReference.HandlerMethod(methodReference.ParentHandler, deserializedPacket);
-                                    }
-                                    else
-                                    {
-                                        Logger.Warn(string.Format(Language.Instance.GetMessageFromKey("CORRUPT_PACKET"), packetHeader, packet));
-                                    }
-                                }
+                                return;
+                            }
+
+                            object deserializedPacket = PacketFactory.Deserialize(packet, methodReference.PacketDefinitionParameterType, IsAuthenticated);
+
+                            if (deserializedPacket != null || methodReference.PassNonParseablePacket)
+                            {
+                                methodReference.HandlerMethod(methodReference.ParentHandler, deserializedPacket);
                             }
                             else
                             {
-                                methodReference.HandlerMethod(methodReference.ParentHandler, packet);
+                                Logger.Log.WarnFormat(Language.Instance.GetMessageFromKey("CORRUPT_PACKET"), packetHeader, packet);
                             }
+                        }
+                        else
+                        {
+                            methodReference.HandlerMethod(methodReference.ParentHandler, packet);
                         }
                     }
                     catch (DivideByZeroException ex)
                     {
                         // disconnect if something unexpected happens
-                        Logger.Error("Handler Error SessionId: " + SessionId, ex);
+                        Logger.Log.Error("Handler Error SessionId: " + SessionId, ex);
                         Disconnect();
                     }
                 }
                 else
                 {
-                    Logger.Warn(string.Format(Language.Instance.GetMessageFromKey("HANDLER_NOT_FOUND"), packetHeader));
+                    Logger.Log.WarnFormat(Language.Instance.GetMessageFromKey("HANDLER_NOT_FOUND"), packetHeader);
                 }
             }
             else
             {
-                Logger.Warn(string.Format(Language.Instance.GetMessageFromKey("CLIENTSESSION_DISPOSING"), packetHeader));
+                Logger.Log.WarnFormat(Language.Instance.GetMessageFromKey("CLIENTSESSION_DISPOSING"), packetHeader);
             }
         }
 

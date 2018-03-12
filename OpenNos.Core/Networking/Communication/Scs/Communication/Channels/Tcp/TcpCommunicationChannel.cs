@@ -1,19 +1,4 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-using OpenNos.Core.ConcurrencyExtensions;
-using OpenNos.Core.Networking.Communication.Scs.Communication.EndPoints;
+﻿using OpenNos.Core.Networking.Communication.Scs.Communication.EndPoints;
 using OpenNos.Core.Networking.Communication.Scs.Communication.EndPoints.Tcp;
 using OpenNos.Core.Networking.Communication.Scs.Communication.Messages;
 using System;
@@ -38,38 +23,39 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         /// <summary>
         /// Size of the buffer that is used to receive bytes from TCP socket.
         /// </summary>
-        private const int _receiveBufferSize = 4 * 1024;
+        private const int RECEIVE_BUFFER_SIZE = 4 * 1024;
 
         /// <summary>
         /// This buffer is used to receive bytes
         /// </summary>
-        private readonly byte[] _buffer;
+        private readonly byte[] buffer;
 
         /// <summary>
         /// Socket object to send/reveice messages.
         /// </summary>
-        private readonly Socket _clientSocket;
+        private readonly Socket clientSocket;
 
-        private readonly ConcurrentQueue<byte[]> _highPriorityBuffer;
-        private readonly ConcurrentQueue<byte[]> _lowPriorityBuffer;
-        private readonly Random _random = new Random();
-        private readonly ScsTcpEndPoint _remoteEndPoint;
-
-        private readonly CancellationTokenSource _sendCancellationToken = new CancellationTokenSource();
-
-        private readonly Task _sendTask;
+        // 4KB
+        private readonly ScsTcpEndPoint remoteEndPoint;
 
         /// <summary>
         /// This object is just used for thread synchronizing (locking).
         /// </summary>
-        private readonly object _syncLock;
+        private readonly object syncLock;
 
-        private bool _disposed;
+        private bool disposed;
+        private ConcurrentQueue<byte[]> highPriorityBuffer;
+        private ConcurrentQueue<byte[]> lowPriorityBuffer;
+        private Random random = new Random();
 
         /// <summary>
         /// A flag to control thread's running
         /// </summary>
-        private volatile bool _running;
+        private volatile bool running;
+
+        private CancellationTokenSource sendCancellationToken = new CancellationTokenSource();
+
+        private Task sendTask;
 
         #endregion
 
@@ -83,22 +69,22 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         /// </param>
         public TcpCommunicationChannel(Socket clientSocket)
         {
-            _clientSocket = clientSocket;
-            _clientSocket.NoDelay = true;
+            this.clientSocket = clientSocket;
+            this.clientSocket.NoDelay = true;
 
             // initialize lagging mode
-            bool isLagMode = string.Equals(ConfigurationManager.AppSettings["LagMode"], "true", StringComparison.CurrentCultureIgnoreCase);
+            var isLagMode = ConfigurationManager.AppSettings["LagMode"].ToLower() == "true";
 
-            IPEndPoint ipEndPoint = (IPEndPoint)_clientSocket.RemoteEndPoint;
-            _remoteEndPoint = new ScsTcpEndPoint(ipEndPoint.Address.ToString(), ipEndPoint.Port);
+            var ipEndPoint = (IPEndPoint)this.clientSocket.RemoteEndPoint;
+            remoteEndPoint = new ScsTcpEndPoint(ipEndPoint.Address.ToString(), ipEndPoint.Port);
 
-            _buffer = new byte[_receiveBufferSize];
-            _syncLock = new object();
+            buffer = new byte[RECEIVE_BUFFER_SIZE];
+            syncLock = new object();
 
-            _highPriorityBuffer = new ConcurrentQueue<byte[]>();
-            _lowPriorityBuffer = new ConcurrentQueue<byte[]>();
-            CancellationToken cancellationToken = _sendCancellationToken.Token;
-            _sendTask = StartSending(SendInterval, new TimeSpan(0, 0, 0, 0, isLagMode ? 1000 : 10), cancellationToken);
+            highPriorityBuffer = new ConcurrentQueue<byte[]>();
+            lowPriorityBuffer = new ConcurrentQueue<byte[]>();
+            var cancellationToken = sendCancellationToken.Token;
+            sendTask = StartSending(SendInterval, new TimeSpan(0, 0, 0, 0, isLagMode ? 1000 : 10), cancellationToken);
         }
 
         #endregion
@@ -108,28 +94,29 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         /// <summary>
         /// Gets the endpoint of remote application.
         /// </summary>
-        public override ScsEndPoint RemoteEndPoint => _remoteEndPoint;
+        public override ScsEndPoint RemoteEndPoint => remoteEndPoint;
 
         #endregion
 
         #region Methods
 
-        public static async Task StartSending(Action action, TimeSpan period, CancellationToken _sendCancellationToken)
+        public static async Task StartSending(Action action, TimeSpan period, CancellationToken sendCancellationToken)
         {
-            while (!_sendCancellationToken.IsCancellationRequested)
+            while (!sendCancellationToken.IsCancellationRequested)
             {
-                await Task.Delay(period, _sendCancellationToken).ConfigureAwait(false);
-                if (!_sendCancellationToken.IsCancellationRequested)
+                await Task.Delay(period, sendCancellationToken);
+
+                if (!sendCancellationToken.IsCancellationRequested)
                 {
                     action();
                 }
             }
         }
 
-        public override Task ClearLowPriorityQueueAsync()
+        public override async Task ClearLowPriorityQueue()
         {
-            _lowPriorityBuffer.Clear();
-            return Task.CompletedTask;
+            lowPriorityBuffer.Clear();
+            await Task.CompletedTask;
         }
 
         /// <summary>
@@ -142,16 +129,16 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
                 return;
             }
 
-            _running = false;
+            running = false;
             try
             {
-                _sendCancellationToken.Cancel();
-                if (_clientSocket.Connected)
+                sendCancellationToken.Cancel();
+                if (clientSocket.Connected)
                 {
-                    _clientSocket.Close();
+                    clientSocket.Close();
                 }
 
-                _clientSocket.Dispose();
+                clientSocket.Dispose();
             }
             catch
             {
@@ -159,7 +146,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
             }
             finally
             {
-                _sendCancellationToken.Dispose();
+                sendCancellationToken.Dispose();
             }
 
             CommunicationState = CommunicationStates.Disconnected;
@@ -171,11 +158,11 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         /// </summary>
         public void Dispose()
         {
-            if (!_disposed)
+            if (!disposed)
             {
                 Dispose(true);
                 GC.SuppressFinalize(this);
-                _disposed = true;
+                disposed = true;
             }
         }
 
@@ -185,15 +172,16 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
             {
                 if (WireProtocol != null)
                 {
-                    sendByPriority(_highPriorityBuffer);
-                    sendByPriority(_lowPriorityBuffer);
+                    SendByPriority(highPriorityBuffer);
+                    SendByPriority(lowPriorityBuffer);
                 }
             }
-            catch
+            catch (Exception)
             {
                 // disconnect
             }
-            if (!_clientSocket.Connected)
+
+            if (!clientSocket.Connected)
             {
                 // do nothing
             }
@@ -204,7 +192,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
             if (disposing)
             {
                 Disconnect();
-                _sendCancellationToken.Dispose();
+                sendCancellationToken.Dispose();
             }
         }
 
@@ -212,34 +200,33 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         /// Sends a message to the remote application.
         /// </summary>
         /// <param name="message">Message to be sent</param>
-        /// <param name="priority">Priority of message to send</param>
-        protected override void SendMessagePublic(IScsMessage message, byte priority)
+        protected override void SendMessagepublic(IScsMessage message, byte priority)
         {
             if (priority > 5)
             {
-                _highPriorityBuffer.Enqueue(WireProtocol.GetBytes(message));
+                highPriorityBuffer.Enqueue(WireProtocol.GetBytes(message));
             }
             else
             {
-                _lowPriorityBuffer.Enqueue(WireProtocol.GetBytes(message));
+                lowPriorityBuffer.Enqueue(WireProtocol.GetBytes(message));
             }
         }
 
         /// <summary>
         /// Starts the thread to receive messages from socket.
         /// </summary>
-        protected override void StartPublic()
+        protected override void Startpublic()
         {
-            _running = true;
-            _clientSocket.BeginReceive(_buffer, 0, _buffer.Length, 0, ReceiveCallback, null);
+            running = true;
+            clientSocket.BeginReceive(buffer, 0, buffer.Length, 0, ReceiveCallback, null);
         }
 
-        private static void sendCallback(IAsyncResult result)
+        private static void SendCallback(IAsyncResult result)
         {
             try
             {
                 // Retrieve the socket from the state object.
-                Socket client = (Socket)result.AsyncState;
+                var client = (Socket)result.AsyncState;
 
                 if (!client.Connected)
                 {
@@ -247,9 +234,9 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
                 }
 
                 // Complete sending the data to the remote device.
-                int bytesSent = client.EndSend(result);
+                var bytesSent = client.EndSend(result);
             }
-            catch
+            catch (Exception)
             {
                 // disconnect
             }
@@ -262,17 +249,17 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
         /// <param name="result">Asyncronous call result</param>
         private void ReceiveCallback(IAsyncResult result)
         {
-            if (!_running)
+            if (!running)
             {
                 return;
             }
 
             try
             {
-                int bytesRead = -1;
+                var bytesRead = -1;
 
                 // Get received bytes count
-                bytesRead = _clientSocket.EndReceive(result);
+                bytesRead = clientSocket.EndReceive(result);
 
                 if (bytesRead > 0)
                 {
@@ -280,25 +267,25 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
 
                     // Copy received bytes to a new byte array
                     byte[] receivedBytes = new byte[bytesRead];
-                    Array.Copy(_buffer, receivedBytes, bytesRead);
+                    Array.Copy(buffer, receivedBytes, bytesRead);
 
-                    // Read messages according to current wire protocol and raise MessageReceived
-                    // event for all received messages
-                    foreach (IScsMessage message in WireProtocol.CreateMessages(receivedBytes))
-                    {
+                    // Read messages according to current wire protocol
+                    IEnumerable<IScsMessage> messages = WireProtocol.CreateMessages(receivedBytes);
+
+                    // Raise MessageReceived event for all received messages
+                    foreach (IScsMessage message in messages)
                         OnMessageReceived(message, DateTime.Now);
-                    }
                 }
                 else
                 {
-                    Logger.Warn(Language.Instance.GetMessageFromKey("CLIENT_DISCONNECTED"));
+                    Logger.Log.Warn(Language.Instance.GetMessageFromKey("CLIENT_DISCONNECTED"));
                     Disconnect();
                 }
 
                 // Read more bytes if still running
-                if (_running)
+                if (running)
                 {
-                    _clientSocket.BeginReceive(_buffer, 0, _buffer.Length, 0, ReceiveCallback, null);
+                    clientSocket.BeginReceive(buffer, 0, buffer.Length, 0, ReceiveCallback, null);
                 }
             }
             catch
@@ -307,7 +294,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
             }
         }
 
-        private void sendByPriority(ConcurrentQueue<byte[]> buffer)
+        private void SendByPriority(ConcurrentQueue<byte[]> buffer)
         {
             IEnumerable<byte> outgoingPacket = new List<byte>();
 
@@ -326,8 +313,8 @@ namespace OpenNos.Core.Networking.Communication.Scs.Communication.Channels.Tcp
 
             if (outgoingPacket.Any())
             {
-                _clientSocket.BeginSend(outgoingPacket.ToArray(), 0, outgoingPacket.Count(), SocketFlags.None,
-                sendCallback, _clientSocket);
+                clientSocket.BeginSend(outgoingPacket.ToArray(), 0, outgoingPacket.Count(), SocketFlags.None,
+                SendCallback, clientSocket);
             }
         }
 

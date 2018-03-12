@@ -1,18 +1,4 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-using System;
+﻿using System;
 
 namespace OpenNos.Core.Networking.Communication.ScsServices.Service
 {
@@ -28,7 +14,7 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Service
         /// The current client for a thread that called service method.
         /// </summary>
         [ThreadStatic]
-        private static IScsServiceClient _currentClient;
+        private static IScsServiceClient currentClient;
 
         #endregion
 
@@ -43,21 +29,29 @@ namespace OpenNos.Core.Networking.Communication.ScsServices.Service
         /// </remarks>
         public IScsServiceClient CurrentClient
         {
-            get => GetCurrentClient();
-            set => _currentClient = value;
+            get
+            {
+                return GetCurrentClient();
+            }
+
+            set
+            {
+                currentClient = value;
+            }
         }
 
         #endregion
 
         #region Methods
 
-        private static IScsServiceClient GetCurrentClient()
+        private IScsServiceClient GetCurrentClient()
         {
-            if (_currentClient != null)
+            if (currentClient != null)
             {
-                return _currentClient;
+                return currentClient;
             }
-            throw new ArgumentNullException(string.Empty, "Client channel can not be obtained. CurrentClient property must be called by the thread which runs the service method.");
+
+            throw new ArgumentNullException("Client channel can not be obtained. CurrentClient property must be called by the thread which runs the service method.");
         }
 
         #endregion

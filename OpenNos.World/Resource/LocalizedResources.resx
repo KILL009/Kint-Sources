@@ -127,7 +127,7 @@
     <value>Adventurer</value>
   </data>
   <data name="ALREADY_IN_GROUP" xml:space="preserve">
-    <value>You are already in a group!</value>
+    <value>You are already in group!</value>
   </data>
   <data name="ALREADY_TAKEN" xml:space="preserve">
     <value>This name is already taken!</value>
@@ -144,38 +144,23 @@
   <data name="BAD_EQUIPMENT" xml:space="preserve">
     <value>You can't wear this item!</value>
   </data>
-  <data name="NO_FAMILY" xml:space="preserve">
-    <value>You don't have a family!</value>
-  </data>
-  <data name="OPTION_IDENTIFIED" xml:space="preserve">
-    <value>Option identified!</value>
-  </data>
   <data name="BAD_FAIRY" xml:space="preserve">
-    <value>The fairy element is different from sp element!</value>
+    <value>The fairy element is different with sp element!</value>
   </data>
   <data name="BAD_PASSWORD" xml:space="preserve">
     <value>Wrong password!</value>
   </data>
   <data name="BN0" xml:space="preserve">
-    <value>NosArmy^Team</value>
+    <value>Welcome^to^the^Magic^World^of^OpenNosForSale!!</value>
   </data>
   <data name="BN1" xml:space="preserve">
-    <value>NosArmy^Team</value>
+    <value>If^you^have^any^problem^please^report^it^to^Cryless^or^Flow</value>
   </data>
   <data name="BN2" xml:space="preserve">
-    <value>NosArmy^Team</value>
+    <value>Need^help?^Use^our^official^Discord^server:^https://discordapp.com/K7tnxv7</value>
   </data>
   <data name="BN3" xml:space="preserve">
-    <value>NosArmy^Team</value>
-  </data>
-  <data name="BN4" xml:space="preserve">
-    <value>NosArmy^Team</value>
-  </data>
-  <data name="BN5" xml:space="preserve">
-    <value>NosArmy^Team</value>
-  </data>
-  <data name="BN6" xml:space="preserve">
-    <value>NosArmy^Team</value>
+    <value>Greetings^from^SystemX64^Team!</value>
   </data>
   <data name="BUFF_BLOCKED" xml:space="preserve">
     <value>Buff icons disabled</value>
@@ -268,10 +253,10 @@
     <value>Friend request allowed</value>
   </data>
   <data name="GET_PROTECTION_POWER_1" xml:space="preserve">
-    <value>You were blessed by the power of angels.</value>
+    <value>You were blessed by power of angel.</value>
   </data>
   <data name="GET_PROTECTION_POWER_2" xml:space="preserve">
-    <value>You were cursed by the power of demons.</value>
+    <value>You were cursed by  power of demon.</value>
   </data>
   <data name="GOLD_SET" xml:space="preserve">
     <value>Gold changed!</value>
@@ -520,7 +505,7 @@
   <data name="REP_CHANGED" xml:space="preserve">
     <value>Reputation changed</value>
   </data>
-  <data name="SELL_ITEM_VALID" xml:space="preserve">
+  <data name="SELL_ITEM_VALIDE" xml:space="preserve">
     <value>Sold: {0} &lt;{1} : piece &gt;</value>
   </data>
   <data name="SEX_CHANGED" xml:space="preserve">
@@ -600,6 +585,9 @@
   </data>
   <data name="UPDATE_ACCOUNT_ERROR" xml:space="preserve">
     <value>Error inserting or updating Account {0} , {1}</value>
+  </data>
+  <data name="UPDATE_ERROR" xml:space="preserve">
+    <value>{0}</value>
   </data>
   <data name="UPGRADE_FAILED" xml:space="preserve">
     <value>Upgrade failed!</value>
@@ -817,15 +805,6 @@
   <data name="GROUP_JOIN" xml:space="preserve">
     <value>You joined {0}'s group!</value>
   </data>
-  <data name="BN7" xml:space="preserve">
-    <value>NosArmy^Team</value>
-  </data>
-  <data name="BN8" xml:space="preserve">
-    <value>NosArmy^Team</value>
-  </data>
-  <data name="BN9" xml:space="preserve">
-    <value>NosArmy^Team</value>
-  </data>
   <data name="NO_WIG" xml:space="preserve">
     <value>You're not wearing that cool afro ;)</value>
   </data>
@@ -881,7 +860,7 @@
     <value>Can't use that right now!</value>
   </data>
   <data name="NOT_ENOUGH_ITEM" xml:space="preserve">
-    <value>You don't have required item to harvest.</value>
+    <value>Following item is required: {0}</value>
   </data>
   <data name="NOT_ENOUGH_POINTS" xml:space="preserve">
     <value>You don't have enough sp points to do this.</value>
@@ -925,8 +904,8 @@
   <data name="ITEM_NOT_FOUND" xml:space="preserve">
     <value>Item not found!</value>
   </data>
-  <data name="NPCMONSTER_NOT_FOUND" xml:space="preserve">
-    <value>NpcMonster not found!</value>
+  <data name="MONSTER_NOT_FOUND" xml:space="preserve">
+    <value>Monster not found!</value>
   </data>
   <data name="NOT_YOUR_ITEM" xml:space="preserve">
     <value>The item is not yours!</value>
@@ -959,7 +938,7 @@
     <value>You received {0} gift/s!</value>
   </data>
   <data name="ITEM_GIFTED" xml:space="preserve">
-    <value>You got an item: {0} x{1}</value>
+    <value>You get an item &gt;&gt;</value>
   </data>
   <data name="GIFT_SENDED" xml:space="preserve">
     <value>The gift has been sent!</value>
@@ -986,16 +965,16 @@
     <value>Packet with Header {0} is corrupt or PacketDefinition is invalid. Content: {1}</value>
   </data>
   <data name="BOT_MESSAGE_0" xml:space="preserve">
-    <value>NosArmy^Team</value>
+    <value>Don't share you password with anyone!</value>
   </data>
   <data name="BOT_MESSAGE_1" xml:space="preserve">
-    <value>NosArmy^Team</value>
+    <value>Report bugs to our github page!</value>
   </data>
   <data name="BOT_MESSAGE_2" xml:space="preserve">
-    <value>NosArmy^Team</value>
+    <value>That's a cool message!</value>
   </data>
   <data name="BOT_MESSAGE_3" xml:space="preserve">
-    <value>NosArmy^Team</value>
+    <value>Thanks for all of your contributions!</value>
   </data>
   <data name="INTRODUCTION_SET" xml:space="preserve">
     <value>Your description has been updated!</value>
@@ -1115,7 +1094,7 @@
     <value>Sending message to  '{0}' on channel {1}.</value>
   </data>
   <data name="NO_WINGS" xml:space="preserve">
-    <value>You don't have any Wings of Friendship!</value>
+    <value>You don't have any friend wing!</value>
   </data>
   <data name="WANT_TO_SAVE_POSITION" xml:space="preserve">
     <value>Do you want to save your position?</value>
@@ -1124,31 +1103,10 @@
     <value>Gold Drop Rate</value>
   </data>
   <data name="BOT_MESSAGE_4" xml:space="preserve">
-    <value>NosArmy^Team</value>
+    <value>Never open any suspicious links!</value>
   </data>
   <data name="BOT_MESSAGE_5" xml:space="preserve">
-    <value>NosArmy^Team</value>
-  </data>
-  <data name="SHIP_NOTARRIVED" xml:space="preserve">
-    <value>Ship not arrived!</value>
-  </data>
-  <data name="SHIP_MINUTE" xml:space="preserve">
-    <value>Ship is going to leave in 1 minute!</value>
-  </data>
-  <data name="SHIP_MINUTES" xml:space="preserve">
-    <value>Ship is going to leave in {0} minutes!</value>
-  </data>
-  <data name="SHIP_SECONDS" xml:space="preserve">
-    <value>Ship is going to leave in {0} seconds!</value>
-  </data>
-  <data name="SHIP_SETOFF" xml:space="preserve">
-    <value>We are ready!</value>
-  </data>
-  <data name="ASK_CHANGE_FACTION1" xml:space="preserve">
-    <value>Do yuo want change?</value>
-  </data>
-  <data name="ASK_CHANGE_FACTION2" xml:space="preserve">
-    <value>Do yuo want change?</value>
+    <value>Never give anyone your password or username!</value>
   </data>
   <data name="DEMON" xml:space="preserve">
     <value>Demon</value>
@@ -1201,8 +1159,11 @@
   <data name="LOSE_REP" xml:space="preserve">
     <value>You've lost {0} reputation</value>
   </data>
+  <data name="ACT4_PVP_DIE" xml:space="preserve">
+    <value>You were killed by an enemy! Due to the curse of the Frozen Crown, you can't be revived for 30 seconds!</value>
+  </data>
   <data name="EFFECT_ACTIVATED" xml:space="preserve">
-    <value>The {0} effect has been activated!</value>
+    <value>The {0} effect has been actived!</value>
   </data>
   <data name="INFO_BAZAAR" xml:space="preserve">
     <value>You cannot open the bazaar because you do not possess the required object.</value>
@@ -1220,7 +1181,7 @@
     <value>The sale was interrupted because the item is no longer available!</value>
   </data>
   <data name="LOGIN_MEDAL" xml:space="preserve">
-    <value>The Bazar Medal is currently active.</value>
+    <value>The BazaarMedal is currently active.</value>
   </data>
   <data name="GROUP_SHARE_INFO" xml:space="preserve">
     <value>You sent a request to share the point of return with the members of your group.</value>
@@ -1243,11 +1204,14 @@
   <data name="ASSISTANT" xml:space="preserve">
     <value>Assistant</value>
   </data>
+  <data name="BAZAR_LOADED" xml:space="preserve">
+    <value>Bazaar loaded!</value>
+  </data>
   <data name="CHANNEL" xml:space="preserve">
-    <value>Channel</value>
+    <value>channel</value>
   </data>
   <data name="FAMILYCALL" xml:space="preserve">
-    <value>Familycall</value>
+    <value>familycall</value>
   </data>
   <data name="HEAD" xml:space="preserve">
     <value>Head</value>
@@ -1372,6 +1336,9 @@
   <data name="MINILAND_PUBLIC" xml:space="preserve">
     <value>The mini-land is now public.</value>
   </data>
+  <data name="SUPPORT" xml:space="preserve">
+    <value>Support</value>
+  </data>
   <data name="ALREADY_PET_IN_TEAM" xml:space="preserve">
     <value>Your NosMate is already on the team.</value>
   </data>
@@ -1382,7 +1349,7 @@
     <value>Do you want to take out your NosMate ?</value>
   </data>
   <data name="GET_PET_PLACES" xml:space="preserve">
-    <value>You have more space for your Pets.</value>
+    <value>Right now, you can have more NosMate.</value>
   </data>
   <data name="PET_CAN_PICK_UP" xml:space="preserve">
     <value>Now, your NosMate can drop items.</value>
@@ -1441,241 +1408,148 @@
   <data name="WARNING_INFO" xml:space="preserve">
     <value>You've been warned: {0} times.</value>
   </data>
-  <data name="CARDS_LOADED" xml:space="preserve">
-    <value>{0} Cards loaded!</value>
-  </data>
-  <data name="MAINTENANCE_PLANNED" xml:space="preserve">
-    <value>Planned Maintenance detected, kicking users...</value>
-  </data>
-  <data name="DIGNITY_LOST" xml:space="preserve">
-    <value>You've lost some of your dignity!</value>
-  </data>
-  <data name="TS_TUTORIAL" xml:space="preserve">
-    <value>Timespace tutorial</value>
-  </data>
-  <data name="MUTED_SINGULAR" xml:space="preserve">
-    <value>You've been muted for 1 minute.</value>
-  </data>
-  <data name="ASK_ENTRY_IN_FIRST_ROOM" xml:space="preserve">
-    <value>Do you want to start the mission?</value>
-  </data>
-  <data name="GOLD_TS_END" xml:space="preserve">
-    <value>You got {0} gold after finishing the timespace.</value>
-  </data>
   <data name="GIFT_SENT" xml:space="preserve">
     <value>Gift has been sent!</value>
   </data>
-  <data name="BAZAAR_LOADED" xml:space="preserve">
-    <value>{0} BazaarItems loaded!</value>
+  <data name="ARENA_NOT_OPEN" xml:space="preserve">
+    <value>Arena talent is open at 18:00 - 22:00</value>
   </data>
-  <data name="NPCMONSTER_REMOVED" xml:space="preserve">
-    <value>NPC removed (MapNpcId: {0}, Name: {1}, MapId: {2}, MapX: {3}, MapY: {4})</value>
+  <data name="ARENA_TEAM_FOUND" xml:space="preserve">
+    <value>A team was found!</value>
   </data>
-  <data name="UNDER_EFFECT" xml:space="preserve">
-    <value>You're under effect of: {0}</value>
+  <data name="ARENA_TICKET_LEFT" xml:space="preserve">
+    <value>You can still make {0}x the arena of talents!</value>
   </data>
-  <data name="EFFECT_TERMINATED" xml:space="preserve">
-    <value>Effect of: {0} has been terminated!</value>
+  <data name="NO_TEAM_ARENA" xml:space="preserve">
+    <value>No participants found</value>
   </data>
-  <data name="METEORITE_MINUTES" xml:space="preserve">
-    <value>The Meteorite Game will start in {0} minute(s)!</value>
+  <data name="RETRY_SEARCH_ARENA_TEAM" xml:space="preserve">
+    <value>Retry to make the team.</value>
   </data>
-  <data name="METEORITE_ROUND" xml:space="preserve">
-    <value>Congratulations! You finished round {0} of the Meteorite Game. Get ready for the next round!</value>
+  <data name="SEARCH_ARENA_TEAM" xml:space="preserve">
+    <value>Searching for a team</value>
   </data>
-  <data name="METEORITE_SECONDS" xml:space="preserve">
-    <value>The Meteorite Game will start in {0} second(s)!</value>
+  <data name="SEARCH_RIVAL_ARENA_TEAM" xml:space="preserve">
+    <value>Searching opposing team</value>
   </data>
-  <data name="METEORITE_STARTED" xml:space="preserve">
-    <value>The Meteorite Game started!</value>
+  <data name="WORLD_SERVER_CONSOLE_TITLE" xml:space="preserve">
+    <value>OpenNos World Server [ ID: {0} - IP: {2}:{3} - Players: {1} ]</value>
   </data>
-  <data name="RECIPELISTS_LOADED" xml:space="preserve">
-    <value>{0} RecipeLists loaded!</value>
+  <data name="EQUALITY" xml:space="preserve">
+    <value>Equality!</value>
   </data>
-  <data name="INVITE_RAID" xml:space="preserve">
-    <value>{0} Invited you to the raid</value>
+  <data name="ERENIA" xml:space="preserve">
+    <value>You are on the Erenia team.</value>
   </data>
-  <data name="RAID_JOIN" xml:space="preserve">
-    <value>You've joined the raid</value>
+  <data name="SELECT_ORDER_ARENA" xml:space="preserve">
+    <value>Choice the order of participation or it will be determinated randomly!</value>
   </data>
-  <data name="RAID_LEVEL_INCORRECT" xml:space="preserve">
-    <value>Since your level doesn't match the recommended level, you will not receive any rewards.</value>
+  <data name="SELECT_ORDER_ARENA_TIME" xml:space="preserve">
+    <value>One minut remaning before the begin of the fight. Good luck!</value>
   </data>
-  <data name="RAID_START_QUESTION" xml:space="preserve">
-    <value>Do you want to start the raid?</value>
+  <data name="VICTORIOUS_ERENIA" xml:space="preserve">
+    <value>Winner!  Erenia</value>
   </data>
-  <data name="NOT_TEAM_LEADER" xml:space="preserve">
-    <value>Only team leader can start the raid.</value>
+  <data name="VICTORIOUS_ZENAS" xml:space="preserve">
+    <value>Winner! Zenas</value>
   </data>
-  <data name="NEED_TEAM" xml:space="preserve">
-    <value>You need to form a team to start the raid.</value>
+  <data name="ZENAS" xml:space="preserve">
+    <value>You are on the Zenas team.</value>
   </data>
-  <data name="FIRST_ROOM_START" xml:space="preserve">
-    <value>Do you want to enter the first room?</value>
-  </data>
-  <data name="RAID_REGISTERED" xml:space="preserve">
-    <value>Raid has been registered.</value>
-  </data>
-  <data name="SEARCH_TEAM_MEMBERS" xml:space="preserve">
-    <value>{0} is searching for team members, Raid of {1}</value>
-  </data>
-  <data name="RAID_UNREGISTERED" xml:space="preserve">
-    <value>Raid has been unregistered.</value>
-  </data>
-  <data name="LEFT_RAID" xml:space="preserve">
-    <value>You have left the raid.</value>
-  </data>
-  <data name="KICK_RAID" xml:space="preserve">
-    <value>You have been kicked from the raid.</value>
-  </data>
-  <data name="RAID_DISOLVED" xml:space="preserve">
-    <value>Raid has been canceled.</value>
-  </data>
-  <data name="RAID_LEADER" xml:space="preserve">
-    <value>You are the raid leader.</value>
-  </data>
-  <data name="ITEM_IN_USE" xml:space="preserve">
-    <value>This item is in use.</value>
-  </data>
-  <data name="OPTION_DELETE" xml:space="preserve">
-    <value>Shell effect erased.</value>
-  </data>
-  <data name="IN_FAMILY" xml:space="preserve">
-    <value>You're in family, you can't use individual faction egg.</value>
-  </data>
-  <data name="ASK_PET_MAX" xml:space="preserve">
-    <value>Do you want to expand the pet slots?</value>
-  </data>
-  <data name="ACT4_PVP_DEATH1" xml:space="preserve">
-    <value>{0}'s Power of Protection has been stolen by a Demon Guardian</value>
-  </data>
-  <data name="ACT4_PVP_DEATH2" xml:space="preserve">
-    <value>{0}'s Power of Protection has been stolen by an Angel Guardian</value>
-  </data>
-  <data name="ACT4_PVP_DIE" xml:space="preserve">
-    <value>You were killed by an enemy! Due to the curse of the Frozen Crown, you can't be revived for 30 seconds!</value>
-  </data>
-  <data name="ACT4_PVP_KILL1" xml:space="preserve">
-    <value>{0} stole the Power of Protection of an Angel Guardian</value>
-  </data>
-  <data name="ACT4_PVP_KILL2" xml:space="preserve">
-    <value>{0} stole the Power of Protection of a Demon Guardian</value>
-  </data>
-  <data name="PVP_ACTIVE" xml:space="preserve">
-    <value>PVP is now enabled!</value>
-  </data>
-  <data name="PVP_KILL" xml:space="preserve">
-    <value>[{1}] was slain by [{0}]</value>
-  </data>
-  <data name="CATCH_SUCCESS" xml:space="preserve">
-    <value>Capture successful.</value>
-  </data>
-  <data name="CATCH_FAIL" xml:space="preserve">
-    <value>Capture failed.</value>
-  </data>
-  <data name="LEVEL_LOWER_THAN_MONSTER" xml:space="preserve">
-    <value>You can only capture animals of a lower level than you.</value>
-  </data>
-  <data name="CURRENT_HP_TOO_HIGH" xml:space="preserve">
-    <value>You can only capture animals whose HP is 50% or lower.</value>
-  </data>
-  <data name="MONSTER_CANT_BE_CAPTURED" xml:space="preserve">
-    <value>Monsters cannot be captured.</value>
-  </data>
-  <data name="PET_SLOT_FULL" xml:space="preserve">
-    <value />
-  </data>
-  <data name="AID_LEFT" xml:space="preserve">
-    <value>Ayuda Izquierda.</value>
-  </data>
-  <data name="ASK_OPEN_BOX" xml:space="preserve">
-    <value>Abrir Caja.</value>
-  </data>
-  <data name="CANT_KICK_HEAD" xml:space="preserve">
-    <value>No peudes echar al cabelliza</value>
-  </data>
-  <data name="ITEM_IS_NOT_FIXED" xml:space="preserve">
-    <value>Este item no esta fijo.</value>
-  </data>
-  <data name="NEW_MISSION" xml:space="preserve">
-    <value>Nueva Mission</value>
-  </data>
-  <data name="OPTION_FAIL" xml:space="preserve">
-    <value>Option fallo!</value>
-  </data>
-  <data name="OPTION_SUCCESS" xml:space="preserve">
-    <value>Option Subio!</value>
-  </data>
-  <data name="QUESTS_LOADED" xml:space="preserve">
-    <value>Missiones Cargaron.</value>
-  </data>
-  <data name="RAID_LEFT" xml:space="preserve">
-    <value>Raid Izquierda!</value>
-  </data>
-  <data name="WIN_FXP" xml:space="preserve">
-    <value>Ganaste exp familiar!</value>
-  </data>
-  <data name="ALREADY_THIS_MINILANDOBJECT" xml:space="preserve">
-    <value>Este objecto esta en uso</value>
-  </data>
-  <data name="EXCHANGE_NOT_ALLOWED_IN_RAID" xml:space="preserve">
-    <value>No se permiten cambios en Raid.</value>
-  </data>
-  <data name="JOIN_TEAM" xml:space="preserve">
-    <value>Entraste al eguipo.</value>
-  </data>
-  <data name="PARTNER_BACKPACK" xml:space="preserve">
-    <value>Compañero Mochila.</value>
-  </data>
-  <data name="RAID_SUCCEED" xml:space="preserve">
-    <value>Victoria Ha Vencido Al Malvado Demonio  Exitosamente Has Completado Un Raid Gracias Por Jugar.</value>
-  </data>
-  <data name="RY_WHILE_USING_BOOSTER" xml:space="preserve">
-    <value>Espero para usar.</value>
-  </data>
-  <data name="TEAM_LEADER_CHANGE" xml:space="preserve">
-    <value>El jefe del Raid a Cambiado.</value>
-  </data>
-  <data name="ASK_CHANGE_SPAWNLOCATION" xml:space="preserve">
-    <value>PREGUNTE CAMBIAR LA UBICACIÓN DE SPAWN.</value>
+  <data name="CANNOT_LEAVE_FAMILY" xml:space="preserve">
+    <value>The family head cannot exit the family.</value>
   </data>
   <data name="CANT_USE_THAT" xml:space="preserve">
-    <value>No puedo usar eso.</value>
+    <value>You cannot do it now.</value>
   </data>
-  <data name="FAMILY_FULL" xml:space="preserve">
-    <value>Family Full.</value>
+  <data name="SHELL_ALREADY_IDENTIFIED" xml:space="preserve">
+    <value>Options of this object are already identified.</value>
   </data>
-  <data name="ITEM_ACQUIRED_LOD" xml:space="preserve">
-    <value>Item consequido en lod.</value>
+  <data name="USER_ON_INSTANCEMAP" xml:space="preserve">
+    <value>The player is not on a general map.</value>
   </data>
-  <data name="RAID_MEMBER_DEAD" xml:space="preserve">
-    <value>Miembro del raid muerto</value>
+  <data name="ADD_OPTION_ON_STUFF" xml:space="preserve">
+    <value>Do you want to add an option on this stuff ? If yes, this item will be link to you only.</value>
   </data>
-  <data name="REMOVE_FAIRY_WHILE_USING_BOOSTER" xml:space="preserve">
-    <value>ELIMINE LA HADA MIENTRAS UTILIZA EL REFUERZO.</value>
+  <data name="ADD_OPTION_ON_STUFF_NOT_EMPTY" xml:space="preserve">
+    <value>The option will be replace by the new. You've 50% of chance to win, else the item will be destroyed. Do you want to continue ?</value>
   </data>
-  <data name="YOU_HAVE_LIFE_RAID" xml:space="preserve">
-    <value>TIENES UNA VIDA INCORPORADA.</value>
+  <data name="NEED_PARFUM_TO_CHANGE_SHELL" xml:space="preserve">
+    <value>You cannot change the shell, the soul is not yours.</value>
   </data>
-  <data name="CALIGOR_END" xml:space="preserve">
-    <value>Galigor End</value>
+  <data name="SHELL_BROKEN" xml:space="preserve">
+    <value>The shell is broken because it has failed.</value>
   </data>
-  <data name="CALIGOR_OPEN" xml:space="preserve">
-    <value>Galigor Open For All</value>
+  <data name="SHELL_ERASED" xml:space="preserve">
+    <value>The option has been erased.</value>
   </data>
-  <data name="MONSTER_NOT_FOUND" xml:space="preserve">
-    <value>Monster No Found</value>
+  <data name="SHELL_FOR_ARMOR_ONLY" xml:space="preserve">
+    <value>You can only use this shell on armor.</value>
   </data>
-  <data name="OPTION_APPLY_FAIL" xml:space="preserve">
-    <value>Option Fail</value>
+  <data name="SHELL_FOR_WEAPON_ONLY" xml:space="preserve">
+    <value>You can only use this shell on weapon.</value>
   </data>
-  <data name="OPTION_APPLY_SUCCESS" xml:space="preserve">
-    <value>Option Success</value>
+  <data name="SHELL_LEVEL_TOO_HIGH" xml:space="preserve">
+    <value>The level of the shell is too high.</value>
   </data>
-  <data name="String1" xml:space="preserve">
-    <value>Your Pet Died</value>
+  <data name="SHELL_MUST_BE_IDENTIFIED" xml:space="preserve">
+    <value>The shell must be identified before use.</value>
   </data>
-  <data name="TALENTARENA_OPEN" xml:space="preserve">
-    <value>Talenent Arena Open</value>
+  <data name="SHELL_OPTION_SET" xml:space="preserve">
+    <value>A new option has been added.</value>
+  </data>
+  <data name="SHELL_RARITY_TOO_HIGH" xml:space="preserve">
+    <value>The shell rarity is too high.</value>
+  </data>
+  <data name="ARENA_CALLED" xml:space="preserve">
+    <value>A Team Member has called : {0}</value>
+  </data>
+  <data name="ARENA_PENALITY_NOTICE" xml:space="preserve">
+    <value>If you cancel the inscription you will suffered a penality.</value>
+  </data>
+  <data name="ASK_CHANGE_SPAWNLOCATION" xml:space="preserve">
+    <value>Do you want to change the respawn town?</value>
+  </data>
+  <data name="RESPAWNLOCATION_CHANGED" xml:space="preserve">
+    <value>The town has been changed!</value>
+  </data>
+  <data name="RIVAL_ARENA_TEAM_FOUND" xml:space="preserve">
+    <value>Enemy team found.</value>
+  </data>
+  <data name="WINNER_ARENA_ROUND" xml:space="preserve">
+    <value>{0} as kill {1}.</value>
+  </data>
+  <data name="INSTANTBATTLE_NOT_ENOUGH_PLAYERS" xml:space="preserve">
+    <value>Not enough players were found to start the Instant Battle!</value>
+  </data>
+  <data name="DIGNITY_RESTORED" xml:space="preserve">
+    <value>Your dignity has been restored to {0}</value>
+  </data>
+  <data name="CARDS_LOADED" xml:space="preserve">
+    <value>{0} Cards loaded!</value>
+  </data>
+  <data name="NOT_IN_MINILAND" xml:space="preserve">
+    <value>You are not in Mini-Land</value>
+  </data>
+  <data name="NO_PET" xml:space="preserve">
+    <value>You don't have a pet with you!</value>
+  </data>
+  <data name="MONSTER_CANNOT_BE_CAPTURED" xml:space="preserve">
+    <value>This monster can't be captured.</value>
+  </data>
+  <data name="CAPTURE_FAILED" xml:space="preserve">
+    <value>Oops, the monster managed to escape. Try again!</value>
+  </data>
+  <data name="MONSTER_MUST_BE_LOW_HP" xml:space="preserve">
+    <value>The monster MUST have half or less HP to be captured.</value>
+  </data>
+  <data name="CAPTURE_SUCCESSFUL" xml:space="preserve">
+    <value>Capture successful.</value>
+  </data>
+  <data name="CANNOT_IN_MINILAND" xml:space="preserve">
+    <value>You can not perform this action in Mini-Land.</value>
+  </data>
+  <data name="LEVEL_NOT_HIGH_ENOUGH" xml:space="preserve">
+    <value>The Level is not High enough!</value>
   </data>
 </root>

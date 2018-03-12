@@ -6,7 +6,10 @@ namespace OpenNos.DAL.EF.Migrations
     {
         #region Methods
 
-        public override void Down() => AddColumn("dbo.Account", "LastSession", c => c.Int(nullable: false));
+        public override void Down()
+        {
+            AddColumn("dbo.Account", "LastSession", c => c.Int(nullable: false));
+        }
 
         public override void Up() => DropColumn("dbo.Account", "LastSession");
 

@@ -1,45 +1,30 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-using OpenNos.Core;
+﻿using OpenNos.Core;
 using OpenNos.Domain;
-using OpenNos.GameObject.Event;
 using OpenNos.GameObject.Helpers;
-using OpenNos.GameObject.Networking;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace OpenNos.GameObject
 {
-    public class Group : IDisposable
+    public class Group
     {
         #region Members
 
-        private readonly object _syncObj = new object();
-        private bool _disposed;
-        private int _order;
+        private readonly object syncObj = new object();
+        private int order;
 
         #endregion
 
         #region Instantiation
 
-        public Group()
+        public Group(GroupType type)
         {
-            Characters = new ThreadSafeGenericList<ClientSession>();
+            Characters = new ConcurrentBag<ClientSession>();
             GroupId = ServerManager.Instance.GetNextGroupId();
-            _order = 0;
+            order = 0;
+            GroupType = type;
         }
 
         #endregion
@@ -48,7 +33,7 @@ namespace OpenNos.GameObject
 
         public int CharacterCount => Characters.Count;
 
-        public ThreadSafeGenericList<ClientSession> Characters { get; }
+        public ConcurrentBag<ClientSession> Characters { get; set; }
 
         public long GroupId { get; set; }
 
@@ -58,27 +43,15 @@ namespace OpenNos.GameObject
 
         public byte SharingMode { get; set; }
 
-        public TalentArenaBattle TalentArenaBattle { get; set; }
-
         #endregion
 
         #region Methods
 
-        public void Dispose()
-        {
-            if (!_disposed)
-            {
-                Dispose(true);
-                GC.SuppressFinalize(this);
-                _disposed = true;
-            }
-        }
-
         public List<string> GeneratePst(ClientSession player)
         {
             List<string> str = new List<string>();
-            int i = 0;
-            Characters.ForEach(session =>
+            var i = 0;
+            foreach (ClientSession session in Characters)
             {
                 if (session == player)
                 {
@@ -88,68 +61,64 @@ namespace OpenNos.GameObject
                 }
                 else
                 {
-                    str.Add($"pst 1 {session.Character.CharacterId} {++i} {(int)(session.Character.Hp / session.Character.HPLoad() * 100)} {(int)(session.Character.Mp / session.Character.MPLoad() * 100)} {session.Character.HPLoad()} {session.Character.MPLoad()} {(byte)session.Character.Class} {(byte)session.Character.Gender} {(session.Character.UseSp ? session.Character.Morph : 0)}{session.Character.Buff.GetAllItems().Aggregate(string.Empty, (current, buff) => current + $" {buff.Card.CardId}")}");
+                    str.Add($"pst 1 {session.Character.CharacterId} {++i} {(int)(session.Character.Hp / session.Character.HPLoad() * 100)} {(int)(session.Character.Mp / session.Character.MPLoad() * 100)} {session.Character.HPLoad()} {session.Character.MPLoad()} {(byte)session.Character.Class} {(byte)session.Character.Gender} {(session.Character.UseSp ? session.Character.Morph : 0)}{session.Character.Buff.Aggregate(string.Empty, (current, buff) => current + $" {buff.Card.CardId}")}");
                 }
-            });
+            }
+
             return str;
         }
 
         public string GenerateRdlst()
         {
-            string result = string.Empty;
-            result = $"rdlst{((GroupType == GroupType.GiantTeam) ? "f" : string.Empty)} {Raid?.LevelMinimum ?? 1} {Raid?.LevelMaximum ?? 99} 0";
-            try
-            {
-                Characters.ForEach(session => result += $" {session.Character.Level}.{(session.Character.UseSp || session.Character.IsVehicled ? session.Character.Morph : -1)}.{(short)session.Character.Class}.{Raid?.InstanceBag.DeadList.Count(s => s == session.Character.CharacterId) ?? 0}.{session.Character.Name}.{(short)session.Character.Gender}.{session.Character.CharacterId}.{session.Character.HeroLevel}");
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex, "GenerateRdlst");
-            }
+            var result = $"rdlst{(GroupType == GroupType.GiantTeam ? "f" : "")} {Raid.LevelMinimum} {Raid.LevelMaximum} 0";
+            Characters.ToList().ForEach(session => result += $" {session.Character.Level}.{(session.Character.UseSp || session.Character.IsVehicled ? session.Character.Morph : -1)}.{(short)session.Character.Class}.{Raid?.FirstMap?.InstanceBag.DeadList.Count(s => s == session.Character.CharacterId) ?? 0}.{session.Character.Name}.{(short)session.Character.Gender}.{session.Character.CharacterId}.{session.Character.HeroLevel}");
+
             return result;
         }
 
-        public string GeneraterRaidmbf(ClientSession session) => $"raidmbf {session?.CurrentMapInstance?.InstanceBag?.MonsterLocker.Initial} {session?.CurrentMapInstance?.InstanceBag?.MonsterLocker.Current} {session?.CurrentMapInstance?.InstanceBag?.ButtonLocker.Initial} {session?.CurrentMapInstance?.InstanceBag?.ButtonLocker.Current} {Raid?.InstanceBag?.Lives - Raid?.InstanceBag?.DeadList.Count} {Raid?.InstanceBag?.Lives} 25";
+        public string GeneraterRaidmbf()
+        {
+            return $"raidmbf {Raid?.FirstMap?.InstanceBag.MonsterLocker.Initial} {Raid?.FirstMap?.InstanceBag.MonsterLocker.Current} {Raid?.FirstMap?.InstanceBag.ButtonLocker.Initial} {Raid?.FirstMap?.InstanceBag.ButtonLocker.Current} {Raid?.FirstMap?.InstanceBag.Lives - Raid?.FirstMap?.InstanceBag.DeadList.Count()} {Raid?.FirstMap?.InstanceBag.Lives} 25";
+        }
 
         public long? GetNextOrderedCharacterId(Character character)
         {
-            lock (_syncObj)
+            lock (syncObj)
             {
-                _order++;
-                List<ClientSession> sessions = Characters.Where(s => Map.GetDistance(s.Character, character) < 50);
-                if (_order > sessions.Count - 1) // if order wents out of amount of ppl, reset it -> zero based index
+                order++;
+                List<ClientSession> sessions = Characters.Replace(s => Map.GetDistance(s.Character, character) < 50).ToList();
+                if (order > sessions.Count - 1) // if order wents out of amount of ppl, reset it -> zero based index
                 {
-                    _order = 0;
+                    order = 0;
                 }
 
-                if (sessions.Count == 0) // group seems to be empty
+                if (!sessions.Any()) // group seems to be empty
                 {
                     return null;
                 }
 
-                return sessions[_order].Character.CharacterId;
+                return sessions[order].Character.CharacterId;
             }
         }
 
         public bool IsLeader(ClientSession session)
         {
-            if (Characters.Count > 0)
-            {
-                return Characters.FirstOrDefault() == session;
-            }
-            else
-            {
-                return false;
-            }
+            return Characters.OrderBy(s => s.Character.LastGroupJoin).ElementAt(0) == session;
         }
 
-        public bool IsMemberOfGroup(long characterId) => Characters?.Any(s => s?.Character?.CharacterId == characterId) == true;
+        public bool IsMemberOfGroup(long characterId)
+        {
+            return Characters != null && Characters.Any(s => s?.Character?.CharacterId == characterId);
+        }
 
-        public bool IsMemberOfGroup(ClientSession session) => Characters?.Any(s => s?.Character?.CharacterId == session.Character.CharacterId) == true;
+        public bool IsMemberOfGroup(ClientSession session)
+        {
+            return Characters != null && Characters.Any(s => s?.Character?.CharacterId == session.Character.CharacterId);
+        }
 
         public void JoinGroup(long characterId)
         {
-            ClientSession session = ServerManager.Instance.GetSessionByCharacterId(characterId);
+            var session = ServerManager.Instance.GetSessionByCharacterId(characterId);
             if (session != null)
             {
                 JoinGroup(session);
@@ -159,6 +128,7 @@ namespace OpenNos.GameObject
         public void JoinGroup(ClientSession session)
         {
             session.Character.Group = this;
+            session.Character.LastGroupJoin = DateTime.Now;
             Characters.Add(session);
         }
 
@@ -167,17 +137,10 @@ namespace OpenNos.GameObject
             session.Character.Group = null;
             if (IsLeader(session) && GroupType != GroupType.Group && Characters.Count > 1)
             {
-                Characters.ForEach(s => s.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("TEAM_LEADER_CHANGE"), Characters.ElementAt(0).Character?.Name), 0)));
+                Characters.ToList().ForEach(s => s.SendPacket(UserInterfaceHelper.Instance.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("TEAM_LEADER_CHANGE"), Characters.ElementAt(0).Character?.Name), 0)));
             }
-            Characters.RemoveAll(s => s?.Character.CharacterId == session.Character.CharacterId);
-        }
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                Characters.Dispose();
-            }
+            Characters = Characters.Replace(s => s?.Character.CharacterId != session.Character.CharacterId);
         }
 
         #endregion

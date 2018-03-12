@@ -1,18 +1,4 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-using OpenNos.Core;
+﻿using OpenNos.Core;
 using OpenNos.Core.Networking.Communication.Scs.Communication.Messages;
 using System;
 using System.Collections.Generic;
@@ -26,11 +12,9 @@ namespace OpenNos.GameObject.Mock
     {
         #region Members
 
-        private long _clientId;
-
-        private ClientSession _clientSession;
-
-        private long _lastPacketId;
+        private long clientId;
+        private ClientSession clientSession;
+        private long lastKeepAliveIdentitiy;
 
         #endregion
 
@@ -38,10 +22,10 @@ namespace OpenNos.GameObject.Mock
 
         public FakeNetworkClient()
         {
-            _clientId = 0;
+            clientId = 0;
             SentPackets = new Queue<string>();
             ReceivedPackets = new Queue<string>();
-            _lastPacketId = 1;
+            lastKeepAliveIdentitiy = 1;
             IsConnected = true;
         }
 
@@ -59,15 +43,18 @@ namespace OpenNos.GameObject.Mock
         {
             get
             {
-                if (_clientId == 0)
+                if (clientId == 0)
                 {
-                    _clientId = GameObjectMockHelper.Instance.GetNextClientId();
+                    clientId = GameObjectMockHelper.Instance.GetNextClientId();
                 }
 
-                return _clientId;
+                return clientId;
             }
 
-            set => _clientId = value;
+            set
+            {
+                clientId = value;
+            }
         }
 
         public string IpAddress => "127.0.0.1";
@@ -86,13 +73,13 @@ namespace OpenNos.GameObject.Mock
 
         #region Methods
 
-        public async Task ClearLowPriorityQueueAsync() => await Task.CompletedTask;
+        public async Task ClearLowPriorityQueue() => await Task.CompletedTask;
 
         public void Disconnect() => IsConnected = false;
 
-        public ClientSession GetClientSession() => _clientSession;
+        public ClientSession GetClientSession() => clientSession;
 
-        public void Initialize(CryptographyBase encryptor)
+        public void Initialize(EncryptionBase encryptor)
         {
             // nothing to do here
         }
@@ -104,31 +91,38 @@ namespace OpenNos.GameObject.Mock
         public void ReceivePacket(string packet)
         {
             Debug.WriteLine($"Enqueued {packet}");
-            UTF8Encoding encoding = new UTF8Encoding();
-            byte[] buf = encoding.GetBytes($"{_lastPacketId} {packet}");
+            var encoding = new UTF8Encoding();
+            byte[] buf = encoding.GetBytes($"{lastKeepAliveIdentitiy} {packet}");
             MessageReceived?.Invoke(this, new MessageEventArgs(new ScsRawDataMessage(buf), DateTime.Now));
-            _lastPacketId++;
+            lastKeepAliveIdentitiy++;
         }
 
         /// <summary>
         /// Send a packet to the Server as the Fake client receives it and triggers a Handler method.
         /// </summary>
         /// <param name="packet">Packet created thru PacketFactory.</param>
-        public void ReceivePacket(PacketDefinition packet) => ReceivePacket(PacketFactory.Serialize(packet));
+        public void ReceivePacket(PacketDefinition packet)
+        {
+            ReceivePacket(PacketFactory.Serialize(packet));
+        }
 
         public void SendPacket(string packet, byte priority = 10) => SentPackets.Enqueue(packet);
 
-        public void SendPacketFormat(string packet, params object[] param) => SentPackets.Enqueue(string.Format(packet, param));
+        public void SendPacketFormat(string packet, params object[] param)
+        {
+            SentPackets.Enqueue(string.Format(packet, param));
+        }
 
         public void SendPackets(IEnumerable<string> packets, byte priority = 10)
         {
             foreach (string packet in packets)
-            {
                 SendPacket(packet, priority);
-            }
         }
 
-        public void SetClientSession(object clientSession) => _clientSession = (ClientSession)clientSession;
+        public void SetClientSession(object clientSession)
+        {
+            this.clientSession = (ClientSession)clientSession;
+        }
 
         #endregion
     }

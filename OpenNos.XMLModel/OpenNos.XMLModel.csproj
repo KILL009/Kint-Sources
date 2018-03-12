@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CE1BCBE7-EDB7-4564-A11E-8D90868DF9D0}</ProjectGuid>
+    <ProjectGuid>{0C477D44-59EE-4234-BCDE-D5AFA18C54EE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>OpenNos.XMLModel</RootNamespace>
     <AssemblyName>OpenNos.XMLModel</AssemblyName>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -30,22 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
-    <Reference Include="RestSharp, Version=106.2.1.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
-      <HintPath>..\packages\RestSharp.106.2.1\lib\net452\RestSharp.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\net47\System.ValueTuple.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -76,8 +62,6 @@
     <Compile Include="Events\OnTarget.cs" />
     <Compile Include="Events\OnTimeout.cs" />
     <Compile Include="Events\OnTraversal.cs" />
-    <Compile Include="Events\Quest\Script.cs" />
-    <Compile Include="Events\Quest\TeleportTo.cs" />
     <Compile Include="Events\Roam.cs" />
     <Compile Include="Events\SendMessage.cs" />
     <Compile Include="Events\SendPacket.cs" />
@@ -87,18 +71,9 @@
     <Compile Include="Events\SpawnPortal.cs" />
     <Compile Include="Events\StartClock.cs" />
     <Compile Include="Events\SummonMonster.cs" />
-    <Compile Include="Events\SummonMonsters.cs" />
     <Compile Include="Events\SummonNpc.cs" />
     <Compile Include="Events\Teleport.cs" />
     <Compile Include="Events\ThrowItem.cs" />
-    <Compile Include="Models\Quest\QuestGiver.cs" />
-    <Compile Include="Models\Quest\Reward.cs" />
-    <Compile Include="Objects\Name.cs" />
-    <Compile Include="Objects\Quest\LootObjective.cs" />
-    <Compile Include="Objects\Quest\WalkObjective.cs" />
-    <Compile Include="Objects\Quest\KillObjective.cs" />
-    <Compile Include="Objects\Wave.cs" />
-    <Compile Include="Models\Quest\QuestModel.cs" />
     <Compile Include="Models\ScriptedInstance\Globals.cs" />
     <Compile Include="Models\ScriptedInstance\ScriptedInstanceModel.cs" />
     <Compile Include="Objects\CreateMap.cs" />
@@ -109,19 +84,12 @@
     <Compile Include="Objects\Label.cs" />
     <Compile Include="Objects\Level.cs" />
     <Compile Include="Objects\Lives.cs" />
+    <Compile Include="Objects\Name.cs" />
     <Compile Include="Objects\Reputation.cs" />
     <Compile Include="Objects\StartPosition.cs" />
+    <Compile Include="Objects\Wave.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\OpenNos.Domain\OpenNos.Domain.csproj">
-      <Project>{20addddd-dad9-44f3-9beb-026c73090660}</Project>
-      <Name>OpenNos.Domain</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

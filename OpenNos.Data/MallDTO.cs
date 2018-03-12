@@ -20,8 +20,4 @@ namespace OpenNos.Data
 
         #endregion
     }
-
-    public class MappingBaseDTO
-    {
-    }
 }

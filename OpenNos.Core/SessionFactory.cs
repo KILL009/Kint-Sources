@@ -1,26 +1,11 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-namespace OpenNos.Core
+﻿namespace OpenNos.Core
 {
     public class SessionFactory
     {
         #region Members
 
-        private static SessionFactory _instance;
-
-        private int _sessionCounter;
+        private static SessionFactory instance;
+        private int sessionCounter;
 
         #endregion
 
@@ -34,7 +19,7 @@ namespace OpenNos.Core
 
         #region Properties
 
-        public static SessionFactory Instance => _instance ?? (_instance = new SessionFactory());
+        public static SessionFactory Instance => instance ?? (instance = new SessionFactory());
 
         #endregion
 
@@ -42,8 +27,8 @@ namespace OpenNos.Core
 
         public int GenerateSessionId()
         {
-            _sessionCounter += 2;
-            return _sessionCounter;
+            sessionCounter += 2;
+            return sessionCounter;
         }
 
         #endregion

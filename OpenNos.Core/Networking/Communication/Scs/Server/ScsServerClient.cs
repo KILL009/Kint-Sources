@@ -1,18 +1,4 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-using OpenNos.Core.Networking.Communication.Scs.Communication;
+﻿using OpenNos.Core.Networking.Communication.Scs.Communication;
 using OpenNos.Core.Networking.Communication.Scs.Communication.Channels;
 using OpenNos.Core.Networking.Communication.Scs.Communication.EndPoints;
 using OpenNos.Core.Networking.Communication.Scs.Communication.Messages;
@@ -32,7 +18,7 @@ namespace OpenNos.Core.Networking.Communication.Scs.Server
         /// <summary>
         /// The communication channel that is used by client to send and receive messages.
         /// </summary>
-        private readonly ICommunicationChannel _communicationChannel;
+        private readonly ICommunicationChannel communicationChannel;
 
         #endregion
 
@@ -46,10 +32,10 @@ namespace OpenNos.Core.Networking.Communication.Scs.Server
         /// </param>
         public ScsServerClient(ICommunicationChannel communicationChannel)
         {
-            _communicationChannel = communicationChannel;
-            _communicationChannel.MessageReceived += CommunicationChannel_MessageReceived;
-            _communicationChannel.MessageSent += CommunicationChannel_MessageSent;
-            _communicationChannel.Disconnected += CommunicationChannel_Disconnected;
+            this.communicationChannel = communicationChannel;
+            this.communicationChannel.MessageReceived += CommunicationChannel_MessageReceived;
+            this.communicationChannel.MessageSent += CommunicationChannel_MessageSent;
+            this.communicationChannel.Disconnected += CommunicationChannel_Disconnected;
         }
 
         #endregion
@@ -84,55 +70,63 @@ namespace OpenNos.Core.Networking.Communication.Scs.Server
         /// <summary>
         /// Gets the communication state of the Client.
         /// </summary>
-        public CommunicationStates CommunicationState => _communicationChannel.CommunicationState;
+        public CommunicationStates CommunicationState => communicationChannel.CommunicationState;
 
         /// <summary>
         /// Gets the time of the last succesfully received message.
         /// </summary>
-        public DateTime LastReceivedMessageTime => _communicationChannel.LastReceivedMessageTime;
+        public DateTime LastReceivedMessageTime => communicationChannel.LastReceivedMessageTime;
 
         /// <summary>
         /// Gets the time of the last succesfully received message.
         /// </summary>
-        public DateTime LastSentMessageTime => _communicationChannel.LastSentMessageTime;
+        public DateTime LastSentMessageTime => communicationChannel.LastSentMessageTime;
 
         /// <summary>
         /// Gets endpoint of remote application.
         /// </summary>
-        public ScsEndPoint RemoteEndPoint => _communicationChannel.RemoteEndPoint;
+        public ScsEndPoint RemoteEndPoint => communicationChannel.RemoteEndPoint;
 
         /// <summary>
         /// Gets/sets wire protocol that is used while reading and writing messages.
         /// </summary>
         public IScsWireProtocol WireProtocol
         {
-            get => _communicationChannel.WireProtocol;
-            set => _communicationChannel.WireProtocol = value;
+            get { return communicationChannel.WireProtocol; }
+            set { communicationChannel.WireProtocol = value; }
         }
 
         #endregion
 
         #region Methods
 
-        public async Task ClearLowPriorityQueueAsync() => await _communicationChannel.ClearLowPriorityQueueAsync().ConfigureAwait(false);
+        public async Task ClearLowPriorityQueue()
+        {
+            await communicationChannel.ClearLowPriorityQueue();
+        }
 
         /// <summary>
         /// Disconnects from client and closes underlying communication channel.
         /// </summary>
-        public void Disconnect() => _communicationChannel.Disconnect();
+        public void Disconnect() => communicationChannel.Disconnect();
 
         /// <summary>
         /// Sends a message to the client.
         /// </summary>
         /// <param name="message">Message to be sent</param>
-        /// <param name="priority">Message priority to send</param>
-        public void SendMessage(IScsMessage message, byte priority) => _communicationChannel.SendMessage(message, priority);
+        public void SendMessage(IScsMessage message, byte priority)
+        {
+            communicationChannel.SendMessage(message, priority);
+        }
 
         /// <summary>
         /// Raises MessageSent event.
         /// </summary>
         /// <param name="message">Received message</param>
-        protected virtual void OnMessageSent(IScsMessage message) => MessageSent?.Invoke(this, new MessageEventArgs(message, DateTime.Now));
+        protected virtual void OnMessageSent(IScsMessage message)
+        {
+            MessageSent?.Invoke(this, new MessageEventArgs(message, DateTime.Now));
+        }
 
         /// <summary>
         /// Handles Disconnected event of _communicationChannel object.
@@ -148,10 +142,10 @@ namespace OpenNos.Core.Networking.Communication.Scs.Server
         /// <param name="e">Event arguments</param>
         private void CommunicationChannel_MessageReceived(object sender, MessageEventArgs e)
         {
-            IScsMessage message = e.Message;
+            var message = e.Message;
             if (message is ScsPingMessage)
             {
-                _communicationChannel.SendMessage(new ScsPingMessage { RepliedMessageId = message.MessageId }, 10);
+                communicationChannel.SendMessage(new ScsPingMessage { RepliedMessageId = message.MessageId }, 10);
                 return;
             }
 
@@ -163,7 +157,10 @@ namespace OpenNos.Core.Networking.Communication.Scs.Server
         /// </summary>
         /// <param name="sender">Source of event</param>
         /// <param name="e">Event arguments</param>
-        private void CommunicationChannel_MessageSent(object sender, MessageEventArgs e) => OnMessageSent(e.Message);
+        private void CommunicationChannel_MessageSent(object sender, MessageEventArgs e)
+        {
+            OnMessageSent(e.Message);
+        }
 
         /// <summary>
         /// Raises Disconnected event.
@@ -174,7 +171,10 @@ namespace OpenNos.Core.Networking.Communication.Scs.Server
         /// Raises MessageReceived event.
         /// </summary>
         /// <param name="message">Received message</param>
-        private void OnMessageReceived(IScsMessage message) => MessageReceived?.Invoke(this, new MessageEventArgs(message, DateTime.Now));
+        private void OnMessageReceived(IScsMessage message)
+        {
+            MessageReceived?.Invoke(this, new MessageEventArgs(message, DateTime.Now));
+        }
 
         #endregion
     }

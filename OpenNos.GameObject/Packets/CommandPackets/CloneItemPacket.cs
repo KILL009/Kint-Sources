@@ -5,7 +5,7 @@ using OpenNos.Domain;
 
 namespace OpenNos.GameObject.CommandPackets
 {
-    [PacketHeader("$Clone", PassNonParseablePacket = true, Authority = AuthorityType.Operator)]
+    [PacketHeader("$Clone", PassNonParseablePacket = true, Authority = AuthorityType.GameMaster)]
     public class CloneItemPacket : PacketDefinition
     {
         #region Properties
@@ -17,7 +17,7 @@ namespace OpenNos.GameObject.CommandPackets
 
         public static string ReturnHelp()
         {
-            return "$Clone SLOT DESTINATIONSLOT";
+            return "$Clone <Slot>";
         }
     }
 }

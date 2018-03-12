@@ -1,22 +1,8 @@
-/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
 using OpenNos.DAL.EF.Entities;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 
-namespace OpenNos.DAL.EF
+namespace OpenNos.DAL.EF.DB
 {
     public class OpenNosContext : DbContext
     {
@@ -43,8 +29,6 @@ namespace OpenNos.DAL.EF
 
         public virtual DbSet<Card> Card { get; set; }
 
-        public virtual DbSet<CellonOption> CellonOption { get; set; }
-
         public virtual DbSet<Character> Character { get; set; }
 
         public virtual DbSet<CharacterRelation> CharacterRelation { get; set; }
@@ -54,6 +38,8 @@ namespace OpenNos.DAL.EF
         public virtual DbSet<Combo> Combo { get; set; }
 
         public virtual DbSet<Drop> Drop { get; set; }
+
+        public virtual DbSet<EquipmentOption> EquipmentOption { get; set; }
 
         public virtual DbSet<Family> Family { get; set; }
 
@@ -67,9 +53,14 @@ namespace OpenNos.DAL.EF
 
         public virtual DbSet<ItemInstance> ItemInstance { get; set; }
 
+        public virtual DbSet<LogChat> LogChat { get; set; }
+
+        public virtual DbSet<LogCommands> LogCommands { get; set; }
+
+        // public virtual DbSet<LogPlayerAction> PlayerActions { get; set; }
         public virtual DbSet<Mail> Mail { get; set; }
 
-        public virtual DbSet<MaintenanceLog> MaintenanceLog { get; set; }
+        public virtual DbSet<Mall> Mall { get; set; }
 
         public virtual DbSet<Map> Map { get; set; }
 
@@ -82,8 +73,6 @@ namespace OpenNos.DAL.EF
         public virtual DbSet<MapTypeMap> MapTypeMap { get; set; }
 
         public virtual DbSet<Mate> Mate { get; set; }
-      
-        public virtual DbSet<MinigameLog> MinigameLog { get; set; }
 
         public virtual DbSet<MinilandObject> MinilandObject { get; set; }
 
@@ -95,17 +84,11 @@ namespace OpenNos.DAL.EF
 
         public virtual DbSet<Portal> Portal { get; set; }
 
-        public virtual DbSet<Quest> Quest { get; set; }
-
-        public virtual DbSet<QuestProgress> QuestProgress { get; set; }
-
         public virtual DbSet<QuicklistEntry> QuicklistEntry { get; set; }
 
         public virtual DbSet<Recipe> Recipe { get; set; }
 
         public virtual DbSet<RecipeItem> RecipeItem { get; set; }
-
-        public virtual DbSet<RecipeList> RecipeList { get; set; }
 
         public virtual DbSet<Respawn> Respawn { get; set; }
 
@@ -114,8 +97,6 @@ namespace OpenNos.DAL.EF
         public virtual DbSet<RollGeneratedItem> RollGeneratedItem { get; set; }
 
         public virtual DbSet<ScriptedInstance> ScriptedInstance { get; set; }
-
-        public virtual DbSet<ShellEffect> ShellEffect { get; set; }
 
         public virtual DbSet<Shop> Shop { get; set; }
 
@@ -139,6 +120,13 @@ namespace OpenNos.DAL.EF
         {
             // remove automatic pluralization
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+
+            // build TPH tables for inheritance
+            modelBuilder.Entity<ItemInstance>()
+                .Map<WearableInstance>(m => m.Requires("WearableInstance"))
+                .Map<SpecialistInstance>(m => m.Requires("SpecialistInstance"))
+                .Map<BoxInstance>(m => m.Requires("BoxInstance"))
+                .Map<UsableInstance>(m => m.Requires("UsableInstance"));
 
             modelBuilder.Entity<Account>()
                 .Property(e => e.Password)
@@ -201,12 +189,6 @@ namespace OpenNos.DAL.EF
                 .HasForeignKey(e => e.CharacterId)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<Character>()
-                .HasMany(e => e.MinigameLog)
-                .WithRequired(e => e.Character)
-                .HasForeignKey(e => e.CharacterId)
-                .WillCascadeOnDelete(false);
-
             modelBuilder.Entity<Card>()
                 .HasMany(e => e.StaticBuff)
                 .WithRequired(e => e.Card)
@@ -217,18 +199,6 @@ namespace OpenNos.DAL.EF
                 .HasMany(e => e.QuicklistEntry)
                 .WithRequired(e => e.Character)
                 .HasForeignKey(e => e.CharacterId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Character>()
-                .HasMany(e => e.QuestProgress)
-                .WithRequired(e => e.Character)
-                .HasForeignKey(e => e.CharacterId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<QuestProgress>()
-                .HasRequired(e => e.Quest)
-                .WithMany(e => e.QuestProgress)
-                .HasForeignKey(e => e.QuestId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Character>()
@@ -445,6 +415,11 @@ namespace OpenNos.DAL.EF
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<MapNpc>()
+                .HasMany(e => e.Recipe)
+                .WithRequired(e => e.MapNpc)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<MapNpc>()
                 .HasMany(e => e.Shop)
                 .WithRequired(e => e.MapNpc)
                 .WillCascadeOnDelete(false);
@@ -452,24 +427,6 @@ namespace OpenNos.DAL.EF
             modelBuilder.Entity<MapNpc>()
                 .HasMany(e => e.Teleporter)
                 .WithRequired(e => e.MapNpc)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<RecipeList>()
-                .HasOptional(e => e.Item)
-                .WithMany(e => e.RecipeList)
-                .HasForeignKey(e => e.ItemVNum)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<RecipeList>()
-                .HasOptional(e => e.MapNpc)
-                .WithMany(e => e.RecipeList)
-                .HasForeignKey(e => e.MapNpcId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<RecipeList>()
-                .HasRequired(e => e.Recipe)
-                .WithMany(e => e.RecipeList)
-                .HasForeignKey(e => e.RecipeId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<NpcMonster>()
