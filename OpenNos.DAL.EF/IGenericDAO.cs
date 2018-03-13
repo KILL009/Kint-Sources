@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using OpenNos.Data;
 
 namespace OpenNos.DAL.EF
 {
@@ -20,6 +21,7 @@ namespace OpenNos.DAL.EF
         IEnumerable<TDTO> LoadAll();
 
         IEnumerable<TDTO> Where(Expression<Func<TEntity, bool>> predicate);
+        MapDTO LoadById(short mapId);
 
         #endregion
     }

@@ -94,6 +94,8 @@ namespace OpenNos.GameObject
 
         public MapInstance ArenaInstance { get; private set; }
 
+        private static readonly ConcurrentDictionary<Guid, MapInstance> _mapinstances = new ConcurrentDictionary<Guid, MapInstance>();
+
         public List<ArenaMember> ArenaMembers { get; set; } = new List<ArenaMember>();
 
         public List<ConcurrentBag<ArenaTeamMember>> ArenaTeams { get; set; } = new List<ConcurrentBag<ArenaTeamMember>>();
@@ -735,6 +737,8 @@ namespace OpenNos.GameObject
         {
             CommunicationServiceClient.Instance.UpdateFamily(ServerGroup, familyId);
         }
+
+        public static MapInstance GetMapInstanceByMapId(short mapId) => _mapinstances.Values.FirstOrDefault(s => s.Map.MapId == mapId);
 
         public MapInstance GenerateMapInstance(short mapId, MapInstanceType type, InstanceBag mapclock)
         {

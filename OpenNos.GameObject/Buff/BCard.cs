@@ -38,9 +38,12 @@ namespace OpenNos.GameObject
                     }
                     else if (session.GetType() == typeof(MapNpc))
                     {
+
                     }
+
                     else if (session.GetType() == typeof(Mate))
                     {
+
                     }
 
                     break;
@@ -62,6 +65,7 @@ namespace OpenNos.GameObject
                 case BCardType.CardType.Summons:
                     if (session.GetType() == typeof(Character))
                     {
+
                     }
                     else if (session.GetType() == typeof(MapMonster))
                     {
@@ -109,9 +113,11 @@ namespace OpenNos.GameObject
                     }
                     else if (session.GetType() == typeof(MapNpc))
                     {
+
                     }
                     else if (session.GetType() == typeof(Mate))
                     {
+
                     }
 
                     break;
