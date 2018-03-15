@@ -213,10 +213,7 @@ namespace OpenNos.DAL.EF
             }
         }
 
-        public MapDTO LoadById(short mapId)
-        {
-            throw new NotImplementedException();
-        }
+       
 
         public virtual IMappingBaseDAO RegisterMapping(Type gameObjectType)
         {
