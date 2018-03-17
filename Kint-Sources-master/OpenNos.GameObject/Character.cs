@@ -4452,6 +4452,12 @@ namespace OpenNos.GameObject
             return (DateTime.Now - LastDefence).TotalSeconds > 4 ? CharacterHelper.HPHealthStand[(byte)Class] : 0;
         }
 
+        public void OpenBank()
+        {
+            Session.SendPacket($"gb 3 {Session.Account.BankGold / 1000} {Session.Character.Gold} 0 0");
+            Session.SendPacket("s_memo 6 Welcome to the Cuarry Bank. You can deposit or withdraw 1,000 to 100 billion gold.");
+        }
+
         private int HealthMPLoad()
         {
             if (IsSitting)
