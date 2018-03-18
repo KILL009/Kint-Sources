@@ -174,23 +174,20 @@ namespace OpenNos.Handler
             {
                 return;
             }
-            if (characterDeletePacket.Password != null)
+            if (account.Password.ToLower() == CryptographyBase.Sha512(characterDeletePacket.Password))
             {
-                if (account.Password.ToLower() == CryptographyBase.Sha512(characterDeletePacket.Password))
+                CharacterDTO character = DAOFactory.CharacterDAO.LoadBySlot(account.AccountId, characterDeletePacket.Slot);
+                if (character == null)
                 {
-                    CharacterDTO character = DAOFactory.CharacterDAO.LoadBySlot(account.AccountId, characterDeletePacket.Slot);
-                    if (character == null)
-                    {
-                        return;
-                    }
-                    DAOFactory.GeneralLogDAO.SetCharIdNull(Convert.ToInt64(character.CharacterId));
-                    DAOFactory.CharacterDAO.DeleteByPrimaryKey(account.AccountId, characterDeletePacket.Slot);
-                    LoadCharacters(string.Empty);
+                    return;
                 }
-                else
-                {
-                    Session.SendPacket($"info {Language.Instance.GetMessageFromKey("BAD_PASSWORD")}");
-                }
+                DAOFactory.GeneralLogDAO.SetCharIdNull(Convert.ToInt64(character.CharacterId));
+                DAOFactory.CharacterDAO.DeleteByPrimaryKey(account.AccountId, characterDeletePacket.Slot);
+                LoadCharacters(string.Empty);
+            }
+            else
+            {
+                Session.SendPacket($"info {Language.Instance.GetMessageFromKey("BAD_PASSWORD")}");
             }
         }
 

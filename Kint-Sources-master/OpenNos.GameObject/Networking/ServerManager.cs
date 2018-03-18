@@ -158,11 +158,8 @@ namespace OpenNos.GameObject.Networking
         public Guid WorldId { get; private set; }
 
         public ThreadSafeSortedList<long, ClientSession> CharacterScreenSessions { get; set; }
-
         public long MaxBankGold { get; set; }
-
         public long MaxGold { get; set; }
-
         public int RaidType { get; set; }
 
         #endregion
@@ -766,8 +763,6 @@ namespace OpenNos.GameObject.Networking
 
         public void Initialize()
         {
-            MaxBankGold = long.Parse(ConfigurationManager.AppSettings["MaxBankGold"]);
-
             Act4RaidStart = DateTime.Now;
             Act4AngelStat = new Act4Stat();
             Act4DemonStat = new Act4Stat();
