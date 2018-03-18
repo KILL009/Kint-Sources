@@ -590,17 +590,20 @@ namespace OpenNos.Handler
         /// <param name="ptCtlPacket"></param>
         public void PetMove(PtCtlPacket ptCtlPacket)
         {
-            string[] packetsplit = ptCtlPacket.PacketEnd.Split(' ');
-            for (int i = 0; i < ptCtlPacket.Amount * 3; i += 3)
+            if (ptCtlPacket.PacketEnd != null)
             {
-                if (packetsplit.Length >= ptCtlPacket.Amount * 3 && int.TryParse(packetsplit[i], out int petId) && short.TryParse(packetsplit[i + 1], out short positionX) && short.TryParse(packetsplit[i + 2], out short positionY))
+                string[] packetsplit = ptCtlPacket.PacketEnd.Split(' ');
+                for (int i = 0; i < ptCtlPacket.Amount * 3; i += 3)
                 {
-                    Mate mate = Session.Character.Mates.Find(s => s.MateTransportId == petId);
-                    if (mate != null)
+                    if (packetsplit.Length >= ptCtlPacket.Amount * 3 && int.TryParse(packetsplit[i], out int petId) && short.TryParse(packetsplit[i + 1], out short positionX) && short.TryParse(packetsplit[i + 2], out short positionY))
                     {
-                        mate.PositionX = positionX;
-                        mate.PositionY = positionY;
-                        Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.Move(UserType.Npc, petId, positionX, positionY, mate.Monster.Speed));
+                        Mate mate = Session.Character?.Mates.Find(s => s.MateTransportId == petId);
+                        if (mate != null)
+                        {
+                            mate.PositionX = positionX;
+                            mate.PositionY = positionY;
+                            Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.Move(UserType.Npc, petId, positionX, positionY, mate.Monster.Speed));
+                        }
                     }
                 }
             }

@@ -62,6 +62,13 @@ namespace OpenNos.GameObject
                     session.SendPacket(session.Character.GenerateSpPoint());
                     break;
 
+                case 5836:
+                    {
+                        session.SendPacket($"gb 0 {session.Account.BankGold / 1000} {session.Character.Gold} 0 0");
+                        session.SendPacket($"s_memo 6 [Account balance]: {session.Account.BankGold} gold; [Owned]: {session.Character.Gold} gold\nWe will do our best. Thank you for using the services of Cuarry Bank.");
+                    }
+                    break;
+
                 // Specialist Medal
                 case 204:
                     session.Character.SpPoint += EffectValue;
@@ -372,13 +379,7 @@ namespace OpenNos.GameObject
 
                     }
                     break;
-                case 5836:
-                    {
-                        session.SendPacket($"gb 0 {session.Account.BankGold / 1000} {session.Character.Gold} 0 0");
-                        session.SendPacket($"s_memo 6 [Account balance]: {session.Account.BankGold} gold; [Owned]: {session.Character.Gold} gold\nWe will do our best. Thank you for using the services of Cuarry Bank.");
-                    }
-                    break;
-
+              
                 // Faction Egg
                 case 570:
                     if (session.Character.Faction == (FactionType)EffectValue)
