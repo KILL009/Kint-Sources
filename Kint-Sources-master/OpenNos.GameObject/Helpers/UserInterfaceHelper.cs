@@ -153,6 +153,18 @@ namespace OpenNos.GameObject.Helpers
                 case 10:
                     return $"guri 10 {argument} {value} {callerId}";
 
+                case 11:
+                    return $"guri 1 {argument} {value} {callerId}";
+
+                case 12:
+                    return $"guri 1 5 {argument} {callerId}";
+
+                case 13:
+                    return $"guri 1 2550 {argument} {value} ";
+
+                case 14:
+                    return $"guri 1 {argument}  {callerId}";
+
                 case 15:
                     return $"guri 15 {argument} 0 0";
 
