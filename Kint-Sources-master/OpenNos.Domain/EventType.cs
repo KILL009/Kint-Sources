@@ -25,6 +25,7 @@ namespace OpenNos.Domain
         Act4Raid,
         METEORITEGAME,
         TALENTARENA,
+        ICEBREAKER,
         CALIGOR
     }
 }
