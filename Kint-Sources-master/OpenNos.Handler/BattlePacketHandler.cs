@@ -20,6 +20,8 @@ using OpenNos.GameObject.Battle;
 using OpenNos.GameObject.Helpers;
 using OpenNos.GameObject.Networking;
 using OpenNos.Master.Library.Client;
+using System.Threading.Tasks;
+using OpenNos.GameObject.Event;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -359,7 +361,7 @@ namespace OpenNos.Handler
                 bool isAlive = target.Character.Hp > 0;
                 if (!isAlive && target.HasCurrentMapInstance)
                 {
-                    if (target.CurrentMapInstance.Map?.MapTypes.Any(s => s.MapTypeId == (short) MapTypeEnum.Act4)
+                    if (target.CurrentMapInstance.Map?.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4)
                         == true)
                     {
                         if (ServerManager.Instance.ChannelId == 51 && ServerManager.Instance.Act4DemonStat.Mode == 0
@@ -398,7 +400,7 @@ namespace OpenNos.Handler
                             hitRequest.Session.SendPacket(hitRequest.Session.Character.GenerateLev());
                             target.SendPacket(target.Character.GenerateSay(
                                 string.Format(Language.Instance.GetMessageFromKey("LOSE_REP"),
-                                    (short) (target.Character.Level * 50)), 11));
+                                    (short)(target.Character.Level * 50)), 11));
                         }
 
                         foreach (ClientSession sess in ServerManager.Instance.Sessions.Where(
@@ -409,7 +411,7 @@ namespace OpenNos.Handler
                                 sess.SendPacket(sess.Character.GenerateSay(
                                     string.Format(
                                         Language.Instance.GetMessageFromKey(
-                                            $"ACT4_PVP_KILL{(int) target.Character.Faction}"), Session.Character.Name),
+                                            $"ACT4_PVP_KILL{(int)target.Character.Faction}"), Session.Character.Name),
                                     12));
                             }
                             else if (sess.Character.Faction == target.Character.Faction)
@@ -417,7 +419,7 @@ namespace OpenNos.Handler
                                 sess.SendPacket(sess.Character.GenerateSay(
                                     string.Format(
                                         Language.Instance.GetMessageFromKey(
-                                            $"ACT4_PVP_DEATH{(int) target.Character.Faction}"), target.Character.Name),
+                                            $"ACT4_PVP_DEATH{(int)target.Character.Faction}"), target.Character.Name),
                                     11));
                             }
                         }
@@ -438,6 +440,10 @@ namespace OpenNos.Handler
                                 $"c_mode 1 {target.Character.CharacterId} 1564 0 0 0");
                             target.CurrentMapInstance?.Broadcast(target.Character.GenerateRevive());
                         });
+                    
+
+                    
+
                         Observable.Timer(TimeSpan.FromMilliseconds(30000)).Subscribe(o =>
                         {
                             target.Character.Hp = (int) target.Character.HPLoad();
@@ -739,7 +745,38 @@ namespace OpenNos.Handler
                         break;
                 }
             }
-            else
+
+            else if (target?.CurrentMapInstance?.MapInstanceType == MapInstanceType.IceBreakerInstance)
+            {
+                if (IceBreaker.AlreadyFrozenPlayers.Contains(target))
+                {
+                    IceBreaker.AlreadyFrozenPlayers.Remove(target);
+                    target?.CurrentMapInstance?.Broadcast(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("ICEBREAKER_PLAYER_OUT"), target?.Character?.Name), 0));
+                    target.Character.Hp = 1;
+                    target.Character.Mp = 1;
+                    var respawn = target?.Character?.Respawn;
+                    ServerManager.Instance.ChangeMap(target.Character.CharacterId, respawn.DefaultMapId);
+                }
+                else
+                                            {
+                    IceBreaker.FrozenPlayers.Add(target);
+                    target?.CurrentMapInstance?.Broadcast(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("ICEBREAKER_PLAYER_FROZEN"), target?.Character?.Name), 0));
+                    Task.Run(() =>
+                    {
+                        target.Character.Hp = (int)target.Character.HPLoad();
+                        target.Character.Mp = (int)target.Character.MPLoad();
+                        target?.SendPacket(target?.Character?.GenerateStat());
+                        target.Character.NoMove = true;
+                        target.Character.NoAttack = true;
+                        target?.SendPacket(target?.Character?.GenerateCond());
+                        while (IceBreaker.FrozenPlayers.Contains(target))
+                        {
+                            target?.CurrentMapInstance?.Broadcast(target?.Character?.GenerateEff(35));
+                            Thread.Sleep(1000);
+                        }
+                    });
+                }
+            }
             {
                 // monster already has been killed, send cancel
                 if (target != null)

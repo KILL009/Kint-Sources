@@ -131,6 +131,7 @@
     <Compile Include="Event\ACT4\CaligorRaid.cs" />
     <Compile Include="Event\EventWave.cs" />
     <Compile Include="Event\GAMES\MeteoriteGame.cs" />
+    <Compile Include="Event\ICEBREAKER\IceBreaker.cs" />
     <Compile Include="Event\TALENTARENA\TalentArena.cs" />
     <Compile Include="Event\TALENTARENA\TalentArenaBattle.cs" />
     <Compile Include="Helpers\MallAPIHelper.cs" />

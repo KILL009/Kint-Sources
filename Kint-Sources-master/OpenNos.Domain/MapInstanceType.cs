@@ -28,6 +28,7 @@ namespace OpenNos.Domain
         Act4Hatus,
         Act4Calvina,
         Act4Berios,
+        IceBreakerInstance,
         EventGameInstance,
         CaligorInstance
     }

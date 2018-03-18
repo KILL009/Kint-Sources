@@ -163,6 +163,8 @@ namespace OpenNos.GameObject.Networking
 
         public long MaxGold { get; set; }
 
+        public bool IceBreakerInWaiting { get; set; }
+
         public int RaidType { get; set; }
 
         #endregion

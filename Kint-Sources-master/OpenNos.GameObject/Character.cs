@@ -1260,6 +1260,11 @@ namespace OpenNos.GameObject
             }
         }
 
+        public string GenerateEff(int v)
+        {
+            throw new NotImplementedException();
+        }
+
         public void CloseExchangeOrTrade()
         {
             if (InExchangeOrTrade)

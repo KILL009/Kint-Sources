@@ -57,7 +57,7 @@ namespace OpenNos.GameObject.Helpers
             return a;
         }
 
-        public static void GenerateEvent(EventType type)
+        public void GenerateEvent(EventType type, bool useTimer = true)
         {
             if (!ServerManager.Instance.StartedEvents.Contains(type))
             {
@@ -94,6 +94,10 @@ namespace OpenNos.GameObject.Helpers
                         case EventType.ACT4SHIP:
                             ACT4SHIP.GenerateAct4Ship(1);
                             ACT4SHIP.GenerateAct4Ship(2);
+                            break;
+
+                        case EventType.ICEBREAKER:
+                            IceBreaker.GenerateIceBreaker(useTimer);
                             break;
 
                         case EventType.TALENTARENA:
