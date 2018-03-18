@@ -1140,15 +1140,10 @@ namespace OpenNos.Handler
                     }
                 }
 
-
-                if (ServerManager.Instance.IceBreakerInWaiting && IceBreaker.Map.Sessions.Count() < IceBreaker.MAX_ALLOWED_PLAYERS)
+                if (ServerManager.Instance.IceBreakerInWaiting && IceBreaker.Map.Sessions.Count() < IceBreaker.MaxAllowedPlayers)
                 {
-
                     ServerManager.Instance.TeleportOnRandomPlaceInMap(Session, IceBreaker.Map.MapInstanceId);
                 }
-
-
-
 
                 else if (guriPacket.Type == 4)
                 {
