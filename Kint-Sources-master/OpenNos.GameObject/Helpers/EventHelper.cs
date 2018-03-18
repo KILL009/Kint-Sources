@@ -57,7 +57,7 @@ namespace OpenNos.GameObject.Helpers
             return a;
         }
 
-        public void GenerateEvent(EventType type, bool useTimer = true)
+        public static void GenerateEvent(EventType type, bool useTimer = true)
         {
             if (!ServerManager.Instance.StartedEvents.Contains(type))
             {

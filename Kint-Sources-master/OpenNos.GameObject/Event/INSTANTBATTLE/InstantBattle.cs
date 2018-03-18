@@ -115,8 +115,11 @@ namespace OpenNos.GameObject.Event
             public void Run(Tuple<MapInstance, byte> mapinstance)
             {
                 if (ServerManager.Instance.ChannelId == 51)
+
                 {
+
                     return;
+
                 }
 
                 long maxGold = ServerManager.Instance.Configuration.MaxGold;
