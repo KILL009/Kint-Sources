@@ -99,10 +99,11 @@ namespace OpenNos.Handler
             {
                 if (Session.Character.Invisible)
                 {
-                    Session.Character.Invisible = false;
+                    Session.Character.Invisible = true;
                     Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateInvisible());
                     Session.SendPacket(Session.Character.GenerateEq());
                     Session.Character.RemoveBuff(85);
+                    Session.Character.RemoveBuff(559);
 
                     Session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m =>
                         Session.CurrentMapInstance?.Broadcast(m.GenerateIn(), ReceiverType.AllExceptMe));
