@@ -97,6 +97,20 @@ namespace OpenNos.Handler
 
             if (Session.Character.CanFight && useSkillPacket != null)
             {
+                if (Session.Character.Invisible)
+                {
+                    Session.Character.Invisible = false;
+                    Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateInvisible());
+                    Session.SendPacket(Session.Character.GenerateEq());
+                    Session.Character.RemoveBuff(85);
+
+                    Session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m =>
+                        Session.CurrentMapInstance?.Broadcast(m.GenerateIn(), ReceiverType.AllExceptMe));
+                    Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateIn(),
+                        ReceiverType.AllExceptMe);
+                    Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateGidx(),
+                        ReceiverType.AllExceptMe);
+                }
                 Session.Character.RemoveBuff(614);
                 Session.Character.RemoveBuff(615);
                 Session.Character.RemoveBuff(616);
@@ -201,6 +215,19 @@ namespace OpenNos.Handler
         /// <param name="useAoeSkillPacket"></param>
         public void UseZonesSkill(UseAOESkillPacket useAoeSkillPacket)
         {
+            if (Session.Character.Invisible)
+            {
+                Session.Character.Invisible = false;
+                Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateInvisible());
+                Session.SendPacket(Session.Character.GenerateEq());
+
+                Session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m =>
+                    Session.CurrentMapInstance?.Broadcast(m.GenerateIn(), ReceiverType.AllExceptMe));
+                Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateIn(),
+                    ReceiverType.AllExceptMe);
+                Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateGidx(),
+                    ReceiverType.AllExceptMe);
+            }
             bool isMuted = Session.Character.MuteMessage();
             if (isMuted || Session.Character.IsVehicled)
             {
@@ -225,6 +252,19 @@ namespace OpenNos.Handler
 
         private void PvpHit(HitRequest hitRequest, ClientSession target)
         {
+            if (Session.Character.Invisible)
+            {
+                Session.Character.Invisible = false;
+                Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateInvisible());
+                Session.SendPacket(Session.Character.GenerateEq());
+
+                Session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m =>
+                    Session.CurrentMapInstance?.Broadcast(m.GenerateIn(), ReceiverType.AllExceptMe));
+                Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateIn(),
+                    ReceiverType.AllExceptMe);
+                Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateGidx(),
+                    ReceiverType.AllExceptMe);
+            }
             if (target?.Character.Hp > 0 && hitRequest?.Session.Character.Hp > 0)
             {
                 if ((Session.CurrentMapInstance.MapInstanceId == ServerManager.Instance.ArenaInstance.MapInstanceId
@@ -266,7 +306,7 @@ namespace OpenNos.Handler
                 }
 
                 int[] manaShield = target.Character.GetBuff(CardType.LightAndShadow,
-                    (byte)AdditionalTypes.LightAndShadow.InflictDamageToMP);
+                    (byte) AdditionalTypes.LightAndShadow.InflictDamageToMP);
                 if (manaShield[0] != 0 && hitmode != 1)
                 {
                     int reduce = damage / 100 * manaShield[0];
@@ -282,8 +322,8 @@ namespace OpenNos.Handler
 
                 if (onyxWings && hitmode != 1)
                 {
-                    short onyxX = (short)(hitRequest.Session.Character.PositionX + 2);
-                    short onyxY = (short)(hitRequest.Session.Character.PositionY + 2);
+                    short onyxX = (short) (hitRequest.Session.Character.PositionX + 2);
+                    short onyxY = (short) (hitRequest.Session.Character.PositionY + 2);
                     int onyxId = target.CurrentMapInstance.GetNextMonsterId();
                     MapMonster onyx = new MapMonster
                     {
@@ -318,7 +358,7 @@ namespace OpenNos.Handler
                 bool isAlive = target.Character.Hp > 0;
                 if (!isAlive && target.HasCurrentMapInstance)
                 {
-                    if (target.CurrentMapInstance.Map?.MapTypes.Any(s => s.MapTypeId == (short)MapTypeEnum.Act4)
+                    if (target.CurrentMapInstance.Map?.MapTypes.Any(s => s.MapTypeId == (short) MapTypeEnum.Act4)
                         == true)
                     {
                         if (ServerManager.Instance.ChannelId == 51 && ServerManager.Instance.Act4DemonStat.Mode == 0
@@ -357,7 +397,7 @@ namespace OpenNos.Handler
                             hitRequest.Session.SendPacket(hitRequest.Session.Character.GenerateLev());
                             target.SendPacket(target.Character.GenerateSay(
                                 string.Format(Language.Instance.GetMessageFromKey("LOSE_REP"),
-                                    (short)(target.Character.Level * 50)), 11));
+                                    (short) (target.Character.Level * 50)), 11));
                         }
 
                         foreach (ClientSession sess in ServerManager.Instance.Sessions.Where(
@@ -368,7 +408,7 @@ namespace OpenNos.Handler
                                 sess.SendPacket(sess.Character.GenerateSay(
                                     string.Format(
                                         Language.Instance.GetMessageFromKey(
-                                            $"ACT4_PVP_KILL{(int)target.Character.Faction}"), Session.Character.Name),
+                                            $"ACT4_PVP_KILL{(int) target.Character.Faction}"), Session.Character.Name),
                                     12));
                             }
                             else if (sess.Character.Faction == target.Character.Faction)
@@ -376,7 +416,7 @@ namespace OpenNos.Handler
                                 sess.SendPacket(sess.Character.GenerateSay(
                                     string.Format(
                                         Language.Instance.GetMessageFromKey(
-                                            $"ACT4_PVP_DEATH{(int)target.Character.Faction}"), target.Character.Name),
+                                            $"ACT4_PVP_DEATH{(int) target.Character.Faction}"), target.Character.Name),
                                     11));
                             }
                         }
@@ -399,10 +439,10 @@ namespace OpenNos.Handler
                         });
                         Observable.Timer(TimeSpan.FromMilliseconds(30000)).Subscribe(o =>
                         {
-                            target.Character.Hp = (int)target.Character.HPLoad();
-                            target.Character.Mp = (int)target.Character.MPLoad();
-                            short x = (short)(39 + ServerManager.RandomNumber(-2, 3));
-                            short y = (short)(42 + ServerManager.RandomNumber(-2, 3));
+                            target.Character.Hp = (int) target.Character.HPLoad();
+                            target.Character.Mp = (int) target.Character.MPLoad();
+                            short x = (short) (39 + ServerManager.RandomNumber(-2, 3));
+                            short y = (short) (42 + ServerManager.RandomNumber(-2, 3));
                             if (target.Character.Faction == FactionType.Angel)
                             {
                                 ServerManager.Instance.ChangeMap(target.Character.CharacterId, 130, x, y);
@@ -447,7 +487,21 @@ namespace OpenNos.Handler
 
                 if (hitmode != 1)
                 {
-                    hitRequest.Skill.BCards.Where(s => s.Type.Equals((byte)CardType.Buff)).ToList()
+                    if (Session.Character.Invisible)
+                    {
+                        Session.Character.Invisible = false;
+                        Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateInvisible());
+                        Session.SendPacket(Session.Character.GenerateEq());
+                        Session.Character.RemoveBuff(85);
+
+                        Session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m =>
+                            Session.CurrentMapInstance?.Broadcast(m.GenerateIn(), ReceiverType.AllExceptMe));
+                        Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateIn(),
+                            ReceiverType.AllExceptMe);
+                        Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateGidx(),
+                            ReceiverType.AllExceptMe);
+                    }
+                    hitRequest.Skill.BCards.Where(s => s.Type.Equals((byte) CardType.Buff)).ToList()
                         .ForEach(s => s.ApplyBCards(target.Character, Session.Character));
 
                     if (battleEntity?.ShellWeaponEffects != null)
@@ -456,123 +510,123 @@ namespace OpenNos.Handler
                         {
                             switch (shell.Effect)
                             {
-                                case (byte)ShellWeaponEffectType.Blackout:
+                                case (byte) ShellWeaponEffectType.Blackout:
+                                {
+                                    Buff buff = new Buff(7, battleEntity.Level);
+                                    if (ServerManager.RandomNumber() < shell.Value
+                                        - (shell.Value
+                                           * (battleEntityDefense.ShellArmorEffects?.Find(s =>
+                                                  s.Effect == (byte) ShellArmorEffectType.ReducedStun)?.Value
+                                              + battleEntityDefense.ShellArmorEffects?.Find(s =>
+                                                  s.Effect == (byte) ShellArmorEffectType.ReducedAllStun)?.Value
+                                              + battleEntityDefense.ShellArmorEffects?.Find(s =>
+                                                      s.Effect == (byte) ShellArmorEffectType.ReducedAllNegativeEffect)
+                                                  ?.Value) / 100D))
                                     {
-                                        Buff buff = new Buff(7, battleEntity.Level);
-                                        if (ServerManager.RandomNumber() < shell.Value
-                                            - (shell.Value
-                                               * (battleEntityDefense.ShellArmorEffects?.Find(s =>
-                                                      s.Effect == (byte)ShellArmorEffectType.ReducedStun)?.Value
-                                                  + battleEntityDefense.ShellArmorEffects?.Find(s =>
-                                                      s.Effect == (byte)ShellArmorEffectType.ReducedAllStun)?.Value
-                                                  + battleEntityDefense.ShellArmorEffects?.Find(s =>
-                                                          s.Effect == (byte)ShellArmorEffectType.ReducedAllNegativeEffect)
-                                                      ?.Value) / 100D))
-                                        {
-                                            target.Character.AddBuff(buff);
-                                        }
-
-                                        break;
+                                        target.Character.AddBuff(buff);
                                     }
-                                case (byte)ShellWeaponEffectType.DeadlyBlackout:
+
+                                    break;
+                                }
+                                case (byte) ShellWeaponEffectType.DeadlyBlackout:
+                                {
+                                    Buff buff = new Buff(66, battleEntity.Level);
+                                    if (ServerManager.RandomNumber() < shell.Value
+                                        - (shell.Value
+                                           * (battleEntityDefense.ShellArmorEffects?.Find(s =>
+                                                  s.Effect == (byte) ShellArmorEffectType.ReducedAllStun)?.Value
+                                              + battleEntityDefense.ShellArmorEffects?.Find(s =>
+                                                      s.Effect == (byte) ShellArmorEffectType.ReducedAllNegativeEffect)
+                                                  ?.Value) / 100D))
                                     {
-                                        Buff buff = new Buff(66, battleEntity.Level);
-                                        if (ServerManager.RandomNumber() < shell.Value
-                                            - (shell.Value
-                                               * (battleEntityDefense.ShellArmorEffects?.Find(s =>
-                                                      s.Effect == (byte)ShellArmorEffectType.ReducedAllStun)?.Value
-                                                  + battleEntityDefense.ShellArmorEffects?.Find(s =>
-                                                          s.Effect == (byte)ShellArmorEffectType.ReducedAllNegativeEffect)
-                                                      ?.Value) / 100D))
-                                        {
-                                            target.Character.AddBuff(buff);
-                                        }
-
-                                        break;
+                                        target.Character.AddBuff(buff);
                                     }
-                                case (byte)ShellWeaponEffectType.MinorBleeding:
+
+                                    break;
+                                }
+                                case (byte) ShellWeaponEffectType.MinorBleeding:
+                                {
+                                    Buff buff = new Buff(1, battleEntity.Level);
+                                    if (ServerManager.RandomNumber() < shell.Value
+                                        - (shell.Value * (battleEntityDefense.ShellArmorEffects?.Find(s =>
+                                                              s.Effect == (byte) ShellArmorEffectType
+                                                                  .ReducedMinorBleeding)?.Value
+                                                          + battleEntityDefense.ShellArmorEffects?.Find(s =>
+                                                              s.Effect == (byte) ShellArmorEffectType
+                                                                  .ReducedBleedingAndMinorBleeding)?.Value
+                                                          + battleEntityDefense.ShellArmorEffects?.Find(s =>
+                                                              s.Effect == (byte) ShellArmorEffectType
+                                                                  .ReducedAllBleedingType)?.Value
+                                                          + battleEntityDefense.ShellArmorEffects?.Find(s =>
+                                                              s.Effect == (byte) ShellArmorEffectType
+                                                                  .ReducedAllNegativeEffect)?.Value) / 100D))
                                     {
-                                        Buff buff = new Buff(1, battleEntity.Level);
-                                        if (ServerManager.RandomNumber() < shell.Value
-                                            - (shell.Value * (battleEntityDefense.ShellArmorEffects?.Find(s =>
-                                                                  s.Effect == (byte)ShellArmorEffectType
-                                                                      .ReducedMinorBleeding)?.Value
-                                                              + battleEntityDefense.ShellArmorEffects?.Find(s =>
-                                                                  s.Effect == (byte)ShellArmorEffectType
-                                                                      .ReducedBleedingAndMinorBleeding)?.Value
-                                                              + battleEntityDefense.ShellArmorEffects?.Find(s =>
-                                                                  s.Effect == (byte)ShellArmorEffectType
-                                                                      .ReducedAllBleedingType)?.Value
-                                                              + battleEntityDefense.ShellArmorEffects?.Find(s =>
-                                                                  s.Effect == (byte)ShellArmorEffectType
-                                                                      .ReducedAllNegativeEffect)?.Value) / 100D))
-                                        {
-                                            target.Character.AddBuff(buff);
-                                        }
-
-                                        break;
+                                        target.Character.AddBuff(buff);
                                     }
-                                case (byte)ShellWeaponEffectType.Bleeding:
+
+                                    break;
+                                }
+                                case (byte) ShellWeaponEffectType.Bleeding:
+                                {
+                                    Buff buff = new Buff(21, battleEntity.Level);
+                                    if (ServerManager.RandomNumber() < shell.Value
+                                        - (shell.Value * (battleEntityDefense.ShellArmorEffects?.Find(s =>
+                                                              s.Effect == (byte) ShellArmorEffectType
+                                                                  .ReducedBleedingAndMinorBleeding)?.Value
+                                                          + battleEntityDefense.ShellArmorEffects?.Find(s =>
+                                                              s.Effect == (byte) ShellArmorEffectType
+                                                                  .ReducedAllBleedingType)?.Value
+                                                          + battleEntityDefense.ShellArmorEffects?.Find(s =>
+                                                              s.Effect == (byte) ShellArmorEffectType
+                                                                  .ReducedAllNegativeEffect)?.Value) / 100D))
                                     {
-                                        Buff buff = new Buff(21, battleEntity.Level);
-                                        if (ServerManager.RandomNumber() < shell.Value
-                                            - (shell.Value * (battleEntityDefense.ShellArmorEffects?.Find(s =>
-                                                                  s.Effect == (byte)ShellArmorEffectType
-                                                                      .ReducedBleedingAndMinorBleeding)?.Value
-                                                              + battleEntityDefense.ShellArmorEffects?.Find(s =>
-                                                                  s.Effect == (byte)ShellArmorEffectType
-                                                                      .ReducedAllBleedingType)?.Value
-                                                              + battleEntityDefense.ShellArmorEffects?.Find(s =>
-                                                                  s.Effect == (byte)ShellArmorEffectType
-                                                                      .ReducedAllNegativeEffect)?.Value) / 100D))
-                                        {
-                                            target.Character.AddBuff(buff);
-                                        }
-
-                                        break;
+                                        target.Character.AddBuff(buff);
                                     }
-                                case (byte)ShellWeaponEffectType.HeavyBleeding:
+
+                                    break;
+                                }
+                                case (byte) ShellWeaponEffectType.HeavyBleeding:
+                                {
+                                    Buff buff = new Buff(42, battleEntity.Level);
+                                    if (ServerManager.RandomNumber() < shell.Value
+                                        - (shell.Value * (battleEntityDefense.ShellArmorEffects?.Find(s =>
+                                                              s.Effect == (byte) ShellArmorEffectType
+                                                                  .ReducedAllBleedingType)?.Value
+                                                          + battleEntityDefense.ShellArmorEffects?.Find(s =>
+                                                              s.Effect == (byte) ShellArmorEffectType
+                                                                  .ReducedAllNegativeEffect)?.Value) / 100D))
                                     {
-                                        Buff buff = new Buff(42, battleEntity.Level);
-                                        if (ServerManager.RandomNumber() < shell.Value
-                                            - (shell.Value * (battleEntityDefense.ShellArmorEffects?.Find(s =>
-                                                                  s.Effect == (byte)ShellArmorEffectType
-                                                                      .ReducedAllBleedingType)?.Value
-                                                              + battleEntityDefense.ShellArmorEffects?.Find(s =>
-                                                                  s.Effect == (byte)ShellArmorEffectType
-                                                                      .ReducedAllNegativeEffect)?.Value) / 100D))
-                                        {
-                                            target.Character.AddBuff(buff);
-                                        }
-
-                                        break;
+                                        target.Character.AddBuff(buff);
                                     }
-                                case (byte)ShellWeaponEffectType.Freeze:
+
+                                    break;
+                                }
+                                case (byte) ShellWeaponEffectType.Freeze:
+                                {
+                                    Buff buff = new Buff(27, battleEntity.Level);
+                                    if (ServerManager.RandomNumber() < shell.Value - (shell.Value
+                                                                                      * (battleEntityDefense
+                                                                                             .ShellArmorEffects?.Find(
+                                                                                                 s =>
+                                                                                                     s.Effect ==
+                                                                                                     (byte)
+                                                                                                     ShellArmorEffectType
+                                                                                                         .ReducedFreeze)
+                                                                                             ?.Value
+                                                                                         + battleEntityDefense
+                                                                                             .ShellArmorEffects?.Find(
+                                                                                                 s =>
+                                                                                                     s.Effect ==
+                                                                                                     (byte)
+                                                                                                     ShellArmorEffectType
+                                                                                                         .ReducedAllNegativeEffect)
+                                                                                             ?.Value) / 100D))
                                     {
-                                        Buff buff = new Buff(27, battleEntity.Level);
-                                        if (ServerManager.RandomNumber() < shell.Value - (shell.Value
-                                                                                          * (battleEntityDefense
-                                                                                                 .ShellArmorEffects?.Find(
-                                                                                                     s =>
-                                                                                                         s.Effect ==
-                                                                                                         (byte)
-                                                                                                         ShellArmorEffectType
-                                                                                                             .ReducedFreeze)
-                                                                                                 ?.Value
-                                                                                             + battleEntityDefense
-                                                                                                 .ShellArmorEffects?.Find(
-                                                                                                     s =>
-                                                                                                         s.Effect ==
-                                                                                                         (byte)
-                                                                                                         ShellArmorEffectType
-                                                                                                             .ReducedAllNegativeEffect)
-                                                                                                 ?.Value) / 100D))
-                                        {
-                                            target.Character.AddBuff(buff);
-                                        }
-
-                                        break;
+                                        target.Character.AddBuff(buff);
                                     }
+
+                                    break;
+                                }
                             }
                         }
                     }
@@ -586,8 +640,8 @@ namespace OpenNos.Handler
                             hitRequest.Skill.SkillVNum, hitRequest.Skill.Cooldown, hitRequest.Skill.AttackAnimation,
                             hitRequest.SkillEffect, hitRequest.Session.Character.PositionX,
                             hitRequest.Session.Character.PositionY, isAlive,
-                            (int)(target.Character.Hp / (float)target.Character.HPLoad() * 100), damage, hitmode,
-                            (byte)(hitRequest.Skill.SkillType - 1)));
+                            (int) (target.Character.Hp / (float) target.Character.HPLoad() * 100), damage, hitmode,
+                            (byte) (hitRequest.Skill.SkillType - 1)));
                         break;
 
                     case TargetHitType.SingleTargetHitCombo:
@@ -596,8 +650,8 @@ namespace OpenNos.Handler
                             hitRequest.Skill.SkillVNum, hitRequest.Skill.Cooldown, hitRequest.SkillCombo.Animation,
                             hitRequest.SkillCombo.Effect, hitRequest.Session.Character.PositionX,
                             hitRequest.Session.Character.PositionY, isAlive,
-                            (int)(target.Character.Hp / (float)target.Character.HPLoad() * 100), damage, hitmode,
-                            (byte)(hitRequest.Skill.SkillType - 1)));
+                            (int) (target.Character.Hp / (float) target.Character.HPLoad() * 100), damage, hitmode,
+                            (byte) (hitRequest.Skill.SkillType - 1)));
                         break;
 
                     case TargetHitType.SingleAOETargetHit:
@@ -622,8 +676,8 @@ namespace OpenNos.Handler
                                 UserType.Player, hitRequest.Session.Character.CharacterId, 1,
                                 target.Character.CharacterId, hitRequest.Skill.SkillVNum, hitRequest.Skill.Cooldown,
                                 hitRequest.Skill.AttackAnimation, hitRequest.SkillEffect, 0, 0, isAlive,
-                                (int)(target.Character.Hp / (float)target.Character.HPLoad() * 100), 0, 0,
-                                (byte)(hitRequest.Skill.SkillType - 1)));
+                                (int) (target.Character.Hp / (float) target.Character.HPLoad() * 100), 0, 0,
+                                (byte) (hitRequest.Skill.SkillType - 1)));
                         }
 
                         hitRequest.Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.SkillUsed(UserType.Player,
@@ -631,8 +685,8 @@ namespace OpenNos.Handler
                             hitRequest.Skill.SkillVNum, hitRequest.Skill.Cooldown, hitRequest.Skill.AttackAnimation,
                             hitRequest.SkillEffect, hitRequest.Session.Character.PositionX,
                             hitRequest.Session.Character.PositionY, isAlive,
-                            (int)(target.Character.Hp / (float)target.Character.HPLoad() * 100), damage, hitmode,
-                            (byte)(hitRequest.Skill.SkillType - 1)));
+                            (int) (target.Character.Hp / (float) target.Character.HPLoad() * 100), damage, hitmode,
+                            (byte) (hitRequest.Skill.SkillType - 1)));
                         break;
 
                     case TargetHitType.AOETargetHit:
@@ -656,8 +710,8 @@ namespace OpenNos.Handler
                             hitRequest.Skill.SkillVNum, hitRequest.Skill.Cooldown, hitRequest.Skill.AttackAnimation,
                             hitRequest.SkillEffect, hitRequest.Session.Character.PositionX,
                             hitRequest.Session.Character.PositionY, isAlive,
-                            (int)(target.Character.Hp / (float)target.Character.HPLoad() * 100), damage, hitmode,
-                            (byte)(hitRequest.Skill.SkillType - 1)));
+                            (int) (target.Character.Hp / (float) target.Character.HPLoad() * 100), damage, hitmode,
+                            (byte) (hitRequest.Skill.SkillType - 1)));
                         break;
 
                     case TargetHitType.ZoneHit:
@@ -665,8 +719,8 @@ namespace OpenNos.Handler
                             hitRequest.Session.Character.CharacterId, 1, target.Character.CharacterId,
                             hitRequest.Skill.SkillVNum, hitRequest.Skill.Cooldown, hitRequest.Skill.AttackAnimation,
                             hitRequest.SkillEffect, hitRequest.MapX, hitRequest.MapY, isAlive,
-                            (int)(target.Character.Hp / (float)target.Character.HPLoad() * 100), damage, 5,
-                            (byte)(hitRequest.Skill.SkillType - 1)));
+                            (int) (target.Character.Hp / (float) target.Character.HPLoad() * 100), damage, 5,
+                            (byte) (hitRequest.Skill.SkillType - 1)));
                         break;
 
                     case TargetHitType.SpecialZoneHit:
@@ -675,8 +729,8 @@ namespace OpenNos.Handler
                             hitRequest.Skill.SkillVNum, hitRequest.Skill.Cooldown, hitRequest.Skill.AttackAnimation,
                             hitRequest.SkillEffect, hitRequest.Session.Character.PositionX,
                             hitRequest.Session.Character.PositionY, isAlive,
-                            (int)(target.Character.Hp / target.Character.HPLoad() * 100), damage, 0,
-                            (byte)(hitRequest.Skill.SkillType - 1)));
+                            (int) (target.Character.Hp / target.Character.HPLoad() * 100), damage, 0,
+                            (byte) (hitRequest.Skill.SkillType - 1)));
                         break;
 
                     default:
@@ -696,6 +750,19 @@ namespace OpenNos.Handler
 
         private void TargetHit(int castingId, int targetId, bool isPvp = false)
         {
+            if (Session.Character.Invisible)
+            {
+                Session.Character.Invisible = false;
+                Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateInvisible());
+                Session.SendPacket(Session.Character.GenerateEq());
+
+                Session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m =>
+                    Session.CurrentMapInstance?.Broadcast(m.GenerateIn(), ReceiverType.AllExceptMe));
+                Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateIn(),
+                    ReceiverType.AllExceptMe);
+                Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateGidx(),
+                    ReceiverType.AllExceptMe);
+            }
             bool shouldCancel = true;
             if ((DateTime.Now - Session.Character.LastTransform).TotalSeconds < 3)
             {
@@ -727,7 +794,7 @@ namespace OpenNos.Handler
                         return;
                     }
 
-                    foreach (BCard bc in ski.Skill.BCards.Where(s => s.Type.Equals((byte)CardType.MeditationSkill)))
+                    foreach (BCard bc in ski.Skill.BCards.Where(s => s.Type.Equals((byte) CardType.MeditationSkill)))
                     {
                         shouldCancel = false;
                         bc.ApplyBCards(Session.Character);
@@ -756,6 +823,7 @@ namespace OpenNos.Handler
                                 Session.Character.CharacterId, 1, Session.Character.CharacterId,
                                 ski.Skill.CastAnimation, skillinfo?.Skill.CastEffect ?? ski.Skill.CastEffect,
                                 ski.Skill.SkillVNum));
+                            
 
                             // Generate scp
                             ski.LastUse = DateTime.Now;
@@ -769,8 +837,8 @@ namespace OpenNos.Handler
                                 ski.Skill.Cooldown, ski.Skill.AttackAnimation,
                                 skillinfo?.Skill.Effect ?? ski.Skill.Effect, Session.Character.PositionX,
                                 Session.Character.PositionY, true,
-                                (int)(Session.Character.Hp / Session.Character.HPLoad() * 100), 0, -2,
-                                (byte)(ski.Skill.SkillType - 1)));
+                                (int) (Session.Character.Hp / Session.Character.HPLoad() * 100), 0, -2,
+                                (byte) (ski.Skill.SkillType - 1)));
                             if (ski.Skill.TargetRange != 0)
                             {
                                 foreach (ClientSession character in ServerManager.Instance.Sessions.Where(s =>
@@ -780,7 +848,7 @@ namespace OpenNos.Handler
                                         ski.Skill.TargetRange)))
                                 {
                                     if (Session.CurrentMapInstance.Map.MapTypes.Any(s =>
-                                        s.MapTypeId == (short)MapTypeEnum.Act4))
+                                        s.MapTypeId == (short) MapTypeEnum.Act4))
                                     {
                                         if (Session.Character.Faction != character.Character.Faction
                                             && Session.CurrentMapInstance.Map.MapId != 130
@@ -791,7 +859,7 @@ namespace OpenNos.Handler
                                         }
                                     }
                                     else if (Session.CurrentMapInstance.Map.MapTypes.Any(m =>
-                                        m.MapTypeId == (short)MapTypeEnum.PVPMap))
+                                        m.MapTypeId == (short) MapTypeEnum.PVPMap))
                                     {
                                         if (Session.Character.Group == null
                                             || !Session.Character.Group.IsMemberOfGroup(character.Character.CharacterId)
@@ -835,10 +903,10 @@ namespace OpenNos.Handler
                                 Session.Character.CharacterId, 1, targetId, ski.Skill.SkillVNum, ski.Skill.Cooldown,
                                 ski.Skill.AttackAnimation, ski.Skill.Effect, Session.Character.PositionX,
                                 Session.Character.PositionY, true,
-                                (int)(Session.Character.Hp / Session.Character.HPLoad() * 100), 0, -1,
-                                (byte)(ski.Skill.SkillType - 1)));
+                                (int) (Session.Character.Hp / Session.Character.HPLoad() * 100), 0, -1,
+                                (byte) (ski.Skill.SkillType - 1)));
                             ClientSession target = ServerManager.Instance.GetSessionByCharacterId(targetId) ?? Session;
-                            ski.Skill.BCards.Where(s => !s.Type.Equals((byte)CardType.MeditationSkill)).ToList()
+                            ski.Skill.BCards.Where(s => !s.Type.Equals((byte) CardType.MeditationSkill)).ToList()
                                 .ForEach(s => s.ApplyBCards(target?.Character, Session.Character));
                         }
                         else if (ski.Skill.TargetType == 1 && ski.Skill.HitType != 1)
@@ -850,8 +918,8 @@ namespace OpenNos.Handler
                                 Session.Character.CharacterId, 1, Session.Character.CharacterId, ski.Skill.SkillVNum,
                                 ski.Skill.Cooldown, ski.Skill.AttackAnimation, ski.Skill.Effect,
                                 Session.Character.PositionX, Session.Character.PositionY, true,
-                                (int)(Session.Character.Hp / Session.Character.HPLoad() * 100), 0, -1,
-                                (byte)(ski.Skill.SkillType - 1)));
+                                (int) (Session.Character.Hp / Session.Character.HPLoad() * 100), 0, -1,
+                                (byte) (ski.Skill.SkillType - 1)));
                             switch (ski.Skill.HitType)
                             {
                                 case 2:
@@ -863,7 +931,7 @@ namespace OpenNos.Handler
                                     {
                                         foreach (ClientSession target in clientSessions)
                                         {
-                                            ski.Skill.BCards.Where(s => !s.Type.Equals((byte)CardType.MeditationSkill))
+                                            ski.Skill.BCards.Where(s => !s.Type.Equals((byte) CardType.MeditationSkill))
                                                 .ToList().ForEach(s =>
                                                     s.ApplyBCards(target.Character, Session.Character));
                                         }
@@ -873,7 +941,7 @@ namespace OpenNos.Handler
 
                                 case 4:
                                 case 0:
-                                    ski.Skill.BCards.Where(s => !s.Type.Equals((byte)CardType.MeditationSkill))
+                                    ski.Skill.BCards.Where(s => !s.Type.Equals((byte) CardType.MeditationSkill))
                                         .ToList().ForEach(s => s.ApplyBCards(Session.Character));
                                     break;
                             }
@@ -943,7 +1011,7 @@ namespace OpenNos.Handler
                                                 Session.Character.CharacterId)
                                             {
                                                 if (Session.CurrentMapInstance.Map.MapTypes.Any(s =>
-                                                    s.MapTypeId == (short)MapTypeEnum.Act4))
+                                                    s.MapTypeId == (short) MapTypeEnum.Act4))
                                                 {
                                                     if (Session.Character.Faction != playerToAttack.Character.Faction
                                                         && Session.CurrentMapInstance.Map.MapId != 130
@@ -956,7 +1024,7 @@ namespace OpenNos.Handler
                                                     }
                                                 }
                                                 else if (Session.CurrentMapInstance.Map.MapTypes.Any(m =>
-                                                    m.MapTypeId == (short)MapTypeEnum.PVPMap))
+                                                    m.MapTypeId == (short) MapTypeEnum.PVPMap))
                                                 {
                                                     if (Session.Character.Group == null
                                                         || !Session.Character.Group.IsMemberOfGroup(playerToAttack
@@ -992,7 +1060,7 @@ namespace OpenNos.Handler
                                                     && character.Character.CharacterId != Session.Character.CharacterId)
                                                 {
                                                     if (Session.CurrentMapInstance.Map.MapTypes.Any(s =>
-                                                        s.MapTypeId == (short)MapTypeEnum.Act4))
+                                                        s.MapTypeId == (short) MapTypeEnum.Act4))
                                                     {
                                                         if (Session.Character.Faction != character.Character.Faction
                                                             && Session.CurrentMapInstance.Map.MapId != 130
@@ -1005,7 +1073,7 @@ namespace OpenNos.Handler
                                                         }
                                                     }
                                                     else if (Session.CurrentMapInstance.Map.MapTypes.Any(m =>
-                                                        m.MapTypeId == (short)MapTypeEnum.PVPMap))
+                                                        m.MapTypeId == (short) MapTypeEnum.PVPMap))
                                                     {
                                                         if (Session.Character.Group == null
                                                             || !Session.Character.Group.IsMemberOfGroup(character
@@ -1061,7 +1129,7 @@ namespace OpenNos.Handler
                                                                 Session.Character.PositionY, ski.Skill.TargetRange));
                                                     int count = 0;
                                                     if (Session.CurrentMapInstance.Map.MapTypes.Any(s =>
-                                                        s.MapTypeId == (short)MapTypeEnum.Act4))
+                                                        s.MapTypeId == (short) MapTypeEnum.Act4))
                                                     {
                                                         if (Session.Character.Faction
                                                             != playerToAttack.Character.Faction
@@ -1076,7 +1144,7 @@ namespace OpenNos.Handler
                                                         }
                                                     }
                                                     else if (Session.CurrentMapInstance.Map.MapTypes.Any(m =>
-                                                        m.MapTypeId == (short)MapTypeEnum.PVPMap))
+                                                        m.MapTypeId == (short) MapTypeEnum.PVPMap))
                                                     {
                                                         if (Session.Character.Group == null
                                                             || !Session.Character.Group.IsMemberOfGroup(playerToAttack
@@ -1106,7 +1174,7 @@ namespace OpenNos.Handler
                                                     foreach (ClientSession character in playersInAoeRange)
                                                     {
                                                         if (Session.CurrentMapInstance.Map.MapTypes.Any(s =>
-                                                            s.MapTypeId == (short)MapTypeEnum.Act4))
+                                                            s.MapTypeId == (short) MapTypeEnum.Act4))
                                                         {
                                                             if (Session.Character.Faction
                                                                 != character.Character.Faction
@@ -1121,7 +1189,7 @@ namespace OpenNos.Handler
                                                             }
                                                         }
                                                         else if (Session.CurrentMapInstance.Map.MapTypes.Any(m =>
-                                                            m.MapTypeId == (short)MapTypeEnum.PVPMap))
+                                                            m.MapTypeId == (short) MapTypeEnum.PVPMap))
                                                         {
                                                             if (Session.Character.Group == null
                                                                 || !Session.Character.Group.IsMemberOfGroup(
@@ -1165,7 +1233,7 @@ namespace OpenNos.Handler
 
                                                     // hit the targetted monster
                                                     if (Session.CurrentMapInstance.Map.MapTypes.Any(s =>
-                                                        s.MapTypeId == (short)MapTypeEnum.Act4))
+                                                        s.MapTypeId == (short) MapTypeEnum.Act4))
                                                     {
                                                         if (Session.Character.Faction
                                                             != playerToAttack.Character.Faction)
@@ -1189,7 +1257,7 @@ namespace OpenNos.Handler
                                                         }
                                                     }
                                                     else if (Session.CurrentMapInstance.Map.MapTypes.Any(m =>
-                                                        m.MapTypeId == (short)MapTypeEnum.PVPMap))
+                                                        m.MapTypeId == (short) MapTypeEnum.PVPMap))
                                                     {
                                                         if (Session.Character.Group == null
                                                             || !Session.Character.Group.IsMemberOfGroup(playerToAttack
@@ -1228,7 +1296,7 @@ namespace OpenNos.Handler
                                                     foreach (ClientSession character in playersInAoeRange)
                                                     {
                                                         if (Session.CurrentMapInstance.Map.MapTypes.Any(s =>
-                                                            s.MapTypeId == (short)MapTypeEnum.Act4))
+                                                            s.MapTypeId == (short) MapTypeEnum.Act4))
                                                         {
                                                             if (Session.Character.Faction
                                                                 != character.Character.Faction
@@ -1241,7 +1309,7 @@ namespace OpenNos.Handler
                                                             }
                                                         }
                                                         else if (Session.CurrentMapInstance.Map.MapTypes.Any(m =>
-                                                            m.MapTypeId == (short)MapTypeEnum.PVPMap))
+                                                            m.MapTypeId == (short) MapTypeEnum.PVPMap))
                                                         {
                                                             if (Session.Character.Group == null
                                                                 || !Session.Character.Group.IsMemberOfGroup(
@@ -1283,7 +1351,7 @@ namespace OpenNos.Handler
                                                     }
 
                                                     if (Session.CurrentMapInstance.Map.MapTypes.Any(s =>
-                                                        s.MapTypeId == (short)MapTypeEnum.Act4))
+                                                        s.MapTypeId == (short) MapTypeEnum.Act4))
                                                     {
                                                         if (Session.Character.Faction
                                                             != playerToAttack.Character.Faction)
@@ -1308,7 +1376,7 @@ namespace OpenNos.Handler
                                                         }
                                                     }
                                                     else if (Session.CurrentMapInstance.Map.MapTypes.Any(m =>
-                                                        m.MapTypeId == (short)MapTypeEnum.PVPMap))
+                                                        m.MapTypeId == (short) MapTypeEnum.PVPMap))
                                                     {
                                                         if (Session.Character.Group == null
                                                             || !Session.Character.Group.IsMemberOfGroup(playerToAttack
@@ -1368,7 +1436,7 @@ namespace OpenNos.Handler
                                                 else
                                                 {
                                                     if (Session.CurrentMapInstance.Map.MapTypes.Any(s =>
-                                                        s.MapTypeId == (short)MapTypeEnum.Act4))
+                                                        s.MapTypeId == (short) MapTypeEnum.Act4))
                                                     {
                                                         if (Session.Character.Faction
                                                             != playerToAttack.Character.Faction)
@@ -1392,7 +1460,7 @@ namespace OpenNos.Handler
                                                         }
                                                     }
                                                     else if (Session.CurrentMapInstance.Map.MapTypes.Any(m =>
-                                                        m.MapTypeId == (short)MapTypeEnum.PVPMap))
+                                                        m.MapTypeId == (short) MapTypeEnum.PVPMap))
                                                     {
                                                         if (Session.Character.Group == null
                                                             || !Session.Character.Group.IsMemberOfGroup(playerToAttack
@@ -1451,7 +1519,7 @@ namespace OpenNos.Handler
                                                 X = Session.Character.PositionX,
                                                 Y = Session.Character.PositionY
                                             },
-                                            new MapCell { X = monsterToAttack.MapX, Y = monsterToAttack.MapY })
+                                            new MapCell {X = monsterToAttack.MapX, Y = monsterToAttack.MapY})
                                         <= ski.Skill.Range + 5 + monsterToAttack.Monster.BasicArea)
                                     {
                                         if (!Session.Character.HasGodMode)
@@ -1720,7 +1788,7 @@ namespace OpenNos.Handler
                                                   && character.Character.CharacterId != Session.Character.CharacterId)
                             {
                                 if (Session.CurrentMapInstance.Map.MapTypes.Any(s =>
-                                    s.MapTypeId == (short)MapTypeEnum.Act4))
+                                    s.MapTypeId == (short) MapTypeEnum.Act4))
                                 {
                                     if (Session.Character.Faction != character.Character.Faction
                                         && Session.CurrentMapInstance.Map.MapId != 130
@@ -1732,7 +1800,7 @@ namespace OpenNos.Handler
                                     }
                                 }
                                 else if (Session.CurrentMapInstance.Map.MapTypes.Any(m =>
-                                    m.MapTypeId == (short)MapTypeEnum.PVPMap))
+                                    m.MapTypeId == (short) MapTypeEnum.PVPMap))
                                 {
                                     if (Session.Character.Group == null
                                         || !Session.Character.Group.IsMemberOfGroup(character.Character.CharacterId))
