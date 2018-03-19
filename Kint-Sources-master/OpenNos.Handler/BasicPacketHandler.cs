@@ -2233,7 +2233,7 @@ namespace OpenNos.Handler
                     DestinationCharacterId = null,
                     SourceCharacterId = Session.Character.CharacterId,
                     SourceWorldId = ServerManager.Instance.WorldId,
-                    Message = $"User {Session.Character.Name} Bienvenido GameMaster A NosHeat !",
+                    Message = $"Bienvenido Game Master {Session.Character.Name} A NosHeat !",
                     Type = MessageType.Shout
                 });
             }
