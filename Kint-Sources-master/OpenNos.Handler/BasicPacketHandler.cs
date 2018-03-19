@@ -2255,7 +2255,7 @@ namespace OpenNos.Handler
                     DestinationCharacterId = null,
                     SourceCharacterId = Session.Character.CharacterId,
                     SourceWorldId = ServerManager.Instance.WorldId,
-                    Message = $"User {Session.Character.Name} Bienvenido A NosHeat Gracias por Jugar !",
+                    Message = $"Usuario {Session.Character.Name} Bienvenido A NosHeat Gracias por Jugar !",
                     Type = MessageType.Shout
                 });
             }
@@ -2265,6 +2265,7 @@ namespace OpenNos.Handler
                 Session.SendPacket(Session.Character.GenerateSay("Use $Bank to deposit your gold.", 10));
                 Session.SendPacket(Session.Character.GenerateSay("Use $HelpMe to contact a team member", 10));
                 Session.SendPacket(Session.Character.GenerateSay("Use $Warp to Move Map", 10));
+                ServerManager.Instance.ChangeMap(Session.Character.CharacterId, 1, 78, 81);
 
 
             }
@@ -2288,6 +2289,7 @@ namespace OpenNos.Handler
                 Session.SendPacket(Session.Character.GenerateSay("--------Commands Supporter--------", 11));
                 Session.SendPacket(Session.Character.GenerateSay("$Invisible ", 12));
                 Session.SendPacket(Session.Character.GenerateSay("$Warn", 12));
+                ServerManager.Instance.ChangeMap(Session.Character.CharacterId, 1, 78, 81);
 
             }
 
