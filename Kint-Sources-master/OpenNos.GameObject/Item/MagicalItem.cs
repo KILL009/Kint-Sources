@@ -73,7 +73,7 @@ namespace OpenNos.GameObject
                                     wearable.ShellEffects.Clear();
                                     DAOFactory.ShellEffectDAO.DeleteByEquipmentSerialId(wearable.EquipmentSerialId);
                                     wearable.ShellEffects.AddRange(inv.ShellEffects);
-                                    if(wearable.EquipmentSerialId == Guid.Empty)
+                                    if (wearable.EquipmentSerialId == Guid.Empty)
                                     {
                                         wearable.EquipmentSerialId = Guid.NewGuid();
                                     }
@@ -97,6 +97,31 @@ namespace OpenNos.GameObject
                         session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     }
                     break;
+
+                case 10066:
+                    if (session.Character.MapInstance.MapInstanceType != MapInstanceType.BaseMapInstance)
+                    {
+                        return;
+                    }
+
+                    session.Character.OpenBank();
+                    session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                    return;
+
+
+                    if (ItemType == ItemType.Event)
+                    {
+                        session.CurrentMapInstance?.Broadcast(session.Character.GenerateEff(EffectValue));
+                        if (MappingHelper.GuriItemEffects.ContainsKey(EffectValue))
+                        {
+                            session.CurrentMapInstance?.Broadcast(UserInterfaceHelper.GenerateGuri(19, 1, session.Character.CharacterId, MappingHelper.GuriItemEffects[EffectValue]), session.Character.MapX, session.Character.MapY);
+                        }
+
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                    }
+
+                    break;
+
 
                 //respawn objects
                 case 1:
