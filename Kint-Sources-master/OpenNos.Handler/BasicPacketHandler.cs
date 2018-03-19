@@ -2226,6 +2226,18 @@ namespace OpenNos.Handler
             }
             //Messaggio GM
             if (Session.Character.Authority == AuthorityType.GameMaster)
+
+            {
+                CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
+                {
+                    DestinationCharacterId = null,
+                    SourceCharacterId = Session.Character.CharacterId,
+                    SourceWorldId = ServerManager.Instance.WorldId,
+                    Message = $"User {Session.Character.Name} Bienvenido GameMaster A NosHeat !",
+                    Type = MessageType.Shout
+                });
+            }
+
             {
                 Session.SendPacket(Session.Character.GenerateSay("------------------------", 10));
                 Session.SendPacket(Session.Character.GenerateSay("Welcome " + Session.Character.Name, 12));
@@ -2233,8 +2245,21 @@ namespace OpenNos.Handler
                 Session.SendPacket(Session.Character.GenerateSay("------------------------", 10));
                 ServerManager.Instance.ChangeMap(Session.Character.CharacterId, 10000, 5, 5);
             }
+
             //Messaggio Bank
             if (Session.Character.Authority == AuthorityType.User)
+
+            {
+                CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
+                {
+                    DestinationCharacterId = null,
+                    SourceCharacterId = Session.Character.CharacterId,
+                    SourceWorldId = ServerManager.Instance.WorldId,
+                    Message = $"User {Session.Character.Name} Bienvenido A NosHeat Gracias por Jugar !",
+                    Type = MessageType.Shout
+                });
+            }
+
             {
 
                 Session.SendPacket(Session.Character.GenerateSay("Use $Bank to deposit your gold.", 10));
@@ -2245,6 +2270,18 @@ namespace OpenNos.Handler
             }
             //Messaggio Supporter
             if (Session.Character.Authority == AuthorityType.Moderator)
+
+            {
+                CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
+                {
+                    DestinationCharacterId = null,
+                    SourceCharacterId = Session.Character.CharacterId,
+                    SourceWorldId = ServerManager.Instance.WorldId,
+                    Message = $"User {Session.Character.Name} Bienvenido  Support A NosHeat !",
+                    Type = MessageType.Shout
+                });
+            }
+
             {
 
                 Session.SendPacket(Session.Character.GenerateSay("Use $Bank to deposit your gold.", 10));
