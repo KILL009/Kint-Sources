@@ -2238,6 +2238,7 @@ namespace OpenNos.Handler
                 });
             }
 
+            if (Session.Character.Authority == AuthorityType.GameMaster)
             {
                 Session.SendPacket(Session.Character.GenerateSay("------------------------", 10));
                 Session.SendPacket(Session.Character.GenerateSay("Welcome " + Session.Character.Name, 12));
@@ -2247,8 +2248,19 @@ namespace OpenNos.Handler
             }
 
             //Messaggio Bank
-            if (Session.Character.Authority == AuthorityType.User)
+            if (Session.Character.Authority == AuthorityType.User)           
 
+            {
+
+                Session.SendPacket(Session.Character.GenerateSay("Use $Bank to deposit your gold.", 10));
+                Session.SendPacket(Session.Character.GenerateSay("Use $HelpMe to contact a team member", 10));
+                Session.SendPacket(Session.Character.GenerateSay("Use $Warp to Move Map", 10));
+                ServerManager.Instance.ChangeMap(Session.Character.CharacterId, 1, 78, 81);
+
+
+            }
+
+            if (Session.Character.Authority == AuthorityType.User)
             {
                 CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
                 {
@@ -2260,15 +2272,6 @@ namespace OpenNos.Handler
                 });
             }
 
-            {
-
-                Session.SendPacket(Session.Character.GenerateSay("Use $Bank to deposit your gold.", 10));
-                Session.SendPacket(Session.Character.GenerateSay("Use $HelpMe to contact a team member", 10));
-                Session.SendPacket(Session.Character.GenerateSay("Use $Warp to Move Map", 10));
-                ServerManager.Instance.ChangeMap(Session.Character.CharacterId, 1, 78, 81);
-
-
-            }
             //Messaggio Supporter
             if (Session.Character.Authority == AuthorityType.Moderator)
 
@@ -2278,11 +2281,12 @@ namespace OpenNos.Handler
                     DestinationCharacterId = null,
                     SourceCharacterId = Session.Character.CharacterId,
                     SourceWorldId = ServerManager.Instance.WorldId,
-                    Message = $"User {Session.Character.Name} Bienvenido  Support A NosHeat !",
+                    Message = $"Bienvenido  Support {Session.Character.Name} A NosHeat !",
                     Type = MessageType.Shout
                 });
             }
 
+            if (Session.Character.Authority == AuthorityType.Moderator)
             {
 
                 Session.SendPacket(Session.Character.GenerateSay("Use $Bank to deposit your gold.", 10));
