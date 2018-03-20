@@ -163,7 +163,7 @@ namespace OpenNos.Core
                 {
                     int currentIndex = packetBasePropertyInfo.Key.Index + (includesKeepAliveIdentity ? 2 : 1); // adding 2 because we need to skip incrementing number and packet header
 
-                    if (currentIndex < matches.Count + (includesKeepAliveIdentity ? 1 : 0))
+                    if (currentIndex < matches.Count )
 
                     {
                         if (packetBasePropertyInfo.Key.SerializeToEnd)
