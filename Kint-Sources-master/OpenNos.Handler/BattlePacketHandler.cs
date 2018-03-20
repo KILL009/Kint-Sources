@@ -57,31 +57,24 @@ namespace OpenNos.Handler
             {
                 return;
             }
-
             bool isMuted = Session.Character.MuteMessage();
             if (isMuted || Session.Character.IsVehicled)
             {
                 Session.SendPacket(StaticPacketHelper.Cancel());
                 return;
             }
-
             if ((DateTime.Now - Session.Character.LastTransform).TotalSeconds < 3)
             {
                 Session.SendPacket(StaticPacketHelper.Cancel());
-                Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("CANT_ATTACK"),
-                    0));
+                Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("CANT_ATTACK"), 0));
                 return;
             }
-
-            if (mutliTargetListPacket.TargetsAmount > 0
-                && mutliTargetListPacket.TargetsAmount == mutliTargetListPacket.Targets.Count
-                && mutliTargetListPacket.Targets != null)
+            if (mutliTargetListPacket.TargetsAmount > 0 && mutliTargetListPacket.TargetsAmount == mutliTargetListPacket.Targets.Count && mutliTargetListPacket.Targets != null)
             {
                 Session.Character.MTListTargetQueue.Clear();
                 foreach (MultiTargetListSubPacket subpacket in mutliTargetListPacket.Targets)
                 {
-                    Session.Character.MTListTargetQueue.Push(new MTListHitTarget(subpacket.TargetType,
-                        subpacket.TargetId));
+                    Session.Character.MTListTargetQueue.Push(new MTListHitTarget(subpacket.TargetType, subpacket.TargetId));
                 }
             }
         }
@@ -101,11 +94,11 @@ namespace OpenNos.Handler
             {
                 if (Session.Character.Invisible)
                 {
-                    Session.Character.Invisible = false;
+                    Session.Character.Invisible = true;
                     Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateInvisible());
                     Session.SendPacket(Session.Character.GenerateEq());
                     Session.Character.RemoveBuff(85);
-                    Session.Character.RemoveBuff(559);
+                   
 
                     Session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m =>
                         Session.CurrentMapInstance?.Broadcast(m.GenerateIn(), ReceiverType.AllExceptMe));
@@ -220,7 +213,7 @@ namespace OpenNos.Handler
         {
             if (Session.Character.Invisible)
             {
-                Session.Character.Invisible = false;
+                Session.Character.Invisible = true;
                 Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateInvisible());
                 Session.SendPacket(Session.Character.GenerateEq());
 
@@ -257,7 +250,7 @@ namespace OpenNos.Handler
         {
             if (Session.Character.Invisible)
             {
-                Session.Character.Invisible = false;
+                Session.Character.Invisible = true;
                 Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateInvisible());
                 Session.SendPacket(Session.Character.GenerateEq());
 
@@ -496,7 +489,7 @@ namespace OpenNos.Handler
                 {
                     if (Session.Character.Invisible)
                     {
-                        Session.Character.Invisible = false;
+                        Session.Character.Invisible = true;
                         Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateInvisible());
                         Session.SendPacket(Session.Character.GenerateEq());
                         Session.Character.RemoveBuff(85);
@@ -790,7 +783,7 @@ namespace OpenNos.Handler
         {
             if (Session.Character.Invisible)
             {
-                Session.Character.Invisible = false;
+                Session.Character.Invisible = true;
                 Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateInvisible());
                 Session.SendPacket(Session.Character.GenerateEq());
 
