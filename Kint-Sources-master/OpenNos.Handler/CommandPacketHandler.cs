@@ -2694,7 +2694,7 @@ namespace OpenNos.Handler
                         session.Account.Authority = AuthorityType.Donador;
                         ServerManager.Instance.ChangeMap(session.Character.CharacterId);
                     }
-                    ServerManager.Shout($"Gracias A {RankDTPacket.CharacterName} la Donation!");
+                    ServerManager.Shout($"Gracias A {RankDTPacket.CharacterName} por la Donation!");
                     AccountDTO account = DAOFactory.AccountDAO.LoadById(character.AccountId);
                     account.Authority = AuthorityType.Donador;
                     DAOFactory.AccountDAO.InsertOrUpdate(ref account);
