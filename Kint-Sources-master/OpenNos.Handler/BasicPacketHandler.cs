@@ -1867,6 +1867,14 @@ namespace OpenNos.Handler
                     message = $"[Support {Session.Character.Name}]: {message}";
                 }
                 Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateSay(message.Trim(), type), ReceiverType.AllExceptMe);
+
+                if (Session.Character.Authority == AuthorityType.Donador)
+                {
+                    type = 10;
+                    Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateSay(message.Trim(), 1), ReceiverType.AllExceptMe);
+                    message = $"[DT {Session.Character.Name}]: {message}";
+                }
+                Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateSay(message.Trim(), type), ReceiverType.AllExceptMe);
             }
         }
 
@@ -2272,6 +2280,31 @@ namespace OpenNos.Handler
                 });
             }
 
+            //Messaggio 
+            if (Session.Character.Authority == AuthorityType.Donador)
+
+            {
+                Session.SendPacket(Session.Character.GenerateSay("--------Commands Donador--------", 11));
+                Session.SendPacket(Session.Character.GenerateSay("Use $Bank to deposit your gold.", 10));
+                Session.SendPacket(Session.Character.GenerateSay("Use $HelpMe to contact a team member", 10));
+                Session.SendPacket(Session.Character.GenerateSay("Use $Warp to Move Map", 10));
+                ServerManager.Instance.ChangeMap(Session.Character.CharacterId, 1, 78, 81);
+
+
+            }
+
+            if (Session.Character.Authority == AuthorityType.Donador)
+            {
+                CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
+                {
+                    DestinationCharacterId = null,
+                    SourceCharacterId = Session.Character.CharacterId,
+                    SourceWorldId = ServerManager.Instance.WorldId,
+                    Message = $"Donador {Session.Character.Name} Bienvenido A NosHeat Gracias por Jugar !",
+                    Type = MessageType.Shout
+                });
+            }
+
             //Messaggio Supporter
             if (Session.Character.Authority == AuthorityType.Moderator)
 
@@ -2410,7 +2443,7 @@ namespace OpenNos.Handler
                 {
                     return;
                 }
-                string characterName = whisperPacket.Message.Split(' ')[whisperPacket.Message.StartsWith("GM ") ? 1 : 0].Replace("[Support]", string.Empty).Replace("[BitchNiggerFaggot]", string.Empty);
+                string characterName = whisperPacket.Message.Split(' ')[whisperPacket.Message.StartsWith("GM ") ? 1 : 0].Replace("[Support]", string.Empty).Replace("[BitchNiggerFaggot]", string.Empty).Replace("[DT]", string.Empty);
                 string message = string.Empty;
                 string[] packetsplit = whisperPacket.Message.Split(' ');
                 for (int i = packetsplit[0] == "GM" ? 2 : 1; i < packetsplit.Length; i++)

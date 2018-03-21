@@ -209,6 +209,7 @@
     <Compile Include="Packets\CommandPackets\InstanceMusicPacket.cs" />
     <Compile Include="Packets\CommandPackets\ItemRainPacket.cs" />
     <Compile Include="Packets\CommandPackets\MaintenancePacket.cs" />
+    <Compile Include="Packets\CommandPackets\RankDTPacket.cs" />
     <Compile Include="Packets\CommandPackets\RemoveNpcMonsterPacket.cs" />
     <Compile Include="Packets\CommandPackets\RestartAllPacket.cs" />
     <Compile Include="Packets\CommandPackets\ReturnPointPacket.cs" />
