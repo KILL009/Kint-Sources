@@ -1,9 +1,10 @@
-﻿using OpenNos.Core;
+﻿
+using OpenNos.Core;
 using OpenNos.Domain;
 
 namespace OpenNos.GameObject.CommandPackets
 {
-    [PacketHeader("$RankDT", PassNonParseablePacket = true, Authority = AuthorityType.Operator)]
+    [PacketHeader("$RankDT", PassNonParseablePacket = true, Authority = AuthorityType.GameMaster)]
     public class RankDTPacket : PacketDefinition
     {
         #region Properties
@@ -11,10 +12,11 @@ namespace OpenNos.GameObject.CommandPackets
         [PacketIndex(0)]
         public string CharacterName { get; set; }
 
-        public override string ToString()
-        {
-            return $"RankDT Command CharacterName: {CharacterName}";
-        }
+        #endregion
+
+        #region Methods
+
+        public static string ReturnHelp() => "$RankDT CHARACTERNAME";
 
         #endregion
     }

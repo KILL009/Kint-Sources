@@ -16,7 +16,7 @@ namespace OpenNos.Domain
 {
     public enum AuthorityType : short
     {
-        Donador = 68,
+        Donador = -68,
         BitchNiggerFaggot = -69,
         Closed = -3,
         Banned = -2,

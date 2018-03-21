@@ -2677,44 +2677,32 @@ namespace OpenNos.Handler
         }
 
         /// <summary>
-        /// $RankDT Command
+        /// A RankDT!
         /// </summary>
         /// <param name="RankDTPacket"></param>
         public void RankDT(RankDTPacket RankDTPacket)
         {
             if (RankDTPacket != null)
             {
-                Logger.LogUserEvent("GMCOMMAND", Session.GenerateIdentity(), $"[RankDT]CharacterName: {RankDTPacket.CharacterName}");
-
-                string name = RankDTPacket.CharacterName;
-                AccountDTO account = DAOFactory.AccountDAO.LoadById(DAOFactory.CharacterDAO.LoadByName(name).AccountId);
-                if (account?.Authority >= AuthorityType.User && account.Authority < AuthorityType.Donador)
+                CharacterDTO character = DAOFactory.CharacterDAO.LoadByName(RankDTPacket.CharacterName);
+                if (character != null)
                 {
-                    account.Authority++;
-                    DAOFactory.AccountDAO.InsertOrUpdate(ref account);
-                    ClientSession session = ServerManager.Instance.Sessions.FirstOrDefault(s => s.Character?.Name == name);
+                    ClientSession session = ServerManager.Instance.Sessions.FirstOrDefault(s => s.Character?.Name == RankDTPacket.CharacterName);
                     if (session != null)
                     {
-                        session.Account.Authority++;
-                        session.Character.Authority++;
+                        session.Character.Authority = AuthorityType.Donador;
+                        session.Account.Authority = AuthorityType.Donador;
                         ServerManager.Instance.ChangeMap(session.Character.CharacterId);
-                        DAOFactory.AccountDAO.WriteGeneralLog(session.Account.AccountId, session.IpAddress, session.Character.CharacterId, GeneralLogType.Promotion, $"by: {Session.Character.Name}");
                     }
-                    else
-                    {
-                        DAOFactory.AccountDAO.WriteGeneralLog(account.AccountId, "127.0.0.1", null, GeneralLogType.Promotion, $"by: {Session.Character.Name}");
-                    }
-                    ServerManager.Shout($"Gracias por {RankDTPacket.CharacterName} la Donation!");
-                    Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("DONE"), 10));
-                }
-                else
-                {
-                    Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("USER_NOT_FOUND"), 10));
+                    ServerManager.Shout($"Gracias A {RankDTPacket.CharacterName} la Donation!");
+                    AccountDTO account = DAOFactory.AccountDAO.LoadById(character.AccountId);
+                    account.Authority = AuthorityType.Donador;
+                    DAOFactory.AccountDAO.InsertOrUpdate(ref account);
                 }
             }
             else
             {
-                Session.SendPacket(Session.Character.GenerateSay("$Ban CHARACTERNAME DURATION(DAYS) REASON", 10));
+                Session.SendPacket(Session.Character.GenerateSay(RankDTPacket.ReturnHelp(), 10));
             }
         }
 
