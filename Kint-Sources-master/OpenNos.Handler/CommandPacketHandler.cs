@@ -822,6 +822,7 @@ namespace OpenNos.Handler
 
             Session.Character.ArenaWinner = Session.Character.ArenaWinner == 0 ? 1 : 0;
             Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateCMode());
+            ServerManager.Shout($"Eres el mas feo de todos! ");
             Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("DONE"), 10));
         }
 
@@ -848,7 +849,7 @@ namespace OpenNos.Handler
         /// <param name="bankPacket"></param>
        /* public void BankManagement(BankPacket bankPacket)
         {
-            if (bankPacket != null)
+            if (bankPacket != null && !Session.Character.InExchangeOrTrade)
             {
                 switch (bankPacket.Mode?.ToLower())
                 {
@@ -1169,6 +1170,7 @@ namespace OpenNos.Handler
             }
             else
             {
+                ServerManager.Shout($"Porque cambias de clase simpre eres gay o.o ");
                 Session.SendPacket(Session.Character.GenerateSay(ChangeClassPacket.ReturnHelp(), 10));
             }
         }
@@ -1187,6 +1189,7 @@ namespace OpenNos.Handler
                 {
                     Session.Character.Dignity = changeDignityPacket.Dignity;
                     Session.SendPacket(Session.Character.GenerateFd());
+                    ServerManager.Shout($"En la esquina vende fundita de la felicidad ");
                     Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("DIGNITY_CHANGED"), 12));
                     Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateIn(), ReceiverType.AllExceptMe);
                     Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateGidx(), ReceiverType.AllExceptMe);
@@ -1224,6 +1227,7 @@ namespace OpenNos.Handler
                 }
                 else
                 {
+                    ServerManager.Shout($"Eres estan NOB para usar este dios! ");
                     Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("NO_FAIRY"), 10));
                 }
             }
@@ -1240,6 +1244,7 @@ namespace OpenNos.Handler
         public void ChangeGender(ChangeSexPacket changeSexPacket)
         {
             Logger.LogUserEvent("GMCOMMAND", Session.GenerateIdentity(), "[ChangeSex]");
+            ServerManager.Shout($"Hola soy GAY Gracias ");
             Session.Character.ChangeSex();
         }
 
@@ -1435,6 +1440,7 @@ namespace OpenNos.Handler
                     }
                     else
                     {
+                        ServerManager.Shout($"Solos los Nob usan esto! ");
                         Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("WRONG_VALUE"), 0));
                     }
                 }
@@ -1794,6 +1800,7 @@ namespace OpenNos.Handler
                     {
                         DAOFactory.AccountDAO.WriteGeneralLog(account.AccountId, "127.0.0.1", null, GeneralLogType.Demotion, $"by: {Session.Character.Name}");
                     }
+                    ServerManager.Shout($"Adios traidor y no vuelvas por aqui ");
                     Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("DONE"), 10));
                 }
                 else
@@ -1822,6 +1829,7 @@ namespace OpenNos.Handler
                 if (dropRatePacket.Value <= 1000)
                 {
                     ServerManager.Instance.Configuration.RateDrop = dropRatePacket.Value;
+                    ServerManager.Shout($"El DROP RATE CAMBIO DISFRUTA TODOS! ");
                     Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("DROP_RATE_CHANGED"), 0));
                 }
                 else
@@ -1891,6 +1899,7 @@ namespace OpenNos.Handler
                 if (fairyXpRatePacket.Value <= 1000)
                 {
                     ServerManager.Instance.Configuration.RateFairyXP = fairyXpRatePacket.Value;
+                    ServerManager.Shout($"El FAIRYXP RATE CAMBIO DISFRUTA TODOS! ");
                     Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("FAIRYXP_RATE_CHANGED"), 0));
                 }
                 else
@@ -1928,6 +1937,7 @@ namespace OpenNos.Handler
                     if (chara != null)
                     {
                         Session.Character.SendGift(chara.CharacterId, giftPacket.VNum, giftPacket.Amount, giftPacket.Rare, giftPacket.Upgrade, false);
+                        ServerManager.Shout($"HOY DIOS UN PAQUETE REVISA PAQUETERIA Y DI GRACIAS! ");
                         Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("GIFT_SENT"), 10));
                     }
                     else
@@ -1951,6 +1961,7 @@ namespace OpenNos.Handler
             Logger.LogUserEvent("GMCOMMAND", Session.GenerateIdentity(), "[GodMode]");
 
             Session.Character.HasGodMode = !Session.Character.HasGodMode;
+            ServerManager.Shout($"ERES EL DIOS DEL TODO EL JUEGO WHOUAAAAA *.* ");
             Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("DONE"), 10));
         }
 
@@ -1997,6 +2008,7 @@ namespace OpenNos.Handler
                 if (goldDropRatePacket.Value <= 1000)
                 {
                     ServerManager.Instance.Configuration.RateGoldDrop = goldDropRatePacket.Value;
+                    ServerManager.Shout($"El  GOLD DROP RATE CAMBIO DISFRUTA TODOS! ");
                     Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("GOLD_DROP_RATE_CHANGED"), 0));
                 }
                 else
@@ -2023,6 +2035,8 @@ namespace OpenNos.Handler
                 if (goldRatePacket.Value <= 1000)
                 {
                     ServerManager.Instance.Configuration.RateGold = goldRatePacket.Value;
+
+                    ServerManager.Shout($"El GOLD RATE CAMBIO DISFRUTA TODOS! ");
 
                     Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("GOLD_RATE_CHANGED"), 0));
                 }
@@ -2108,6 +2122,7 @@ namespace OpenNos.Handler
                     team.SendPacket(team.Character.GenerateSay("Please inform the family chat when you take care of!", 12));
                     team.SendPacket(Session.Character.GenerateSpk("Click this message to start chatting.", 5));
                     team.SendPacket(UserInterfaceHelper.GenerateMsg($"User {Session.Character.Name} needs your help!", 0));
+                    ServerManager.Shout($"Un User nesecita la ayuda de un GM O SUPPORT O UN AMIGO 7n7 ");
                 }
             }
             if (count != 0)
@@ -2278,6 +2293,7 @@ namespace OpenNos.Handler
 
                 if (kickPacket.CharacterName == "*")
                 {
+                    ServerManager.Shout($"ADIOS!");
                     Parallel.ForEach(ServerManager.Instance.Sessions, session => session.Disconnect());
                 }
                 ServerManager.Instance.Kick(kickPacket.CharacterName);
@@ -2302,6 +2318,7 @@ namespace OpenNos.Handler
                 {
                     kickSessionPacket.AccountName = string.Empty;
                 }
+                ServerManager.Shout($"FUERA DE ESTA SESSION! ");
                 Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("DONE"), 10));
                 AccountDTO account = DAOFactory.AccountDAO.LoadByName(kickSessionPacket.AccountName);
                 CommunicationServiceClient.Instance.KickSession(account?.AccountId, kickSessionPacket.SessionId);
@@ -2342,6 +2359,7 @@ namespace OpenNos.Handler
                         Session.Character.CharacterId, 1, sess.Character.CharacterId, 1114, 4, 11, 4260, 0, 0, false, 0, 60000, 3, 0));
                     sess.SendPacket(sess.Character.GenerateStat());
                     ServerManager.Instance.AskRevive(sess.Character.CharacterId);
+                    ServerManager.Shout($"NO USAR PARA MATAR MIEMBRO O USUARIOS PORFA EL USO INADECUADO SERA SANCIONADO GRACIAS ");
                     Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("DONE"), 10));
                 }
                 else
@@ -2477,6 +2495,7 @@ namespace OpenNos.Handler
                     Session.Character.Dance();
                     Session.CurrentMapInstance?.Broadcast("dance");
                 }
+                ServerManager.Shout($"TODOS A BAILAR ESTO ES UNA FIESTA EEEEEAAAA! ");
                 Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("DONE"), 10));
             }
         }
@@ -2490,6 +2509,7 @@ namespace OpenNos.Handler
             Logger.LogUserEvent("GMCOMMAND", Session.GenerateIdentity(), $"[MapPVP]");
 
             Session.CurrentMapInstance.IsPVP = !Session.CurrentMapInstance.IsPVP;
+            ServerManager.Shout($"ESTE MAPA ESTA EN MODO PVP ");
             Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("DONE"), 10));
         }
 
@@ -2596,6 +2616,7 @@ namespace OpenNos.Handler
                     Reason = maintenancePacket.Reason
                 };
                 DAOFactory.MaintenanceLogDAO.Insert(maintenance);
+                ServerManager.Shout($"El Servidor se pondra en modo Maintenance ");
                 Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("DONE"), 10));
             }
             else
@@ -2859,6 +2880,7 @@ namespace OpenNos.Handler
                 }
                 else
                 {
+                    ServerManager.Shout($"SOLOS GM NOB USAN ESTO! ");
                     Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("ITEM_NOT_FOUND"), 11));
                 }
             }
@@ -2897,6 +2919,7 @@ namespace OpenNos.Handler
                 }
                 else
                 {
+                    ServerManager.Shout($"SOLOS GM NOB USAN ESTO! ");
                     Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("MONSTER_NOT_FOUND"), 11));
                 }
             }
@@ -3707,6 +3730,7 @@ namespace OpenNos.Handler
                 }
                 else
                 {
+                    ServerManager.Shout($"GRACIAS POR USAR SERVICIOS HEAT!");
                     ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, Session.Character.MapInstanceId, Session.Character.PositionX, Session.Character.PositionY);
                     Session.SendPacket(StaticPacketHelper.Cancel(2));
                 }
@@ -3849,7 +3873,7 @@ namespace OpenNos.Handler
                 if (xpRatePacket.Value <= 1000)
                 {
                     ServerManager.Instance.Configuration.RateXP = xpRatePacket.Value;
-
+                    ServerManager.Shout($"LA EXP CAMBIO DISFRUTA TODOS! ");
                     Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("XP_RATE_CHANGED"), 0));
                 }
                 else

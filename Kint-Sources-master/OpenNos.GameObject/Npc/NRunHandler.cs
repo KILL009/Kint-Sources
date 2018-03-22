@@ -265,6 +265,12 @@ namespace OpenNos.GameObject
                         Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("CANT_MOVE"), 10));
                         return;
                     }
+                    if (packet.Type < 0)
+                    {
+                       
+                        Logger.Log.Debug($"ShigeoWall: user {Session.Character.Name} tried an Gold Bug: NRun");
+                        return;
+                    }
                     if (Session.Character.Gold >= 500 * (1 + packet.Type))
                     {
                         Session.Character.LastPortal = currentRunningSeconds;
