@@ -8,7 +8,12 @@ genyx
 MasterDomino  
 Martazza  
 KrisYiu  
-Uppermost  
+Uppermost
+JOAOMASTER
+xDarkGunnerx
+LOLToke
+LadySusy
+KILL009
 
 # Helpers
 juhgiyo for his JPS+ algorithm  
