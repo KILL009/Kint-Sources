@@ -23,7 +23,7 @@ We recommend usage of [Roslynator](https://marketplace.visualstudio.com/items?it
 http://go.microsoft.com/fwlink/?LinkID=393520&clcid=0x409
 
 ## 2. Install or Configure Microsoft SQL Server 2017 (at least Developer Edition) ##
-- Microsoft SQL Server 2016 developer edition: https://www.microsoft.com/en-us/sql-server/sql-server-editions-developers
+- Microsoft SQL Server 2017 developer edition: https://www.microsoft.com/en-us/sql-server/sql-server-editions-developers
 - Microsoft SQL Server Management Studio (SSMS): https://msdn.microsoft.com/en-us/library/mt238290.aspx
 - Installation Tutorial: http://pastebin.com/gRVENLFm
 
