@@ -46,6 +46,7 @@ namespace OpenNos.World
         private static EventHandler _exitHandler;
 
         private static bool _isDebug;
+        private static ConsoleColor blue;
 
         #endregion
 
@@ -94,6 +95,7 @@ namespace OpenNos.World
                         break;
                 }
             }
+            ConsoleColor color = blue;
 
             // initialize Logger
             Logger.InitializeLogger(LogManager.GetLogger(typeof(Program)));
