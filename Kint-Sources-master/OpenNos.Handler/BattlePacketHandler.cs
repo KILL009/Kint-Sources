@@ -94,7 +94,7 @@ namespace OpenNos.Handler
             {
                 if (Session.Character.Invisible)
                 {
-                    Session.Character.Invisible = true;
+                    Session.Character.Invisible = false;
                     Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateInvisible());
                     Session.SendPacket(Session.Character.GenerateEq());
                     Session.Character.RemoveBuff(85);
@@ -1791,7 +1791,7 @@ namespace OpenNos.Handler
 
                     Session.SendPacket(Session.Character.GenerateStat());
                     characterSkill.LastUse = DateTime.Now;
-                    Observable.Timer(TimeSpan.FromMilliseconds(characterSkill.Skill.Cooldown * 100)).Subscribe(o =>
+                    Observable.Timer(TimeSpan.FromMilliseconds(characterSkill.Skill.CastTime * 100)).Subscribe(o =>
                     {
                         Session.Character.LastSkillUse = DateTime.Now;
 
