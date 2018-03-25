@@ -69,6 +69,12 @@ namespace OpenNos.Handler
                 Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("CANT_ATTACK"), 0));
                 return;
             }
+            if (mutliTargetListPacket.TargetsAmount > 0 && mutliTargetListPacket.Targets == null)
+            {
+                
+                Logger.Log.Debug($"user {Session.Character.Name} tried an Crash: MultiTargetListHit");
+                return;
+            }
             if (mutliTargetListPacket.TargetsAmount > 0 && mutliTargetListPacket.TargetsAmount == mutliTargetListPacket.Targets.Count && mutliTargetListPacket.Targets != null)
             {
                 Session.Character.MTListTargetQueue.Clear();

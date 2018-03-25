@@ -46,7 +46,7 @@ namespace OpenNos.World
         private static EventHandler _exitHandler;
 
         private static bool _isDebug;
-        private static ConsoleColor blue;
+       
 
         #endregion
 
@@ -78,7 +78,7 @@ namespace OpenNos.World
             Thread.Sleep(1000);
 #endif
             CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo("en-US");
-            Console.Title = $"OpenNos World Server{(_isDebug ? " Development Environment" : string.Empty)}";
+            Console.Title = $"World Server{(_isDebug ? " Development Environment" : string.Empty)}";
 
             string isA4 = string.Empty;
 
@@ -95,7 +95,7 @@ namespace OpenNos.World
                         break;
                 }
             }
-            ConsoleColor color = blue;
+           
 
             // initialize Logger
             Logger.InitializeLogger(LogManager.GetLogger(typeof(Program)));
@@ -139,7 +139,7 @@ namespace OpenNos.World
                     text += $"PORT : {port}";
                 }
 
-                text += " by SystemX64 Team";
+                text += " by Source# Team";
                 int offset = (Console.WindowWidth / 2) + (text.Length / 2);
                 string separator = new string('=', Console.WindowWidth);
                 Console.WriteLine(separator + string.Format("{0," + offset + "}\n", text) + separator);

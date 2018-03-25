@@ -56,7 +56,7 @@ namespace OpenNos.Master.Server
                 _isDebug = true;
 #endif
                 CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo("en-US");
-                Console.Title = $"OpenNos Master Server{(_isDebug ? " Development Environment" : string.Empty)}";
+                Console.Title = $"Master Server{(_isDebug ? " Development Environment" : string.Empty)}";
 
                 bool ignoreStartupMessages = false;
                 bool ignoreTelemetry = false;
@@ -82,7 +82,7 @@ namespace OpenNos.Master.Server
                 {
                     Assembly assembly = Assembly.GetExecutingAssembly();
                     FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
-                    string text = $"MASTER SERVER v{fileVersionInfo.ProductVersion}dev - PORT : {port} by SystemX64 Team";
+                    string text = $"MASTER SERVER v{fileVersionInfo.ProductVersion}dev - PORT : {port} by Source# Team";
                     int offset = (Console.WindowWidth / 2) + (text.Length / 2);
                     string separator = new string('=', Console.WindowWidth);
                     Console.WriteLine(separator + string.Format("{0," + offset + "}\n", text) + separator);
