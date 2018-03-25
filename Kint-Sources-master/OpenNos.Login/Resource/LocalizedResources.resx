@@ -118,78 +118,78 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ALREADY_CONNECTED" xml:space="preserve">
-    <value>Account is already connected.</value>
+    <value>La cuenta ya está conectada.</value>
   </data>
   <data name="BANNED" xml:space="preserve">
-    <value>You have been banned. Reason {0}, until {1}</value>
+    <value>Usted ha sido prohibido. Motivo {0}, hasta {1}</value>
   </data>
   <data name="CLIENT_CLOSED" xml:space="preserve">
-    <value>Connection closed by Client.</value>
+    <value>Conexión cerrada por el cliente.</value>
   </data>
   <data name="CONNECTION_CLOSED" xml:space="preserve">
-    <value>Connection closed.</value>
+    <value>Conexión cerrada.</value>
   </data>
   <data name="CONFIG_LOADED" xml:space="preserve">
-    <value>Config loaded!</value>
+    <value>¡Config cargada!</value>
   </data>
   <data name="CONNECTION" xml:space="preserve">
-    <value>CONNECT {0} Connected -- SessionId: {1}</value>
+    <value>CONNECT {0} Conectado - SessionId: {1}</value>
   </data>
   <data name="DATABASE_INITIALIZED" xml:space="preserve">
-    <value>Database has been initialized!</value>
+    <value>¡La base de datos ha sido inicializada!</value>
   </data>
   <data name="DISCONNECT" xml:space="preserve">
-    <value>Client disconnected! ClientId = </value>
+    <value>Cliente desconectado! ClientId =</value>
   </data>
   <data name="FORCED_DISCONNECT" xml:space="preserve">
-    <value>Forced Disconnecting of client {0}, too much connections.</value>
+    <value>Desconexión forzada del cliente {0}, demasiadas conexiones.</value>
   </data>
   <data name="IDERROR" xml:space="preserve">
-    <value>Wrong Id or Password!</value>
+    <value>¡ID o Contraseña equivocada!</value>
   </data>
   <data name="MESSAGE_RECEIVED" xml:space="preserve">
-    <value>Message received {0} on client {1}</value>
+    <value>Mensaje recibido {0} en el cliente {1}</value>
   </data>
   <data name="MSG_SENT" xml:space="preserve">
-    <value>Message sent to client </value>
+    <value>Mensaje enviado al cliente</value>
   </data>
   <data name="NEW_CONNECT" xml:space="preserve">
-    <value>New client connected. ClientId = </value>
+    <value>Nuevo cliente conectado. ClientId =</value>
   </data>
   <data name="NOTVALIDATE" xml:space="preserve">
-    <value>Account not validate!</value>
+    <value>Cuenta no validada</value>
   </data>
   <data name="PACKET_FAILURE" xml:space="preserve">
-    <value>Failed to send packet {0} to client {1}, {2}.</value>
+    <value>Error al enviar el paquete {0} al cliente {1}, {2}.</value>
   </data>
   <data name="STARTED" xml:space="preserve">
-    <value>LoginServer started successfully.</value>
+    <value>LoginServer se inició correctamente.</value>
   </data>
   <data name="TOO_BIG" xml:space="preserve">
-    <value>Message is too big ({0} bytes). Max allowed length is {1} bytes.</value>
+    <value>El mensaje es demasiado grande ({0} bytes). La longitud máxima permitida es {1} bytes.</value>
   </data>
   <data name="CONNECTION_LOST" xml:space="preserve">
-    <value>Connection to the server has been lost.</value>
+    <value>La conexión al servidor se ha perdido.</value>
   </data>
   <data name="DATABASE_NOT_UPTODATE" xml:space="preserve">
-    <value>Database may not be up to date. Please consider updating your database.</value>
+    <value>La base de datos puede no estar actualizada. Por favor considere actualizar su base de datos.</value>
   </data>
   <data name="CLIENT_DISCONNECTED" xml:space="preserve">
-    <value>Connection closed.</value>
+    <value>Conexión cerrada.</value>
   </data>
   <data name="MAINTENANCE" xml:space="preserve">
-    <value>Server is currently under maintenance. Maintenance estimated time: {0} reason: {1}</value>
+    <value>El servidor se encuentra actualmente en mantenimiento. Tiempo estimado de mantenimiento: {0} razón: {1}</value>
   </data>
   <data name="CORRUPT_PACKET" xml:space="preserve">
-    <value>Packet with Header {0} is corrupt or PacketDefinition is invalid. Content: {1} </value>
+    <value>Packet with Header {0} está dañado o PacketDefinition no es válido. Contenido: {1}</value>
   </data>
   <data name="API_INITIALIZED" xml:space="preserve">
-    <value>Master Server communication has been initialized.</value>
+    <value>La comunicación del servidor maestro se ha inicializado.</value>
   </data>
   <data name="RETRY_CONNECTION" xml:space="preserve">
-    <value>Cannot connect to Master Server! Trying again in 5 seconds...</value>
+    <value>¡No se puede conectar al servidor maestro! Intentando de nuevo en 5 segundos ...</value>
   </data>
   <data name="NO_WORLDSERVERS" xml:space="preserve">
-    <value>404: No world servers found! please try again later.</value>
+    <value>404: ¡No se encontraron servidores mundiales! Por favor, inténtelo de nuevo más tarde.</value>
   </data>
 </root>
