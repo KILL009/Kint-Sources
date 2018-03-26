@@ -498,17 +498,24 @@ namespace OpenNos.GameObject
         {
             get
             {
-                if (_speed > 59)
+                if (HasBuff(CardType.Move, (byte)AdditionalTypes.Move.MovementImpossible))
+                {
+                    return 0;
+                }
+
+                var bonusSpeed = (byte)GetBuff(CardType.Move, (byte)AdditionalTypes.Move.SetMovementNegated)[0];
+                if (Speed + bonusSpeed > 59)
                 {
                     return 59;
                 }
-                return _speed;
+
+                return (byte)(Speed + bonusSpeed);
             }
 
             set
             {
                 LastSpeedChange = DateTime.Now;
-                _speed = value > 59 ? (byte)59 : value;
+                Speed = value > 59 ? (byte)59 : value;
             }
         }
 
@@ -529,7 +536,9 @@ namespace OpenNos.GameObject
         public int WareHouseSize { get; set; }
 
         public int WaterResistance { get; set; }
+
         public long LastTargetType { get; set; }
+
         public long LastTargetId { get; set; }
 
         #endregion
@@ -553,6 +562,11 @@ namespace OpenNos.GameObject
                 {
                     BuffObservables[indicator.Card.CardId]?.Dispose();
                     BuffObservables.Remove(indicator.Card.CardId);
+                }
+                if (indicator.Card.EffectId > 0)
+                {
+                    GenerateEff(indicator.Card.EffectId);
+
                 }
                 BuffObservables[indicator.Card.CardId] = Observable.Timer(TimeSpan.FromMilliseconds(indicator.Card.Duration * 100)).Subscribe(o =>
                 {
@@ -798,6 +812,20 @@ namespace OpenNos.GameObject
 
         }
 
+        // NoAttack // NoMove [...]
+        public bool HasBuff(CardType type, byte subtype)
+        {
+            return Buff.Any(buff => buff.Card.BCards.Any(b => b.Type == (byte)type && b.SubType == subtype && (b.CastType != 1 || b.CastType == 1 && buff.Start.AddMilliseconds(buff.Card.Delay * 100) < DateTime.Now))) ||
+                   EquipmentBCards.Any(s => s.Type.Equals((byte)type) && s.SubType.Equals(subtype));
+        }
+
+        public void GetReput(long val)
+        {
+            Reputation += val * ServerManager.Instance.ReputRate;
+            Session.SendPacket(GenerateFd());
+            Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("REPUT_INCREASE"), val), 11));
+        }
+
         public void CharacterLife()
         {
             //foreach (QuestModel quest in Quests.GetAllItems().Where(q => q.WalkObjective != null))
@@ -984,6 +1012,57 @@ namespace OpenNos.GameObject
                     SkillComboCount = 0;
                     Session.SendPackets(GenerateQuicklist());
                     Session.SendPacket("mslot 0 -1");
+                }
+
+                // HEAL
+                if (LastHealth.AddSeconds(2) <= DateTime.Now)
+                {
+                    var heal = GetBuff(CardType.HealingBurningAndCasting, (byte)AdditionalTypes.HealingBurningAndCasting.RestoreHP)[0];
+                    Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateRc(heal));
+                    if (Hp + heal < HPLoad())
+                    {
+                        Hp += heal;
+                        change = true;
+                    }
+                    else
+                    {
+                        if (Hp != (int)HPLoad())
+                        {
+                            change = true;
+                        }
+
+                        Hp = (int)HPLoad();
+                    }
+
+                    if (change)
+                    {
+                        Session.SendPacket(GenerateStat());
+                    }
+                }
+
+                // DEBUFF HP LOSS
+                if (LastHealth.AddSeconds(2) <= DateTime.Now)
+                {
+                    var debuff = (int)(GetBuff(CardType.RecoveryAndDamagePercent, (byte)AdditionalTypes.RecoveryAndDamagePercent.HPReduced)[0] * (HPLoad() / 100));
+                    if (Hp - debuff > 1)
+                    {
+                        Hp -= debuff;
+                        change = true;
+                    }
+                    else
+                    {
+                        if (Hp != 1)
+                        {
+                            change = true;
+                        }
+
+                        Hp = 1;
+                    }
+
+                    if (change)
+                    {
+                        Session.SendPacket(GenerateStat());
+                    }
                 }
 
                 if (UseSp)

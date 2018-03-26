@@ -145,7 +145,11 @@ namespace OpenNos.GameObject
                 indicator.Start = DateTime.Now;
 
                 indicator.Card.BCards.ForEach(c => c.ApplyBCards(this));
-                Observable.Timer(TimeSpan.FromMilliseconds(indicator.Card.Duration * 100)).Subscribe(o =>
+                if (indicator.Card.EffectId > 0)
+                {
+                    GenerateEff(indicator.Card.EffectId);
+                }
+                    Observable.Timer(TimeSpan.FromMilliseconds(indicator.Card.Duration * 100)).Subscribe(o =>
                 {
                     removeBuff(indicator.Card.CardId);
                     if (indicator.Card.TimeoutBuff != 0 &&
@@ -163,6 +167,16 @@ namespace OpenNos.GameObject
             }
         }
 
+        public EffectPacket GenerateEff(int effectid)
+        {
+            return new EffectPacket
+            {
+                EffectTypep = 3,
+                CharacterId = MapMonsterId,
+                Id = effectid
+            };
+        }
+
         public string GenerateBoss() => $"rboss 3 {MapMonsterId} {CurrentHp} {MaxHp}";
 
         public string GenerateIn()
@@ -173,6 +187,13 @@ namespace OpenNos.GameObject
             }
             return string.Empty;
         }
+
+        // NoAttack // NoMove [...]
+        public bool HasBuff(CardType type, byte subtype)
+        {
+            return Buff.Any(buff => buff.Card.BCards.Any(b => b.Type == (byte)type && b.SubType == subtype && (b.CastType != 1 || b.CastType == 1 && buff.Start.AddMilliseconds(buff.Card.Delay * 100) < DateTime.Now)));
+        }
+
 
         public void Initialize(MapInstance currentMapInstance)
         {

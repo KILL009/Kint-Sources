@@ -1,18 +1,4 @@
-﻿/*
- * This file is part of the OpenNos Emulator Project. See AUTHORS file for Copyright information
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
-namespace OpenNos.Domain
+﻿namespace OpenNos.Domain
 {
     public static class BCardType
     {
@@ -20,7 +6,9 @@ namespace OpenNos.Domain
 
         public enum CardType : byte
         {
+            // 1-20
             SpecialAttack = 1,
+
             SpecialDefence = 2,
             AttackPower = 3,
             Target = 4,
@@ -40,7 +28,10 @@ namespace OpenNos.Domain
             Casting = 18,
             Move = 19,
             Reflection = 20,
+
+            // 21-40
             DrainAndSteal = 21,
+
             HealingBurningAndCasting = 22,
             HPMP = 23,
             SpecialisationBuffResistance = 24,
@@ -60,7 +51,10 @@ namespace OpenNos.Domain
             Count = 38,
             NoDefeatAndNoDamage = 39,
             SpecialActions = 40,
+
+            // 41-60
             Mode = 41,
+
             NoCharacteristicValue = 42,
             LightAndShadow = 43,
             Item = 44,
@@ -81,7 +75,7 @@ namespace OpenNos.Domain
             SummonSkill = 59,
             InflictSkill = 60,
 
-            // 61 missingno ?
+            // 61-80 Missingno = 61,
             HideBarrelSkill = 62,
 
             FocusEnemyAttentionSkill = 63,
@@ -102,20 +96,22 @@ namespace OpenNos.Domain
             TeamArenaBuff = 78,
             ArenaCamera = 79,
             DarkCloneSummon = 80,
+
+            // 81-??
             AbsorbedSpirit = 81,
+
             AngerSkill = 82,
             MeteoriteTeleport = 83,
             StealBuff = 84,
-            Unknown = 85,
-            EffectSummon = 86,
-            
+
+            SPSL = 200,
+            EffectSummon = 201,
+            Unknown = 202,
         }
     }
 
-    public static class AdditionalTypes
+    public  static class AdditionalTypes 
     {
-        
-
         // 1-20
         public enum SpecialAttack : byte
         {
@@ -206,7 +202,7 @@ namespace OpenNos.Domain
             WaterIncreased = 21,
             WaterDecreased = 22,
             LightIncreased = 31,
-            Light5Decreased = 32,
+            LightDecreased = 32,
             DarkIncreased = 41,
             DarkDecreased = 42,
             AllIncreased = 51,
@@ -325,8 +321,8 @@ namespace OpenNos.Domain
             AlwaysDodgePropabilityNegated = 22,
             NoPenatly = 41,
             NoPenatlyNegated = 42,
-            DistanceDamageIncreasing = 51,
-            DistanceDamageIncreasingNegated = 52
+            DistanceDamageIncreasing = 41,
+            DistanceDamageIncreasingNegated = 42
         }
 
         public enum Morale : byte
@@ -383,6 +379,7 @@ namespace OpenNos.Domain
             EnemyMPDecreased = 42
         }
 
+        // 21-40
         public enum DrainAndSteal : byte
         {
             ReceiveHpFromMP = 11,
@@ -580,8 +577,6 @@ namespace OpenNos.Domain
 
         public enum RecoveryAndDamagePercent : byte
         {
-            HPRecoveredOnDefense = 01,
-            HPDecreasedOnDefense = 02,
             HPRecovered = 11,
             HPReduced = 12,
             MPRecovered = 21,
@@ -620,6 +615,7 @@ namespace OpenNos.Domain
             SeeHiddenThings = 52
         }
 
+        // 41-60
         public enum Mode : byte
         {
             Range = 11,
@@ -671,9 +667,7 @@ namespace OpenNos.Domain
             ScrollPower = 41,
             ScrollPowerNegated = 42,
             IncreaseEarnedGold = 51,
-            IncreaseEarnedGoldNegated = 52,
-            IncreaseSPXP = 61,
-            IncreaseSPXPNegated = 62
+            IncreaseEarnedGoldNegated = 52
         }
 
         public enum DebuffResistance : byte
@@ -786,13 +780,13 @@ namespace OpenNos.Domain
 
         public enum BearSpirit : byte
         {
-            IncreaseMaximumHP = 11,
-            DecreaseMaximumHP = 12,
+            IncreaseMaximumMP = 11,
+            DecreaseMaximumMP = 12,
 
             // Unknown = 21, Unknown2 = 22,
-            IncreaseMaximumMP = 31,
+            IncreaseMaximumHP = 31,
 
-            DecreaseMaximumMP = 32
+            DecreaseMaximumHP = 32
         }
 
         public enum SummonSkill : byte
@@ -808,6 +802,13 @@ namespace OpenNos.Domain
             InflictDamageAtLocation = 11,
             InflictDamageAtLocationNegated = 12
         }
+
+        // 61-80
+        /*public enum Missingno : byte
+        {
+            Unknown = 11,
+            Unknown2 = 12
+        }*/
 
         public enum HideBarrelSkill : byte
         {
@@ -883,8 +884,6 @@ namespace OpenNos.Domain
             Sacrifice = 51,
             Sacrificenegated = 52
         }
-
-      
 
         public enum FalconSkill : byte
         {
@@ -1031,6 +1030,7 @@ namespace OpenNos.Domain
             DarkElementDamageDecreaseChance = 52
         }
 
+        // 81-??
         public enum AbsorbedSpirit : byte
         {
             ApplyEffectIfPresent = 11,
@@ -1079,6 +1079,15 @@ namespace OpenNos.Domain
             StealGoodEffectNegated = 42
         }
 
+        public enum SPSL : byte
+        {
+            Attack,
+            Defense,
+            Element,
+            HPMP,
+            All
+        }
+
         public enum Unknown : byte
         {
             // TODO
@@ -1093,6 +1102,8 @@ namespace OpenNos.Domain
             DamageBoostOnHigherLvl = 31
         }
 
-        #endregion
+        // end!
     }
+
+    #endregion
 }

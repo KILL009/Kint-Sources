@@ -110,6 +110,11 @@ namespace OpenNos.GameObject
                         }
                         else if (type == typeof(Mate))
                         {
+
+                            if (ServerManager.RandomNumber() < FirstData && session is Mate mapMonster)
+                            {
+                                mapMonster.AddBuff(new Buff((short)SecondData, mapMonster.Monster.Level));
+                            }
                         }
                         break;
                     }

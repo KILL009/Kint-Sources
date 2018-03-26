@@ -163,6 +163,8 @@ namespace OpenNos.GameObject.Networking
 
         public long MaxGold { get; set; }
 
+        public int ReputRate { get; set; }
+
         public bool IceBreakerInWaiting { get; set; }
 
         public int RaidType { get; set; }
@@ -768,6 +770,7 @@ namespace OpenNos.GameObject.Networking
 
         public void Initialize()
         {
+            ReputRate = int.Parse(ConfigurationManager.AppSettings["RateReput"]);
             MaxBankGold = long.Parse(ConfigurationManager.AppSettings["MaxBankGold"]);
             Act4RaidStart = DateTime.Now;
             Act4AngelStat = new Act4Stat();

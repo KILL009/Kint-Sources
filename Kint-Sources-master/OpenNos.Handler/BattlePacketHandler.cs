@@ -123,6 +123,13 @@ namespace OpenNos.Handler
                     return;
                 }
 
+                if (Session.Character.HasBuff(BCardType.CardType.SpecialAttack, (byte)AdditionalTypes.SpecialAttack.NoAttack))
+                {
+                    Session.SendPacket("cancel 0 0");
+                    return;
+                }
+
+
                 if (useSkillPacket.MapX.HasValue && useSkillPacket.MapY.HasValue)
                 {
                     Session.Character.PositionX = useSkillPacket.MapX.Value;

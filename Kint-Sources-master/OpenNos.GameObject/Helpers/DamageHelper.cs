@@ -550,7 +550,7 @@ namespace OpenNos.GameObject.Helpers
                     staticBoostCategory5 += GetAttackerBenefitingBuffs(BCardType.CardType.Element,
                         (byte)AdditionalTypes.Element.LightIncreased)[0];
                     staticBoostCategory5 += GetDefenderBenefitingBuffs(BCardType.CardType.Element,
-                        (byte)AdditionalTypes.Element.Light5Decreased)[0];
+                        (byte)AdditionalTypes.Element.LightDecreased)[0];
                     break;
 
                 case 4:
