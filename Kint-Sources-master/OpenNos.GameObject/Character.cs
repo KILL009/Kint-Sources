@@ -554,11 +554,7 @@ namespace OpenNos.GameObject
                     BuffObservables[indicator.Card.CardId]?.Dispose();
                     BuffObservables.Remove(indicator.Card.CardId);
                 }
-                if (indicator.Card.EffectId > 0)
-                {
-                    GenerateEff(indicator.Card.EffectId);
-                }
-                    BuffObservables[indicator.Card.CardId] = Observable.Timer(TimeSpan.FromMilliseconds(indicator.Card.Duration * 100)).Subscribe(o =>
+                  BuffObservables[indicator.Card.CardId] = Observable.Timer(TimeSpan.FromMilliseconds(indicator.Card.Duration * 100)).Subscribe(o =>
                 {
                     RemoveBuff(indicator.Card.CardId);
                     if (indicator.Card.TimeoutBuff != 0 && ServerManager.RandomNumber() < indicator.Card.TimeoutBuffChance)
