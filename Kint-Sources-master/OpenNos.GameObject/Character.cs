@@ -498,17 +498,24 @@ namespace OpenNos.GameObject
         {
             get
             {
-                if (_speed > 59)
+                if (HasBuff(CardType.Move, (byte)AdditionalTypes.Move.MovementImpossible))
+                {
+                    return 0;
+                }
+
+                var bonusSpeed = (byte)GetBuff(CardType.Move, (byte)AdditionalTypes.Move.SetMovementNegated)[0];
+                if (Speed + bonusSpeed > 59)
                 {
                     return 59;
                 }
-                return _speed;
+
+                return (byte)(Speed + bonusSpeed);
             }
 
             set
             {
                 LastSpeedChange = DateTime.Now;
-                _speed = value > 59 ? (byte)59 : value;
+                Speed = value > 59 ? (byte)59 : value;
             }
         }
 
@@ -796,6 +803,20 @@ namespace OpenNos.GameObject
         public static void UpdateQuests()
         {
 
+        }
+
+        // NoAttack // NoMove [...]
+        public bool HasBuff(CardType type, byte subtype)
+        {
+            return Buff.Any(buff => buff.Card.BCards.Any(b => b.Type == (byte)type && b.SubType == subtype && (b.CastType != 1 || b.CastType == 1 && buff.Start.AddMilliseconds(buff.Card.Delay * 100) < DateTime.Now))) ||
+                   EquipmentBCards.Any(s => s.Type.Equals((byte)type) && s.SubType.Equals(subtype));
+        }
+
+        public void GetReput(long val)
+        {
+            Reputation += val * ServerManager.Instance.ReputRate;
+            Session.SendPacket(GenerateFd());
+            Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("REPUT_INCREASE"), val), 11));
         }
 
         public void CharacterLife()
