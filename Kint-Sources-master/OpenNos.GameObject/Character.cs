@@ -498,23 +498,21 @@ namespace OpenNos.GameObject
         {
             get
             {
-<<<<<<< HEAD
-                         
+                
+            
                 var bonusSpeed = (byte)GetBuff(CardType.Move, (byte)AdditionalTypes.Move.SetMovementNegated)[0];
                 if (Speed + bonusSpeed > 59)
-=======
-                if (_speed > 59)
->>>>>>> 0e340d832f0f923a1d8a629520d8e8564d2ff761
                 {
                     return 59;
                 }
-                return _speed;
+
+                return (byte)(Speed + bonusSpeed);
             }
 
             set
             {
                 LastSpeedChange = DateTime.Now;
-                _speed = value > 59 ? (byte)59 : value;
+                Speed = value > 59 ? (byte)59 : value;
             }
         }
 
