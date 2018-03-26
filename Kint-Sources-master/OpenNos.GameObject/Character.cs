@@ -498,24 +498,17 @@ namespace OpenNos.GameObject
         {
             get
             {
-                if (HasBuff(CardType.Move, (byte)AdditionalTypes.Move.MovementImpossible))
-                {
-                    return 0;
-                }
-
-                var bonusSpeed = (byte)GetBuff(CardType.Move, (byte)AdditionalTypes.Move.SetMovementNegated)[0];
-                if (Speed + bonusSpeed > 59)
+                if (_speed > 59)
                 {
                     return 59;
                 }
-
-                return (byte)(Speed + bonusSpeed);
+                return _speed;
             }
 
             set
             {
                 LastSpeedChange = DateTime.Now;
-                Speed = value > 59 ? (byte)59 : value;
+                _speed = value > 59 ? (byte)59 : value;
             }
         }
 
@@ -805,7 +798,12 @@ namespace OpenNos.GameObject
 
         }
 
-     
+        // NoAttack // NoMove [...]
+        public bool HasBuff(CardType type, byte subtype)
+        {
+            return Buff.Any(buff => buff.Card.BCards.Any(b => b.Type == (byte)type && b.SubType == subtype && (b.CastType != 1 || b.CastType == 1 && buff.Start.AddMilliseconds(buff.Card.Delay * 100) < DateTime.Now))) ||
+                   EquipmentBCards.Any(s => s.Type.Equals((byte)type) && s.SubType.Equals(subtype));
+        }
 
         public void GetReput(long val)
         {
