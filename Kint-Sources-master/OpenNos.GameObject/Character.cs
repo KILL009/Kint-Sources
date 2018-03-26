@@ -902,6 +902,57 @@ namespace OpenNos.GameObject
                         return;
                     }
 
+                    // HEAL
+                    if (LastHealth.AddSeconds(2) <= DateTime.Now)
+                    {
+                        var heal = GetBuff(CardType.HealingBurningAndCasting, (byte)AdditionalTypes.HealingBurningAndCasting.RestoreHP)[0];
+                        Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateRc(heal));
+                        if (Hp + heal < HPLoad())
+                        {
+                            Hp += heal;
+                            change = true;
+                        }
+                        else
+                        {
+                            if (Hp != (int)HPLoad())
+                            {
+                                change = true;
+                            }
+
+                            Hp = (int)HPLoad();
+                        }
+
+                        if (change)
+                        {
+                            Session.SendPacket(GenerateStat());
+                        }
+                    }
+
+                    // DEBUFF HP LOSS
+                    if (LastHealth.AddSeconds(2) <= DateTime.Now)
+                    {
+                        var debuff = (int)(GetBuff(CardType.RecoveryAndDamagePercent, (byte)AdditionalTypes.RecoveryAndDamagePercent.HPReduced)[0] * (HPLoad() / 100));
+                        if (Hp - debuff > 1)
+                        {
+                            Hp -= debuff;
+                            change = true;
+                        }
+                        else
+                        {
+                            if (Hp != 1)
+                            {
+                                change = true;
+                            }
+
+                            Hp = 1;
+                        }
+
+                        if (change)
+                        {
+                            Session.SendPacket(GenerateStat());
+                        }
+                    }
+
                     if (LastDefence.AddSeconds(4) <= DateTime.Now && LastSkillUse.AddSeconds(2) <= DateTime.Now && Hp > 0)
                     {
                         if (x == 0)
