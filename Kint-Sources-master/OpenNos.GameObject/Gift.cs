@@ -23,7 +23,7 @@ namespace OpenNos.GameObject
             // do nothing
         }
 
-        public Gift(short vnum, byte amount, short design = 0, bool isRareRandom = false)
+        public Gift(short vnum, byte amount, ushort design = 0, bool isRareRandom = false)
         {
             VNum = vnum;
             Amount = amount;
@@ -37,7 +37,7 @@ namespace OpenNos.GameObject
 
         public byte Amount { get; set; }
 
-        public short Design { get; set; }
+        public ushort Design { get; set; }
 
         public bool IsRandomRare { get; set; }
 

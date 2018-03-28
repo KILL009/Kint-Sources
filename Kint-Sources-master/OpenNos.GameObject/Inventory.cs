@@ -149,7 +149,7 @@ namespace OpenNos.GameObject
             return invcopy;
         }
 
-        public List<ItemInstance> AddNewToInventory(short vnum, ushort amount = 1, InventoryType? type = null, sbyte Rare = 0, byte Upgrade = 0, byte Design = 0)
+        public List<ItemInstance> AddNewToInventory(short vnum, ushort amount = 1, InventoryType? type = null, sbyte Rare = 0, ushort Upgrade = 0, ushort Design = 0)
         {
             if (Owner != null)
             {

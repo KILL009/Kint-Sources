@@ -50,7 +50,7 @@ namespace OpenNos.DAL.EF
         [Index("IX_SlotAndType", 1, IsUnique = false, Order = 0)]
         public long CharacterId { get; set; }
 
-        public short Design { get; set; }
+        public ushort Design { get; set; }
 
         public int DurabilityPoint { get; set; }
 
@@ -70,7 +70,7 @@ namespace OpenNos.DAL.EF
         [Index("IX_SlotAndType", 3, IsUnique = false, Order = 2)]
         public InventoryType Type { get; set; }
 
-        public byte Upgrade { get; set; }
+        public ushort Upgrade { get; set; }
 
         public short? HoldingVNum { get; set; }
 

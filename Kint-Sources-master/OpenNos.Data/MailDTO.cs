@@ -22,13 +22,13 @@ namespace OpenNos.Data
     {
         #region Properties
 
-        public byte AttachmentAmount { get; set; }
+        public ushort AttachmentAmount { get; set; }
 
         public byte AttachmentLevel { get; set; }
 
         public byte AttachmentRarity { get; set; }
 
-        public byte AttachmentUpgrade { get; set; }
+        public ushort AttachmentUpgrade { get; set; }
 
         public short? AttachmentVNum { get; set; }
 
