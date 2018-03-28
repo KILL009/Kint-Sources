@@ -123,6 +123,10 @@
     <Compile Include="Migrations\201802101625010_Aphrodite78.Designer.cs">
       <DependentUpon>201802101625010_Aphrodite78.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201803281413185_Annais.cs" />
+    <Compile Include="Migrations\201803281413185_Annais.Designer.cs">
+      <DependentUpon>201803281413185_Annais.cs</DependentUpon>
+    </Compile>
     <Compile Include="MinigameLog.cs" />
     <Compile Include="Quest.cs" />
     <Compile Include="QuestProgress.cs" />
@@ -745,6 +749,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201802101625010_Aphrodite78.resx">
       <DependentUpon>201802101625010_Aphrodite78.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201803281413185_Annais.resx">
+      <DependentUpon>201803281413185_Annais.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

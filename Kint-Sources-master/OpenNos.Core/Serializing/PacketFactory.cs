@@ -351,6 +351,7 @@ namespace OpenNos.Core
                 return Convert.ChangeType(currentValue, packetPropertyType.GenericTypeArguments[0]);
 
                 if (packetPropertyType == typeof(string) && string.IsNullOrEmpty(currentValue))
+
                 {
                     throw new NullReferenceException();
                 }

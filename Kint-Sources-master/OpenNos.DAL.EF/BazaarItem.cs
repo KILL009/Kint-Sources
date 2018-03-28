@@ -20,7 +20,7 @@ namespace OpenNos.DAL.EF
     {
         #region Properties
 
-        public byte Amount { get; set; }
+        public ushort Amount { get; set; }
 
         public long BazaarItemId { get; set; }
 

@@ -1683,7 +1683,8 @@ namespace OpenNos.Handler
 
                 short vnum = createItemPacket.VNum;
                 sbyte rare = 0;
-                byte upgrade = 0, amount = 1, design = 0;
+                byte upgrade = 0, design = 0;
+                ushort amount = 1;
                 if (vnum == 1046)
                 {
                     return; // cannot create gold as item, use $Gold instead
@@ -1729,7 +1730,7 @@ namespace OpenNos.Handler
                     }
                     if (createItemPacket.Design.HasValue && !createItemPacket.Upgrade.HasValue)
                     {
-                        amount = createItemPacket.Design.Value > 99 ? (byte)99 : createItemPacket.Design.Value;
+                        amount = createItemPacket.Design.Value > 99 ? (ushort)999 : createItemPacket.Design.Value;
                     }
                     ItemInstance inv = Session.Character.Inventory.AddNewToInventory(vnum, amount, Rare: rare, Upgrade: upgrade, Design: design).FirstOrDefault();
                     if (inv != null)

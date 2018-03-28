@@ -42,7 +42,7 @@ namespace OpenNos.GameObject
 
         #region Properties
 
-        public abstract byte Amount { get; set; }
+        public abstract ushort Amount { get; set; }
 
         public DateTime CreatedDate { get; set; }
 

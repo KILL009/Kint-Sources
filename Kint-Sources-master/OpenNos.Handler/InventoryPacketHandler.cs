@@ -650,7 +650,7 @@ namespace OpenNos.Handler
                             {
                                 lock (Session.Character.Inventory)
                                 {
-                                    byte amount = mapItem.Amount;
+                                    ushort amount = mapItem.Amount;
                                     ItemInstance inv = Session.Character.Inventory.AddToInventory(mapItemInstance).FirstOrDefault();
                                     if (inv != null)
                                     {
