@@ -76,6 +76,7 @@ namespace OpenNos.GameObject
             ShellEffectArmor = new ConcurrentBag<ShellEffectDTO>();
             ShellEffectMain = new ConcurrentBag<ShellEffectDTO>();
             ShellEffectSecondary = new ConcurrentBag<ShellEffectDTO>();
+            ObservableBag = new Dictionary<short, IDisposable>();
         }
 
         public Character(CharacterDTO input)
@@ -478,6 +479,8 @@ namespace OpenNos.GameObject
 
         public ConcurrentBag<ShellEffectDTO> ShellEffectSecondary { get; set; }
 
+        public Dictionary<short, IDisposable> ObservableBag { get; set; }
+
         public int Size { get; set; } = 10;
 
         public byte SkillComboCount { get; set; }
@@ -529,7 +532,9 @@ namespace OpenNos.GameObject
         public int WareHouseSize { get; set; }
 
         public int WaterResistance { get; set; }
+
         public long LastTargetType { get; set; }
+
         public long LastTargetId { get; set; }
 
         #endregion
@@ -538,11 +543,18 @@ namespace OpenNos.GameObject
 
         public void AddBuff(Buff indicator, bool noMessage = false)
         {
+            int buffTime = 0;
+
             if (indicator.Card != null && (!noMessage || !Buff.Any(s => s.Card.CardId == indicator.Card.CardId)))
             {
                 Buff.Remove(indicator.Card.CardId);
                 Buff[indicator.Card.CardId] = indicator;
-                indicator.RemainingTime = indicator.Card.Duration;
+                //TODO: Find a better way to do this
+             if (indicator.Card.CardId == 85)
+              {
+                    buffTime = ServerManager.RandomNumber(50, 350);
+              }
+                indicator.RemainingTime = indicator.Card.Duration == 0 ? buffTime : indicator.Card.Duration;
                 indicator.Start = DateTime.Now;
 
                 Session.SendPacket($"bf 1 {CharacterId} 0.{indicator.Card.CardId}.{indicator.RemainingTime} {Level}");
@@ -554,7 +566,11 @@ namespace OpenNos.GameObject
                     BuffObservables[indicator.Card.CardId]?.Dispose();
                     BuffObservables.Remove(indicator.Card.CardId);
                 }
-                  BuffObservables[indicator.Card.CardId] = Observable.Timer(TimeSpan.FromMilliseconds(indicator.Card.Duration * 100)).Subscribe(o =>
+                if (ObservableBag.ContainsKey(indicator.Card.CardId))
+              {
+                 ObservableBag[indicator.Card.CardId]?.Dispose();
+              }
+                ObservableBag[indicator.Card.CardId] = Observable.Timer(TimeSpan.FromMilliseconds((indicator.Card.Duration == 0 ? buffTime : indicator.Card.Duration) * 100)).Subscribe(o =>
                 {
                     RemoveBuff(indicator.Card.CardId);
                     if (indicator.Card.TimeoutBuff != 0 && ServerManager.RandomNumber() < indicator.Card.TimeoutBuffChance)
