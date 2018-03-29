@@ -21,13 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
-using OpenNos.GameObject;
-using OpenNos.GameObject.CommandPackets;
-using OpenNos.Master.Library.Client;
-using OpenNos.Master.Library.Data;
-using System.Diagnostics;
-using System.Reflection;
-using System.Threading.Tasks;
+
 
 namespace OpenNos.GameObject
 {
@@ -399,6 +393,13 @@ namespace OpenNos.GameObject
                     break;
 
                 case BCardType.CardType.SpecialActions:
+                    if (SubType.Equals((byte)AdditionalTypes.SpecialActions.Hide))
+                                            {
+                        Character character = (session as Character);
+                        character.Invisible = true;
+                        character.Mates.Where(s => s.IsTeamMember).ToList().ForEach(s => character.Session.CurrentMapInstance?.Broadcast(s.GenerateOut()));
+                        character.Session.CurrentMapInstance?.Broadcast(character.GenerateInvisible());
+                     }
                     break;
 
                 case BCardType.CardType.Mode:

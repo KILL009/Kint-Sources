@@ -651,6 +651,11 @@ namespace OpenNos.GameObject
                             MapInstance?.Broadcast(StaticPacketHelper.SkillUsed(UserType.Player, hitRequest.Session.Character.CharacterId, 3, MapMonsterId, hitRequest.Skill.SkillVNum, hitRequest.Skill.Cooldown, hitRequest.Skill.AttackAnimation, hitRequest.SkillEffect, hitRequest.Session.Character.PositionX, hitRequest.Session.Character.PositionY, IsAlive, (int)((float)CurrentHp / (float)MaxHp * 100), damage, hitmode, (byte)(hitRequest.Skill.SkillType - 1)));
                             break;
                     }
+                
+                    if (hitmode != 1)
+                    {
+                        hitRequest.Session.Character.RemoveBuff(85);
+                    }
 
                     if (CurrentHp <= 0 && !isCaptureSkill)
                     {

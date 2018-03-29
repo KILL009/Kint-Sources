@@ -98,21 +98,7 @@ namespace OpenNos.Handler
 
             if (Session.Character.CanFight && useSkillPacket != null)
             {
-                if (Session.Character.Invisible)
-                {
-                    Session.Character.Invisible = false;
-                    Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateInvisible());
-                    Session.SendPacket(Session.Character.GenerateEq());
-                    Session.Character.RemoveBuff(85);
-
-
-                    Session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m =>
-                        Session.CurrentMapInstance?.Broadcast(m.GenerateIn(), ReceiverType.AllExceptMe));
-                    Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateIn(),
-                        ReceiverType.AllExceptMe);
-                    Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateGidx(),
-                        ReceiverType.AllExceptMe);
-                }
+               
                 Session.Character.RemoveBuff(614);
                 Session.Character.RemoveBuff(615);
                 Session.Character.RemoveBuff(616);
@@ -217,19 +203,7 @@ namespace OpenNos.Handler
         /// <param name="useAoeSkillPacket"></param>
         public void UseZonesSkill(UseAOESkillPacket useAoeSkillPacket)
         {
-            if (Session.Character.Invisible)
-            {
-                Session.Character.Invisible = false;
-                Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateInvisible());
-                Session.SendPacket(Session.Character.GenerateEq());
-
-                Session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m =>
-                    Session.CurrentMapInstance?.Broadcast(m.GenerateIn(), ReceiverType.AllExceptMe));
-                Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateIn(),
-                    ReceiverType.AllExceptMe);
-                Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateGidx(),
-                    ReceiverType.AllExceptMe);
-            }
+            
             bool isMuted = Session.Character.MuteMessage();
             if (isMuted || Session.Character.IsVehicled)
             {
@@ -254,19 +228,7 @@ namespace OpenNos.Handler
 
         private void PvpHit(HitRequest hitRequest, ClientSession target)
         {
-            if (Session.Character.Invisible)
-            {
-                Session.Character.Invisible = false;
-                Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateInvisible());
-                Session.SendPacket(Session.Character.GenerateEq());
-
-                Session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m =>
-                    Session.CurrentMapInstance?.Broadcast(m.GenerateIn(), ReceiverType.AllExceptMe));
-                Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateIn(),
-                    ReceiverType.AllExceptMe);
-                Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateGidx(),
-                    ReceiverType.AllExceptMe);
-            }
+            
             if (target?.Character.Hp > 0 && hitRequest?.Session.Character.Hp > 0)
             {
                 if ((Session.CurrentMapInstance.MapInstanceId == ServerManager.Instance.ArenaInstance.MapInstanceId
@@ -306,6 +268,12 @@ namespace OpenNos.Handler
                     damage = 0;
                     hitmode = 1;
                 }
+
+                if (hitmode != 1)
+                {
+                  Session.Character.RemoveBuff(85);
+                }
+
 
                 int[] manaShield = target.Character.GetBuff(CardType.LightAndShadow,
                     (byte)AdditionalTypes.LightAndShadow.InflictDamageToMP);
@@ -493,20 +461,7 @@ namespace OpenNos.Handler
 
                 if (hitmode != 1)
                 {
-                    if (Session.Character.Invisible)
-                    {
-                        Session.Character.Invisible = false;
-                        Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateInvisible());
-                        Session.SendPacket(Session.Character.GenerateEq());
-                        Session.Character.RemoveBuff(85);
-
-                        Session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m =>
-                            Session.CurrentMapInstance?.Broadcast(m.GenerateIn(), ReceiverType.AllExceptMe));
-                        Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateIn(),
-                            ReceiverType.AllExceptMe);
-                        Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateGidx(),
-                            ReceiverType.AllExceptMe);
-                    }
+                    
                     hitRequest.Skill.BCards.Where(s => s.Type.Equals((byte)CardType.Buff)).ToList()
                         .ForEach(s => s.ApplyBCards(target.Character, Session.Character));
 
@@ -787,19 +742,7 @@ namespace OpenNos.Handler
 
         private void TargetHit(int castingId, int targetId, bool isPvp = false)
         {
-            if (Session.Character.Invisible)
-            {
-                Session.Character.Invisible = false;
-                Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateInvisible());
-                Session.SendPacket(Session.Character.GenerateEq());
-
-                Session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m =>
-                    Session.CurrentMapInstance?.Broadcast(m.GenerateIn(), ReceiverType.AllExceptMe));
-                Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateIn(),
-                    ReceiverType.AllExceptMe);
-                Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateGidx(),
-                    ReceiverType.AllExceptMe);
-            }
+           
             bool shouldCancel = true;
             if ((DateTime.Now - Session.Character.LastTransform).TotalSeconds < 3)
             {

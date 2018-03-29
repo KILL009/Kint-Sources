@@ -3718,6 +3718,12 @@ namespace OpenNos.GameObject
                     NoAttack = false;
                     Session.SendPacket(GenerateCond());
                 }
+                if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.SpecialActions && s.SubType.Equals((byte)AdditionalTypes.SpecialActions.Hide)))
+               {
+                    Invisible = false;
+                    Session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m => Session.CurrentMapInstance?.Broadcast(m.GenerateIn()));
+                    Session.CurrentMapInstance?.Broadcast(GenerateInvisible());
+                  }
                 if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.Move && s.SubType.Equals((byte)AdditionalTypes.Move.MovementImpossible / 10)))
                 {
                     NoMove = false;
