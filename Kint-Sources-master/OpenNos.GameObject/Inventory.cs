@@ -85,7 +85,7 @@ namespace OpenNos.GameObject
             return newItem;
         }
 
-        public ItemInstance AddIntoBazaarInventory(InventoryType inventory, byte slot, byte amount)
+        public ItemInstance AddIntoBazaarInventory(InventoryType inventory, byte slot, ushort amount)
         {
             ItemInstance inv = LoadBySlotAndType(slot, inventory);
             if (inv == null || amount > inv.Amount)
@@ -97,7 +97,7 @@ namespace OpenNos.GameObject
             invcopy.Id = Guid.NewGuid();
             if (inv.Item.Type == InventoryType.Equipment)
             {
-                for (short i = 0; i < 255; i++)
+                for (short i = 0; i < 999; i++)
                 {
                     if (LoadBySlotAndType<ItemInstance>(i, InventoryType.Bazaar) == null)
                     {
@@ -114,7 +114,7 @@ namespace OpenNos.GameObject
             }
             if (amount >= inv.Amount)
             {
-                for (short i = 0; i < 255; i++)
+                for (short i = 0; i < 999; i++)
                 {
                     if (LoadBySlotAndType<ItemInstance>(i, InventoryType.Bazaar) == null)
                     {
@@ -133,7 +133,7 @@ namespace OpenNos.GameObject
             invcopy.Amount = amount;
             inv.Amount -= amount;
 
-            for (short i = 0; i < 255; i++)
+            for (short i = 0; i < 999; i++)
             {
                 if (LoadBySlotAndType<ItemInstance>(i, InventoryType.Bazaar) == null)
                 {
@@ -192,10 +192,10 @@ namespace OpenNos.GameObject
                         {
                             int max = slot.Amount + newItem.Amount;
                             max = max > MAX_ITEM_AMOUNT ? MAX_ITEM_AMOUNT : max;
-                            newItem.Amount = (byte)(slot.Amount + newItem.Amount - max);
-                            newItem.Amount = (byte)(newItem.Amount < 0 ? 0 : newItem.Amount);
+                            newItem.Amount = (ushort)(slot.Amount + newItem.Amount - max);
+                            newItem.Amount = (ushort)(newItem.Amount < 0 ? 0 : newItem.Amount);
                             Logger.LogUserEvent("ITEM_CREATE", Owner.GenerateIdentity(), $"IIId: {slot.Id} ItemVNum: {slot.ItemVNum} Amount: {max - slot.Amount} MapId: {Owner.MapInstance?.Map.MapId} MapX: {Owner.PositionX} MapY: {Owner.PositionY}");
-                            slot.Amount = (byte)max;
+                            slot.Amount = (ushort)max;
                             invlist.Add(slot);
                             Owner.Session?.SendPacket(slot.GenerateInventoryAdd());
                         }
@@ -315,7 +315,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        public void DepositItem(InventoryType inventory, byte slot, byte amount, byte NewSlot, ref ItemInstance item, ref ItemInstance itemdest, bool PartnerBackpack)
+        public void DepositItem(InventoryType inventory, byte slot, ushort amount, byte NewSlot, ref ItemInstance item, ref ItemInstance itemdest, bool PartnerBackpack)
         {
             if (item != null && amount <= item.Amount && amount > 0)
             {
@@ -360,7 +360,7 @@ namespace OpenNos.GameObject
             return true;
         }
 
-        public void FDepositItem(InventoryType inventory, byte slot, byte amount, byte newSlot, ref ItemInstance item, ref ItemInstance itemdest)
+        public void FDepositItem(InventoryType inventory, byte slot, ushort amount, byte newSlot, ref ItemInstance item, ref ItemInstance itemdest)
         {
             if (item != null && amount <= item.Amount && amount > 0 && item.Item.IsTradable && !item.IsBound)
             {
@@ -637,7 +637,7 @@ namespace OpenNos.GameObject
                         if (inventory.Amount > remainingAmount)
                         {
                             // Amount completely removed
-                            inventory.Amount -= (byte)remainingAmount;
+                            inventory.Amount -= (ushort)remainingAmount;
                             remainingAmount = 0;
                             Owner.Session.SendPacket(inventory.GenerateInventoryAdd());
                         }

@@ -42,7 +42,7 @@ namespace OpenNos.GameObject
             
         }
 
-        public ItemInstance(short vNum, byte amount)
+        public ItemInstance(short vNum, ushort amount)
         {
             ItemVNum = vNum;
             Amount = amount;
@@ -2608,7 +2608,7 @@ namespace OpenNos.GameObject
                 byte[] upfail;
                 byte[] upfix;
                 int[] goldprice;
-                short[] cella;
+                ushort[] cella;
                 byte[] gem;
 
                 if (Rare >= 8)
@@ -2617,7 +2617,7 @@ namespace OpenNos.GameObject
                     upfail = new byte[] { 50, 40, 60, 50, 60, 70, 75, 77, 83, 89 };
 
                     goldprice = new[] { 5000, 15000, 30000, 100000, 300000, 800000, 1500000, 4000000, 7000000, 10000000 };
-                    cella = new short[] { 40, 100, 160, 240, 320, 440, 560, 760, 960, 1200 };
+                    cella = new ushort[] { 40, 100, 160, 240, 320, 440, 560, 760, 960, 1200 };
                     gem = new byte[] { 2, 2, 4, 4, 6, 2, 2, 4, 4, 6 };
                 }
                 else
@@ -2626,7 +2626,7 @@ namespace OpenNos.GameObject
                     upfail = new byte[] { 0, 0, 0, 5, 20, 40, 60, 70, 80, 85 };
 
                     goldprice = new[] { 500, 1500, 3000, 10000, 30000, 80000, 150000, 400000, 700000, 1000000 };
-                    cella = new short[] { 20, 50, 80, 120, 160, 220, 280, 380, 480, 600 };
+                    cella = new ushort[] { 20, 50, 80, 120, 160, 220, 280, 380, 480, 600 };
                     gem = new byte[] { 1, 1, 2, 2, 3, 1, 1, 2, 2, 3 };
                 }
 
@@ -2688,7 +2688,7 @@ namespace OpenNos.GameObject
                             session.SendPacket("shop_end 2");
                         }
                         session.Character.Gold -= (long)(goldprice[Upgrade] * reducedpricefactor);
-                        session.Character.Inventory.RemoveItemAmount(cellaVnum, (int)(cella[Upgrade] * reducedpricefactor));
+                        session.Character.Inventory.RemoveItemAmount(cellaVnum, (ushort)(cella[Upgrade] * reducedpricefactor));
                         session.SendPacket(session.Character.GenerateGold());
                         break;
 
