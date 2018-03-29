@@ -566,11 +566,7 @@ namespace OpenNos.GameObject
                     BuffObservables[indicator.Card.CardId]?.Dispose();
                     BuffObservables.Remove(indicator.Card.CardId);
                 }
-                if (ObservableBag.ContainsKey(indicator.Card.CardId))
-              {
-                 ObservableBag[indicator.Card.CardId]?.Dispose();
-              }
-                ObservableBag[indicator.Card.CardId] = Observable.Timer(TimeSpan.FromMilliseconds((indicator.Card.Duration == 0 ? buffTime : indicator.Card.Duration) * 100)).Subscribe(o =>
+                  BuffObservables[indicator.Card.CardId] = Observable.Timer(TimeSpan.FromMilliseconds(indicator.Card.Duration * 100)).Subscribe(o =>
                 {
                     RemoveBuff(indicator.Card.CardId);
                     if (indicator.Card.TimeoutBuff != 0 && ServerManager.RandomNumber() < indicator.Card.TimeoutBuffChance)
