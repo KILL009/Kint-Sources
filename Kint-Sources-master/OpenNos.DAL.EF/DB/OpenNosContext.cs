@@ -22,7 +22,7 @@ namespace OpenNos.DAL.EF
     {
         #region Instantiation
 
-        public OpenNosContext() : base("name=OpenNosContext")
+        public OpenNosContext() : base("OpenNosContext")
         {
             Configuration.LazyLoadingEnabled = true;
 
