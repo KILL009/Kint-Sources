@@ -54,31 +54,28 @@
                 </ul>
             </div>
         </nav>
-        using (opennosEntities2 context = new opennosEntities2())
-        {
-            int id = Convert.ToInt32(Session["auth"]);
+		using (opennosEntities2 context = new opennosEntities2())
+		{
+			int id = Convert.ToInt32(Session["auth"]);
 
-            IEnumerable<Character> result = context.Character;
-            var product = result.Where(x => x.AccountId == id);
-            string astuce = "pas ok";
+			IEnumerable<Character> result = context.Character;
+			var product = result.Where(x => x.AccountId == id);
+			string astuce = "pas ok";
 
-            if (product == null)
-            {
-          <h1>Please create a character</h1>
-            }
-            else
-            {
-                foreach (var r in product)
-                {
-                    if (astuce == "pas ok")
-                    {
-                        astuce = "ok";
+			foreach (var r in product)
+			{
+				if (astuce == "pas ok")
+				{
+					if (r == null)
+					{
+						<p>Please create a personnage</p>
+					}
+					astuce = "ok";
                      <p>Please choose a character :</p>
-                    }
+				}
                     <p class="btn btn-success">@Html.ActionLink(r.Name, "Select", "Personnage", new { name = r.Name }, new { @class = "button" })</p>
-                }
-            }
-        }
-    }
+			}
+		}
+	}
 </body>
 </html>

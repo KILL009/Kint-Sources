@@ -58,7 +58,7 @@ namespace ShopApplicationByFizo.Controllers
                         {
                             if (shop.Price * Convert.ToByte(amount) > prod.NosheatDollar)
                             {
-                                Response.Redirect("Order/Index");
+                                return View("Index");
                             }
                             else
                             {
@@ -73,6 +73,7 @@ namespace ShopApplicationByFizo.Controllers
                                         Rare = 0,
                                         Upgrade = 0
                                     });
+                                    return View("OrderA");
                                 }
                                 else
                                 {
