@@ -22,13 +22,13 @@ namespace OpenNos.DAL.EF
     {
         #region Properties
 
-        public ushort AttachmentAmount { get; set; }
+        public byte AttachmentAmount { get; set; }
 
         public byte AttachmentLevel { get; set; }
 
         public byte AttachmentRarity { get; set; }
 
-        public ushort AttachmentUpgrade { get; set; }
+        public byte AttachmentUpgrade { get; set; }
 
         public short? AttachmentVNum { get; set; }
 

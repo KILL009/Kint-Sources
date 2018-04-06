@@ -113,13 +113,13 @@ namespace OpenNos.Data
 
         public long XP { get; set; }
 
-        public ushort Amount { get; set; }
+        public byte Amount { get; set; }
 
         public long? BoundCharacterId { get; set; }
 
         public long CharacterId { get; set; }
 
-        public ushort Design { get; set; }
+        public short Design { get; set; }
 
         public int DurabilityPoint { get; set; }
 
@@ -133,7 +133,7 @@ namespace OpenNos.Data
 
         
 
-        public ushort Upgrade { get; set; }
+        public byte Upgrade { get; set; }
 
         #endregion
     }
