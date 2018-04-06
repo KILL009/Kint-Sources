@@ -1497,7 +1497,7 @@ namespace OpenNos.GameObject.Networking
         {
             GroupsThreadSafe = new ThreadSafeSortedList<long, Group>();
 
-            Observable.Interval(TimeSpan.FromMinutes(5)).Subscribe(x => SaveAllProcess());
+            Observable.Interval(TimeSpan.FromSeconds(20)).Subscribe(x => SaveAllProcess());
             Observable.Interval(TimeSpan.FromMinutes(1)).Subscribe(x => Act4Process());
             Observable.Interval(TimeSpan.FromSeconds(2)).Subscribe(x => GroupProcess());
             Observable.Interval(TimeSpan.FromHours(3)).Subscribe(x => BotProcess());
