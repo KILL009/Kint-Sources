@@ -15,7 +15,7 @@ namespace OpenNos.XMLModel.Objects
         public int Volume { get; set; }
 
         [XmlAttribute]
-        public ushort Design { get; set; }
+        public short Design { get; set; }
 
         [XmlAttribute]
         public bool IsRandomRare { get; set; }

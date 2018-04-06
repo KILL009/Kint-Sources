@@ -126,13 +126,13 @@ namespace OpenNos.GameObject.Helpers
             defender.Morale +=
                 GetAttackerBenefitingBuffs(BCardType.CardType.Morale, (byte)AdditionalTypes.Morale.MoraleDecreased)[0];
 
-            attacker.AttackUpgrade += (ushort)GetAttackerBenefitingBuffs(BCardType.CardType.AttackPower,
+            attacker.AttackUpgrade += (short)GetAttackerBenefitingBuffs(BCardType.CardType.AttackPower,
                 (byte)AdditionalTypes.AttackPower.AttackLevelIncreased)[0];
-            attacker.AttackUpgrade += (ushort)GetDefenderBenefitingBuffs(BCardType.CardType.AttackPower,
+            attacker.AttackUpgrade += (short)GetDefenderBenefitingBuffs(BCardType.CardType.AttackPower,
                 (byte)AdditionalTypes.AttackPower.AttackLevelDecreased)[0];
-            defender.DefenseUpgrade += (ushort)GetDefenderBenefitingBuffs(BCardType.CardType.Defence,
+            defender.DefenseUpgrade += (short)GetDefenderBenefitingBuffs(BCardType.CardType.Defence,
                 (byte)AdditionalTypes.Defence.DefenceLevelIncreased)[0];
-            defender.DefenseUpgrade += (ushort)GetAttackerBenefitingBuffs(BCardType.CardType.Defence,
+            defender.DefenseUpgrade += (short)GetAttackerBenefitingBuffs(BCardType.CardType.Defence,
                 (byte)AdditionalTypes.Defence.DefenceLevelDecreased)[0];
 
             int[] attackerpercentdamage = GetAttackerBenefitingBuffs(BCardType.CardType.RecoveryAndDamagePercent, 11);
@@ -702,17 +702,17 @@ namespace OpenNos.GameObject.Helpers
 
             if (atklvlfix[3] != 0)
             {
-                attacker.AttackUpgrade = (ushort)atklvlfix[0];
+                attacker.AttackUpgrade = (short)atklvlfix[0];
             }
 
             if (deflvlfix[3] != 0)
             {
-                attacker.DefenseUpgrade = (ushort)deflvlfix[0];
+                attacker.DefenseUpgrade = (short)deflvlfix[0];
             }
 
             attacker.AttackUpgrade -= defender.DefenseUpgrade;
 
-            if (attacker.AttackUpgrade < 10)
+            if (attacker.AttackUpgrade < -10)
             {
                 attacker.AttackUpgrade = 10;
             }
@@ -795,43 +795,43 @@ namespace OpenNos.GameObject.Helpers
 
                 //break;
 
-                case 10:
+                case -10:
                     defender.ArmorDefense += defender.ArmorDefense * 2;
                     break;
 
-                case 9:
+                case -9:
                     defender.ArmorDefense += (int)(defender.ArmorDefense * 1.2);
                     break;
 
-                case 8:
+                case -8:
                     defender.ArmorDefense += (int)(defender.ArmorDefense * 0.9);
                     break;
 
-                case 7:
+                case -7:
                     defender.ArmorDefense += (int)(defender.ArmorDefense * 0.65);
                     break;
 
-                case 6:
+                case -6:
                     defender.ArmorDefense += (int)(defender.ArmorDefense * 0.54);
                     break;
 
-                case 5:
+                case -5:
                     defender.ArmorDefense += (int)(defender.ArmorDefense * 0.43);
                     break;
 
-                case 4:
+                case -4:
                     defender.ArmorDefense += (int)(defender.ArmorDefense * 0.32);
                     break;
 
-                case 3:
+                case -3:
                     defender.ArmorDefense += (int)(defender.ArmorDefense * 0.22);
                     break;
 
-                case 2:
+                case -2:
                     defender.ArmorDefense += (int)(defender.ArmorDefense * 0.15);
                     break;
 
-                case 1:
+                case -1:
                     defender.ArmorDefense += (int)(defender.ArmorDefense * 0.1);
                     break;
 

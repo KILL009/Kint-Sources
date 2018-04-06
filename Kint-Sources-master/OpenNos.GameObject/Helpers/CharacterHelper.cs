@@ -644,7 +644,7 @@ namespace OpenNos.GameObject.Helpers
             }
         }
 
-        public static int SPPoint(short spLevel, ushort upgrade)
+        public static int SPPoint(short spLevel, short upgrade)
         {
             int point = (spLevel - 20) * 3;
             if (spLevel <= 20)

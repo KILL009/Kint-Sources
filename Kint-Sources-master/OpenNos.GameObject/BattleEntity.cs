@@ -293,7 +293,7 @@ namespace OpenNos.GameObject
 
         public AttackType AttackType { get; set; }
 
-        public ushort AttackUpgrade { get; set; }
+        public short AttackUpgrade { get; set; }
 
         public List<BCard> BCards { get; set; }
 
@@ -311,7 +311,7 @@ namespace OpenNos.GameObject
 
         public int Defense { get; set; }
 
-        public ushort DefenseUpgrade { get; set; }
+        public short DefenseUpgrade { get; set; }
 
         public int Dodge { get; set; }
 

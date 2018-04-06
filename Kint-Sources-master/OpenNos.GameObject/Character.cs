@@ -1615,9 +1615,9 @@ namespace OpenNos.GameObject
         public string GenerateEqRareUpgradeForPacket()
         {
             sbyte weaponRare = 0;
-            ushort weaponUpgrade = 0;
+            short weaponUpgrade = 0;
             sbyte armorRare = 0;
-            ushort armorUpgrade = 0;
+            short armorUpgrade = 0;
             if (Inventory != null)
             {
                 for (short i = 0; i < 15; i++)
@@ -3257,7 +3257,7 @@ namespace OpenNos.GameObject
             return new[] { value1, value2 };
         }
 
-        public void GiftAdd(short itemVNum, ushort amount, byte rare = 0, byte upgrade = 0, ushort design = 0, bool forceRandom = false, byte minRare = 0)
+        public void GiftAdd(short itemVNum, byte amount, byte rare = 0, byte upgrade = 0, short design = 0, bool forceRandom = false, byte minRare = 0)
         {
             //TODO add the rare support
             if (Inventory != null)
@@ -3944,7 +3944,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        public void SendGift(long id, short vnum, ushort amount, sbyte rare, ushort upgrade, bool isNosmall)
+        public void SendGift(long id, short vnum, byte amount, sbyte rare, byte upgrade, bool isNosmall)
         {
             Item it = ServerManager.GetItem(vnum);
 
