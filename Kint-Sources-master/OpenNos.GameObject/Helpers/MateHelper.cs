@@ -33,6 +33,10 @@ namespace OpenNos.GameObject.Helpers
 
         public int[,] DamageData { get; private set; }
 
+        public short[,] MinDamageData { get; private set; }
+
+        public short[,] MaxDamageData { get; private set; }
+
         public int[,] HitRateData { get; private set; }
 
         public int[,] MeleeDefenseData { get; private set; }
@@ -95,6 +99,65 @@ namespace OpenNos.GameObject.Helpers
                 PrimaryMpData[i] = PrimaryMpData[i - (i % 10 == 2 ? 2 : 1)] + basup;
             }
         }
+
+        #region Damage
+
+        private void LoadMinDamageData()
+        {
+            MinDamageData = new short[2, 256];
+
+            short baseDamage = 37;
+            short baseUp = 4;
+
+            MinDamageData[0, 0] = baseDamage;
+
+            for (int i = 1; i < MinDamageData.GetLength(1); i++)
+            {
+                MinDamageData[0, i] = baseDamage;
+                baseDamage += (short)(i % 5 == 0 ? 5 : baseUp);
+            }
+
+            baseDamage = 23;
+            baseUp = 6;
+
+            MinDamageData[1, 0] = baseDamage;
+
+            for (int i = 1; i < MinDamageData.GetLength(1); i++)
+            {
+                MinDamageData[1, i] = baseDamage;
+                baseDamage += (short)(i % 5 == 0 ? 5 : baseUp);
+                baseDamage += (short)(i % 2 == 0 ? 1 : 0);
+            }
+        }
+
+        private void LoadMaxDamageData()
+        {
+            MaxDamageData = new short[2, 256];
+
+            short baseDamage = 40;
+            short baseUp = 6;
+
+            MaxDamageData[0, 0] = baseDamage;
+
+            for (int i = 1; i < MaxDamageData.GetLength(1); i++)
+            {
+                MaxDamageData[0, i] = baseDamage;
+                baseDamage += (short)(i % 5 == 0 ? 5 : baseUp);
+            }
+
+            MaxDamageData[1, 0] = baseDamage;
+
+            baseDamage = 38;
+            baseUp = 8;
+
+            for (int i = 1; i < MaxDamageData.GetLength(1); i++)
+            {
+                MaxDamageData[1, i] = baseDamage;
+                baseDamage += (short)(i % 5 == 0 ? 5 : baseUp);
+            }
+        }
+
+        #endregion
 
         private void LoadSecondaryMpData()
         {

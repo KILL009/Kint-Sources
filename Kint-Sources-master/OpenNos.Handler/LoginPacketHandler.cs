@@ -109,7 +109,7 @@ namespace OpenNos.Handler
 
                             default:
                                 {
-                                    if (loadedAccount.Authority == AuthorityType.User || loadedAccount.Authority == AuthorityType.BitchNiggerFaggot)
+                                    if (loadedAccount.Authority == AuthorityType.User || loadedAccount.Authority == AuthorityType.Donador)
                                     {
                                         MaintenanceLogDTO maintenanceLog = DAOFactory.MaintenanceLogDAO.LoadFirst();
                                         if (maintenanceLog != null)

@@ -16,6 +16,7 @@ using OpenNos.Core;
 using OpenNos.Domain;
 using OpenNos.GameObject.Event;
 using OpenNos.GameObject.Event.GAMES;
+using OpenNos.GameObject.Event.BattleRoyale;
 using OpenNos.PathFinder;
 using System;
 using System.Collections.Generic;
@@ -98,6 +99,10 @@ namespace OpenNos.GameObject.Helpers
 
                         case EventType.ICEBREAKER:
                             IceBreaker.GenerateIceBreaker(useTimer);
+                            break;
+
+                        case EventType.BATTLEROYAL:
+                            BattleRoyaleManager.Instance.Prepare(useTimer);
                             break;
 
                         case EventType.TALENTARENA:

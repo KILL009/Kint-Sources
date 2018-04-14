@@ -45,6 +45,10 @@ namespace OpenNos.GameObject
         private bool _isSleeping;
 
         private bool _isSleepingRequest;
+       
+        private Guid guid;
+        private bool v;
+        private MapInstanceType battleRoyaleMapInstance;
 
         #endregion
 
@@ -81,6 +85,8 @@ namespace OpenNos.GameObject
             StartLife();
         }
 
+       
+
         #endregion
 
         #region Properties
@@ -96,7 +102,7 @@ namespace OpenNos.GameObject
         public InstanceBag InstanceBag { get; set; }
 
         public int InstanceMusic { get; set; }
-
+        public bool IsPvp { get; set; }
         public bool IsDancing { get; set; }
 
         public bool IsPVP { get; set; }

@@ -40,7 +40,7 @@ namespace OpenNos.Handler
 {
     public class BasicPacketHandler : IPacketHandler
     {
-        private object qstlist2;
+       
         #region Instantiation
 
         public BasicPacketHandler(ClientSession session) => Session = session;
@@ -1521,7 +1521,7 @@ namespace OpenNos.Handler
         /// <param name="pulsepacket"></param>
         public void Pulse(PulsePacket pulsepacket)
         {
-            if (Session.Character.LastPulse.AddMilliseconds(80000) >= DateTime.Now && DateTime.Now >= Session.Character.LastPulse.AddMilliseconds(40000))
+            if (Session.Character.LastPulse.AddMilliseconds(800000) >= DateTime.Now && DateTime.Now >= Session.Character.LastPulse.AddMilliseconds(40000))
             {
                 Session.Character.LastPulse = DateTime.Now;
             }
@@ -1869,14 +1869,13 @@ namespace OpenNos.Handler
                 Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateSay(message.Trim(), type), ReceiverType.AllExceptMe);
 
                
-                
-                    if (Session.Character.Authority == AuthorityType.Donador)
-                    {
+                if (Session.Character.Authority == AuthorityType.Donador)
+                {
                         type = 10;
                         Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateSay(message.Trim(), 1), ReceiverType.AllExceptMe);
-                        message = $"[{Session.Character.Name} DT ]: {message}";
-                    }
-                    Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateSay(message.Trim(), type), ReceiverType.AllExceptMe);
+                        message = $"[DT {Session.Character.Name}]: {message}";
+                }
+                 Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateSay(message.Trim(), type), ReceiverType.AllExceptMe);
                 
             }
         }
@@ -2342,17 +2341,7 @@ namespace OpenNos.Handler
             {
                 Session.Character.AddStaticBuff(staticBuff);
             }
-            if (Session.Character.Authority == AuthorityType.BitchNiggerFaggot)
-            {
-                CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
-                {
-                    DestinationCharacterId = null,
-                    SourceCharacterId = Session.Character.CharacterId,
-                    SourceWorldId = ServerManager.Instance.WorldId,
-                    Message = $"User {Session.Character.Name} with rank BitchNiggerFaggot has logged in, don't trust *it*!",
-                    Type = MessageType.Shout
-                });
-            }
+            
 
             //QuestModel quest = ServerManager.Instance.QuestList.Where(s => s.QuestGiver.Type == QuestGiverType.InitialQuest).FirstOrDefault();
             //if(quest != null)

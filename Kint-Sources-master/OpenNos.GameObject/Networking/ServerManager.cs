@@ -108,6 +108,8 @@ namespace OpenNos.GameObject.Networking
 
         public DateTime Act4RaidStart { get; set; }
 
+        public List<Card> Cards { get; set; }
+
 
         public MapInstance ArenaInstance { get; private set; }
 
@@ -195,7 +197,44 @@ namespace OpenNos.GameObject.Networking
             }
         }
 
-       
+        public void TeleportOnRandomPlaceInMap(ClientSession session, Guid guid, bool isSameMap = false)
+        {
+            MapInstance map = GetMapInstance(guid);
+            if (guid == default(Guid))
+            {
+                return;
+            }
+            MapCell pos = map.Map.GetRandomPosition();
+            if (pos == null)
+            {
+                return;
+            }
+            switch (isSameMap)
+            {
+                case false:
+                    ChangeMapInstance(session.Character.CharacterId, guid, pos.X, pos.Y);
+                    break;
+                case true:
+                    session.Character.TeleportOnMap(pos.X, pos.Y);
+                    break;
+            }
+        }
+      
+        public void TeleportForward(ClientSession session, Guid guid, short x, short y)
+        {
+            MapInstance map = GetMapInstance(guid);
+            if (guid == default(Guid))
+            {
+                return;
+            }
+            bool pos = map.Map.GetDefinedPosition(x, y);
+            if (!pos)
+            {
+                return;
+            }
+            session.Character.TeleportOnMap(x, y);
+        }
+
 
         // PacketHandler -> with Callback?
         public void AskRevive(long characterId)
