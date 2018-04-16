@@ -24,6 +24,6 @@ namespace OpenNos.Domain
         User = 0,
         Moderator = 1,
         GameMaster = 2,
-        Operator = 3
+        Operator = 3,       
     }
 }
