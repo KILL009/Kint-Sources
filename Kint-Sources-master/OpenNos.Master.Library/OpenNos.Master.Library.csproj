@@ -101,6 +101,7 @@
     <Compile Include="Data\MallItem.cs" />
     <Compile Include="Data\MallStaticBonus.cs" />
     <Compile Include="Data\MapInstance.cs" />
+    <Compile Include="Data\PercentBar.cs" />
     <Compile Include="Interface\IAdminToolService.cs" />
     <Compile Include="Interface\IAuthentificationService.cs" />
     <Compile Include="Interface\ICommunicationClient.cs" />

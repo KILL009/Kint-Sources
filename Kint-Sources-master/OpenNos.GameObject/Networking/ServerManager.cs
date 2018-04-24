@@ -32,6 +32,7 @@ using OpenNos.GameObject.Helpers;
 using OpenNos.Master.Library.Client;
 using OpenNos.Master.Library.Data;
 using OpenNos.XMLModel.Models.Quest;
+using OpenNos.GameObject.Event.ACT6;
 
 namespace OpenNos.GameObject.Networking
 {
@@ -122,7 +123,7 @@ namespace OpenNos.GameObject.Networking
         public ConfigurationObject Configuration { get; set; }
 
         public bool EventInWaiting { get; set; }
-
+    
         public MapInstance FamilyArenaInstance { get; private set; }
 
         public ThreadSafeSortedList<long, Family> FamilyList { get; set; }
@@ -130,6 +131,12 @@ namespace OpenNos.GameObject.Networking
         public List<Group> GroupList { get; set; } = new List<Group>();
 
         public List<Group> Groups => GroupsThreadSafe.GetAllItems();
+
+        public PercentBar Act6Zenas { get; set; }
+
+        public ConcurrentBag<ScriptedInstance> Act6Raids { get; set; }
+
+        public PercentBar Act6Erenia { get; set; }
 
         public bool InBazaarRefreshMode { get; set; }
 
@@ -1496,6 +1503,36 @@ namespace OpenNos.GameObject.Networking
             }
 
             Parallel.ForEach(Sessions, sess => sess.SendPacket(sess.Character.GenerateFc()));
+        }
+
+        public void Act6Process()
+        {
+            if (Act6Zenas.Percentage >= 1000 && Act6Zenas.Mode == 0)
+            {
+                Act6Raid.GenerateRaid(FactionType.Angel);
+                Act6Zenas.TotalTime = 3600;
+                Act6Zenas.Mode = 1;
+            }
+            else if (Act6Erenia.Percentage >= 1000 && Act6Erenia.Mode == 0)
+            {
+                Act6Raid.GenerateRaid(FactionType.Demon);
+                Act6Erenia.TotalTime = 3600;
+                Act6Erenia.Mode = 1;
+            }
+
+            if (Act6Erenia.CurrentTime <= 0 && Act6Erenia.Mode != 0)
+            {
+                Act6Erenia.KilledMonsters = 0;
+                Act6Erenia.Percentage = 0;
+                Act6Erenia.Mode = 0;
+            }
+            if (Act6Zenas.CurrentTime <= 0 && Act6Zenas.Mode != 0)
+            {
+                Act6Zenas.KilledMonsters = 0;
+                Act6Zenas.Percentage = 0;
+                Act6Zenas.Mode = 0;
+            }
+            Parallel.ForEach(Sessions.Where(s => s?.Character != null && s.CurrentMapInstance?.Map.MapId >= 228 && s.CurrentMapInstance?.Map.MapId < 238 || s?.CurrentMapInstance?.Map.MapId == 2604), sess => sess.SendPacket(sess.Character.GenerateAct6()));
         }
 
         // Server

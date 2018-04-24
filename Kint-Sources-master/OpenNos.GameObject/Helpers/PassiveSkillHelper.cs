@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using OpenNos.Domain;
 using OpenNos.GameObject;
 
@@ -59,6 +60,11 @@ namespace OpenNos.GameObject.Helpers
         public static PassiveSkillHelper Instance
         {
             get { return _instance ?? (_instance = new PassiveSkillHelper()); }
+        }
+
+        internal object PassiveSkillToBcards(object p)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

@@ -130,6 +130,7 @@
     <Compile Include="Event\ACT4\Act4Raid.cs" />
     <Compile Include="Event\ACT4\Act4Ship.cs" />
     <Compile Include="Event\ACT4\CaligorRaid.cs" />
+    <Compile Include="Event\ACT6\Act6Raid.cs" />
     <Compile Include="Event\BattleRoyale\BattleRoyaleManager.cs" />
     <Compile Include="Event\EventWave.cs" />
     <Compile Include="Event\GAMES\MeteoriteGame.cs" />
@@ -192,6 +193,7 @@
     <Compile Include="Packets\ClientPackets\UseItemPacket.cs" />
     <Compile Include="Packets\CommandPackets\Act4ConnectPacket.cs" />
     <Compile Include="Packets\CommandPackets\Act4StatPacket.cs" />
+    <Compile Include="Packets\CommandPackets\Act6RaidPacket.cs" />
     <Compile Include="Packets\CommandPackets\BenchmarkPacket.cs" />
     <Compile Include="Packets\CommandPackets\AddPartnerPacket.cs" />
     <Compile Include="Packets\CommandPackets\BankPacket.cs" />

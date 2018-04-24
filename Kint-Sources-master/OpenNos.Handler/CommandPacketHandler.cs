@@ -29,6 +29,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using OpenNos.GameObject.Packets.CommandPackets;
 
 namespace OpenNos.Handler
 {
@@ -129,6 +130,36 @@ namespace OpenNos.Handler
                 {
                     ServerManager.Instance.RaidType = raidType;
                 }
+            }
+        }
+
+        /// <summary>
+        /// $Act6Percent
+        /// </summary>
+        /// <param name="packet"></param>
+        public void Act6Percent(Act6RaidPacket packet)
+        {
+            ;
+            if (string.IsNullOrEmpty(packet?.Name))
+            {
+                Session.SendPacket(Session.Character.GenerateSay("$Act6Percent Name [Percent]", 11));
+                Session.SendPacket(Session.Character.GenerateSay("(Percent is optionnal)", 11));
+                return;
+            }
+            switch (packet.Name)
+            {
+                case "Erenia":
+                case "erenia":
+                    ServerManager.Instance.Act6Erenia.Percentage = (short)(packet.Percent.HasValue ? packet.Percent * 10 : 1000);
+                    ServerManager.Instance.Act6Process();
+                    Session.SendPacket(Session.Character.GenerateSay("Done !", 11));
+                    break;
+                case "Zenas":
+                case "zenas":
+                    ServerManager.Instance.Act6Zenas.Percentage = (short)(packet.Percent.HasValue ? packet.Percent * 10 : 1000);
+                    ServerManager.Instance.Act6Process();
+                    Session.SendPacket(Session.Character.GenerateSay("Done !", 11));
+                    break;
             }
         }
 

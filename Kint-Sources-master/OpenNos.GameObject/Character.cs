@@ -34,6 +34,8 @@ using static OpenNos.Domain.BCardType;
 using OpenNos.Core.ConcurrencyExtensions;
 using OpenNos.GameObject.Networking;
 using OpenNos.Core.Extensions;
+using System.Diagnostics.CodeAnalysis;
+
 
 namespace OpenNos.GameObject
 {
@@ -251,6 +253,8 @@ namespace OpenNos.GameObject
 
         public int HPMax { get; set; }
 
+        public List<BCard> StaticBcards { get; set; }
+
         public bool InExchangeOrTrade => ExchangeInfo != null || Speed == 0;
 
         public Inventory Inventory { get; set; }
@@ -333,6 +337,7 @@ namespace OpenNos.GameObject
         public int MagicalDefence { get; set; }
 
         public IDictionary<int, MailDTO> MailList { get; set; }
+        public BattleEntity BattleEntity { get; private set; }
 
         public MapInstance MapInstance => ServerManager.GetMapInstance(MapInstanceId);
 
@@ -3398,6 +3403,7 @@ namespace OpenNos.GameObject
             LastEffect = DateTime.Now;
             Session = null;
             MailList = new Dictionary<int, MailDTO>();
+            BattleEntity = new BattleEntity(this);
             Group = null;
             GmPvtBlock = false;
         }
@@ -4549,6 +4555,49 @@ namespace OpenNos.GameObject
                 return CharacterHelper.MPHealth[(byte)Class];
             }
             return (DateTime.Now - LastDefence).TotalSeconds > 4 ? CharacterHelper.MPHealthStand[(byte)Class] : 0;
+        }
+        public void LoadPassive()
+        {
+            // TODO IMPROVE PERFORMANCES
+            // ACCESSING A DICTIONARY LIKE THIS IS CPU CYCLE KILLER
+            PassiveSkillHelper.Instance.PassiveSkillToBcards(Skills.Where(s => s.Skill.SkillType == 0).ToList()).ForEach(s =>EquipmentBCards.Add(s));
+        }
+
+        public string GenerateAct6()
+        {
+            return
+                $"act6 1 0 {ServerManager.Instance.Act6Zenas.Percentage / 10} {Convert.ToByte(ServerManager.Instance.Act6Zenas.Mode)} {ServerManager.Instance.Act6Zenas.CurrentTime} {ServerManager.Instance.Act6Zenas.TotalTime} {ServerManager.Instance.Act6Erenia.Percentage / 10} {Convert.ToByte(ServerManager.Instance.Act6Erenia.Mode)} {ServerManager.Instance.Act6Erenia.CurrentTime} {ServerManager.Instance.Act6Erenia.TotalTime}";
+        }
+
+        public int[] GetWeaponSoftDamage()
+        {
+            int increase = 0;
+            int increaseChance = 0;
+
+            ItemInstance prim = Inventory.PrimaryWeapon;
+            ItemInstance sec = Inventory.SecondaryWeapon;
+
+            if (prim != null)
+            {
+                foreach (BCard bcard in prim.Item.BCards.Where(
+                    s => s != null && s.Type.Equals((byte)CardType.IncreaseDamage) &&
+                         s.SubType.Equals((byte)AdditionalTypes.IncreaseDamage.IncreasingPropability)))
+                {
+                    increaseChance += bcard.FirstData;
+                    increase += bcard.SecondData;
+                }
+            }
+            if (sec != null)
+            {
+                foreach (BCard bcard in sec.Item.BCards.Where(
+                    s => s != null && s.Type.Equals((byte)CardType.IncreaseDamage) &&
+                         s.SubType.Equals((byte)AdditionalTypes.IncreaseDamage.IncreasingPropability)))
+                {
+                    increaseChance += bcard.FirstData;
+                    increase += bcard.SecondData;
+                }
+            }
+            return new[] { increaseChance, increase };
         }
 
         private double HeroXPLoad() => HeroLevel == 0 ? 1 : CharacterHelper.HeroXpData[HeroLevel - 1];

@@ -18,6 +18,7 @@ using OpenNos.Domain;
 using OpenNos.GameObject.Helpers;
 using OpenNos.GameObject.Networking;
 using System;
+using OpenNos.GameObject.Battle;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
