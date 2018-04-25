@@ -13,6 +13,8 @@ namespace OpenNos.GameObject.CommandPackets
         [PacketIndex(0)]
         public byte Value { get; set; }
 
+        public byte Speed { get; set; }
+
         public static string ReturnHelp()
         {
             return "$Speed SPEED";

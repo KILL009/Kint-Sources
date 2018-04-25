@@ -544,7 +544,7 @@ namespace OpenNos.GameObject
                             if (methodReference.PacketDefinitionParameterType != null)
                             {
                                 //check for the correct authority
-                                if (!IsAuthenticated || Account.Authority >= methodReference.Authority || (Account.Authority == AuthorityType.BitchNiggerFaggot && methodReference.Authority == AuthorityType.User) || ignoreAuthority)
+                                if (!IsAuthenticated || Account.Authority >= methodReference.Authority || (Account.Authority == AuthorityType.Donador && methodReference.Authority == AuthorityType.User) || ignoreAuthority)
                                 {
                                     PacketDefinition deserializedPacket = PacketFactory.Deserialize(packet, methodReference.PacketDefinitionParameterType, IsAuthenticated);
                                     if (deserializedPacket != null || methodReference.PassNonParseablePacket)

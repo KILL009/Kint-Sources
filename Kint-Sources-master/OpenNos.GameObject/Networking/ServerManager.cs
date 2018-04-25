@@ -32,6 +32,7 @@ using OpenNos.GameObject.Helpers;
 using OpenNos.Master.Library.Client;
 using OpenNos.Master.Library.Data;
 using OpenNos.XMLModel.Models.Quest;
+using OpenNos.GameObject.Event.ACT6;
 
 namespace OpenNos.GameObject.Networking
 {
@@ -108,6 +109,8 @@ namespace OpenNos.GameObject.Networking
 
         public DateTime Act4RaidStart { get; set; }
 
+        public List<Card> Cards { get; set; }
+
 
         public MapInstance ArenaInstance { get; private set; }
 
@@ -120,7 +123,7 @@ namespace OpenNos.GameObject.Networking
         public ConfigurationObject Configuration { get; set; }
 
         public bool EventInWaiting { get; set; }
-
+    
         public MapInstance FamilyArenaInstance { get; private set; }
 
         public ThreadSafeSortedList<long, Family> FamilyList { get; set; }
@@ -128,6 +131,12 @@ namespace OpenNos.GameObject.Networking
         public List<Group> GroupList { get; set; } = new List<Group>();
 
         public List<Group> Groups => GroupsThreadSafe.GetAllItems();
+
+        public PercentBar Act6Zenas { get; set; }
+
+        public ConcurrentBag<ScriptedInstance> Act6Raids { get; set; }
+
+        public PercentBar Act6Erenia { get; set; }
 
         public bool InBazaarRefreshMode { get; set; }
 
@@ -195,7 +204,44 @@ namespace OpenNos.GameObject.Networking
             }
         }
 
-       
+        public void TeleportOnRandomPlaceInMap(ClientSession session, Guid guid, bool isSameMap = false)
+        {
+            MapInstance map = GetMapInstance(guid);
+            if (guid == default(Guid))
+            {
+                return;
+            }
+            MapCell pos = map.Map.GetRandomPosition();
+            if (pos == null)
+            {
+                return;
+            }
+            switch (isSameMap)
+            {
+                case false:
+                    ChangeMapInstance(session.Character.CharacterId, guid, pos.X, pos.Y);
+                    break;
+                case true:
+                    session.Character.TeleportOnMap(pos.X, pos.Y);
+                    break;
+            }
+        }
+      
+        public void TeleportForward(ClientSession session, Guid guid, short x, short y)
+        {
+            MapInstance map = GetMapInstance(guid);
+            if (guid == default(Guid))
+            {
+                return;
+            }
+            bool pos = map.Map.GetDefinedPosition(x, y);
+            if (!pos)
+            {
+                return;
+            }
+            session.Character.TeleportOnMap(x, y);
+        }
+
 
         // PacketHandler -> with Callback?
         public void AskRevive(long characterId)
@@ -1459,6 +1505,36 @@ namespace OpenNos.GameObject.Networking
             Parallel.ForEach(Sessions, sess => sess.SendPacket(sess.Character.GenerateFc()));
         }
 
+        public void Act6Process()
+        {
+            if (Act6Zenas.Percentage >= 1000 && Act6Zenas.Mode == 0)
+            {
+                Act6Raid.GenerateRaid(FactionType.Angel);
+                Act6Zenas.TotalTime = 3600;
+                Act6Zenas.Mode = 1;
+            }
+            else if (Act6Erenia.Percentage >= 1000 && Act6Erenia.Mode == 0)
+            {
+                Act6Raid.GenerateRaid(FactionType.Demon);
+                Act6Erenia.TotalTime = 3600;
+                Act6Erenia.Mode = 1;
+            }
+
+            if (Act6Erenia.CurrentTime <= 0 && Act6Erenia.Mode != 0)
+            {
+                Act6Erenia.KilledMonsters = 0;
+                Act6Erenia.Percentage = 0;
+                Act6Erenia.Mode = 0;
+            }
+            if (Act6Zenas.CurrentTime <= 0 && Act6Zenas.Mode != 0)
+            {
+                Act6Zenas.KilledMonsters = 0;
+                Act6Zenas.Percentage = 0;
+                Act6Zenas.Mode = 0;
+            }
+            Parallel.ForEach(Sessions.Where(s => s?.Character != null && s.CurrentMapInstance?.Map.MapId >= 228 && s.CurrentMapInstance?.Map.MapId < 238 || s?.CurrentMapInstance?.Map.MapId == 2604), sess => sess.SendPacket(sess.Character.GenerateAct6()));
+        }
+
         // Server
         private static void BotProcess()
         {
@@ -1497,7 +1573,7 @@ namespace OpenNos.GameObject.Networking
         {
             GroupsThreadSafe = new ThreadSafeSortedList<long, Group>();
 
-            Observable.Interval(TimeSpan.FromMinutes(5)).Subscribe(x => SaveAllProcess());
+            Observable.Interval(TimeSpan.FromSeconds(20)).Subscribe(x => SaveAllProcess());
             Observable.Interval(TimeSpan.FromMinutes(1)).Subscribe(x => Act4Process());
             Observable.Interval(TimeSpan.FromSeconds(2)).Subscribe(x => GroupProcess());
             Observable.Interval(TimeSpan.FromHours(3)).Subscribe(x => BotProcess());

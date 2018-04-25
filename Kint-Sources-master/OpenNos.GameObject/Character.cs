@@ -34,6 +34,8 @@ using static OpenNos.Domain.BCardType;
 using OpenNos.Core.ConcurrencyExtensions;
 using OpenNos.GameObject.Networking;
 using OpenNos.Core.Extensions;
+using System.Diagnostics.CodeAnalysis;
+
 
 namespace OpenNos.GameObject
 {
@@ -251,13 +253,15 @@ namespace OpenNos.GameObject
 
         public int HPMax { get; set; }
 
+        public List<BCard> StaticBcards { get; set; }
+
         public bool InExchangeOrTrade => ExchangeInfo != null || Speed == 0;
 
         public Inventory Inventory { get; set; }
 
         public bool Invisible { get; set; }
 
-        
+        public void DisableBuffs(List<BuffType> types, int level = 100) => BattleEntity.DisableBuffs(types, level);
 
         public bool InvisibleGm { get; set; }
 
@@ -320,7 +324,7 @@ namespace OpenNos.GameObject
 
         public DateTime LastSpeedChange { get; set; }
 
-        
+        public int BuffRandomTime { get; set; }
 
         public DateTime LastSpGaugeRemove { get; set; }
 
@@ -333,6 +337,7 @@ namespace OpenNos.GameObject
         public int MagicalDefence { get; set; }
 
         public IDictionary<int, MailDTO> MailList { get; set; }
+        public BattleEntity BattleEntity { get; private set; }
 
         public MapInstance MapInstance => ServerManager.GetMapInstance(MapInstanceId);
 
@@ -501,9 +506,9 @@ namespace OpenNos.GameObject
         {
             get
             {
-                if (_speed > 59)
+                if (_speed > 255)
                 {
-                    return 59;
+                    return 255;
                 }
                 return _speed;
             }
@@ -511,7 +516,7 @@ namespace OpenNos.GameObject
             set
             {
                 LastSpeedChange = DateTime.Now;
-                _speed = value > 59 ? (byte)59 : value;
+                _speed = value > 255 ? (byte)255 : value;
             }
         }
 
@@ -1476,11 +1481,11 @@ namespace OpenNos.GameObject
             }
         }
 
-        public void DisableBuffs(BuffType type, int level = 100)
+        public void DisableBuffs(BuffType types, int level = 100)
         {
             lock (Buff)
             {
-                List<Buff> buff = Buff.Where(s => (type & s.Card.BuffType) == s.Card.BuffType && !s.StaticBuff && s.Card.Level < level);
+                List<Buff> buff = Buff.Where(s => (types & s.Card.BuffType) == s.Card.BuffType && !s.StaticBuff && s.Card.Level < level);
                 buff.ForEach(s =>
                 {
                     if (BuffObservables.ContainsKey(s.Card.CardId))
@@ -1523,9 +1528,9 @@ namespace OpenNos.GameObject
             return result;
         }
 
-       
 
-        public string GenerateCInfo() => $"c_info {(Authority == AuthorityType.Moderator && !Undercover ? "[Support]" + Name : Authority == AuthorityType.BitchNiggerFaggot ? Name + "[BitchNiggerFaggot]" + Name : Authority == AuthorityType.Donador ? Name + "[DT]" : Name)} - -1 {(Family != null && !Undercover ? $"{Family.FamilyId} {Family.Name}({Language.Instance.GetMessageFromKey(FamilyCharacter.Authority.ToString().ToUpper())})" : "-1 -")} {CharacterId} {(Invisible ? 6 : Undercover ? (byte)AuthorityType.User : Authority < AuthorityType.User ? (byte)AuthorityType.User : (byte)Authority)} {(byte)Gender} {(byte)HairStyle} {(byte)HairColor} {(byte)Class} {(GetDignityIco() == 1 ? GetReputationIco() : -GetDignityIco())} {(Authority == AuthorityType.Moderator ? 500 : Compliment)} {(UseSp || IsVehicled ? Morph : 0)} {(Invisible ? 1 : 0)} {Family?.FamilyLevel ?? 0} {(UseSp ? MorphUpgrade : 0)} {ArenaWinner}";
+
+        public string GenerateCInfo() => $"c_info {(Authority == AuthorityType.Moderator && !Undercover ? "[Support]" + Name : Authority == AuthorityType.Donador ? Name + "[DT]" : Name)} - -1 {(Family != null && !Undercover ? $"{Family.FamilyId} {Family.Name}({Language.Instance.GetMessageFromKey(FamilyCharacter.Authority.ToString().ToUpper())})" : "-1 -")} {CharacterId} {(Invisible ? 6 : Undercover ? (byte)AuthorityType.User : Authority < AuthorityType.User ? (byte)AuthorityType.User : (byte)Authority)} {(byte)Gender} {(byte)HairStyle} {(byte)HairColor} {(byte)Class} {(GetDignityIco() == 1 ? GetReputationIco() : -GetDignityIco())} {(Authority == AuthorityType.Moderator ? 500 : Compliment)} {(UseSp || IsVehicled ? Morph : 0)} {(Invisible ? 1 : 0)} {Family?.FamilyLevel ?? 0} {(UseSp ? MorphUpgrade : 0)} {ArenaWinner}";
 
         public string GenerateCMap() => $"c_map 0 {MapInstance.Map.MapId} {(MapInstance.MapInstanceType != MapInstanceType.BaseMapInstance ? 1 : 0)}";
 
@@ -1946,7 +1951,7 @@ namespace OpenNos.GameObject
                 }
                 fairy = Inventory.LoadBySlotAndType((byte)EquipmentType.Fairy, InventoryType.Wear);
             }
-            return $"in 1 {(Authority == AuthorityType.Moderator && !Undercover ? "[Support]" + _name : Authority == AuthorityType.BitchNiggerFaggot ? _name + "[BitchNiggerFaggot]" + _name : Authority == AuthorityType.Donador ? _name + "[DT]" : _name)} - {CharacterId} {PositionX} {PositionY} {Direction} {(Undercover ? (byte)AuthorityType.User : Authority < AuthorityType.User ? (byte)AuthorityType.User : (byte)Authority)} {(byte)Gender} {(byte)HairStyle} {color} {(byte)Class} {GenerateEqListForPacket()} {Math.Ceiling(Hp / HPLoad() * 100)} {Math.Ceiling(Mp / MPLoad() * 100)} {(IsSitting ? 1 : 0)} {(Group?.GroupType == GroupType.Group ? (Group?.GroupId ?? -1) : -1)} {(fairy != null && !Undercover ? 4 : 0)} {fairy?.Item.Element ?? 0} 0 {fairy?.Item.Morph ?? 0} 0 {(UseSp || IsVehicled ? Morph : 0)} {GenerateEqRareUpgradeForPacket()} {(!Undercover ? (foe ? -1 : Family?.FamilyId ?? -1) : -1)} {(!Undercover ? (foe ? _name : Family?.Name ?? " - ") : "-")} {(GetDignityIco() == 1 ? GetReputationIco() : -GetDignityIco())} {(Invisible ? 1 : 0)} {(UseSp ? MorphUpgrade : 0)} {_faction} {(UseSp ? MorphUpgrade2 : 0)} {Level} {Family?.FamilyLevel ?? 0} {ArenaWinner} {(Authority == AuthorityType.Moderator && !Undercover ? 500 : Compliment)} {Size} {HeroLevel}";
+            return $"in 1 {(Authority == AuthorityType.Moderator && !Undercover ? "[Support]" + _name : Authority == AuthorityType.Donador ? _name + "[DT]" : _name)} - {CharacterId} {PositionX} {PositionY} {Direction} {(Undercover ? (byte)AuthorityType.User : Authority < AuthorityType.User ? (byte)AuthorityType.User : (byte)Authority)} {(byte)Gender} {(byte)HairStyle} {color} {(byte)Class} {GenerateEqListForPacket()} {Math.Ceiling(Hp / HPLoad() * 100)} {Math.Ceiling(Mp / MPLoad() * 100)} {(IsSitting ? 1 : 0)} {(Group?.GroupType == GroupType.Group ? (Group?.GroupId ?? -1) : -1)} {(fairy != null && !Undercover ? 4 : 0)} {fairy?.Item.Element ?? 0} 0 {fairy?.Item.Morph ?? 0} 0 {(UseSp || IsVehicled ? Morph : 0)} {GenerateEqRareUpgradeForPacket()} {(!Undercover ? (foe ? -1 : Family?.FamilyId ?? -1) : -1)} {(!Undercover ? (foe ? _name : Family?.Name ?? "-") : "-")} {(GetDignityIco() == 1 ? GetReputationIco() : -GetDignityIco())} {(Invisible ? 1 : 0)} {(UseSp ? MorphUpgrade : 0)} {_faction} {(UseSp ? MorphUpgrade2 : 0)} {Level} {Family?.FamilyLevel ?? 0} {ArenaWinner} {(Authority == AuthorityType.Moderator && !Undercover ? 500 : Compliment)} {Size} {HeroLevel}";
         }
 
         public string GenerateInvisible() => $"cl {CharacterId} {(Invisible ? 1 : 0)} {(InvisibleGm ? 1 : 0)}";
@@ -2354,11 +2359,11 @@ namespace OpenNos.GameObject
         {
             string[] pktQs = { "qslot 0", "qslot 1", "qslot 2" };
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 30; i++)
             {
                 for (int j = 0; j < 3; j++)
                 {
-                    QuicklistEntryDTO qi = QuicklistEntries.Find(n => n.Q1 == j && n.Q2 == i && n.Morph == (UseSp ? Morph : 0));
+                    QuicklistEntryDTO qi = QuicklistEntries.FirstOrDefault(n => n.Q1 == j && n.Q2 == i && n.Morph == (UseSp ? Morph : 0));
                     pktQs[j] += $" {qi?.Type ?? 7}.{qi?.Slot ?? 7}.{qi?.Pos.ToString() ?? "-1"}";
                 }
             }
@@ -3398,6 +3403,7 @@ namespace OpenNos.GameObject
             LastEffect = DateTime.Now;
             Session = null;
             MailList = new Dictionary<int, MailDTO>();
+            BattleEntity = new BattleEntity(this);
             Group = null;
             GmPvtBlock = false;
         }
@@ -4550,6 +4556,49 @@ namespace OpenNos.GameObject
             }
             return (DateTime.Now - LastDefence).TotalSeconds > 4 ? CharacterHelper.MPHealthStand[(byte)Class] : 0;
         }
+        public void LoadPassive()
+        {
+            // TODO IMPROVE PERFORMANCES
+            // ACCESSING A DICTIONARY LIKE THIS IS CPU CYCLE KILLER
+            PassiveSkillHelper.Instance.PassiveSkillToBcards(Skills.Where(s => s.Skill.SkillType == 0).ToList()).ForEach(s =>EquipmentBCards.Add(s));
+        }
+
+        public string GenerateAct6()
+        {
+            return
+                $"act6 1 0 {ServerManager.Instance.Act6Zenas.Percentage / 10} {Convert.ToByte(ServerManager.Instance.Act6Zenas.Mode)} {ServerManager.Instance.Act6Zenas.CurrentTime} {ServerManager.Instance.Act6Zenas.TotalTime} {ServerManager.Instance.Act6Erenia.Percentage / 10} {Convert.ToByte(ServerManager.Instance.Act6Erenia.Mode)} {ServerManager.Instance.Act6Erenia.CurrentTime} {ServerManager.Instance.Act6Erenia.TotalTime}";
+        }
+
+        public int[] GetWeaponSoftDamage()
+        {
+            int increase = 0;
+            int increaseChance = 0;
+
+            ItemInstance prim = Inventory.PrimaryWeapon;
+            ItemInstance sec = Inventory.SecondaryWeapon;
+
+            if (prim != null)
+            {
+                foreach (BCard bcard in prim.Item.BCards.Where(
+                    s => s != null && s.Type.Equals((byte)CardType.IncreaseDamage) &&
+                         s.SubType.Equals((byte)AdditionalTypes.IncreaseDamage.IncreasingPropability)))
+                {
+                    increaseChance += bcard.FirstData;
+                    increase += bcard.SecondData;
+                }
+            }
+            if (sec != null)
+            {
+                foreach (BCard bcard in sec.Item.BCards.Where(
+                    s => s != null && s.Type.Equals((byte)CardType.IncreaseDamage) &&
+                         s.SubType.Equals((byte)AdditionalTypes.IncreaseDamage.IncreasingPropability)))
+                {
+                    increaseChance += bcard.FirstData;
+                    increase += bcard.SecondData;
+                }
+            }
+            return new[] { increaseChance, increase };
+        }
 
         private double HeroXPLoad() => HeroLevel == 0 ? 1 : CharacterHelper.HeroXpData[HeroLevel - 1];
 
@@ -4563,6 +4612,14 @@ namespace OpenNos.GameObject
                 specialist = Inventory.LoadBySlotAndType((byte)EquipmentType.Sp, InventoryType.Wear);
             }
             return specialist != null ? CharacterHelper.SPXPData[specialist.SpLevel == 0 ? 0 : specialist.SpLevel - 1] : 0;
+        }
+
+        public void TeleportOnMap(short x, short y)
+        {
+            Session.Character.PositionX = x;
+            Session.Character.PositionY = y;
+            Session.SendPacket($"tp {1} {CharacterId} {x} {y} 0");
+            Session.SendPacket(GenerateCond());
         }
 
         private double XpLoad() => CharacterHelper.XPData[Level - 1];

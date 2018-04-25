@@ -20,7 +20,11 @@ using OpenNos.Domain;
 using OpenNos.GameObject.Helpers;
 using OpenNos.GameObject.Networking;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
+using OpenNos.Master.Library.Client;
+using OpenNos.Master.Library.Data;
 
 namespace OpenNos.GameObject
 {
@@ -252,18 +256,88 @@ namespace OpenNos.GameObject
 
                 // Speedbooster
                 case 260:
-                    if (!session.Character.Buff.ContainsKey(336))
+                    if (!session.Character.IsVehicled || session.Character.Buff.Any(s => s.Card.CardId == 336))
                     {
-                        session.Character.AddStaticBuff(new StaticBuffDTO() { CardId = 336 });
-                        session.CurrentMapInstance?.Broadcast(session.Character.GeneratePairy());
-                        session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("EFFECT_ACTIVATED"), inv.Item.Name), 0));
-                        session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 3011), session.Character.MapX, session.Character.MapY);
-                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                        return;
                     }
-                    else
+                    session.CurrentMapInstance?.Broadcast(session.Character.GenerateEff(885), session.Character.MapX, session.Character.MapY);
+                    session.Character.AddBuff(new Buff(336));
+                    session.Character.Speed += 5;
+                    switch (session.Character.Morph)
                     {
-                        session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("ITEM_IN_USE"), 0));
+                        case 2517: // Nossi M
+                        case 2518: // Nossi F
+                        case 2522: // Roller M
+                        case 2523: // Roller F
+                                   // Removes <= lv 4 debuffs
+                            List<BuffType> bufftodisable = new List<BuffType> { BuffType.Bad };
+                            session.Character.DisableBuffs(bufftodisable, 4);
+                            break;
                     }
+                    Observable.Timer(TimeSpan.FromSeconds(session.Character.BuffRandomTime * 0.1D)).Subscribe(o =>
+                    {
+                        session.Character.Speed -= 5;
+                        session.Character.LoadSpeed();
+                        switch (session.Character.Morph)
+                        {
+                            case 2526: // White male unicorn
+                            case 2527: // White female unicorn
+                            case 2528: // Pink male unicorn
+                            case 2529: // Pink female unicorn
+                            case 2530: // Black male unicorn
+                            case 2531: // Black Female Unicorn
+                            case 2928: // Male UFO
+                            case 2929: // Female UFO
+                            case 3679: // Male squelettic dragon
+                            case 3680: // Female squelettic dragon
+                                ServerManager.Instance.TeleportOnRandomPlaceInMap(session, session.Character.MapInstanceId, true);
+                                break;
+
+                            case 2432: // Magic broom
+                            case 2433: // Magic broom F
+                            case 2520: // VTT M
+                            case 2521: // VTT F
+                                switch (session.Character.Direction)
+                                {
+                                    case 0:
+                                        // -y
+                                        ServerManager.Instance.TeleportForward(session, session.Character.MapInstanceId, session.Character.PositionX, (short)(session.Character.PositionY - 5));
+                                        break;
+                                    case 1:
+                                        // +x
+                                        ServerManager.Instance.TeleportForward(session, session.Character.MapInstanceId, (short)(session.Character.PositionX + 5), session.Character.PositionY);
+                                        break;
+                                    case 2:
+                                        // +y
+                                        ServerManager.Instance.TeleportForward(session, session.Character.MapInstanceId, session.Character.PositionX, (short)(session.Character.PositionY + 5));
+                                        break;
+                                    case 3:
+                                        // -x
+                                        ServerManager.Instance.TeleportForward(session, session.Character.MapInstanceId, (short)(session.Character.PositionX - 5), session.Character.PositionY);
+                                        break;
+                                    case 4:
+                                        ServerManager.Instance.TeleportForward(session, session.Character.MapInstanceId, (short)(session.Character.PositionX - 5), (short)(session.Character.PositionY - 5));
+                                        // -x -y
+                                        break;
+                                    case 5:
+                                        // +x +y
+                                        ServerManager.Instance.TeleportForward(session, session.Character.MapInstanceId, (short)(session.Character.PositionX - 5), (short)(session.Character.PositionY - 5));
+                                        break;
+                                    case 6:
+                                        // +x -y
+                                        ServerManager.Instance.TeleportForward(session, session.Character.MapInstanceId, (short)(session.Character.PositionX + 5), (short)(session.Character.PositionY + 5));
+                                        break;
+                                    case 7:
+                                        // -x +y
+                                        ServerManager.Instance.TeleportForward(session, session.Character.MapInstanceId, (short)(session.Character.PositionX - 5), (short)(session.Character.PositionY + 5));
+                                        break;
+                                }
+                                break;
+
+                          
+                        }
+                    });
+                    session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     break;
 
 
@@ -514,6 +588,12 @@ namespace OpenNos.GameObject
                             }
                             else if (session.Character.IsVehicled)
                             {
+                                session.Character.Mates?.Where(s => s.IsTeamMember).ToList().ForEach(x =>
+                                {
+                                    x.PositionX = session.Character.PositionX;
+                                    x.PositionY = session.Character.PositionY;
+                                    session.CurrentMapInstance?.Broadcast(x.GenerateIn());
+                                });
                                 session.Character.RemoveVehicle();
                             }
                         }

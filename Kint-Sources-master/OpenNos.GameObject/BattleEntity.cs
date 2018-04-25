@@ -1,12 +1,16 @@
 ﻿using OpenNos.Data;
 using OpenNos.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
 
-namespace OpenNos.GameObject
+
+namespace OpenNos.GameObject.Battle
 {
     public class BattleEntity
     {
+        private Character character;
         #region Instantiation
 
         public BattleEntity(Character character, Skill skill)
@@ -204,6 +208,11 @@ namespace OpenNos.GameObject
             ElementRate = mate.Monster.ElementRate;
         }
 
+        internal static void DisableBuffs(List<BuffType> types, int level)
+        {
+            throw new NotImplementedException();
+        }
+
         public BattleEntity(MapMonster monster)
         {
             HPMax = monster.Monster.MaxHP;
@@ -277,6 +286,11 @@ namespace OpenNos.GameObject
             ArmorMagicalDefense = npc.Npc.MagicDefence;
             Element = npc.Npc.Element;
             ElementRate = npc.Npc.ElementRate;
+        }
+
+        public BattleEntity(Character character)
+        {
+            this.character = character;
         }
 
         #endregion
@@ -366,6 +380,8 @@ namespace OpenNos.GameObject
         public int WeaponDamageMaximum { get; set; }
 
         public int WeaponDamageMinimum { get; set; }
+
+        public List<BCard> StaticBcards { get; set; }
 
         #endregion
     }

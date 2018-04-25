@@ -29,7 +29,10 @@ namespace OpenNos.Domain
         Act4Calvina,
         Act4Berios,
         IceBreakerInstance,
+        RainbowBattleInstance,
         EventGameInstance,
+        BattleRoyaleMapInstance,
+        LobbyMapInstance,
         CaligorInstance
     }
 }

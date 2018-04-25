@@ -8,7 +8,7 @@ namespace OpenNos.GameObject
     [PacketHeader("eff")]
     public class EffectPacket : PacketDefinition
     {
-        internal int Id;
+       
         #region Properties
 
         [PacketIndex(0)]

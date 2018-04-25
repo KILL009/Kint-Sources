@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>OpenNos.Core</RootNamespace>
     <AssemblyName>OpenNos.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp />
     <TargetFrameworkProfile />
@@ -80,10 +80,11 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
-    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.5.0-preview1-26216-02\lib\net47\System.ValueTuple.dll</HintPath>
-    </Reference>
     <Reference Include="System.Web" />
+    <Reference Include="System.ValueTuple">
+      <HintPath>..\packages\System.ValueTuple.4.5.0-preview2-26406-04\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CryptoRandom.cs" />
@@ -173,6 +174,7 @@
     <Compile Include="Threading\SequentialItemProcessor.cs" />
     <Compile Include="Threading\Timer.cs" />
     <Compile Include="Cryptography\WorldCryptography.cs" />
+    <Compile Include="Utilities\Singleton.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -109,6 +109,16 @@ namespace OpenNos.GameObject
             return SummonParameters;
         }
 
+        public bool GetDefinedPosition(int x, int y)
+        {
+            MapCell cell = new MapCell { X = (short)x, Y = (short)y };
+            if (IsBlockedZone(x, y))
+            {
+                return false;
+            }
+            return true;
+        }
+
         public List<NpcToSummon> GenerateNpcs(short vnum, short amount, List<EventContainer> deathEvents, bool isMate, bool isProtected)
         {
             List<NpcToSummon> SummonParameters = new List<NpcToSummon>();
@@ -219,6 +229,7 @@ namespace OpenNos.GameObject
                 }
             }
         }
+       
 
         #endregion
     }

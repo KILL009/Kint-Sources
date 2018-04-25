@@ -45,7 +45,7 @@ namespace OpenNos.GameObject
         private bool _isSleeping;
 
         private bool _isSleepingRequest;
-
+            
         #endregion
 
         #region Instantiation
@@ -81,6 +81,8 @@ namespace OpenNos.GameObject
             StartLife();
         }
 
+       
+
         #endregion
 
         #region Properties
@@ -96,7 +98,7 @@ namespace OpenNos.GameObject
         public InstanceBag InstanceBag { get; set; }
 
         public int InstanceMusic { get; set; }
-
+        public bool IsPvp { get; set; }
         public bool IsDancing { get; set; }
 
         public bool IsPVP { get; set; }
@@ -425,11 +427,19 @@ namespace OpenNos.GameObject
             }
         }
 
-        internal void CreatePortal(Portal portal)
+        internal void CreatePortal(Portal portal, int timeInSeconds = 0, bool isTemporary = false)
         {
             portal.SourceMapInstanceId = MapInstanceId;
             Portals.Add(portal);
             Broadcast(portal.GenerateGp());
+            if (isTemporary)
+            {
+                Observable.Timer(TimeSpan.FromSeconds(timeInSeconds)).Subscribe(o =>
+                {
+                    Portals.Remove(portal);
+                    MapClear();
+                });
+            }
         }
 
         internal IEnumerable<Character> GetCharactersInRange(short mapX, short mapY, byte distance)

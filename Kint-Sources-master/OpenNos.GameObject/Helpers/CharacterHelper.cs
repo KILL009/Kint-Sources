@@ -419,6 +419,23 @@ namespace OpenNos.GameObject.Helpers
             }
         }
 
+        public AttackType GetClassAttackType(ClassType type)
+        {
+            switch (type)
+            {
+                case ClassType.Adventurer:
+                case ClassType.Swordman:
+                    return AttackType.Melee;
+
+                case ClassType.Archer:
+                    return AttackType.Range;
+
+                case ClassType.Magician:
+                    return AttackType.Magical;
+            }
+            return AttackType.Melee;
+        }
+
         public static int MagicalDefence(ClassType @class, byte level) => _magicalDef[(byte)@class, level];
 
         public static int MaxDistance(ClassType @class, byte level) => _maxDist[(byte)@class, level];
@@ -1082,7 +1099,7 @@ namespace OpenNos.GameObject.Helpers
                     }
                     _xpData[i] = Convert.ToInt64(_xpData[i - 1] + (variable * (i + 2) * (i + 2)));
                 }
-
+                          
                 // Console.WriteLine($"LvL {i}: xpdata: {_xpData[i - 1]} v: {v[i - 1]}");
             }
         }

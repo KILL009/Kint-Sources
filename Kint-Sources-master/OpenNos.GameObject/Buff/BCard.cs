@@ -311,7 +311,6 @@ namespace OpenNos.GameObject
                                     {
                                         if (mapMonster.Monster.Level < senderSession.Character.Level)
                                         {
-#warning find a new algorithm
                                             int[] chance = { 100, 80, 60, 40, 20, 0 };
                                             if (ServerManager.RandomNumber() < chance[ServerManager.RandomNumber(0, 5)])
                                             {

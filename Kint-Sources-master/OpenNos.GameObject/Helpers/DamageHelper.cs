@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using OpenNos.Domain;
+using OpenNos.GameObject.Battle;
 using OpenNos.GameObject.Networking;
 
 namespace OpenNos.GameObject.Helpers

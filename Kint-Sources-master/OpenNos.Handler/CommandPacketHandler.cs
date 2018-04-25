@@ -29,6 +29,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using OpenNos.GameObject.Packets.CommandPackets;
 
 namespace OpenNos.Handler
 {
@@ -129,6 +130,36 @@ namespace OpenNos.Handler
                 {
                     ServerManager.Instance.RaidType = raidType;
                 }
+            }
+        }
+
+        /// <summary>
+        /// $Act6Percent
+        /// </summary>
+        /// <param name="packet"></param>
+        public void Act6Percent(Act6RaidPacket packet)
+        {
+            ;
+            if (string.IsNullOrEmpty(packet?.Name))
+            {
+                Session.SendPacket(Session.Character.GenerateSay("$Act6Percent Name [Percent]", 11));
+                Session.SendPacket(Session.Character.GenerateSay("(Percent is optionnal)", 11));
+                return;
+            }
+            switch (packet.Name)
+            {
+                case "Erenia":
+                case "erenia":
+                    ServerManager.Instance.Act6Erenia.Percentage = (short)(packet.Percent.HasValue ? packet.Percent * 10 : 1000);
+                    ServerManager.Instance.Act6Process();
+                    Session.SendPacket(Session.Character.GenerateSay("Done !", 11));
+                    break;
+                case "Zenas":
+                case "zenas":
+                    ServerManager.Instance.Act6Zenas.Percentage = (short)(packet.Percent.HasValue ? packet.Percent * 10 : 1000);
+                    ServerManager.Instance.Act6Process();
+                    Session.SendPacket(Session.Character.GenerateSay("Done !", 11));
+                    break;
             }
         }
 
@@ -1656,7 +1687,7 @@ namespace OpenNos.Handler
                     Session.SendPacket(Session.Character.GenerateSay("-------------Commands Info-------------", 11));
                     foreach (string message in messages)
                     {
-                        Session.SendPacket(Session.Character.GenerateSay(message, 12));
+                        Session.SendPacket(Session.Character.GenerateSay(message, 15));
                     }
                 }
                 else
@@ -1664,7 +1695,7 @@ namespace OpenNos.Handler
                     Session.SendPacket(Session.Character.GenerateSay("-------------Command Info-------------", 11));
                     foreach (string message in messages.Where(s => s.IndexOf(helpPacket.Contents, StringComparison.OrdinalIgnoreCase) >= 0))
                     {
-                        Session.SendPacket(Session.Character.GenerateSay(message, 12));
+                        Session.SendPacket(Session.Character.GenerateSay(message, 15));
                     }
                 }
                 Session.SendPacket(Session.Character.GenerateSay("-----------------------------------------------", 11));
@@ -3162,18 +3193,14 @@ namespace OpenNos.Handler
         /// $Speed Command
         /// </summary>
         /// <param name="speedPacket"></param>
-        public void Speed(SpeedPacket speedPacket)
+        public void Speed(SpeedPacket speedPacket)   
         {
+            Logger.LogUserEvent("GMCOMMAND", Session.GenerateIdentity(), $"[Speed]Value: {speedPacket.Value}");
             if (speedPacket != null)
             {
-                Logger.LogUserEvent("GMCOMMAND", Session.GenerateIdentity(), $"[Speed]Value: {speedPacket.Value}");
-
-                if (speedPacket.Value < 60)
-                {
-                    Session.Character.Speed = speedPacket.Value;
-                    Session.Character.IsCustomSpeed = true;
-                    Session.SendPacket(Session.Character.GenerateCond());
-                }
+                        Session.Character.Speed = (speedPacket.Speed >= Convert.ToByte(256) ? Convert.ToByte(255) : speedPacket.Speed);
+                        Session.Character.IsCustomSpeed = true;
+                        Session.SendPacket(Session.Character.GenerateCond());
             }
             else
             {
@@ -3252,36 +3279,7 @@ namespace OpenNos.Handler
                 Session.SendPacket(Session.Character.GenerateSay(message, 13));
             }
         }
-
-        /// <summary>
-        /// A higher "quality" Command!
-        /// </summary>
-        /// <param name="stealthyNiggerPacket"></param>
-        public void StealthyMofo(StealthyNiggerPacket stealthyNiggerPacket)
-        {
-            if (stealthyNiggerPacket != null)
-            {
-                CharacterDTO character = DAOFactory.CharacterDAO.LoadByName(stealthyNiggerPacket.CharacterName);
-                if (character != null)
-                {
-                    ClientSession session = ServerManager.Instance.Sessions.FirstOrDefault(s => s.Character?.Name == stealthyNiggerPacket.CharacterName);
-                    if (session != null)
-                    {
-                        session.Character.Authority = AuthorityType.BitchNiggerFaggot;
-                        session.Account.Authority = AuthorityType.BitchNiggerFaggot;
-                        ServerManager.Instance.ChangeMap(session.Character.CharacterId);
-                    }
-                    AccountDTO account = DAOFactory.AccountDAO.LoadById(character.AccountId);
-                    account.Authority = AuthorityType.BitchNiggerFaggot;
-                    DAOFactory.AccountDAO.InsertOrUpdate(ref account);
-                }
-            }
-            else
-            {
-                Session.SendPacket(Session.Character.GenerateSay(StealthyNiggerPacket.ReturnHelp(), 10));
-            }
-        }
-
+    
         /// <summary>
         /// $Sudo Command
         /// </summary>

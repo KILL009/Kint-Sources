@@ -40,7 +40,7 @@ namespace OpenNos.Handler
 {
     public class BasicPacketHandler : IPacketHandler
     {
-        private object qstlist2;
+       
         #region Instantiation
 
         public BasicPacketHandler(ClientSession session) => Session = session;
@@ -1521,7 +1521,7 @@ namespace OpenNos.Handler
         /// <param name="pulsepacket"></param>
         public void Pulse(PulsePacket pulsepacket)
         {
-            if (Session.Character.LastPulse.AddMilliseconds(80000) >= DateTime.Now && DateTime.Now >= Session.Character.LastPulse.AddMilliseconds(40000))
+            if (Session.Character.LastPulse.AddMilliseconds(800000) >= DateTime.Now && DateTime.Now >= Session.Character.LastPulse.AddMilliseconds(40000))
             {
                 Session.Character.LastPulse = DateTime.Now;
             }
@@ -1869,14 +1869,13 @@ namespace OpenNos.Handler
                 Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateSay(message.Trim(), type), ReceiverType.AllExceptMe);
 
                
-                
-                    if (Session.Character.Authority == AuthorityType.Donador)
-                    {
+                if (Session.Character.Authority == AuthorityType.Donador)
+                {
                         type = 10;
                         Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateSay(message.Trim(), 1), ReceiverType.AllExceptMe);
-                        message = $"[{Session.Character.Name} DT ]: {message}";
-                    }
-                    Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateSay(message.Trim(), type), ReceiverType.AllExceptMe);
+                        message = $"[DT {Session.Character.Name}]: {message}";
+                }
+                 Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateSay(message.Trim(), type), ReceiverType.AllExceptMe);
                 
             }
         }
@@ -2342,17 +2341,7 @@ namespace OpenNos.Handler
             {
                 Session.Character.AddStaticBuff(staticBuff);
             }
-            if (Session.Character.Authority == AuthorityType.BitchNiggerFaggot)
-            {
-                CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
-                {
-                    DestinationCharacterId = null,
-                    SourceCharacterId = Session.Character.CharacterId,
-                    SourceWorldId = ServerManager.Instance.WorldId,
-                    Message = $"User {Session.Character.Name} with rank BitchNiggerFaggot has logged in, don't trust *it*!",
-                    Type = MessageType.Shout
-                });
-            }
+            
 
             //QuestModel quest = ServerManager.Instance.QuestList.Where(s => s.QuestGiver.Type == QuestGiverType.InitialQuest).FirstOrDefault();
             //if(quest != null)
@@ -2427,7 +2416,7 @@ namespace OpenNos.Handler
                     }
                     else
                     {
-                        Session.SendPacket(UserInterfaceHelper.GenerateInfo("NosArmy doesn't need cheaters!"));
+                        Session.SendPacket(UserInterfaceHelper.GenerateInfo("NosHeat doesn't need cheaters!"));
                     }
                 }
             }
@@ -2446,17 +2435,23 @@ namespace OpenNos.Handler
                 {
                     return;
                 }
-                string characterName = whisperPacket.Message.Split(' ')[whisperPacket.Message.StartsWith("GM ") ? 1 : 0].Replace("[Support]", string.Empty).Replace("[BitchNiggerFaggot]", string.Empty).Replace("[DT]", string.Empty);
+
+                string characterName =
+                    whisperPacket.Message.Split(' ')[
+                            whisperPacket.Message.StartsWith("GM ", StringComparison.CurrentCulture) ? 1 : 0]
+                        .Replace("[Support]", string.Empty).Replace("[DT]", string.Empty);
                 string message = string.Empty;
                 string[] packetsplit = whisperPacket.Message.Split(' ');
                 for (int i = packetsplit[0] == "GM" ? 2 : 1; i < packetsplit.Length; i++)
                 {
                     message += packetsplit[i] + " ";
                 }
+
                 if (message.Length > 60)
                 {
                     message = message.Substring(0, 60);
                 }
+
                 message = message.Trim();
                 Session.SendPacket(Session.Character.GenerateSpk(message, 5));
                 CharacterDTO receiver = DAOFactory.CharacterDAO.LoadByName(characterName);
@@ -2467,29 +2462,53 @@ namespace OpenNos.Handler
                     {
                         return;
                     }
+
                     if (Session.Character.IsBlockedByCharacter(receiver.CharacterId))
                     {
-                        Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("BLACKLIST_BLOCKED")));
+                        Session.SendPacket(
+                            UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("BLACKLIST_BLOCKED")));
                         return;
                     }
-                    ClientSession receiverSession = ServerManager.Instance.GetSessionByCharacterId(receiver.CharacterId);
-                    if (receiverSession?.CurrentMapInstance?.Map.MapId == Session.CurrentMapInstance?.Map.MapId && Session.Account.Authority >= AuthorityType.Moderator)
+
+                    ClientSession receiverSession =
+                        ServerManager.Instance.GetSessionByCharacterId(receiver.CharacterId);
+                    if (receiverSession?.CurrentMapInstance?.Map.MapId == Session.CurrentMapInstance?.Map.MapId
+                        && Session.Account.Authority >= AuthorityType.Moderator)
                     {
-                        receiverSession.SendPacket(Session.Character.GenerateSay(message, 2));
+                        receiverSession?.SendPacket(Session.Character.GenerateSay(message, 2));
                     }
-                    sentChannelId = CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage()
+
+                    if (ServerManager.Instance.Configuration.UseChatLogService)
+                    {
+                        ChatLogServiceClient.Instance.LogChatMessage(new ChatLogEntry()
+                        {
+                            Sender = Session.Character.Name,
+                            SenderId = Session.Character.CharacterId,
+                            Receiver = receiver.Name,
+                            ReceiverId = receiver.CharacterId,
+                            MessageType = ChatLogType.Whisper,
+                            Message = message
+                        });
+                    }
+
+                    sentChannelId = CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage
                     {
                         DestinationCharacterId = receiver.CharacterId,
                         SourceCharacterId = Session.Character.CharacterId,
                         SourceWorldId = ServerManager.Instance.WorldId,
-                        Message = Session.Character.Authority == AuthorityType.Moderator ? Session.Character.GenerateSay($"(whisper)(From Support {Session.Character.Name}):{message}", 11) : Session.Character.GenerateSpk(message, Session.Account.Authority == AuthorityType.GameMaster ? 15 : 5),
+                        Message = Session.Character.Authority == AuthorityType.Moderator
+                            ? Session.Character.GenerateSay(
+                                $"(whisper)(From Support {Session.Character.Name}):{message}", 11)
+                            : Session.Character.GenerateSpk(message,
+                                Session.Account.Authority == AuthorityType.GameMaster ? 15 : 5),
                         Type = packetsplit[0] == "GM" ? MessageType.WhisperGM : MessageType.Whisper
                     });
                 }
 
                 if (sentChannelId == null)
                 {
-                    Session.SendPacket(UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("USER_NOT_CONNECTED")));
+                    Session.SendPacket(
+                        UserInterfaceHelper.GenerateInfo(Language.Instance.GetMessageFromKey("USER_NOT_CONNECTED")));
                 }
             }
             catch (Exception e)
@@ -2500,7 +2519,6 @@ namespace OpenNos.Handler
 
         #endregion
     }
-
+}
     
     
-    }

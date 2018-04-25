@@ -16,14 +16,14 @@ namespace OpenNos.Domain
 {
     public enum AuthorityType : short
     {
-        Donador = -68,
-        BitchNiggerFaggot = -69,
+       
+        Donador = -69,
         Closed = -3,
         Banned = -2,
         Unconfirmed = -1,
         User = 0,
         Moderator = 1,
         GameMaster = 2,
-        Operator = 3
+        Operator = 3,       
     }
 }

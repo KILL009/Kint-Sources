@@ -27,6 +27,8 @@ namespace OpenNos.Core
     /// <typeparam name="TV">Value type</typeparam>
     public class ThreadSafeSortedList<TK, TV> : IDisposable
     {
+        
+
         #region Members
 
         /// <summary>
@@ -80,6 +82,8 @@ namespace OpenNos.Core
                 return 0;
             }
         }
+
+        
 
         #endregion
 

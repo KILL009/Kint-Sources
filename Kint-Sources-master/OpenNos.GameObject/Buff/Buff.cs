@@ -13,6 +13,7 @@
  */
 
 using System;
+using System.Linq;
 using OpenNos.GameObject.Networking;
 
 namespace OpenNos.GameObject
@@ -21,30 +22,33 @@ namespace OpenNos.GameObject
     {
         #region Members
 
-        public int Level;
-
+        
         #endregion
 
         #region Instantiation
 
-        public Buff(short id, byte level)
+        public Buff(int id, byte level = 0, bool isPermaBuff = false)
         {
-            Card = ServerManager.GetCard(id);
+            Card = ServerManager.Instance.Cards.FirstOrDefault(s => s.CardId == id);
             Level = level;
+            IsPermaBuff = isPermaBuff;
         }
 
         #endregion
 
         #region Properties
 
+        public int Level;
+
         public Card Card { get; set; }
+
+        public bool StaticBuff { get; set; }
 
         public int RemainingTime { get; set; }
 
         public DateTime Start { get; set; }
 
-        public bool StaticBuff { get; set; }
-
+        public bool IsPermaBuff { get; set; }
         #endregion
     }
 }

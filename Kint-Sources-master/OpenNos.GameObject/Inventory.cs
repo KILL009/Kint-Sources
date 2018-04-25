@@ -46,6 +46,11 @@ namespace OpenNos.GameObject
 
         private Character Owner { get; }
 
+        public ItemInstance PrimaryWeapon { get; set; }
+
+        public ItemInstance SecondaryWeapon { get; set; }
+
+        public ItemInstance Armor { get; set; }
         #endregion
 
         #region Methods

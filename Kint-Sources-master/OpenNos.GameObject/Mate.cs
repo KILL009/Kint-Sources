@@ -18,6 +18,7 @@ using OpenNos.Domain;
 using OpenNos.GameObject.Helpers;
 using OpenNos.GameObject.Networking;
 using System;
+using OpenNos.GameObject.Battle;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -94,6 +95,8 @@ namespace OpenNos.GameObject
 
         #region Properties
 
+        public BattleEntity BattleEntity { get; set; }
+
         public ItemInstance ArmorInstance { get; set; }
 
         public ItemInstance BootsInstance { get; set; }
@@ -109,6 +112,8 @@ namespace OpenNos.GameObject
         public bool IsUsingSp { get; set; }
 
         public DateTime LastSpeedChange { get; set; }
+
+        public DateTime LastSkillUse { get; set; }
 
         public int MagicalDefense => MagicalDefenseLoad();
 
