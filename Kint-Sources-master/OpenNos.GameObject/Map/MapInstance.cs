@@ -45,9 +45,7 @@ namespace OpenNos.GameObject
         private bool _isSleeping;
 
         private bool _isSleepingRequest;
-       
-
-     
+            
         #endregion
 
         #region Instantiation
