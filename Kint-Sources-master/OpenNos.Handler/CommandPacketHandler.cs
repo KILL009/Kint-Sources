@@ -3198,7 +3198,7 @@ namespace OpenNos.Handler
             Logger.LogUserEvent("GMCOMMAND", Session.GenerateIdentity(), $"[Speed]Value: {speedPacket.Value}");
             if (speedPacket != null)
             {
-                        if(speedPacket.Value < 255)
+                        if(speedPacket.Value > 255)
                         {
                             Session.Character.Speed = 255;
                             Session.Character.IsCustomSpeed = true;
