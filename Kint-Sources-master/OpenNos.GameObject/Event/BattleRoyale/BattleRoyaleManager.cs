@@ -20,8 +20,6 @@ namespace OpenNos.GameObject.Event.BattleRoyale
         private readonly List<ClientSession> _clientSessions = new List<ClientSession>();
         private MapInstance _mapInstance;
         private bool _locked;
-        private bool _started;
-
         private readonly string _introductionInfo =
             $"----- BATTLE ROYALE -----\n" +
             "\n" +
@@ -48,10 +46,7 @@ namespace OpenNos.GameObject.Event.BattleRoyale
 
         #region Properties
 
-        public bool HasStarted
-        {
-            get { return _started; }
-        }
+        public bool HasStarted { get; }
 
         public bool IsLocked
         {

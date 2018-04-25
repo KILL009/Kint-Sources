@@ -108,8 +108,8 @@ namespace OpenNos.GameObject
                     session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     return;
 
-
-                    if (ItemType == ItemType.Event)
+                case 10541:
+                   if (ItemType == ItemType.Event)
                     {
                         session.CurrentMapInstance?.Broadcast(session.Character.GenerateEff(EffectValue));
                         if (MappingHelper.GuriItemEffects.ContainsKey(EffectValue))

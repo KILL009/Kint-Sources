@@ -16,7 +16,6 @@ using System.Configuration;
 using System.Globalization;
 using System.Reflection;
 using System.Resources;
-using System.IO;
 
 namespace OpenNos.Core
 {

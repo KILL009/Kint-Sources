@@ -174,8 +174,6 @@ namespace OpenNos.GameObject.Event
                                     sess.SendPacketAfter(UserInterfaceHelper.GenerateTeamArenaMenu(3, 0, 0, 60, 0), 5000);
                                 }
 
-#warning TODO: Other Setup stuff
-
                                 PlayingGroups[g.GroupId] = new List<Group> { g, prevGroup };
 
                                 BattleThread battleThread = new BattleThread();
@@ -198,8 +196,6 @@ namespace OpenNos.GameObject.Event
             private List<ClientSession> Characters { get; set; }
 
             public void Run(List<Group> groups) => Characters = groups[0].Characters.GetAllItems().Concat(groups[1].Characters.GetAllItems()).ToList();
-
-#warning TODO: Battle Thread System main loop
 
         }
 

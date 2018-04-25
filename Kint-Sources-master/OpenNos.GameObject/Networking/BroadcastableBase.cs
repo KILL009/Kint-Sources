@@ -287,7 +287,7 @@ namespace OpenNos.GameObject
                                         }
                                         else
                                         {
-#warning TODO: Scrambled Packet for Act4
+
                                         }
                                     }
                                 }

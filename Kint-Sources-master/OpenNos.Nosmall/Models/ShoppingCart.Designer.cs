@@ -1,10 +1,10 @@
-﻿// La génération de code T4 est activée pour le modèle 'C:\skyland-master\ShopApplicationByFizo\Models\ShoppingCart.edmx'. 
-// Pour activer la génération de code héritée, définissez la valeur de la propriété
-// du concepteur 'Stratégie de génération de code' sur 'ObjectContext hérité'. Cette propriété est disponible dans la fenêtre Propriétés lorsque le modèle
-//  est ouvert dans le concepteur.
+﻿// La generación de código T4 está habilitada para el modelo 'C:\Users\KILL009\Documents\GitHub\Kint-Sources\Kint-Sources-master\OpenNos.Nosmall\Models\ShoppingCart.edmx'. 
+// Para habilitar la generación de código heredada, cambie el valor de la propiedad del diseñador 'Estrategia de generación de código'
+// por 'ObjectContext heredado'. Esta propiedad está disponible en la ventana Propiedades cuando se abre
+// el modelo en el diseñador.
 
-// Si aucun contexte et classe d'entité n'a été généré, c'est peut-être parce que vous avez créé un modèle vide, mais
-// que vous n'avez pas encore choisi la version d'Entity Framework à utiliser. Pour générer une classe de contexte et des classes
-// d'entité pour le modèle, ouvrez le modèle dans le concepteur, cliquez avec le bouton droit sur l'aire de conception, puis
-// sélectionnez 'Mettre à jour le modèle à partir de la base de données...', 'Générer une base de données à partir du modèle...' ou 'Ajouter un élément de génération
-// de code...'.
+// Si no se ha generado ninguna clase de contexto y de entidad, puede que haya creado un modelo vacío pero
+// no haya elegido todavía la versión de Entity Framework que se va a usar. Para generar una clase de contexto y clases de entidad
+// para el modelo, abra el modelo en el diseñador, haga clic con el botón secundario en la superficie del diseñador y
+// seleccione 'Actualizar modelo desde base de datos...', 'Generar base de datos desde modelo...' o 'Agregar elemento de generación
+// de código...'.

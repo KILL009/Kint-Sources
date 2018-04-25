@@ -46,10 +46,8 @@ namespace OpenNos.GameObject
 
         private bool _isSleepingRequest;
        
-        private Guid guid;
-        private bool v;
-        private MapInstanceType battleRoyaleMapInstance;
 
+     
         #endregion
 
         #region Instantiation

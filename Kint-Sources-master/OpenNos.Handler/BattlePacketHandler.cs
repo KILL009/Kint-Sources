@@ -1511,7 +1511,7 @@ namespace OpenNos.Handler
                                         {
                                             Session.SendPackets(Session.Character.GenerateQuicklist());
                                         }
-#warning check this
+
                                         monsterToAttack.Monster.BCards.Where(s => s.CastType == 1).ToList()
                                             .ForEach(s => s.ApplyBCards(this));
                                         Session.SendPacket(Session.Character.GenerateStat());
