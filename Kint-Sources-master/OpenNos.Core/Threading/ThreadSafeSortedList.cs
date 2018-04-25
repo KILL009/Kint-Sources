@@ -27,7 +27,7 @@ namespace OpenNos.Core
     /// <typeparam name="TV">Value type</typeparam>
     public class ThreadSafeSortedList<TK, TV> : IDisposable
     {
-        public ICollection<TValue> Values { get; }
+        
 
         #region Members
 
