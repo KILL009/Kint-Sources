@@ -1687,7 +1687,7 @@ namespace OpenNos.Handler
                     Session.SendPacket(Session.Character.GenerateSay("-------------Commands Info-------------", 11));
                     foreach (string message in messages)
                     {
-                        Session.SendPacket(Session.Character.GenerateSay(message, 12));
+                        Session.SendPacket(Session.Character.GenerateSay(message, 15));
                     }
                 }
                 else
@@ -1695,7 +1695,7 @@ namespace OpenNos.Handler
                     Session.SendPacket(Session.Character.GenerateSay("-------------Command Info-------------", 11));
                     foreach (string message in messages.Where(s => s.IndexOf(helpPacket.Contents, StringComparison.OrdinalIgnoreCase) >= 0))
                     {
-                        Session.SendPacket(Session.Character.GenerateSay(message, 12));
+                        Session.SendPacket(Session.Character.GenerateSay(message, 15));
                     }
                 }
                 Session.SendPacket(Session.Character.GenerateSay("-----------------------------------------------", 11));
