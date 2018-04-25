@@ -3198,9 +3198,10 @@ namespace OpenNos.Handler
             if (speedPacket != null)
             {
                 Logger.LogUserEvent("GMCOMMAND", Session.GenerateIdentity(), $"[Speed]Value: {speedPacket.Value}");
+              
+                  if (speedPacket.Value > 0 || speedPacket.Value < 60)
 
-                if (speedPacket.Value < 60)
-                {
+                    {
                     Session.Character.Speed = speedPacket.Value;
                     Session.Character.IsCustomSpeed = true;
                     Session.SendPacket(Session.Character.GenerateCond());
