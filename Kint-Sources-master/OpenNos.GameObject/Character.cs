@@ -3839,6 +3839,7 @@ namespace OpenNos.GameObject
                         DAOFactory.IteminstanceDAO.InsertOrUpdateFromList(saveInventory);
 
                         foreach (ItemInstance itemInstance in saveInventory)
+                        
                         {
                             DAOFactory.ShellEffectDAO.InsertOrUpdateFromList(itemInstance.ShellEffects, itemInstance.EquipmentSerialId);
                             DAOFactory.CellonOptionDAO.InsertOrUpdateFromList(itemInstance.CellonOptions, itemInstance.EquipmentSerialId);
@@ -3855,6 +3856,8 @@ namespace OpenNos.GameObject
                         }
                     }
                 }
+
+                
 
                 if (Skills != null)
                 {

@@ -34,7 +34,7 @@ namespace OpenNos.DAL.EF
 
         #region Properties
 
-        public int Amount { get; set; }
+        public short Amount { get; set; }
 
         public virtual ICollection<BazaarItem> BazaarItem { get; set; }
 

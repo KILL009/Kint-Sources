@@ -1762,7 +1762,7 @@ namespace OpenNos.Handler
                     }
                     if (createItemPacket.Design.HasValue && !createItemPacket.Upgrade.HasValue)
                     {
-                        amount = createItemPacket.Design.Value > 99 ? (short)99 : createItemPacket.Design.Value;
+                        amount = createItemPacket.Design.Value > 255 ? (short)255 : createItemPacket.Design.Value;
                     }
                     ItemInstance inv = Session.Character.Inventory.AddNewToInventory(vnum, amount, Rare: rare, Upgrade: upgrade, Design: design).FirstOrDefault();
                     if (inv != null)

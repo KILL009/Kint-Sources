@@ -47,7 +47,7 @@ namespace WatchDog
                 Thread watchDogThread = new Thread(new ThreadStart(StartAppMonitoring));
                 watchDogThread.Start();
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
             }
         }

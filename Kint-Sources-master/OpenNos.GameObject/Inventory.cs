@@ -33,6 +33,7 @@ namespace OpenNos.GameObject
         private const short MAX_ITEM_AMOUNT = 999;
 
         private readonly object _lockObject = new object();
+        private IEnumerable<ItemInstance> saveInventory;
 
         #endregion
 
@@ -90,7 +91,7 @@ namespace OpenNos.GameObject
             return newItem;
         }
 
-        public ItemInstance AddIntoBazaarInventory(InventoryType inventory, byte slot, byte amount)
+        public ItemInstance AddIntoBazaarInventory(InventoryType inventory, short slot, short amount)
         {
             ItemInstance inv = LoadBySlotAndType(slot, inventory);
             if (inv == null || amount > inv.Amount)
@@ -102,7 +103,7 @@ namespace OpenNos.GameObject
             invcopy.Id = Guid.NewGuid();
             if (inv.Item.Type == InventoryType.Equipment)
             {
-                for (short i = 0; i < 255; i++)
+                for (short i = 0; i < 999; i++)
                 {
                     if (LoadBySlotAndType<ItemInstance>(i, InventoryType.Bazaar) == null)
                     {
@@ -119,7 +120,7 @@ namespace OpenNos.GameObject
             }
             if (amount >= inv.Amount)
             {
-                for (short i = 0; i < 255; i++)
+                for (short i = 0; i < 999; i++)
                 {
                     if (LoadBySlotAndType<ItemInstance>(i, InventoryType.Bazaar) == null)
                     {
@@ -138,7 +139,7 @@ namespace OpenNos.GameObject
             invcopy.Amount = amount;
             inv.Amount -= amount;
 
-            for (short i = 0; i < 255; i++)
+            for (short i = 0; i < 999; i++)
             {
                 if (LoadBySlotAndType<ItemInstance>(i, InventoryType.Bazaar) == null)
                 {
@@ -197,10 +198,10 @@ namespace OpenNos.GameObject
                         {
                             int max = slot.Amount + newItem.Amount;
                             max = max > MAX_ITEM_AMOUNT ? MAX_ITEM_AMOUNT : max;
-                            newItem.Amount = (byte)(slot.Amount + newItem.Amount - max);
-                            newItem.Amount = (byte)(newItem.Amount < 0 ? 0 : newItem.Amount);
+                            newItem.Amount = (short)(slot.Amount + newItem.Amount - max);
+                            newItem.Amount = (short)(newItem.Amount < 0 ? 0 : newItem.Amount);
                             Logger.LogUserEvent("ITEM_CREATE", Owner.GenerateIdentity(), $"IIId: {slot.Id} ItemVNum: {slot.ItemVNum} Amount: {max - slot.Amount} MapId: {Owner.MapInstance?.Map.MapId} MapX: {Owner.PositionX} MapY: {Owner.PositionY}");
-                            slot.Amount = (byte)max;
+                            slot.Amount = (short)max;
                             invlist.Add(slot);
                             Owner.Session?.SendPacket(slot.GenerateInventoryAdd());
                         }
@@ -320,7 +321,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        public void DepositItem(InventoryType inventory, byte slot, byte amount, byte NewSlot, ref ItemInstance item, ref ItemInstance itemdest, bool PartnerBackpack)
+        public void DepositItem(InventoryType inventory, short slot, short amount, short NewSlot, ref ItemInstance item, ref ItemInstance itemdest, bool PartnerBackpack)
         {
             if (item != null && amount <= item.Amount && amount > 0)
             {
@@ -365,7 +366,7 @@ namespace OpenNos.GameObject
             return true;
         }
 
-        public void FDepositItem(InventoryType inventory, byte slot, byte amount, byte newSlot, ref ItemInstance item, ref ItemInstance itemdest)
+        public void FDepositItem(InventoryType inventory, short slot, short amount, short newSlot, ref ItemInstance item, ref ItemInstance itemdest)
         {
             if (item != null && amount <= item.Amount && amount > 0 && item.Item.IsTradable && !item.IsBound)
             {
@@ -581,13 +582,15 @@ namespace OpenNos.GameObject
                 }
                 else
                 {
-                    if (destinationInventory.ItemVNum == sourceInventory.ItemVNum && (byte)sourceInventory.Item.Type != 0)
+                    if (destinationInventory.ItemVNum == sourceInventory.ItemVNum && (short)sourceInventory.Item.Type != 0)
                     {
                         if (destinationInventory.Amount + amount > MAX_ITEM_AMOUNT)
                         {
-                            int saveItemCount = destinationInventory.Amount;
+                            short saveItemCount = destinationInventory.Amount;
                             destinationInventory.Amount = MAX_ITEM_AMOUNT;
-                            sourceInventory.Amount = (byte)(saveItemCount + sourceInventory.Amount - MAX_ITEM_AMOUNT);
+                            sourceInventory.Amount = (short)(saveItemCount + sourceInventory.Amount - MAX_ITEM_AMOUNT);
+                            foreach (ItemInstance itemInstance in saveInventory)
+                            Save();
                         }
                         else
                         {
@@ -629,6 +632,11 @@ namespace OpenNos.GameObject
             destinationInventory = LoadBySlotAndType(destinationSlot, desttype);
         }
 
+        private void Save()
+        {
+            throw new NotImplementedException();
+        }
+
         public void RemoveItemAmount(int vnum, int amount = 1)
         {
             if (Owner != null)
@@ -642,7 +650,7 @@ namespace OpenNos.GameObject
                         if (inventory.Amount > remainingAmount)
                         {
                             // Amount completely removed
-                            inventory.Amount -= (byte)remainingAmount;
+                            inventory.Amount -= (short)remainingAmount;
                             remainingAmount = 0;
                             Owner.Session.SendPacket(inventory.GenerateInventoryAdd());
                         }
