@@ -3200,7 +3200,7 @@ namespace OpenNos.Handler
             {
                 Session.Character.Speed = (speedPacket.Value >= 60 ? (byte)59 : speedPacket.Value);
                 Session.Character.IsCustomSpeed = true;
-                        Session.SendPacket(Session.Character.GenerateCond());
+                Session.SendPacket(Session.Character.GenerateCond());
             }
             else
             {
