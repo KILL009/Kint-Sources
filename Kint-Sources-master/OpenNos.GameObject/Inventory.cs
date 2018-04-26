@@ -30,7 +30,7 @@ namespace OpenNos.GameObject
 
         private const short DEFAULT_BACKPACK_SIZE = 48;
 
-        private const byte MAX_ITEM_AMOUNT = 255;
+        private const short MAX_ITEM_AMOUNT = 999;
 
         private readonly object _lockObject = new object();
 
@@ -55,7 +55,7 @@ namespace OpenNos.GameObject
 
         #region Methods
 
-        public static ItemInstance InstantiateItemInstance(short vnum, long ownerId, byte amount = 1)
+        public static ItemInstance InstantiateItemInstance(short vnum, long ownerId, short amount = 1)
         {
             ItemInstance newItem = new ItemInstance { ItemVNum = vnum, Amount = amount, CharacterId = ownerId };
             if (newItem.Item != null)
@@ -154,7 +154,7 @@ namespace OpenNos.GameObject
             return invcopy;
         }
 
-        public List<ItemInstance> AddNewToInventory(short vnum, byte amount = 1, InventoryType? type = null, sbyte Rare = 0, byte Upgrade = 0, byte Design = 0)
+        public List<ItemInstance> AddNewToInventory(short vnum, short amount = 1, InventoryType? type = null, sbyte Rare = 0, byte Upgrade = 0, byte Design = 0)
         {
             if (Owner != null)
             {
@@ -553,7 +553,7 @@ namespace OpenNos.GameObject
             return sourceInstance;
         }
 
-        public void MoveItem(InventoryType sourcetype, InventoryType desttype, short sourceSlot, byte amount, short destinationSlot, out ItemInstance sourceInventory, out ItemInstance destinationInventory)
+        public void MoveItem(InventoryType sourcetype, InventoryType desttype, short sourceSlot, short amount, short destinationSlot, out ItemInstance sourceInventory, out ItemInstance destinationInventory)
         {
             Logger.LogUserEvent("ITEM_MOVE", Owner.GenerateIdentity(), $"SourceType: {sourcetype.ToString()} DestType: {desttype.ToString()} SourceSlot: {sourceSlot} Amount: {amount} DestSlot: {destinationSlot}");
 
@@ -663,7 +663,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        public void RemoveItemFromInventory(Guid id, byte amount = 1)
+        public void RemoveItemFromInventory(Guid id, short amount = 1)
         {
             if (Owner != null)
             {
