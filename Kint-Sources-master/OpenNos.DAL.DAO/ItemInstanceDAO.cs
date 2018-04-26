@@ -172,9 +172,9 @@ namespace OpenNos.DAL.DAO
                         {
                             update(entity, item);
                         }
+                        context.SaveChanges();
                     }
-
-                    context.SaveChanges();
+                  
                     return SaveResult.Updated;
                 }
             }

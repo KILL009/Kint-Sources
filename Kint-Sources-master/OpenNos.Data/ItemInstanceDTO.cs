@@ -113,7 +113,7 @@ namespace OpenNos.Data
 
         public long XP { get; set; }
 
-        public byte Amount { get; set; }
+        public short Amount { get; set; }
 
         public long? BoundCharacterId { get; set; }
 

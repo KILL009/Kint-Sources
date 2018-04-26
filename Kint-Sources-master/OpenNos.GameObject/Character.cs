@@ -506,17 +506,23 @@ namespace OpenNos.GameObject
         {
             get
             {
-                if (_speed > 255)
+                //    if (HasBuff(CardType.Move, (byte)AdditionalTypes.Move.MovementImpossible))
+                //    {
+                //        return 0;
+                //    }
+
+                byte bonusSpeed = 0;/*(byte)GetBuff(CardType.Move, (byte)AdditionalTypes.Move.SetMovementNegated)[0];*/
+                if (_speed + bonusSpeed > 59)
                 {
-                    return 255;
+                    return 59;
                 }
-                return _speed;
+                return (byte)(_speed + bonusSpeed);
             }
 
             set
             {
                 LastSpeedChange = DateTime.Now;
-                _speed = value > 255 ? (byte)255 : value;
+                _speed = value > 59 ? (byte)59 : value;
             }
         }
 
@@ -3839,6 +3845,7 @@ namespace OpenNos.GameObject
                         DAOFactory.IteminstanceDAO.InsertOrUpdateFromList(saveInventory);
 
                         foreach (ItemInstance itemInstance in saveInventory)
+                        
                         {
                             DAOFactory.ShellEffectDAO.InsertOrUpdateFromList(itemInstance.ShellEffects, itemInstance.EquipmentSerialId);
                             DAOFactory.CellonOptionDAO.InsertOrUpdateFromList(itemInstance.CellonOptions, itemInstance.EquipmentSerialId);
@@ -3855,6 +3862,8 @@ namespace OpenNos.GameObject
                         }
                     }
                 }
+
+                
 
                 if (Skills != null)
                 {

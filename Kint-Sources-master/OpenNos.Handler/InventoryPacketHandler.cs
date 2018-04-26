@@ -54,11 +54,11 @@ namespace OpenNos.Handler
             switch (bIPacket.Option)
             {
                 case null:
-                    Session.SendPacket(UserInterfaceHelper.GenerateDialog($"#b_i^{(byte)bIPacket.InventoryType}^{bIPacket.Slot}^1 #b_i^0^0^5 {Language.Instance.GetMessageFromKey("ASK_TO_DELETE")}"));
+                    Session.SendPacket(UserInterfaceHelper.GenerateDialog($"#b_i^{(short)bIPacket.InventoryType}^{bIPacket.Slot}^1 #b_i^0^0^5 {Language.Instance.GetMessageFromKey("ASK_TO_DELETE")}"));
                     break;
 
                 case 1:
-                    Session.SendPacket(UserInterfaceHelper.GenerateDialog($"#b_i^{(byte)bIPacket.InventoryType}^{bIPacket.Slot}^2 #b_i^{(byte)bIPacket.InventoryType}^{bIPacket.Slot}^5 {Language.Instance.GetMessageFromKey("SURE_TO_DELETE")}"));
+                    Session.SendPacket(UserInterfaceHelper.GenerateDialog($"#b_i^{(short)bIPacket.InventoryType}^{bIPacket.Slot}^2 #b_i^{(short)bIPacket.InventoryType}^{bIPacket.Slot}^5 {Language.Instance.GetMessageFromKey("SURE_TO_DELETE")}"));
                     break;
 
                 case 2:
@@ -650,7 +650,7 @@ namespace OpenNos.Handler
                             {
                                 lock (Session.Character.Inventory)
                                 {
-                                    byte amount = mapItem.Amount;
+                                    short amount = mapItem.Amount;
                                     ItemInstance inv = Session.Character.Inventory.AddToInventory(mapItemInstance).FirstOrDefault();
                                     if (inv != null)
                                     {
@@ -795,9 +795,9 @@ namespace OpenNos.Handler
                 ItemInstance invitem = Session.Character.Inventory.LoadBySlotAndType(putPacket.Slot, putPacket.InventoryType);
                 if (invitem?.Item.IsDroppable == true && invitem.Item.IsTradable && !Session.Character.InExchangeOrTrade && putPacket.InventoryType != InventoryType.Bazaar)
                 {
-                    if (putPacket.Amount > 0 && putPacket.Amount < 100)
+                    if (putPacket.Amount > 0 && putPacket.Amount < 999)
                     {
-                        if (Session.Character.MapInstance.DroppedList.Count < 200 && Session.HasCurrentMapInstance)
+                        if (Session.Character.MapInstance.DroppedList.Count < 999 && Session.HasCurrentMapInstance)
                         {
                             MapItem droppedItem = Session.CurrentMapInstance.PutItem(putPacket.InventoryType, putPacket.Slot, putPacket.Amount, ref invitem, Session);
                             if (droppedItem == null)
@@ -1741,7 +1741,7 @@ namespace OpenNos.Handler
             }
             ItemInstance inv = Session.Character.Inventory.LoadBySlotAndType(useItemPacket.Slot, useItemPacket.Type);
             string[] packetsplit = useItemPacket.OriginalContent.Split(' ', '^');
-            inv?.Item.Use(Session, ref inv, packetsplit[1][0] == '#' ? (byte)255 : (byte)0, packetsplit);
+            inv?.Item.Use(Session, ref inv, packetsplit[1][0] == '#' ? (short)999 : (short)0, packetsplit);
         }
 
         /// <summary>

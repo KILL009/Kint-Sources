@@ -24,7 +24,7 @@ namespace OpenNos.GameObject
 
         #region Properties
 
-        public override byte Amount
+        public override short Amount
         {
             get => ItemInstance.Amount;
             set => ItemInstance.Amount = Amount;

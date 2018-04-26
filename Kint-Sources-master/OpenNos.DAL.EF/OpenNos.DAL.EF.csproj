@@ -136,6 +136,26 @@
     <Compile Include="Migrations\201804061634565_annais2.Designer.cs">
       <DependentUpon>201804061634565_annais2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201804252305565_annais3.cs" />
+    <Compile Include="Migrations\201804252305565_annais3.Designer.cs">
+      <DependentUpon>201804252305565_annais3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804260125211_annais4.cs" />
+    <Compile Include="Migrations\201804260125211_annais4.Designer.cs">
+      <DependentUpon>201804260125211_annais4.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804260241334_annais5.cs" />
+    <Compile Include="Migrations\201804260241334_annais5.Designer.cs">
+      <DependentUpon>201804260241334_annais5.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804260543187_annais6.cs" />
+    <Compile Include="Migrations\201804260543187_annais6.Designer.cs">
+      <DependentUpon>201804260543187_annais6.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804261720138_annais7.cs" />
+    <Compile Include="Migrations\201804261720138_annais7.Designer.cs">
+      <DependentUpon>201804261720138_annais7.cs</DependentUpon>
+    </Compile>
     <Compile Include="MinigameLog.cs" />
     <Compile Include="Quest.cs" />
     <Compile Include="QuestProgress.cs" />
@@ -767,6 +787,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201804061634565_annais2.resx">
       <DependentUpon>201804061634565_annais2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804252305565_annais3.resx">
+      <DependentUpon>201804252305565_annais3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804260125211_annais4.resx">
+      <DependentUpon>201804260125211_annais4.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804260241334_annais5.resx">
+      <DependentUpon>201804260241334_annais5.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804260543187_annais6.resx">
+      <DependentUpon>201804260543187_annais6.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804261720138_annais7.resx">
+      <DependentUpon>201804261720138_annais7.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

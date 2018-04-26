@@ -35,7 +35,7 @@ namespace OpenNos.GameObject
 
         #region Properties
 
-        public sealed override byte Amount { get; set; }
+        public sealed override short Amount { get; set; }
 
         public int GoldAmount { get; }
 

@@ -19,7 +19,7 @@ namespace OpenNos.Mapper.Mappers
                 return false;
             }
             output.Ammo = input.Ammo ?? 0;
-            output.Amount = (byte)input.Amount;
+            output.Amount = input.Amount;
             output.BoundCharacterId = input.BoundCharacterId;
             output.Cellon = input.Cellon ?? 0;
             output.CharacterId = input.CharacterId;
