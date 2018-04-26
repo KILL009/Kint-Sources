@@ -30,7 +30,7 @@ namespace OpenNos.GameObject
 
         #region Methods
 
-        public override void Use(ClientSession session, ref ItemInstance inv, byte Option = 0, string[] packetsplit = null)
+        public override void Use(ClientSession session, ref ItemInstance inv, short Option = 0, string[] packetsplit = null)
         {
             switch (Effect)
             {

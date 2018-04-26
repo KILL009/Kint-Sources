@@ -14,10 +14,10 @@ namespace OpenNos.GameObject
         public InventoryType InventoryType { get; set; }
 
         [PacketIndex(1)]
-        public byte Slot { get; set; }
+        public short Slot { get; set; }
 
         [PacketIndex(2)]
-        public byte Amount { get; set; }
+        public short Amount { get; set; }
 
         #endregion
     }

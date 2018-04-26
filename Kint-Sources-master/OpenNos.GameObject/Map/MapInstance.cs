@@ -335,7 +335,7 @@ namespace OpenNos.GameObject
             Parallel.ForEach(GetMapItems(), s => Broadcast(s));
         }
 
-        public MapItem PutItem(InventoryType type, short slot, byte amount, ref ItemInstance inv, ClientSession session)
+        public MapItem PutItem(InventoryType type, short slot, short amount, ref ItemInstance inv, ClientSession session)
         {
             Logger.LogUserEventDebug("PUTITEM", session.GenerateIdentity(), $"type: {type} slot: {slot} amount: {amount}");
             Guid random2 = Guid.NewGuid();

@@ -33,7 +33,7 @@ namespace OpenNos.GameObject
         private const short MAX_ITEM_AMOUNT = 999;
 
         private readonly object _lockObject = new object();
-        private IEnumerable<ItemInstance> saveInventory;
+        
 
         #endregion
 
@@ -588,8 +588,7 @@ namespace OpenNos.GameObject
                         {
                             short saveItemCount = destinationInventory.Amount;
                             destinationInventory.Amount = MAX_ITEM_AMOUNT;
-                            sourceInventory.Amount = (short)(saveItemCount + sourceInventory.Amount - MAX_ITEM_AMOUNT);
-                            foreach (ItemInstance itemInstance in saveInventory)
+                            sourceInventory.Amount = (short)(saveItemCount + sourceInventory.Amount - MAX_ITEM_AMOUNT);                                                 
                             Save();
                         }
                         else
