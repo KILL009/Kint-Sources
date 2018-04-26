@@ -68,7 +68,7 @@ namespace OpenNos.DAL.EF
         public short Slot { get; set; }
 
         [Index("IX_SlotAndType", 3, IsUnique = false, Order = 2)]
-        public InventoryType Type { get; set; }
+        public  InventoryType Type { get; set; }
 
         public byte Upgrade { get; set; }
 
