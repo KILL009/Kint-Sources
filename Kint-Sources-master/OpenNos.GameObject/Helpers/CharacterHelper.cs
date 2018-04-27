@@ -912,7 +912,7 @@ namespace OpenNos.GameObject.Helpers
             // ARCHER MP
             for (int i = 0; i < _mp.GetLength(1) - 1; i++)
             {
-                _mp[(int)ClassType.Magician, i] = 2 * _mp[(int)ClassType.Adventurer, i];
+                _mp[(int)ClassType.Archer, i] = 2 * _mp[(int)ClassType.Adventurer, i];
             }
 
             // MAGICIAN MP
