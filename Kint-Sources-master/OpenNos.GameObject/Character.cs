@@ -799,7 +799,7 @@ namespace OpenNos.GameObject
                 Session.CurrentMapInstance?.Broadcast(Session, $"pidx 1 1.{CharacterId}", ReceiverType.AllExceptMe);
             }
         }
-
+       
         public void ChangeSex()
         {
             Gender = Gender == GenderType.Female ? GenderType.Male : GenderType.Female;
@@ -2895,7 +2895,7 @@ namespace OpenNos.GameObject
             };
         }
 
-        public string GenerateTit() => $"tit {Language.Instance.GetMessageFromKey(Class == (byte)ClassType.Adventurer ? nameof(ClassType.Adventurer).ToUpper() : Class == ClassType.Swordman ? nameof(ClassType.Swordman).ToUpper() : Class == ClassType.Archer ? nameof(ClassType.Archer).ToUpper() : nameof(ClassType.Magician).ToUpper())} {Name}";
+        public string GenerateTit() => $"tit {Language.Instance.GetMessageFromKey(Class == (byte)ClassType.Adventurer ? nameof(ClassType.Adventurer).ToUpper() : Class == ClassType.Swordman ? nameof(ClassType.Swordman).ToUpper() : Class == ClassType.Archer ? nameof(ClassType.Archer).ToUpper() : Class == ClassType.Magician ? nameof(ClassType.Magician).ToUpper()  : nameof(ClassType.Fighter).ToUpper())} {Name}";
 
         public string GenerateTp() => $"tp 1 {CharacterId} {PositionX} {PositionY} 0";
 

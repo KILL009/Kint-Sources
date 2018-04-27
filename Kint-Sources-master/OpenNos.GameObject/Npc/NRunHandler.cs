@@ -43,6 +43,10 @@ namespace OpenNos.GameObject
             switch (packet.Runner)
             {
                 case 1:
+                    if (packet.Type > 4 || packet.Type < 1)
+                    {
+                        return;
+                    }
                     if (Session.Character.Class != (byte)ClassType.Adventurer)
                     {
                         Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_ADVENTURER"), 0));
@@ -57,6 +61,7 @@ namespace OpenNos.GameObject
                     {
                         return;
                     }
+
                     if (Session.Character.Inventory.All(i => i.Type != InventoryType.Wear))
                     {
                         Session.Character.Inventory.AddNewToInventory((short)(4 + (packet.Type * 14)), type: InventoryType.Wear);
