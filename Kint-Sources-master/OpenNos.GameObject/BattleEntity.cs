@@ -60,7 +60,7 @@ namespace OpenNos.GameObject.Battle
 
                     case 1:
                         AttackType = AttackType.Range;
-                        if (character.Class == ClassType.Adventurer || character.Class == ClassType.Swordman || character.Class == ClassType.Magician)
+                        if (character.Class == ClassType.Adventurer || character.Class == ClassType.Swordman || character.Class == ClassType.Magician || character.Class == ClassType.Fighter)
                         {
                             DamageMinimum = character.MinDistance;
                             DamageMaximum = character.MaxDistance;
@@ -85,6 +85,7 @@ namespace OpenNos.GameObject.Battle
                         switch (character.Class)
                         {
                             case ClassType.Adventurer:
+                            case ClassType.Fighter:
                             case ClassType.Swordman:
                                 AttackType = AttackType.Melee;
                                 break;
@@ -105,6 +106,7 @@ namespace OpenNos.GameObject.Battle
                         {
                             case ClassType.Adventurer:
                             case ClassType.Swordman:
+                            case ClassType.Fighter:
                             case ClassType.Magician:
                                 weapon = character.Inventory.LoadBySlotAndType((byte)EquipmentType.MainWeapon, InventoryType.Wear);
                                 break;
@@ -122,6 +124,7 @@ namespace OpenNos.GameObject.Battle
                 switch (character.Class)
                 {
                     case ClassType.Adventurer:
+                    case ClassType.Fighter:
                     case ClassType.Swordman:
                         AttackType = AttackType.Melee;
                         break;

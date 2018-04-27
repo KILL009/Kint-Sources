@@ -1690,4 +1690,7 @@
   <data name="USER_ON_INSTANCEMAP" xml:space="preserve">
     <value>Usuario en este Mapa</value>
   </data>
+  <data name="FIGHTER" xml:space="preserve">
+    <value>Fighter</value>
+  </data>
 </root>

@@ -1429,6 +1429,15 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Fighter.
+        /// </summary>
+        internal static string FIGHTER {
+            get {
+                return ResourceManager.GetString("FIGHTER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a ¿Quieres entrar en la primera habitación?.
         /// </summary>
         internal static string FIRST_ROOM_START {

@@ -9,6 +9,9 @@ MasterDomino
 Martazza  
 KrisYiu  
 Uppermost
+IceTrailer
+Zanouu
+Fizo55
 JOAOMASTER
 xDarkGunnerx
 LOLToke
