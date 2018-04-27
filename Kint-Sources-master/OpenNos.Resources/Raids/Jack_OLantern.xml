@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Definition>
+    <Globals>
+        <Id Value="10" />
+        <Label Value="Raid Jack O'Lantern" />
+        <LevelMinimum Value="20"/>
+        <LevelMaximum Value="99"/>
+        <StartX Value="57" />
+        <StartY Value="77" />
+        <Reputation Value="1500" />
+        <RequieredItems>
+            <Item VNum="1916" Amount="1"/>
+        </RequieredItems>
+        <GiftItems>
+            <Item Amount="1" VNum="302" Design="10" IsRandomRare="True"/>
+        </GiftItems>
+    </Globals>
+    <InstanceEvents>
+        <CreateMap Map="0" VNum="2583">
+                <SetMonsterLockers Value="1" />
+                <SetButtonLockers Value="0" />
+                <RefreshRaidGoals/>
+            <SummonMonster VNum="1381" PositionX="57" PositionY="54" IsBoss="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                    <End Type="1"/>
+                    <ThrowItem VNum="1015"/>
+                    <ThrowItem VNum="2136"/>
+                    <ThrowItem VNum="2170" PackAmount="2"/>
+                    <ThrowItem VNum="1011"/>
+                    <ThrowItem VNum="2043"/>
+                    <ThrowItem VNum="2035"/>
+                    <ThrowItem VNum="2044"/>
+                    <ThrowItem VNum="2127" PackAmount="2"/>
+                    <ThrowItem VNum="2048" PackAmount="2"/>
+                    <ThrowItem VNum="1046" PackAmount="30" MinAmount="10000" MaxAmount="19000"/>
+                </OnDeath>
+            </SummonMonster>
+                <Wave Offset="1" Delay="30">
+                    <SendMessage Value="Les renforts ennemis sont arrivés !" Type="0"/>
+                    <SummonMonster VNum="1382" PositionX="57" PositionY="60">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="52" PositionY="59">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="50" PositionY="54">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="54" PositionY="50">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="59" PositionY="49">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="62" PositionY="54">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="61" PositionY="59">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="63" PositionY="67">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="78" PositionY="66">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="73" PositionY="55">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="67" PositionY="47">
+                    </SummonMonster>
+                </Wave>
+                <Wave Offset="2" Delay="30">
+                    <SummonMonster VNum="1382" PositionX="62" PositionY="61">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="71" PositionY="64">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="80" PositionY="58">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="78" PositionY="48">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="66" PositionY="47">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="57" PositionY="52">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="54" PositionY="60">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="63" PositionY="67">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="78" PositionY="66">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="73" PositionY="55">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="67" PositionY="47">
+                    </SummonMonster>
+                </Wave>
+                <Wave Offset="8" Delay="30">
+                    <SummonMonster VNum="1382" PositionX="62" PositionY="61">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="71" PositionY="64">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="80" PositionY="58">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="78" PositionY="48">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="66" PositionY="47">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="57" PositionY="52">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="54" PositionY="60">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="63" PositionY="67">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="78" PositionY="66">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="73" PositionY="55">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="67" PositionY="47">
+                    </SummonMonster>
+                </Wave>
+                <Wave Offset="14" Delay="30">
+                    <SummonMonster VNum="1382" PositionX="62" PositionY="61">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="71" PositionY="64">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="80" PositionY="58">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="78" PositionY="48">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="66" PositionY="47">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="57" PositionY="52">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="54" PositionY="60">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="63" PositionY="67">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="78" PositionY="66">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="73" PositionY="55">
+
+                    </SummonMonster>
+                    <SummonMonster VNum="1382" PositionX="67" PositionY="47">
+                    </SummonMonster>
+                </Wave>
+        </CreateMap>
+    </InstanceEvents>
+</Definition>

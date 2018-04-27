@@ -1,0 +1,655 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Definition>
+    <Globals>
+        <Id Value="4" />
+        <Label Value="Slade" />
+        <LevelMinimum Value="70"/>
+        <LevelMaximum Value="150"/>
+        <StartX Value="21" />
+        <StartY Value="229" />
+        <RequieredItems>
+            <Item VNum="1131" Amount="1"/>
+        </RequieredItems>
+        <GiftItems>
+            <Item Amount="1" VNum="302" Design="4" IsRandomRare="True"/>
+        </GiftItems>
+    </Globals>
+    <InstanceEvents>
+        <CreateMap Map="0" VNum="2541" >
+            <SummonMonster VNum="854" PositionX="185" PositionY="43"/>
+            <SummonMonster VNum="854" PositionX="185" PositionY="40"/>
+            <SummonMonster VNum="854" PositionX="180" PositionY="44"/>
+            <SummonMonster VNum="854" PositionX="177" PositionY="40"/>
+            <SummonMonster VNum="854" PositionX="174" PositionY="37"/>
+            <SummonMonster VNum="851" PositionX="92" PositionY="184"/>
+            <SummonMonster VNum="851" PositionX="91" PositionY="179"/>
+            <SummonMonster VNum="851" PositionX="91" PositionY="176"/>
+            <SummonMonster VNum="851" PositionX="40" PositionY="188"/>
+            <SummonMonster VNum="851" PositionX="40" PositionY="184"/>
+            <SummonMonster VNum="851" PositionX="39" PositionY="181"/>
+            <SummonMonster VNum="851" PositionX="146" PositionY="223"/>
+            <SummonMonster VNum="851" PositionX="144" PositionY="221"/>
+            <SummonMonster VNum="851" PositionX="139" PositionY="224"/>
+            <SummonMonster VNum="851" PositionX="134" PositionY="223"/>
+            <SummonMonster VNum="851" PositionX="126" PositionY="52"/>
+            <SummonMonster VNum="851" PositionX="126" PositionY="40"/>
+            <SummonMonster VNum="851" PositionX="125" PositionY="46"/>
+            <SummonMonster VNum="851" PositionX="125" PositionY="38"/>
+            <SummonMonster VNum="292" PositionX="96" PositionY="195"/>
+            <SummonMonster VNum="292" PositionX="87" PositionY="195"/>
+            <SummonMonster VNum="292" PositionX="82" PositionY="201"/>
+            <SummonMonster VNum="292" PositionX="77" PositionY="198"/>
+            <SummonMonster VNum="292" PositionX="71" PositionY="196"/>
+            <SummonMonster VNum="292" PositionX="42" PositionY="169"/>
+            <SummonMonster VNum="292" PositionX="37" PositionY="204"/>
+            <SummonMonster VNum="292" PositionX="37" PositionY="200"/>
+            <SummonMonster VNum="292" PositionX="34" PositionY="206"/>
+            <SummonMonster VNum="292" PositionX="32" PositionY="203"/>
+            <SummonMonster VNum="292" PositionX="32" PositionY="199"/>
+            <SummonMonster VNum="292" PositionX="28" PositionY="205"/>
+            <SummonMonster VNum="292" PositionX="28" PositionY="199"/>
+            <SummonMonster VNum="292" PositionX="25" PositionY="205"/>
+            <SummonMonster VNum="292" PositionX="25" PositionY="202"/>
+            <SummonMonster VNum="292" PositionX="24" PositionY="198"/>
+            <SummonMonster VNum="292" PositionX="21" PositionY="199"/>
+            <SummonMonster VNum="292" PositionX="194" PositionY="123"/>
+            <SummonMonster VNum="292" PositionX="194" PositionY="119"/>
+            <SummonMonster VNum="292" PositionX="193" PositionY="115"/>
+            <SummonMonster VNum="292" PositionX="191" PositionY="125"/>
+            <SummonMonster VNum="292" PositionX="191" PositionY="121"/>
+            <SummonMonster VNum="292" PositionX="190" PositionY="222"/>
+            <SummonMonster VNum="292" PositionX="190" PositionY="117"/>
+            <SummonMonster VNum="292" PositionX="190" PositionY="114"/>
+            <SummonMonster VNum="292" PositionX="189" PositionY="224"/>
+            <SummonMonster VNum="292" PositionX="187" PositionY="222"/>
+            <SummonMonster VNum="292" PositionX="186" PositionY="222"/>
+            <SummonMonster VNum="292" PositionX="185" PositionY="224"/>
+            <SummonMonster VNum="292" PositionX="183" PositionY="221"/>
+            <SummonMonster VNum="292" PositionX="182" PositionY="224"/>
+            <SummonMonster VNum="292" PositionX="180" PositionY="225"/>
+            <SummonMonster VNum="292" PositionX="180" PositionY="222"/>
+            <SummonMonster VNum="292" PositionX="144" PositionY="174"/>
+            <SummonMonster VNum="292" PositionX="142" PositionY="176"/>
+            <SummonMonster VNum="292" PositionX="141" PositionY="177"/>
+            <SummonMonster VNum="292" PositionX="141" PositionY="172"/>
+            <SummonMonster VNum="292" PositionX="139" PositionY="174"/>
+            <SummonMonster VNum="292" PositionX="138" PositionY="177"/>
+            <SummonMonster VNum="292" PositionX="135" PositionY="175"/>
+            <SummonMonster VNum="292" PositionX="105" PositionY="195"/>
+            <SummonMonster VNum="292" PositionX="101" PositionY="199"/>
+            <SummonMonster VNum="277" PositionX="37" PositionY="125"/>
+            <SummonMonster VNum="277" PositionX="36" PositionY="123"/>
+            <SummonMonster VNum="277" PositionX="34" PositionY="126"/>
+            <SummonMonster VNum="277" PositionX="34" PositionY="123"/>
+            <SummonMonster VNum="277" PositionX="32" PositionY="125"/>
+            <SummonMonster VNum="277" PositionX="32" PositionY="122"/>
+            <SummonMonster VNum="277" PositionX="139" PositionY="201"/>
+            <SummonMonster VNum="277" PositionX="138" PositionY="198"/>
+            <SummonMonster VNum="277" PositionX="136" PositionY="196"/>
+            <SummonMonster VNum="277" PositionX="135" PositionY="202"/>
+            <SummonMonster VNum="277" PositionX="117" PositionY="222"/>
+            <SummonMonster VNum="277" PositionX="116" PositionY="220"/>
+            <SummonMonster VNum="277" PositionX="115" PositionY="222"/>
+            <SummonMonster VNum="277" PositionX="115" PositionY="221"/>
+            <SummonMonster VNum="277" PositionX="115" PositionY="218"/>
+            <SummonMonster VNum="277" PositionX="113" PositionY="220"/>
+            <SummonMonster VNum="276" PositionX="174" PositionY="58"/>
+            <SummonMonster VNum="276" PositionX="171" PositionY="62"/>
+            <SummonMonster VNum="276" PositionX="168" PositionY="61"/>
+            <SummonMonster VNum="275" PositionX="90" PositionY="167"/>
+            <SummonMonster VNum="275" PositionX="89" PositionY="170"/>
+            <SummonMonster VNum="275" PositionX="89" PositionY="170"/>
+            <SummonMonster VNum="275" PositionX="89" PositionY="169"/>
+            <SummonMonster VNum="275" PositionX="88" PositionY="168"/>
+            <SummonMonster VNum="275" PositionX="88" PositionY="167"/>
+            <SummonMonster VNum="275" PositionX="86" PositionY="169"/>
+            <SummonMonster VNum="275" PositionX="31" PositionY="112"/>
+            <SummonMonster VNum="275" PositionX="30" PositionY="116"/>
+            <SummonMonster VNum="275" PositionX="29" PositionY="114"/>
+            <SummonMonster VNum="275" PositionX="29" PositionY="108"/>
+            <SummonMonster VNum="275" PositionX="29" PositionY="107"/>
+            <SummonMonster VNum="275" PositionX="198" PositionY="161"/>
+            <SummonMonster VNum="275" PositionX="197" PositionY="159"/>
+            <SummonMonster VNum="275" PositionX="194" PositionY="159"/>
+            <SummonMonster VNum="275" PositionX="192" PositionY="159"/>
+            <SummonMonster VNum="275" PositionX="126" PositionY="174"/>
+            <SummonMonster VNum="275" PositionX="126" PositionY="168"/>
+            <SummonMonster VNum="275" PositionX="125" PositionY="172"/>
+            <SummonMonster VNum="275" PositionX="125" PositionY="170"/>
+            <SummonMonster VNum="275" PositionX="125" PositionY="166"/>
+            <SummonMonster VNum="275" PositionX="125" PositionY="164"/>
+            <SummonMonster VNum="274" PositionX="170" PositionY="59"/>
+            <SummonMonster VNum="274" PositionX="168" PositionY="56"/>
+            <SummonMonster VNum="274" PositionX="166" PositionY="60"/>
+            <SummonMonster VNum="274" PositionX="163" PositionY="59"/>
+            <SummonMonster VNum="274" PositionX="161" PositionY="56"/>
+            <SummonMonster VNum="273" PositionX="89" PositionY="169"/>
+            <SummonMonster VNum="273" PositionX="89" PositionY="168"/>
+            <SummonMonster VNum="273" PositionX="88" PositionY="167"/>
+            <SummonMonster VNum="273" PositionX="87" PositionY="170"/>
+            <SummonMonster VNum="273" PositionX="87" PositionY="168"/>
+            <SummonMonster VNum="273" PositionX="87" PositionY="167"/>
+            <SummonMonster VNum="273" PositionX="75" PositionY="122"/>
+            <SummonMonster VNum="273" PositionX="73" PositionY="122"/>
+            <SummonMonster VNum="273" PositionX="72" PositionY="126"/>
+            <SummonMonster VNum="273" PositionX="71" PositionY="129"/>
+            <SummonMonster VNum="273" PositionX="70" PositionY="125"/>
+            <SummonMonster VNum="273" PositionX="68" PositionY="128"/>
+            <SummonMonster VNum="273" PositionX="66" PositionY="126"/>
+            <SummonMonster VNum="273" PositionX="57" PositionY="144"/>
+            <SummonMonster VNum="273" PositionX="47" PositionY="146"/>
+            <SummonMonster VNum="273" PositionX="42" PositionY="144"/>
+            <SummonMonster VNum="273" PositionX="35" PositionY="144"/>
+            <SummonMonster VNum="273" PositionX="202" PositionY="65"/>
+            <SummonMonster VNum="273" PositionX="200" PositionY="63"/>
+            <SummonMonster VNum="273" PositionX="199" PositionY="73"/>
+            <SummonMonster VNum="273" PositionX="199" PositionY="68"/>
+            <SummonMonster VNum="273" PositionX="198" PositionY="60"/>
+            <SummonMonster VNum="273" PositionX="197" PositionY="157"/>
+            <SummonMonster VNum="273" PositionX="196" PositionY="156"/>
+            <SummonMonster VNum="273" PositionX="194" PositionY="156"/>
+            <SummonMonster VNum="273" PositionX="192" PositionY="155"/>
+            <SummonMonster VNum="273" PositionX="140" PositionY="200"/>
+            <SummonMonster VNum="273" PositionX="139" PositionY="199"/>
+            <SummonMonster VNum="273" PositionX="138" PositionY="201"/>
+            <SummonMonster VNum="273" PositionX="137" PositionY="196"/>
+            <SummonMonster VNum="273" PositionX="136" PositionY="203"/>
+            <SummonMonster VNum="273" PositionX="136" PositionY="201"/>
+            <SummonMonster VNum="273" PositionX="135" PositionY="200"/>
+            <SummonMonster VNum="273" PositionX="135" PositionY="198"/>
+            <SummonMonster VNum="273" PositionX="124" PositionY="175"/>
+            <SummonMonster VNum="273" PositionX="123" PositionY="166"/>
+            <SummonMonster VNum="273" PositionX="122" PositionY="169"/>
+            <SummonMonster VNum="273" PositionX="121" PositionY="174"/>
+            <SummonMonster VNum="273" PositionX="121" PositionY="163"/>
+            <SummonMonster VNum="273" PositionX="119" PositionY="221"/>
+            <SummonMonster VNum="273" PositionX="119" PositionY="165"/>
+            <SummonMonster VNum="273" PositionX="118" PositionY="169"/>
+            <SummonMonster VNum="273" PositionX="118" PositionY="166"/>
+            <SummonMonster VNum="273" PositionX="117" PositionY="219"/>
+            <SummonMonster VNum="273" PositionX="117" PositionY="173"/>
+            <SummonMonster VNum="273" PositionX="117" PositionY="171"/>
+            <SummonMonster VNum="273" PositionX="117" PositionY="163"/>
+            <SummonMonster VNum="273" PositionX="115" PositionY="225"/>
+            <SummonMonster VNum="273" PositionX="114" PositionY="168"/>
+            <SummonMonster VNum="273" PositionX="111" PositionY="218"/>
+            <SummonMonster VNum="273" PositionX="110" PositionY="219"/>
+            <SummonMonster VNum="273" PositionX="108" PositionY="225"/>
+            <SummonMonster VNum="209" PositionX="197" PositionY="73"/>
+            <SummonMonster VNum="209" PositionX="197" PositionY="196"/>
+            <SummonMonster VNum="209" PositionX="196" PositionY="202"/>
+            <SummonMonster VNum="209" PositionX="196" PositionY="184"/>
+            <SummonMonster VNum="209" PositionX="196" PositionY="166"/>
+            <SummonMonster VNum="209" PositionX="195" PositionY="77"/>
+            <SummonMonster VNum="209" PositionX="195" PositionY="70"/>
+            <SummonMonster VNum="209" PositionX="195" PositionY="63"/>
+            <SummonMonster VNum="209" PositionX="195" PositionY="60"/>
+            <SummonMonster VNum="209" PositionX="195" PositionY="190"/>
+            <SummonMonster VNum="209" PositionX="195" PositionY="180"/>
+            <SummonMonster VNum="209" PositionX="194" PositionY="75"/>
+            <SummonMonster VNum="209" PositionX="194" PositionY="65"/>
+            <SummonMonster VNum="209" PositionX="193" PositionY="79"/>
+            <SummonMonster VNum="209" PositionX="193" PositionY="71"/>
+            <SummonMonster VNum="209" PositionX="193" PositionY="59"/>
+            <SummonMonster VNum="209" PositionX="192" PositionY="207"/>
+            <SummonMonster VNum="209" PositionX="192" PositionY="177"/>
+            <SummonMonster VNum="209" PositionX="191" PositionY="197"/>
+            <SummonMonster VNum="209" PositionX="191" PositionY="185"/>
+            <SummonMonster VNum="209" PositionX="191" PositionY="178"/>
+            <SummonMonster VNum="209" PositionX="190" PositionY="172"/>
+            <SummonMonster VNum="209" PositionX="166" PositionY="175"/>
+            <SummonMonster VNum="209" PositionX="166" PositionY="166"/>
+            <SummonMonster VNum="209" PositionX="166" PositionY="157"/>
+            <SummonMonster VNum="209" PositionX="166" PositionY="151"/>
+            <SummonMonster VNum="209" PositionX="161" PositionY="156"/>
+            <SummonMonster VNum="209" PositionX="160" PositionY="170"/>
+            <SummonMonster VNum="209" PositionX="160" PositionY="147"/>
+            <SummonMonster VNum="165" PositionX="25" PositionY="173" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="23" PositionY="173" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="20" PositionY="172" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="17" PositionY="171" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="16" PositionY="174" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="39" PositionY="230" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="38" PositionY="228" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="36" PositionY="226" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="34" PositionY="228" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="33" PositionY="226" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="89" PositionY="221" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="87" PositionY="217" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="86" PositionY="222" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="84" PositionY="216" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="83" PositionY="223" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="162" PositionY="203" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="161" PositionY="208" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="158" PositionY="209" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="157" PositionY="200" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="155" PositionY="205" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="122" PositionY="171" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="120" PositionY="171" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="118" PositionY="164" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="116" PositionY="169" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="114" PositionY="166" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="169" PositionY="40" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="167" PositionY="39" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="167" PositionY="31" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="165" PositionY="37" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="164" PositionY="32" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="107" PositionY="86" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="104" PositionY="90" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="101" PositionY="89" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="98" PositionY="87" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="35" PositionY="54" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="31" PositionY="58" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="75" PositionY="60" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="74" PositionY="57" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="70" PositionY="59" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="68" PositionY="62" IsTarget="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                </OnDeath>
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="79" PositionY="148">
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="75" PositionY="145">
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="69" PositionY="145">
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="66" PositionY="147">
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="59" PositionY="148">
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="52" PositionY="145">
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="41" PositionY="146">
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="204" PositionY="159">
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="202" PositionY="159">
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="202" PositionY="157">
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="200" PositionY="160">
+            </SummonMonster>
+            <SummonMonster VNum="165" PositionX="199" PositionY="156">
+            </SummonMonster>
+            <SummonMonster VNum="164" PositionX="71" PositionY="117"/>
+            <SummonMonster VNum="164" PositionX="71" PositionY="115"/>
+            <SummonMonster VNum="164" PositionX="68" PositionY="116"/>
+            <SummonMonster VNum="164" PositionX="66" PositionY="117"/>
+            <SummonMonster VNum="164" PositionX="66" PositionY="115"/>
+            <SummonMonster VNum="164" PositionX="64" PositionY="119"/>
+            <SummonMonster VNum="164" PositionX="193" PositionY="99"/>
+            <SummonMonster VNum="164" PositionX="193" PositionY="105"/>
+            <SummonMonster VNum="164" PositionX="193" PositionY="102"/>
+            <SummonMonster VNum="164" PositionX="192" PositionY="99"/>
+            <SummonMonster VNum="164" PositionX="192" PositionY="98"/>
+            <SummonMonster VNum="164" PositionX="192" PositionY="97"/>
+            <SummonMonster VNum="164" PositionX="192" PositionY="107"/>
+            <SummonMonster VNum="164" PositionX="192" PositionY="106"/>
+            <SummonMonster VNum="164" PositionX="192" PositionY="105"/>
+            <SummonMonster VNum="164" PositionX="192" PositionY="104"/>
+            <SummonMonster VNum="164" PositionX="192" PositionY="103"/>
+            <SummonMonster VNum="164" PositionX="192" PositionY="102"/>
+            <SummonMonster VNum="164" PositionX="192" PositionY="101"/>
+            <SummonMonster VNum="164" PositionX="192" PositionY="100"/>
+            <SummonMonster VNum="164" PositionX="191" PositionY="99"/>
+            <SummonMonster VNum="164" PositionX="191" PositionY="105"/>
+            <SummonMonster VNum="164" PositionX="191" PositionY="102"/>
+            <SummonMonster VNum="164" PositionX="163" PositionY="187"/>
+            <SummonMonster VNum="164" PositionX="163" PositionY="185"/>
+            <SummonMonster VNum="164" PositionX="163" PositionY="183"/>
+            <SummonMonster VNum="164" PositionX="162" PositionY="191"/>
+            <SummonMonster VNum="164" PositionX="162" PositionY="190"/>
+            <SummonMonster VNum="164" PositionX="162" PositionY="188"/>
+            <SummonMonster VNum="164" PositionX="162" PositionY="187"/>
+            <SummonMonster VNum="164" PositionX="162" PositionY="186"/>
+            <SummonMonster VNum="164" PositionX="162" PositionY="184"/>
+            <SummonMonster VNum="164" PositionX="162" PositionY="183"/>
+            <SummonMonster VNum="164" PositionX="162" PositionY="181"/>
+            <SummonMonster VNum="164" PositionX="161" PositionY="188"/>
+            <SummonMonster VNum="164" PositionX="161" PositionY="187"/>
+            <SummonMonster VNum="164" PositionX="161" PositionY="185"/>
+            <SummonMonster VNum="164" PositionX="143" PositionY="125"/>
+            <SummonMonster VNum="164" PositionX="142" PositionY="125"/>
+            <SummonMonster VNum="164" PositionX="141" PositionY="126"/>
+            <SummonMonster VNum="164" PositionX="140" PositionY="127"/>
+            <SummonMonster VNum="164" PositionX="139" PositionY="127"/>
+            <SummonMonster VNum="164" PositionX="138" PositionY="127"/>
+            <SummonMonster VNum="164" PositionX="137" PositionY="128"/>
+            <SummonMonster VNum="164" PositionX="128" PositionY="144"/>
+            <SummonMonster VNum="164" PositionX="128" PositionY="143"/>
+            <SummonMonster VNum="164" PositionX="127" PositionY="142"/>
+            <SummonMonster VNum="164" PositionX="126" PositionY="143"/>
+            <SummonMonster VNum="164" PositionX="126" PositionY="142"/>
+            <SummonMonster VNum="164" PositionX="125" PositionY="141"/>
+            <SpawnButton PositionY="112" PositionX="99" VNumDisabled="1135" VNumEnabled="1136" Id="0">
+                <OnFirstEnable>
+                    <RemoveButtonLocker/>
+                    <RefreshRaidGoals/>
+                </OnFirstEnable>
+            </SpawnButton>
+            <SpawnButton PositionY="197" PositionX="90" VNumDisabled="1135" VNumEnabled="1136" Id="3">
+                <OnFirstEnable>
+                    <RemoveButtonLocker/>
+                    <RefreshRaidGoals/>
+                </OnFirstEnable>
+            </SpawnButton>
+            <SpawnButton PositionY="89" PositionX="72" VNumDisabled="1135" VNumEnabled="1136" Id="4">
+                <OnFirstEnable>
+                    <RemoveButtonLocker/>
+                    <RefreshRaidGoals/>
+                </OnFirstEnable>
+            </SpawnButton>
+            <SpawnButton PositionY="168" PositionX="53" VNumDisabled="1135" VNumEnabled="1136" Id="5">
+                <OnFirstEnable>
+                    <RemoveButtonLocker/>
+                    <RefreshRaidGoals/>
+                </OnFirstEnable>
+            </SpawnButton>
+            <SpawnButton PositionY="93" PositionX="38" VNumDisabled="1135" VNumEnabled="1136" Id="6">
+                <OnFirstEnable>
+                    <RemoveButtonLocker/>
+                    <RefreshRaidGoals/>
+                </OnFirstEnable>
+            </SpawnButton>
+            <SpawnButton PositionY="146" PositionX="24" VNumDisabled="1135" VNumEnabled="1136" Id="8">
+                <OnFirstEnable>
+                    <RemoveButtonLocker/>
+                    <RefreshRaidGoals/>
+                </OnFirstEnable>
+            </SpawnButton>
+            <SpawnButton PositionY="197" PositionX="218" VNumDisabled="1135" VNumEnabled="1136" Id="9">
+                <OnFirstEnable>
+                    <RemoveButtonLocker/>
+                    <RefreshRaidGoals/>
+                </OnFirstEnable>
+            </SpawnButton>
+            <SpawnButton PositionY="99" PositionX="214" VNumDisabled="1135" VNumEnabled="1136" Id="10">
+                <OnFirstEnable>
+                    <RemoveButtonLocker/>
+                    <RefreshRaidGoals/>
+                </OnFirstEnable>
+            </SpawnButton>
+            <SpawnButton PositionY="225" PositionX="168" VNumDisabled="1135" VNumEnabled="1136" Id="12">
+                <OnFirstEnable>
+                    <RemoveButtonLocker/>
+                    <RefreshRaidGoals/>
+                </OnFirstEnable>
+            </SpawnButton>
+            <SpawnButton PositionY="163" PositionX="163" VNumDisabled="1135" VNumEnabled="1136" Id="13">
+                <OnFirstEnable>
+                    <RemoveButtonLocker/>
+                    <RefreshRaidGoals/>
+                </OnFirstEnable>
+            </SpawnButton>
+            <SpawnButton PositionY="85" PositionX="161" VNumDisabled="1135" VNumEnabled="1136" Id="14">
+                <OnFirstEnable>
+                    <RemoveButtonLocker/>
+                    <RefreshRaidGoals/>
+                </OnFirstEnable>
+            </SpawnButton>
+            <SpawnButton PositionY="70" PositionX="138" VNumDisabled="1135" VNumEnabled="1136" Id="16">
+                <OnFirstEnable>
+                    <RemoveButtonLocker/>
+                    <RefreshRaidGoals/>
+                </OnFirstEnable>
+            </SpawnButton>
+            <SpawnButton PositionY="96" PositionX="135" VNumDisabled="1135" VNumEnabled="1136" Id="17">
+                <OnFirstEnable>
+                    <RemoveButtonLocker/>
+                    <RefreshRaidGoals/>
+                </OnFirstEnable>
+            </SpawnButton>
+            <SpawnButton PositionY="122" PositionX="129" VNumDisabled="1135" VNumEnabled="1136" Id="18">
+                <OnFirstEnable>
+                    <RemoveButtonLocker/>
+                    <RefreshRaidGoals/>
+                </OnFirstEnable>
+            </SpawnButton>
+            <SpawnButton PositionY="35" PositionX="126" VNumDisabled="1135" VNumEnabled="1136" Id="19">
+                <OnFirstEnable>
+                    <RemoveButtonLocker/>
+                    <RefreshRaidGoals/>
+                </OnFirstEnable>
+            </SpawnButton>
+            <SpawnButton PositionY="115" PositionX="104" VNumDisabled="1135" VNumEnabled="1136" Id="21">
+                <OnFirstEnable>
+                    <RemoveButtonLocker/>
+                    <RefreshRaidGoals/>
+                </OnFirstEnable>
+            </SpawnButton>
+            <SpawnButton PositionY="131" PositionX="98" VNumDisabled="1135" VNumEnabled="1136" Id="1">
+            </SpawnButton>
+            <SpawnButton PositionY="34" PositionX="95" VNumDisabled="1135" VNumEnabled="1136" Id="2">
+                <!-- Need to add teleport -->
+            </SpawnButton>
+            <SpawnButton PositionY="73" PositionX="36" VNumDisabled="1135" VNumEnabled="1136" Id="7">
+            </SpawnButton><SpawnButton PositionY="34" PositionX="142" VNumDisabled="1135" VNumEnabled="1136" Id="15">
+                 <!-- Need to add teleport -->
+            </SpawnButton>
+
+            <SpawnButton PositionY="35" PositionX="111" VNumDisabled="1135" VNumEnabled="1136" Id="20">
+                <!-- Need to add teleport -->
+            </SpawnButton>
+            <SetMonsterLockers Value="40" />
+            <SetButtonLockers Value="16" />
+            <OnLockerOpen>
+                <ChangePortalType Type="2" IdOnMap="0"/>
+                <RefreshMapItems/>
+                <SendMessage Value="Le portail est ouvert !" Type="0"/>
+            </OnLockerOpen>
+            <GenerateClock Value="24000"/>
+            <StartClock/>
+            <SpawnPortal IdOnMap="0" PositionX="26" PositionY="27" Type="1" ToMap="1" ToX="26" ToY="40"/>
+        </CreateMap>
+        <CreateMap Map="1" VNum="2542">
+                <SetMonsterLockers Value="1" />
+                <SetButtonLockers Value="0" />
+                <RefreshRaidGoals/>
+            <SummonMonster VNum="286" PositionX="38" PositionY="28" IsBoss="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                    <End Type="1"/>
+                    <ThrowItem VNum="1046" PackAmount="30" MinAmount="20000" MaxAmount="20001"/>
+                </OnDeath>
+            </SummonMonster>
+        </CreateMap>
+    </InstanceEvents>
+</Definition>
