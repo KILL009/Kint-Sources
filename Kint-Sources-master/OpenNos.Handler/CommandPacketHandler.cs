@@ -3193,11 +3193,15 @@ namespace OpenNos.Handler
         /// $Speed Command
         /// </summary>
         /// <param name="speedPacket"></param>
-        public void Speed(SpeedPacket speedPacket)   
+        public void Speed(SpeedPacket speedPacket)
         {
             Logger.LogUserEvent("GMCOMMAND", Session.GenerateIdentity(), $"[Speed]Value: {speedPacket.Value}");
-   
-            
+            if (speedPacket != null)
+            {
+                Session.Character.Speed = (speedPacket.Value >= 60 ? (byte)59 : speedPacket.Value);
+                Session.Character.IsCustomSpeed = true;
+                Session.SendPacket(Session.Character.GenerateCond());
+            }
             else
             {
                 Session.SendPacket(Session.Character.GenerateSay(SpeedPacket.ReturnHelp(), 10));

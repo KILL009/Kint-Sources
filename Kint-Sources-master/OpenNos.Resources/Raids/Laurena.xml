@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Definition>
+    <Globals>
+        <Id Value="20" />
+        <Label Value="Raid Laurena" />
+        <LevelMinimum Value="100"/>
+        <LevelMaximum Value="150"/>
+        <StartX Value="48" />
+        <StartY Value="87" />
+        <Reputation Value="8000" />
+        <RequieredItems>
+            <Item VNum="5977" Amount="1"/>
+        </RequieredItems>
+        <GiftItems>
+            <Item Amount="1" VNum="302" Design="20" IsRandomRare="True"/>
+			<Item Amount="1" VNum="5983" Design="0" IsRandomRare="False"/>
+			<Item Amount="1" VNum="5959" Design="0" IsRandomRare="False"/>
+        </GiftItems>
+    </Globals>
+    <InstanceEvents>
+        <CreateMap Map="0" VNum="2514">
+                <SetMonsterLockers Value="1" />
+                <SetButtonLockers Value="0" />
+                <RefreshRaidGoals/>
+				<Wave Offset="1" Delay="90">
+					<SendMessage Value="Attention ! Les renforts ennemis sont arrivés !" Type="0"/>
+					<SummonMonster VNum="2327" PositionX="50" PositionY="75"/>
+				</Wave>
+            <SummonMonster VNum="2326" PositionX="53" PositionY="59" IsBoss="True">
+				<OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                    <End Type="1"/>
+                    <ThrowItem VNum="1046" PackAmount="50" MinAmount="100000" MaxAmount="150000"/>
+                </OnDeath>
+            </SummonMonster>
+        </CreateMap>
+    </InstanceEvents>
+</Definition>

@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Definition>
+  <Globals>
+    <Id Value="17" />
+    <Label Value="'Glacerus le rude" />
+    <LevelMinimum Value="75"/>
+    <LevelMaximum Value="150"/>
+    <StartX Value="12" />
+    <StartY Value="38" />
+      <Reputation Value="3500" />
+    <RequieredItems>
+      <Item VNum="5512" Amount="1"/>
+    </RequieredItems>
+
+    <GiftItems>
+        <Item Amount="1" VNum="302" Design="17" IsRandomRare="True"/>
+		<Item Amount="1" VNum="2523" Design="0" IsRandomRare="False"/>
+		
+    </GiftItems>
+  </Globals>
+  <InstanceEvents>
+    <CreateMap Map="0" VNum="2588">
+      <SpawnButton PositionX="13" PositionY="22" VNumDisabled="1135" VNumEnabled="1136" Id="0">
+        <OnFirstEnable>
+          <RemoveButtonLocker />
+          <RefreshRaidGoals />
+        </OnFirstEnable>
+      </SpawnButton>
+      <SetMonsterLockers Value="0" />
+      <SetButtonLockers Value="1" />
+      <OnLockerOpen>
+        <ChangePortalType Type="2" IdOnMap="0" />
+        <RefreshMapItems />
+        <SendMessage Value="Le portail est ouvert !" Type="0" />
+      </OnLockerOpen>
+      <SpawnPortal IdOnMap="0" PositionX="12" PositionY="7" Type="1" ToMap="1" ToX="30" ToY="46" />
+      <GenerateClock Value="24000" />
+      <StartClock />
+    </CreateMap>
+		    <CreateMap Map="1" VNum="2589">
+        <SetMonsterLockers Value="1" />
+        <SetButtonLockers Value="0" />
+        <RefreshRaidGoals/>
+      <SummonMonster VNum="2049" PositionX="33" PositionY="23" IsBoss="True">
+        <OnDeath>
+          <RemoveMonsterLocker/>
+          <RefreshRaidGoals/>
+          <End Type="1"/>
+          <ThrowItem VNum="1015"/>
+          <ThrowItem VNum="2136"/>
+          <ThrowItem VNum="2170" PackAmount="2"/>
+          <ThrowItem VNum="1011"/>
+          <ThrowItem VNum="2043"/>
+          <ThrowItem VNum="2035"/>
+          <ThrowItem VNum="2044"/>
+          <ThrowItem VNum="2127" PackAmount="2"/>
+          <ThrowItem VNum="2048" PackAmount="2"/>
+          <ThrowItem VNum="1046" PackAmount="30" MinAmount="1000" MaxAmount="2000"/>
+        </OnDeath>
+      </SummonMonster>
+        <Wave Offset="1" Delay="60">
+          <SendMessage Value="Attention ! Les ennemis reçoivent de l'aide !" Type="0"/>
+          <SummonMonster VNum="2046" PositionX="11" PositionY="6">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="17" PositionY="18">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="22" PositionY="18">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="23" PositionY="11">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="23" PositionY="14">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="17" PositionY="17">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="27" PositionY="13">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="32" PositionY="16">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="34" PositionY="10">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="37" PositionY="16">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="38" PositionY="11">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="41" PositionY="18">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="44" PositionY="13">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="47" PositionY="19">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="42" PositionY="22">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="19" PositionY="33">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="21" PositionY="30">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="22" PositionY="36">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="25" PositionY="33">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="30" PositionY="33">
+
+
+          </SummonMonster>
+	      <SummonMonster VNum="2047" PositionX="35" PositionY="33">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="35" PositionY="38">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="41" PositionY="35">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="44" PositionY="31">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="41" PositionY="23">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="41" PositionY="27">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="26" PositionY="24">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="25" PositionY="30">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="27" PositionY="35">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="34" PositionY="37">
+		  
+		  </SummonMonster>
+        </Wave>
+        <Wave Offset="2" Delay="120">
+          <SendMessage Value="Les ennemis reçoivent des renforts !" Type="0"/>
+<SummonMonster VNum="2046" PositionX="11" PositionY="6">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="17" PositionY="18">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="22" PositionY="18">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="23" PositionY="11">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="23" PositionY="14">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="17" PositionY="17">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="27" PositionY="13">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="32" PositionY="16">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="34" PositionY="10">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="37" PositionY="16">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="38" PositionY="11">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="41" PositionY="18">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="44" PositionY="13">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="47" PositionY="19">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="42" PositionY="22">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="19" PositionY="33">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="21" PositionY="30">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="22" PositionY="36">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="25" PositionY="33">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="30" PositionY="33">
+
+
+          </SummonMonster>
+	      <SummonMonster VNum="2047" PositionX="35" PositionY="33">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="35" PositionY="38">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="41" PositionY="35">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="44" PositionY="31">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="41" PositionY="23">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="41" PositionY="27">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="26" PositionY="24">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="25" PositionY="30">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="27" PositionY="35">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="34" PositionY="37">
+
+		  </SummonMonster>
+        </Wave>
+        <Wave Offset="8" Delay="120">
+          <SendMessage Value="Les ennemis reçoivent des renforts !" Type="0"/>
+ <SummonMonster VNum="2046" PositionX="11" PositionY="6">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="17" PositionY="18">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="22" PositionY="18">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="23" PositionY="11">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="23" PositionY="14">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="17" PositionY="17">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="27" PositionY="13">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="32" PositionY="16">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="34" PositionY="10">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="37" PositionY="16">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="38" PositionY="11">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="41" PositionY="18">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="44" PositionY="13">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="47" PositionY="19">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="42" PositionY="22">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="19" PositionY="33">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="21" PositionY="30">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="22" PositionY="36">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="25" PositionY="33">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="30" PositionY="33">
+
+
+          </SummonMonster>
+	      <SummonMonster VNum="2047" PositionX="35" PositionY="33">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="35" PositionY="38">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="41" PositionY="35">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="44" PositionY="31">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="41" PositionY="23">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="41" PositionY="27">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="26" PositionY="24">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="25" PositionY="30">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="27" PositionY="35">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="34" PositionY="37">
+
+
+		  </SummonMonster>
+        </Wave>
+        <Wave Offset="14" Delay="120">
+          <SendMessage Value="Les ennemis reçoivent des renforts !" Type="0"/>
+<SummonMonster VNum="2046" PositionX="11" PositionY="6">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="17" PositionY="18">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="22" PositionY="18">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="23" PositionY="11">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="23" PositionY="14">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="17" PositionY="17">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="27" PositionY="13">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="32" PositionY="16">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="34" PositionY="10">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="37" PositionY="16">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="38" PositionY="11">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="41" PositionY="18">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="44" PositionY="13">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="47" PositionY="19">
+
+          </SummonMonster>
+          <SummonMonster VNum="2046" PositionX="42" PositionY="22">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="19" PositionY="33">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="21" PositionY="30">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="22" PositionY="36">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="25" PositionY="33">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="30" PositionY="33">
+
+          </SummonMonster>
+	      <SummonMonster VNum="2047" PositionX="35" PositionY="33">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="35" PositionY="38">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="41" PositionY="35">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="44" PositionY="31">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="41" PositionY="23">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="41" PositionY="27">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="26" PositionY="24">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="25" PositionY="30">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="27" PositionY="35">
+
+          </SummonMonster>
+          <SummonMonster VNum="2047" PositionX="34" PositionY="37">
+
+		  </SummonMonster>
+        </Wave>
+    </CreateMap>
+	  </InstanceEvents>
+</Definition>

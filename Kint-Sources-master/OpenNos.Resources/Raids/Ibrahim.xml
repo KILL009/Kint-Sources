@@ -1,0 +1,799 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Definition>
+   <Globals>
+      <Id Value="9" />
+      <Label Value="Ibrahim" />
+      <LevelMinimum Value="80" />
+      <LevelMaximum Value="150" />
+      <StartX Value="52" />
+      <StartY Value="132" />
+      <RequieredItems>
+         <Item VNum="1892" Amount="1" />
+      </RequieredItems>
+      <GiftItems>
+         <Item Amount="1" VNum="302" Design="9" IsRandomRare="True" />
+		 <Item Amount="1" VNum="1876" Design="0" IsRandomRare="false" />
+      </GiftItems>
+   </Globals>
+   <InstanceEvents>
+      <CreateMap Map="0" VNum="2591">
+         <SummonMonster VNum="1356" PositionX="114" PositionY="103" IsTarget="true" IsHostile="true" IsBoss="false" Move="true">
+            <OnDeath>
+               <RemoveMonsterLocker />
+               <RefreshRaidGoals />
+            </OnDeath>
+         </SummonMonster>
+         <SummonMonster VNum="1357" PositionX="74" PositionY="43" IsTarget="true" IsHostile="true" IsBoss="false" Move="true">
+            <OnDeath>
+               <RemoveMonsterLocker />
+               <RefreshRaidGoals />
+            </OnDeath>
+         </SummonMonster>
+      <SummonMonster VNum="1355" PositionX="77" PositionY="210" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="77" PositionY="207" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="77" PositionY="204" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="53" PositionY="198" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="176" PositionY="104" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="175" PositionY="68" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="164" PositionY="43" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="155" PositionY="124" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="149" PositionY="104" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="145" PositionY="41" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="143" PositionY="122" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="141" PositionY="46" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="139" PositionY="128" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="131" PositionY="125" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="115" PositionY="205" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="102" PositionY="45" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="102" PositionY="42" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="89" PositionY="55" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="87" PositionY="31" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="57" PositionY="196" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="56" PositionY="45" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="56" PositionY="41" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="53" PositionY="188" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="51" PositionY="188" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="49" PositionY="196" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="179" PositionY="75" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="177" PositionY="49" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="176" PositionY="108" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="176" PositionY="106" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="176" PositionY="102" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="176" PositionY="100" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="175" PositionY="41" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="172" PositionY="78" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="155" PositionY="138" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="149" PositionY="131" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="141" PositionY="146" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="125" PositionY="149" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="125" PositionY="146" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="125" PositionY="143" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="118" PositionY="100" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="117" PositionY="167" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="117" PositionY="116" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="113" PositionY="116" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="112" PositionY="180" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="110" PositionY="100" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="108" PositionY="167" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="80" PositionY="48" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="80" PositionY="39" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="68" PositionY="48" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="68" PositionY="39" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="133" PositionY="99" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="133" PositionY="109" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="122" PositionY="128" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="122" PositionY="120" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="120" PositionY="49" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="120" PositionY="38" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="116" PositionY="199" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="114" PositionY="164" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="113" PositionY="49" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="113" PositionY="38" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="111" PositionY="164" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="108" PositionY="128" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="108" PositionY="120" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="108" PositionY="111" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="107" PositionY="207" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="106" PositionY="49" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="106" PositionY="38" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="55" PositionY="185" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="52" PositionY="185" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="49" PositionY="185" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="178" PositionY="85" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="174" PositionY="60" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="173" PositionY="106" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="173" PositionY="102" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="154" PositionY="45" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="153" PositionY="145" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="147" PositionY="139" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="141" PositionY="106" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="141" PositionY="102" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="136" PositionY="148" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="136" PositionY="144" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="117" PositionY="184" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="114" PositionY="184" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="110" PositionY="184" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="107" PositionY="184" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1378" PositionX="86" PositionY="43" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1378" PositionX="66" PositionY="43" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="117" PositionY="164" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="108" PositionY="164" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+         <SpawnButton PositionX="59" PositionY="198" VNumDisabled="1135" VNumEnabled="1136" Id="0">
+            <OnFirstEnable>
+			   <SummonMonster VNum="1353" PositionX="99" PositionY="204" />
+               <SummonMonster VNum="1353" PositionX="106" PositionY="208" />
+               <SummonMonster VNum="1353" PositionX="111" PositionY="204" />
+               <SummonMonster VNum="1353" PositionX="109" PositionY="197" />
+               <SummonMonster VNum="1353" PositionX="116" PositionY="192" />
+               <SummonMonster VNum="1353" PositionX="111" PositionY="189" />
+               <SummonMonster VNum="1353" PositionX="116" PositionY="186" />
+               <SummonMonster VNum="1353" PositionX="116" PositionY="180" />
+               <RemoveButtonLocker />
+               <RefreshRaidGoals />
+            </OnFirstEnable>
+         </SpawnButton>
+         <SpawnButton PositionX="47" PositionY="205" VNumDisabled="1135" VNumEnabled="1136" Id="1">
+            <OnFirstEnable>
+			<SendMessage Value="The enemies are getting reinforcements!" Type="0" />
+               <SummonMonster VNum="1353" PositionX="52" PositionY="206" />
+               <SummonMonster VNum="1353" PositionX="55" PositionY="210" />
+               <SummonMonster VNum="1353" PositionX="56" PositionY="206" />
+               <SummonMonster VNum="1353" PositionX="54" PositionY="200" />
+               <SummonMonster VNum="1353" PositionX="50" PositionY="199" />
+               <SummonMonster VNum="1353" PositionX="47" PositionY="202" />
+               <SummonMonster VNum="1353" PositionX="52" PositionY="200" />
+               <SummonMonster VNum="1353" PositionX="49" PositionY="205" />
+            </OnFirstEnable>
+         </SpawnButton>
+         <SpawnButton PositionX="108" PositionY="140" VNumDisabled="1135" VNumEnabled="1136" Id="2">
+            <OnFirstEnable>
+               <RemoveButtonLocker />
+               <RefreshRaidGoals />
+            </OnFirstEnable>
+         </SpawnButton>
+         <SpawnButton PositionX="79" PositionY="61" VNumDisabled="1135" VNumEnabled="1136" Id="3">
+            <OnEnable>
+               <Teleport PositionX="79" PositionY="61" DestinationX="118" DestinationY="123" />
+            </OnEnable>
+            <OnDisable>
+               <Teleport PositionX="79" PositionY="61" DestinationX="118" DestinationY="123" />
+            </OnDisable>
+            <OnFirstEnable>
+               <RemoveButtonLocker />
+               <RefreshRaidGoals />
+            </OnFirstEnable>
+         </SpawnButton>
+         <SpawnButton PositionX="76" PositionY="57" VNumDisabled="1135" VNumEnabled="1136" Id="4">
+            <OnFirstEnable>
+			<SendMessage Value="Les renforts ennemis sont apparus !" Type="0" />
+               <SummonMonster VNum="1352" PositionX="66" PositionY="50" />
+               <SummonMonster VNum="1352" PositionX="80" PositionY="54" />
+               <SummonMonster VNum="1352" PositionX="76" PositionY="41" />
+               <SummonMonster VNum="1352" PositionX="67" PositionY="37" />
+               <SummonMonster VNum="1352" PositionX="75" PositionY="37" />
+               <SummonMonster VNum="1352" PositionX="66" PositionY="49" />
+               <SummonMonster VNum="1353" PositionX="73" PositionY="51" />
+               <SummonMonster VNum="1353" PositionX="73" PositionY="60" />
+               <SummonMonster VNum="1353" PositionX="80" PositionY="55" />
+               <SummonMonster VNum="1353" PositionX="85" PositionY="44" />
+               <SummonMonster VNum="1353" PositionX="79" PositionY="36" />
+               <SummonMonster VNum="1353" PositionX="77" PositionY="45" />
+               <SummonMonster VNum="1355" PositionX="63" PositionY="48" />
+               <SummonMonster VNum="1355" PositionX="63" PositionY="36" />
+               <SummonMonster VNum="1355" PositionX="70" PositionY="28" />
+            </OnFirstEnable>
+         </SpawnButton>
+         <SpawnButton PositionX="73" PositionY="58" VNumDisabled="1135" VNumEnabled="1136" Id="5">
+            <OnFirstEnable>
+			<SendMessage Value="Les renforts ennemis sont apparus !" Type="0" />
+               <SummonMonster VNum="1352" PositionX="66" PositionY="50" />
+               <SummonMonster VNum="1352" PositionX="80" PositionY="54" />
+               <SummonMonster VNum="1352" PositionX="76" PositionY="41" />
+               <SummonMonster VNum="1352" PositionX="67" PositionY="37" />
+               <SummonMonster VNum="1352" PositionX="75" PositionY="37" />
+               <SummonMonster VNum="1352" PositionX="66" PositionY="49" />
+               <SummonMonster VNum="1353" PositionX="73" PositionY="51" />
+               <SummonMonster VNum="1353" PositionX="73" PositionY="60" />
+               <SummonMonster VNum="1353" PositionX="80" PositionY="55" />
+               <SummonMonster VNum="1353" PositionX="85" PositionY="44" />
+               <SummonMonster VNum="1353" PositionX="79" PositionY="36" />
+               <SummonMonster VNum="1353" PositionX="77" PositionY="45" />
+               <SummonMonster VNum="1355" PositionX="63" PositionY="48" />
+               <SummonMonster VNum="1355" PositionX="63" PositionY="36" />
+               <SummonMonster VNum="1355" PositionX="70" PositionY="28" />
+            </OnFirstEnable>
+         </SpawnButton>
+         <SpawnButton PositionY="56" PositionX="80" VNumDisabled="1135" VNumEnabled="1136" Id="6">
+            <OnFirstEnable>
+               <SummonMonster VNum="1352" PositionX="66" PositionY="50" />
+               <SummonMonster VNum="1352" PositionX="80" PositionY="54" />
+               <SummonMonster VNum="1352" PositionX="76" PositionY="41" />
+               <SummonMonster VNum="1352" PositionX="67" PositionY="37" />
+               <SummonMonster VNum="1352" PositionX="75" PositionY="37" />
+               <SummonMonster VNum="1352" PositionX="66" PositionY="49" />
+               <SummonMonster VNum="1353" PositionX="73" PositionY="51" />
+               <SummonMonster VNum="1353" PositionX="73" PositionY="60" />
+               <SummonMonster VNum="1353" PositionX="80" PositionY="55" />
+               <SummonMonster VNum="1353" PositionX="85" PositionY="44" />
+               <SummonMonster VNum="1353" PositionX="79" PositionY="36" />
+               <SummonMonster VNum="1353" PositionX="77" PositionY="45" />
+               <SummonMonster VNum="1355" PositionX="63" PositionY="48" />
+               <SummonMonster VNum="1355" PositionX="63" PositionY="36" />
+               <SummonMonster VNum="1355" PositionX="70" PositionY="28" />
+               <RemoveButtonLocker />
+               <RefreshRaidGoals />
+            </OnFirstEnable>
+         </SpawnButton>
+         <SetMonsterLockers Value="2" />
+         <SetButtonLockers Value="4" />
+         <OnLockerOpen>
+            <ChangePortalType Type="2" IdOnMap="0" />
+            <RefreshMapItems />
+            <SendMessage Value="Le portail est ouvert !" Type="0" />
+         </OnLockerOpen>
+         <SpawnPortal IdOnMap="0" PositionX="37" PositionY="43" Type="1" ToMap="1" ToX="30" ToY="118" />
+         <GenerateClock Value="24000" />
+         <StartClock />
+      </CreateMap>
+      <CreateMap Map="1" VNum="2592">
+         <SummonMonster VNum="1358" PositionX="86" PositionY="211" IsTarget="true" IsHostile="true" IsBoss="false" Move="true">
+            <OnDeath>
+               <RemoveMonsterLocker />
+               <RefreshRaidGoals />
+            </OnDeath>
+         </SummonMonster>
+         <SummonMonster VNum="1359" PositionX="169" PositionY="88" IsTarget="true" IsHostile="true" IsBoss="false" Move="true">
+            <OnDeath>
+               <RemoveMonsterLocker />
+               <RefreshRaidGoals />
+            </OnDeath>
+         </SummonMonster>
+      <SummonMonster VNum="1378" PositionX="85" PositionY="172" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1378" PositionX="76" PositionY="168" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1378" PositionX="74" PositionY="177" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1378" PositionX="191" PositionY="78" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1378" PositionX="181" PositionY="152" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1378" PositionX="175" PositionY="82" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1378" PositionX="170" PositionY="42" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1378" PositionX="170" PositionY="104" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1378" PositionX="169" PositionY="47" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1378" PositionX="169" PositionY="137" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1378" PositionX="167" PositionY="151" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1378" PositionX="163" PositionY="82" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1378" PositionX="146" PositionY="79" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="97" PositionY="170" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="97" PositionY="168" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="196" PositionY="214" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="193" PositionY="64" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="193" PositionY="214" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="178" PositionY="67" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="185" PositionY="158" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="185" PositionY="146" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="170" PositionY="211" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="149" PositionY="59" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="143" PositionY="66" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="97" PositionY="172" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="97" PositionY="166" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="65" PositionY="215" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="65" PositionY="214" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="65" PositionY="213" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="65" PositionY="212" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="203" PositionY="165" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="200" PositionY="161" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="197" PositionY="161" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="196" PositionY="95" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="196" PositionY="208" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="194" PositionY="167" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="193" PositionY="208" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="182" PositionY="93" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="178" PositionY="86" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="175" PositionY="77" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="175" PositionY="139" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="175" PositionY="133" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="175" PositionY="127" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="174" PositionY="74" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="173" PositionY="91" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="164" PositionY="91" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="164" PositionY="74" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="163" PositionY="139" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="163" PositionY="133" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="163" PositionY="127" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="160" PositionY="86" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="162" PositionY="76" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="146" PositionY="99" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="156" PositionY="89" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="95" PositionY="170" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="95" PositionY="168" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="194" PositionY="212" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="194" PositionY="210" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="191" PositionY="61" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="175" PositionY="211" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="146" PositionY="62" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="95" PositionY="172" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="95" PositionY="166" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="92" PositionY="169" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="66" PositionY="215" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="66" PositionY="214" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="66" PositionY="213" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="66" PositionY="212" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="66" PositionY="172" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="192" PositionY="96" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="180" PositionY="155" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="191" PositionY="149" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="166" PositionY="215" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="166" PositionY="207" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="149" PositionY="94" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="87" PositionY="202" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="74" PositionY="202" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="83" PositionY="215" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="74" PositionY="213" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="172" PositionY="34" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="51" PositionY="170" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="30" PositionY="163" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="29" PositionY="170" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="91" PositionY="215" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="91" PositionY="213" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1355" PositionX="101" PositionY="202" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="87" PositionY="194" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="74" PositionY="193" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="33" PositionY="139" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="24" PositionY="148" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1354" PositionX="101" PositionY="194" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="71" PositionY="205" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="70" PositionY="188" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="53" PositionY="174" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="53" PositionY="166" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="44" PositionY="177" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="44" PositionY="169" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="37" PositionY="166" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="36" PositionY="174" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="108" PositionY="204" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1353" PositionX="103" PositionY="188" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="87" PositionY="186" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="74" PositionY="186" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="30" PositionY="155" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="27" PositionY="155" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+      <SummonMonster VNum="1352" PositionX="101" PositionY="186" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+         <SpawnButton PositionX="23" PositionY="129" VNumDisabled="1135" VNumEnabled="1136" Id="0">
+            <OnFirstEnable>
+			<SendMessage Value="Attention ! Les renforts ennemis sont là !" Type="0" />
+               <SummonMonster VNum="1353" PositionX="33" PositionY="144" />
+               <SummonMonster VNum="1353" PositionX="30" PositionY="145" />
+               <SummonMonster VNum="1354" PositionX="28" PositionY="148" />
+               <SummonMonster VNum="1353" PositionX="26" PositionY="151" />
+               <SummonMonster VNum="1354" PositionX="30" PositionY="157" />
+               <SummonMonster VNum="1354" PositionX="33" PositionY="161" />
+               <SummonMonster VNum="1353" PositionX="30" PositionY="166" />
+               <SummonMonster VNum="1353" PositionX="26" PositionY="170" />
+               <SummonMonster VNum="1354" PositionX="31" PositionY="172" />
+               <SummonMonster VNum="1353" PositionX="35" PositionY="170" />
+               <SummonMonster VNum="1354" PositionX="36" PositionY="175" />
+               <SummonMonster VNum="1353" PositionX="42" PositionY="170" />
+            </OnFirstEnable>
+         </SpawnButton>
+         <SpawnButton PositionX="23" PositionY="131" VNumDisabled="1135" VNumEnabled="1136" Id="1">
+            <OnFirstEnable>
+               <SummonMonster VNum="1353" PositionX="33" PositionY="144" />
+               <SummonMonster VNum="1353" PositionX="30" PositionY="145" />
+               <SummonMonster VNum="1354" PositionX="28" PositionY="148" />
+               <SummonMonster VNum="1353" PositionX="26" PositionY="151" />
+               <SummonMonster VNum="1354" PositionX="30" PositionY="157" />
+               <SummonMonster VNum="1354" PositionX="33" PositionY="161" />
+               <SummonMonster VNum="1353" PositionX="30" PositionY="166" />
+               <SummonMonster VNum="1353" PositionX="26" PositionY="170" />
+               <SummonMonster VNum="1354" PositionX="31" PositionY="172" />
+               <SummonMonster VNum="1353" PositionX="35" PositionY="170" />
+               <SummonMonster VNum="1354" PositionX="36" PositionY="175" />
+               <SummonMonster VNum="1353" PositionX="42" PositionY="170" />
+               <RemoveButtonLocker />
+               <RefreshRaidGoals />
+            </OnFirstEnable>
+         </SpawnButton>
+         <SpawnButton PositionX="23" PositionY="134" VNumDisabled="1135" VNumEnabled="1136" Id="2">
+                        <OnFirstEnable>
+			<SendMessage Value="Les renforts ennemis sont apparus !" Type="0" />
+               <SummonMonster VNum="1353" PositionX="33" PositionY="144" />
+               <SummonMonster VNum="1353" PositionX="30" PositionY="145" />
+               <SummonMonster VNum="1354" PositionX="28" PositionY="148" />
+               <SummonMonster VNum="1353" PositionX="26" PositionY="151" />
+               <SummonMonster VNum="1354" PositionX="30" PositionY="157" />
+               <SummonMonster VNum="1354" PositionX="33" PositionY="161" />
+               <SummonMonster VNum="1353" PositionX="30" PositionY="166" />
+               <SummonMonster VNum="1353" PositionX="26" PositionY="170" />
+               <SummonMonster VNum="1354" PositionX="31" PositionY="172" />
+               <SummonMonster VNum="1353" PositionX="35" PositionY="170" />
+               <SummonMonster VNum="1354" PositionX="36" PositionY="175" />
+               <SummonMonster VNum="1353" PositionX="42" PositionY="170" />
+            </OnFirstEnable>
+         </SpawnButton>
+         <SpawnButton PositionX="87" PositionY="209" VNumDisabled="1135" VNumEnabled="1136" Id="3">
+            <OnFirstEnable>
+               <RemoveButtonLocker />
+               <RefreshRaidGoals />
+            </OnFirstEnable>
+         </SpawnButton>
+         <SpawnButton PositionX="205" PositionY="208" VNumDisabled="1135" VNumEnabled="1136" Id="4">
+            <OnFirstEnable>
+			<SendMessage Value="Les renforts ennemis sont apparus !" Type="0" />
+               <SummonMonster VNum="1353" PositionX="195" PositionY="192" />
+               <SummonMonster VNum="1353" PositionX="198" PositionY="188" />
+               <SummonMonster VNum="1354" PositionX="201" PositionY="184" />
+               <SummonMonster VNum="1353" PositionX="198" PositionY="181" />
+               <SummonMonster VNum="1354" PositionX="195" PositionY="177" />
+               <SummonMonster VNum="1354" PositionX="202" PositionY="177" />
+               <SummonMonster VNum="1353" PositionX="204" PositionY="171" />
+               <SummonMonster VNum="1353" PositionX="200" PositionY="170" />
+               <SummonMonster VNum="1354" PositionX="196" PositionY="168" />
+               <SummonMonster VNum="1353" PositionX="200" PositionY="165" />
+               <SummonMonster VNum="1354" PositionX="203" PositionY="162" />
+               <SummonMonster VNum="1353" PositionX="201" PositionY="158" />
+            </OnFirstEnable>
+         </SpawnButton>
+         <SpawnButton PositionX="203" PositionY="206" VNumDisabled="1135" VNumEnabled="1136" Id="5">
+            <OnFirstEnable>
+			 <SendMessage Value="Les ennemis reçoivent des renforts !" Type="0"/>
+               <SummonMonster VNum="1353" PositionX="195" PositionY="192" />
+               <SummonMonster VNum="1353" PositionX="198" PositionY="188" />
+               <SummonMonster VNum="1354" PositionX="201" PositionY="184" />
+               <SummonMonster VNum="1353" PositionX="198" PositionY="181" />
+               <SummonMonster VNum="1354" PositionX="195" PositionY="177" />
+               <SummonMonster VNum="1354" PositionX="202" PositionY="177" />
+               <SummonMonster VNum="1353" PositionX="204" PositionY="171" />
+               <SummonMonster VNum="1353" PositionX="200" PositionY="170" />
+               <SummonMonster VNum="1354" PositionX="196" PositionY="168" />
+               <SummonMonster VNum="1353" PositionX="200" PositionY="165" />
+               <SummonMonster VNum="1354" PositionX="203" PositionY="162" />
+               <SummonMonster VNum="1353" PositionX="201" PositionY="158" />
+            </OnFirstEnable>
+         </SpawnButton>
+         <SpawnButton PositionX="204" PositionY="211" VNumDisabled="1135" VNumEnabled="1136" Id="6">
+            <OnFirstEnable>
+			 <SendMessage Value="Les ennemis reçoivent des renforts !" Type="0"/>
+               <SummonMonster VNum="1353" PositionX="195" PositionY="192" />
+               <SummonMonster VNum="1353" PositionX="198" PositionY="188" />
+               <SummonMonster VNum="1354" PositionX="201" PositionY="184" />
+               <SummonMonster VNum="1353" PositionX="198" PositionY="181" />
+               <SummonMonster VNum="1354" PositionX="195" PositionY="177" />
+               <SummonMonster VNum="1354" PositionX="202" PositionY="177" />
+               <SummonMonster VNum="1353" PositionX="204" PositionY="171" />
+               <SummonMonster VNum="1353" PositionX="200" PositionY="170" />
+               <SummonMonster VNum="1354" PositionX="196" PositionY="168" />
+               <SummonMonster VNum="1353" PositionX="200" PositionY="165" />
+               <SummonMonster VNum="1354" PositionX="203" PositionY="162" />
+               <SummonMonster VNum="1353" PositionX="201" PositionY="158" />
+            </OnFirstEnable>
+         </SpawnButton>
+         <SpawnButton PositionX="202" PositionY="210" VNumDisabled="1135" VNumEnabled="1136" Id="7">
+            <OnFirstEnable>
+               <SummonMonster VNum="1353" PositionX="203" PositionY="198" />
+               <SummonMonster VNum="1354" PositionX="201" PositionY="190" />
+               <SummonMonster VNum="1353" PositionX="198" PositionY="187" />
+               <SummonMonster VNum="1354" PositionX="194" PositionY="188" />
+               <SummonMonster VNum="1354" PositionX="195" PositionY="181" />
+               <SummonMonster VNum="1353" PositionX="198" PositionY="176" />
+               <SummonMonster VNum="1353" PositionX="202" PositionY="175" />
+               <SummonMonster VNum="1354" PositionX="200" PositionY="171" />
+               <SummonMonster VNum="1353" PositionX="197" PositionY="169" />
+               <SummonMonster VNum="1354" PositionX="202" PositionY="164" />
+               <SummonMonster VNum="1353" PositionX="199" PositionY="159" />
+               <RemoveButtonLocker />
+               <RefreshRaidGoals />
+            </OnFirstEnable>
+         </SpawnButton>
+         <SpawnButton PositionX="201" PositionY="209" VNumDisabled="1135" VNumEnabled="1136" Id="8">
+            <OnFirstEnable>
+			 <SendMessage Value="Les ennemis reçoivent des renforts !" Type="0"/>
+               <SummonMonster VNum="1353" PositionX="195" PositionY="192" />
+               <SummonMonster VNum="1353" PositionX="198" PositionY="188" />
+               <SummonMonster VNum="1354" PositionX="201" PositionY="184" />
+               <SummonMonster VNum="1353" PositionX="198" PositionY="181" />
+               <SummonMonster VNum="1354" PositionX="195" PositionY="177" />
+               <SummonMonster VNum="1354" PositionX="202" PositionY="177" />
+               <SummonMonster VNum="1353" PositionX="204" PositionY="171" />
+               <SummonMonster VNum="1353" PositionX="200" PositionY="170" />
+               <SummonMonster VNum="1354" PositionX="196" PositionY="168" />
+               <SummonMonster VNum="1353" PositionX="200" PositionY="165" />
+               <SummonMonster VNum="1354" PositionX="203" PositionY="162" />
+               <SummonMonster VNum="1353" PositionX="201" PositionY="158" />
+            </OnFirstEnable>
+         </SpawnButton>
+         <SetMonsterLockers Value="2" />
+         <SetButtonLockers Value="3" />
+         <OnLockerOpen>
+            <ChangePortalType Type="2" IdOnMap="0" />
+            <RefreshMapItems />
+            <SendMessage Value="Le portail est maintenant ouvert !" Type="0" />
+         </OnLockerOpen>
+         <SpawnPortal IdOnMap="0" PositionX="171" PositionY="31" Type="1" ToMap="2" ToX="64" ToY="28" />
+      </CreateMap>
+      <CreateMap Map="2" VNum="2593">
+        <SetMonsterLockers Value="1" />
+        <SetButtonLockers Value="0" />
+        <RefreshRaidGoals/>
+         <SummonMonster VNum="1028" PositionX="63" PositionY="59" IsTarget="true" IsHostile="true" IsBoss="true" Move="true">
+            <OnDeath>
+               <RemoveMonsterLocker />
+               <RefreshRaidGoals />
+               <End Type="1" />
+               <ThrowItem VNum="1020" PackAmount="1" MinAmount="1" MaxAmount="2" />
+               <ThrowItem VNum="1020" PackAmount="1" MinAmount="1" MaxAmount="2" />
+               <ThrowItem VNum="1020" PackAmount="1" MinAmount="1" MaxAmount="2" />
+               <ThrowItem VNum="1021" PackAmount="1" MinAmount="1" MaxAmount="2" />
+               <ThrowItem VNum="1021" PackAmount="1" MinAmount="1" MaxAmount="2" />
+               <ThrowItem VNum="1009" PackAmount="3" MinAmount="3" MaxAmount="4" />
+               <ThrowItem VNum="1009" PackAmount="3" MinAmount="3" MaxAmount="4" />
+               <ThrowItem VNum="1009" PackAmount="3" MinAmount="3" MaxAmount="4" />
+               <ThrowItem VNum="1009" PackAmount="3" MinAmount="3" MaxAmount="4" />
+               <ThrowItem VNum="1009" PackAmount="3" MinAmount="3" MaxAmount="4" />
+               <ThrowItem VNum="1010" PackAmount="1" MinAmount="1" MaxAmount="2" />
+               <ThrowItem VNum="1010" PackAmount="1" MinAmount="1" MaxAmount="2" />
+               <ThrowItem VNum="1010" PackAmount="1" MinAmount="1" MaxAmount="2" />
+               <ThrowItem VNum="1010" PackAmount="1" MinAmount="1" MaxAmount="2" />
+               <ThrowItem VNum="1010" PackAmount="1" MinAmount="1" MaxAmount="2" />
+               <ThrowItem VNum="2503" PackAmount="2" MinAmount="2" MaxAmount="3" />
+               <ThrowItem VNum="2503" PackAmount="2" MinAmount="2" MaxAmount="3" />
+               <ThrowItem VNum="2503" PackAmount="2" MinAmount="2" MaxAmount="3" />
+               <ThrowItem VNum="2504" PackAmount="1" MinAmount="1" MaxAmount="2" />
+               <ThrowItem VNum="5919" PackAmount="1" MinAmount="1" MaxAmount="2" />
+               <ThrowItem VNum="2506" PackAmount="1" MinAmount="1" MaxAmount="2" />
+               <ThrowItem VNum="2506" PackAmount="1" MinAmount="1" MaxAmount="2" />
+               <ThrowItem VNum="2901" PackAmount="1" MinAmount="1" MaxAmount="2" />
+               <ThrowItem VNum="2901" PackAmount="1" MinAmount="1" MaxAmount="2" />
+               <ThrowItem VNum="2900" PackAmount="1" MinAmount="1" MaxAmount="2" />
+               <ThrowItem VNum="2900" PackAmount="1" MinAmount="1" MaxAmount="2" />
+               <ThrowItem VNum="2900" PackAmount="1" MinAmount="1" MaxAmount="2" />
+               <ThrowItem VNum="2900" PackAmount="1" MinAmount="1" MaxAmount="2" />
+               <ThrowItem VNum="1046" PackAmount="1" MinAmount="20000" MaxAmount="20001" />
+               <ThrowItem VNum="1046" PackAmount="1" MinAmount="20000" MaxAmount="20001" />
+               <ThrowItem VNum="1046" PackAmount="1" MinAmount="20000" MaxAmount="20001" />
+               <ThrowItem VNum="1046" PackAmount="1" MinAmount="20000" MaxAmount="20001" />
+               <ThrowItem VNum="1046" PackAmount="1" MinAmount="20000" MaxAmount="20001" />
+               <ThrowItem VNum="1046" PackAmount="1" MinAmount="20000" MaxAmount="20001" />
+               <ThrowItem VNum="1046" PackAmount="1" MinAmount="20000" MaxAmount="20001" />
+               <ThrowItem VNum="1046" PackAmount="1" MinAmount="20000" MaxAmount="20001" />
+               <ThrowItem VNum="1046" PackAmount="1" MinAmount="20000" MaxAmount="20001" />
+               <ThrowItem VNum="1046" PackAmount="1" MinAmount="20000" MaxAmount="20001" />
+               <ThrowItem VNum="1046" PackAmount="1" MinAmount="20000" MaxAmount="20001" />
+               <ThrowItem VNum="1046" PackAmount="1" MinAmount="20000" MaxAmount="20001" />
+               <ThrowItem VNum="1046" PackAmount="1" MinAmount="20000" MaxAmount="20001" />
+            </OnDeath>
+         </SummonMonster>
+         <SummonMonster VNum="1361" PositionX="59" PositionY="62" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+         <SummonMonster VNum="1360" PositionX="69" PositionY="63" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" />
+             <Wave Offset="1" Delay="30">
+               <SendMessage Value="The enemies are getting reinforcements!" Type="0" />
+               <SummonMonster VNum="1352" PositionX="76" PositionY="39" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1353" PositionX="60" PositionY="40" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1354" PositionX="60" PositionY="37" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1355" PositionX="58" PositionY="36" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1352" PositionX="74" PositionY="38" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1353" PositionX="59" PositionY="41" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1354" PositionX="67" PositionY="37" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1355" PositionX="60" PositionY="38" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+			   <SummonMonster VNum="1355" PositionX="67" PositionY="38" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+				</Wave>
+				<Wave Offset="2" Delay="30">
+               <SendMessage Value="Les ennemis reçoivent des renforts !" Type="0"/>
+               <SummonMonster VNum="1352" PositionX="76" PositionY="39" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1353" PositionX="60" PositionY="40" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1354" PositionX="60" PositionY="37" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1355" PositionX="58" PositionY="36" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1352" PositionX="74" PositionY="38" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1353" PositionX="59" PositionY="41" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1354" PositionX="67" PositionY="37" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1355" PositionX="60" PositionY="38" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+			   <SummonMonster VNum="1355" PositionX="67" PositionY="38" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+				</Wave>
+				<Wave Offset="3" Delay="30">
+                <SendMessage Value="Les ennemis reçoivent des renforts !" Type="0"/>
+               <SummonMonster VNum="1352" PositionX="76" PositionY="39" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1353" PositionX="60" PositionY="40" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1354" PositionX="60" PositionY="37" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1355" PositionX="58" PositionY="36" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1352" PositionX="74" PositionY="38" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1353" PositionX="59" PositionY="41" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1354" PositionX="67" PositionY="37" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1355" PositionX="60" PositionY="38" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+			   <SummonMonster VNum="1355" PositionX="67" PositionY="38" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   </Wave>
+				<Wave Offset="4" Delay="30">
+                <SendMessage Value="Les ennemis reçoivent des renforts !" Type="0"/>
+               <SummonMonster VNum="1352" PositionX="76" PositionY="39" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1353" PositionX="60" PositionY="40" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1354" PositionX="60" PositionY="37" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1355" PositionX="58" PositionY="36" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1352" PositionX="74" PositionY="38" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1353" PositionX="59" PositionY="41" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1354" PositionX="67" PositionY="37" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1355" PositionX="60" PositionY="38" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+			   <SummonMonster VNum="1355" PositionX="67" PositionY="38" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+				</Wave>
+				<Wave Offset="5" Delay="30">
+                <SendMessage Value="Les ennemis reçoivent des renforts !" Type="0"/>
+               <SummonMonster VNum="1352" PositionX="76" PositionY="39" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1353" PositionX="60" PositionY="40" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1354" PositionX="60" PositionY="37" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1355" PositionX="58" PositionY="36" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1352" PositionX="74" PositionY="38" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1353" PositionX="59" PositionY="41" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1354" PositionX="67" PositionY="37" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1355" PositionX="60" PositionY="38" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+			   <SummonMonster VNum="1355" PositionX="67" PositionY="38" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+				</Wave>
+				<Wave Offset="6" Delay="30">
+               <SendMessage Value="Les ennemis reçoivent des renforts !" Type="0"/>
+               <SummonMonster VNum="1352" PositionX="76" PositionY="39" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1353" PositionX="60" PositionY="40" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1354" PositionX="60" PositionY="37" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1355" PositionX="58" PositionY="36" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1352" PositionX="74" PositionY="38" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1353" PositionX="59" PositionY="41" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1354" PositionX="67" PositionY="37" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1355" PositionX="60" PositionY="38" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+			   <SummonMonster VNum="1355" PositionX="67" PositionY="38" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+				</Wave>
+				<Wave Offset="7" Delay="30">
+                <SendMessage Value="Les ennemis reçoivent des renforts !" Type="0"/>  
+               <SummonMonster VNum="1352" PositionX="76" PositionY="39" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1353" PositionX="60" PositionY="40" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1354" PositionX="60" PositionY="37" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1355" PositionX="58" PositionY="36" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1352" PositionX="74" PositionY="38" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1353" PositionX="59" PositionY="41" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1354" PositionX="67" PositionY="37" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1355" PositionX="60" PositionY="38" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+			   <SummonMonster VNum="1355" PositionX="67" PositionY="38" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+				</Wave>
+				<Wave Offset="8" Delay="30">
+                <SendMessage Value="Les ennemis reçoivent des renforts !" Type="0"/>
+               <SummonMonster VNum="1352" PositionX="76" PositionY="39" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1353" PositionX="60" PositionY="40" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1354" PositionX="60" PositionY="37" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1355" PositionX="58" PositionY="36" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1352" PositionX="74" PositionY="38" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1353" PositionX="59" PositionY="41" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1354" PositionX="67" PositionY="37" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+               <SummonMonster VNum="1355" PositionX="60" PositionY="38" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+			   
+			   <SummonMonster VNum="1355" PositionX="67" PositionY="38" IsTarget="false" IsHostile="true" IsBoss="false" Move="true" >
+			   </SummonMonster>
+
+			</Wave>
+      </CreateMap>
+   </InstanceEvents>
+</Definition>

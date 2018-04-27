@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Definition>
+    <Globals>
+        <Id Value="27" />
+        <Label Value="Corrupted Yetirand" />
+        <LevelMinimum Value="80"/>
+        <LevelMaximum Value="150"/>
+        <StartX Value="267" />
+        <StartY Value="75" />
+        <Reputation Value="8000" />
+        <RequieredItems>
+            <Item VNum="5999" Amount="1"/>
+        </RequieredItems>
+        <GiftItems>
+            <Item Amount="1" VNum="302" Design="27" IsRandomRare="True"/>
+        </GiftItems>
+    </Globals>
+    <InstanceEvents>
+        <CreateMap Map="0" VNum="2621">
+            <SpawnPortal IdOnMap="0" PositionX="213" PositionY="194" Type="0" ToMap="0" ToX="195" ToY="209"/>
+            <SpawnPortal IdOnMap="1" PositionX="195" PositionY="209" Type="0" ToMap="0" ToX="213" ToY="194"/>
+            <SpawnPortal IdOnMap="2" PositionX="16" PositionY="194" Type="0" ToMap="0" ToX="72" ToY="259"/>
+            <SpawnPortal IdOnMap="3" PositionX="72" PositionY="259" Type="0" ToMap="0" ToX="16" ToY="194"/>
+            <SpawnPortal IdOnMap="4" PositionX="183" PositionY="73" Type="0" ToMap="0" ToX="195" ToY="63"/>
+            <SpawnPortal IdOnMap="5" PositionX="195" PositionY="63" Type="0" ToMap="0" ToX="183" ToY="73"/>
+            <SpawnPortal IdOnMap="6" PositionX="82" PositionY="2" Type="0" ToMap="0" ToX="12" ToY="68"/>
+            <SpawnPortal IdOnMap="7" PositionX="12" PositionY="68" Type="0" ToMap="0" ToX="82" ToY="2"/>
+            <OnCharacterDiscoveringMap>
+                <GenerateMapClock Value="3000"/>
+                <StartMapClock>
+                    <OnStop>
+                        <RefreshMapItems/>
+                    </OnStop>
+                    <OnTimeout>
+                        <End Type="1"/>
+                    </OnTimeout>
+                </StartMapClock>
+            </OnCharacterDiscoveringMap>
+            <SetMonsterLockers Value="0" />
+            <SetButtonLockers Value="1" />
+            <SpawnButton PositionY="-1" PositionX="-1" VNumDisabled="1135" VNumEnabled="1136" Id="1">
+                <OnFirstEnable>
+                    <StopMapClock/>
+                    <RemoveButtonLocker/>
+                    <RefreshRaidGoals/>
+                </OnFirstEnable>
+            </SpawnButton>
+            <OnLockerOpen>
+                <ChangePortalType Type="2" IdOnMap="8"/>
+                <RefreshMapItems/>
+                <SendMessage Value="Door now open!" Type="0"/>
+            </OnLockerOpen>
+            <SpawnPortal IdOnMap="8" PositionX="137" PositionY="133" Type="1" ToMap="1" ToX="118" ToY="134"/>
+        </CreateMap>
+        <CreateMap Map="1" VNum="2622">
+            <SetMonsterLockers Value="1" />
+            <SetButtonLockers Value="0" />
+            <SummonMonster VNum="2662" PositionX="100" PositionY="100"/>
+            <SummonMonster VNum="2639" PositionX="120" PositionY="106" IsBoss="True">
+                <OnDeath>
+                    <RemoveMonsterLocker/>
+                    <RefreshRaidGoals/>
+                    <End Type="1"/>
+                    <ThrowItem VNum="1046" PackAmount="30" MinAmount="100000" MaxAmount="150000"/>
+                </OnDeath>
+            </SummonMonster>
+        </CreateMap>
+    </InstanceEvents>
+</Definition>
