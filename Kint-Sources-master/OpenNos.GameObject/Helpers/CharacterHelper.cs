@@ -906,7 +906,7 @@ namespace OpenNos.GameObject.Helpers
             // SWORDSMAN MP
             for (int i = 1; i < _mp.GetLength(1) - 1; i++)
             {
-                _mp[(int)ClassType.Archer, i] = 8 * _mp[(int)ClassType.Adventurer, i];
+                _mp[(int)ClassType.Swordman, i] = 8 * _mp[(int)ClassType.Adventurer, i];
             }
 
             // ARCHER MP
