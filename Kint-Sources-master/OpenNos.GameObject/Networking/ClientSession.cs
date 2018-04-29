@@ -100,12 +100,16 @@ namespace OpenNos.GameObject
                 if (_character == null || !HasSelectedCharacter)
                 {
                     // cant access an
-                    Logger.Warn("Uninitialized Character cannot be accessed.");
+                    Logger.Log.Warn("Uninitialized Character cannot be accessed.");
                 }
 
                 return _character;
             }
-            private set => _character = value;
+
+            private set
+            {
+                _character = value;
+            }
         }
 
         public long ClientId => _client.ClientId;

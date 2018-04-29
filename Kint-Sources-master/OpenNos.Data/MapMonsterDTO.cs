@@ -35,7 +35,7 @@ namespace OpenNos.Data
 
         public short MonsterVNum { get; set; }
 
-        public byte Position { get; set; }
+        public int Position { get; set; }
 
         #endregion
     }
