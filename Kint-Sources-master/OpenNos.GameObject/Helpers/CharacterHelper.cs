@@ -906,19 +906,19 @@ namespace OpenNos.GameObject.Helpers
             // SWORDSMAN MP
             for (int i = 1; i < _mp.GetLength(1) - 1; i++)
             {
-                _mp[(int)ClassType.Swordman, i] = _mp[(int)ClassType.Adventurer, i];
+                _mp[(int)ClassType.Archer, i] = 8 * _mp[(int)ClassType.Adventurer, i];
             }
 
             // ARCHER MP
             for (int i = 0; i < _mp.GetLength(1) - 1; i++)
             {
-                _mp[(int)ClassType.Archer, i] = 2 * _mp[(int)ClassType.Adventurer, i];
+                _mp[(int)ClassType.Archer, i] = 10 * _mp[(int)ClassType.Adventurer, i];
             }
 
             // MAGICIAN MP
             for (int i = 0; i < _mp.GetLength(1) - 1; i++)
             {
-                _mp[(int)ClassType.Magician, i] = 3 * _mp[(int)ClassType.Adventurer, i];
+                _mp[(int)ClassType.Magician, i] = 15 * _mp[(int)ClassType.Adventurer, i];
             }
 
             // Fighter MP

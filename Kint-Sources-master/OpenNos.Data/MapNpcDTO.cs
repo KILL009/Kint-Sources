@@ -43,7 +43,7 @@ namespace OpenNos.Data
 
         public short NpcVNum { get; set; }
 
-        public byte Position { get; set; }
+        public int Position { get; set; }
 
         #endregion
     }

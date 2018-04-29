@@ -386,6 +386,7 @@ namespace OpenNos.GameObject.Battle
 
         public List<BCard> StaticBcards { get; set; }
 
+       
         #endregion
     }
 }

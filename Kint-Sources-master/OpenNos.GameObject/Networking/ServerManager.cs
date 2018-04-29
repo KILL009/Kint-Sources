@@ -605,7 +605,7 @@ namespace OpenNos.GameObject.Networking
                 }
             }
         }
-
+      
         public void FamilyRefresh(long familyId) => CommunicationServiceClient.Instance.UpdateFamily(ServerGroup, familyId);
 
         public static MapInstance GenerateMapInstance(short mapId, MapInstanceType type, InstanceBag mapclock)

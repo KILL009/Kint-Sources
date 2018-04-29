@@ -392,7 +392,7 @@ namespace OpenNos.GameObject
                     break;
 
                 case BCardType.CardType.SpecialActions:
-                    if (session is Character charact)
+                    if (type == typeof(Character) && session is Character charact)
                     {
                         if (SubType.Equals((byte)AdditionalTypes.SpecialActions.Hide))
                         {
@@ -524,7 +524,17 @@ namespace OpenNos.GameObject
 
 
                 case BCardType.CardType.FalconSkill:
-                    break;
+                    if (type == typeof(Character) && session is Character chars)
+                    {
+                        if (SubType.Equals((byte)AdditionalTypes.FalconSkill.Ambush))
+                        {
+                            chars.Invisible = true;
+                            chars.Mates.Where(s => s.IsTeamMember).ToList().ForEach(s => chars.Session.CurrentMapInstance?.Broadcast(s.GenerateOut()));
+                            chars.Session.CurrentMapInstance?.Broadcast(chars.GenerateInvisible());
+                            
+                            }
+                         }
+                        break;
 
                 case BCardType.CardType.AbsorptionAndPowerSkill:
                     break;

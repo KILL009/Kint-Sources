@@ -48,7 +48,7 @@ namespace OpenNos.GameObject
         private bool _isStaticBuffListInitial;
 
         private Random _random;
-
+      
         private int _slhpbonus;
 
         private byte _speed;
@@ -195,7 +195,7 @@ namespace OpenNos.GameObject
 
         public int DefenceRate { get; set; }
 
-        public byte Direction { get; set; }
+        public int Direction { get; set; }
 
         public int DistanceCritical { get; set; }
 
@@ -313,6 +313,8 @@ namespace OpenNos.GameObject
         public DateTime LastPotion { get; set; }
 
         public DateTime LastPulse { get; set; }
+
+        public int ChargeValue { get; set; }
 
         public DateTime LastPVPRevive { get; set; }
 
@@ -561,10 +563,23 @@ namespace OpenNos.GameObject
                 Buff.Remove(indicator.Card.CardId);
                 Buff[indicator.Card.CardId] = indicator;
                 //TODO: Find a better way to do this
-             if (indicator.Card.CardId == 85)
-              {
-                    buffTime = ServerManager.RandomNumber(50, 350);
-              }
+
+                if (indicator.Card.CardId == 85)
+                {
+                    buffTime = Session.Character.BuffRandomTime = ServerManager.RandomNumber(50, 350);
+                }
+                else if (indicator.Card.CardId == 336)
+                {
+                    buffTime = Session.Character.BuffRandomTime = ServerManager.RandomNumber(30, 70);
+                }
+                else if (indicator.Card.CardId == 559)
+                {
+                    buffTime = Session.Character.BuffRandomTime = ServerManager.RandomNumber(50, 350);
+                }
+                else if (indicator.Card.CardId == 0)
+                {
+                    Session.Character.BuffRandomTime = Session.Character.ChargeValue > 7000 ? 7000 : Session.Character.ChargeValue;
+                }
                 indicator.RemainingTime = indicator.Card.Duration == 0 ? buffTime : indicator.Card.Duration;
                 indicator.Start = DateTime.Now;
 
@@ -577,14 +592,14 @@ namespace OpenNos.GameObject
                     BuffObservables[indicator.Card.CardId]?.Dispose();
                     BuffObservables.Remove(indicator.Card.CardId);
                 }
-                  BuffObservables[indicator.Card.CardId] = Observable.Timer(TimeSpan.FromMilliseconds(indicator.Card.Duration * 100)).Subscribe(o =>
-                {
-                    RemoveBuff(indicator.Card.CardId);
-                    if (indicator.Card.TimeoutBuff != 0 && ServerManager.RandomNumber() < indicator.Card.TimeoutBuffChance)
-                    {
-                        AddBuff(new Buff(indicator.Card.TimeoutBuff, Level));
-                    }
-                });
+                BuffObservables[indicator.Card.CardId] = Observable.Timer(TimeSpan.FromMilliseconds(indicator.Card.Duration * 100)).Subscribe(o =>
+              {
+                  RemoveBuff(indicator.Card.CardId);
+                  if (indicator.Card.TimeoutBuff != 0 && ServerManager.RandomNumber() < indicator.Card.TimeoutBuffChance)
+                  {
+                      AddBuff(new Buff(indicator.Card.TimeoutBuff, Level));
+                  }
+              });
                 if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.Move && !s.SubType.Equals((byte)AdditionalTypes.Move.MovementImpossible / 10)))
                 {
                     LastSpeedChange = DateTime.Now;
@@ -600,6 +615,33 @@ namespace OpenNos.GameObject
                 {
                     NoMove = true;
                     Session.SendPacket(GenerateCond());
+                }
+
+                if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.SpecialActions && s.SubType.Equals((byte)AdditionalTypes.SpecialActions.Hide / 10)))
+                {
+                    Invisible = true;
+                    Session.CurrentMapInstance?.Broadcast(GenerateInvisible());
+                    Session.SendPacket(GenerateEq());
+                    Mates.Where(m => m.IsTeamMember).ToList().ForEach(m =>
+                    Session.CurrentMapInstance?.Broadcast(m.GenerateIn(), ReceiverType.AllExceptMe));
+                    Session.CurrentMapInstance?.Broadcast(Session, GenerateIn(),
+                    ReceiverType.AllExceptMe);
+                    Session.CurrentMapInstance?.Broadcast(Session, GenerateGidx(),
+                        ReceiverType.AllExceptMe);
+
+                    if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.FalconSkill && s.SubType == ((byte)AdditionalTypes.FalconSkill.Ambush / 10)))
+                    {
+                        Session.Character.Invisible = true; Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateInvisible());
+                        Session.SendPacket(Session.Character.GenerateEq());
+
+                        Session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m =>
+                        Session.CurrentMapInstance?.Broadcast(m.GenerateIn(), ReceiverType.AllExceptMe));
+                        Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateIn(),
+                            ReceiverType.AllExceptMe);
+                        Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateGidx(),
+                            ReceiverType.AllExceptMe);
+
+                    }
                 }
             }
         }
@@ -3741,21 +3783,42 @@ namespace OpenNos.GameObject
                 {
                     NoAttack = false;
                     Session.SendPacket(GenerateCond());
-                }
-                if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.SpecialActions && s.SubType.Equals((byte)AdditionalTypes.SpecialActions.Hide)))
-               {
-                    Invisible = false;
-                    Session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m => Session.CurrentMapInstance?.Broadcast(m.GenerateIn()));
-                    Session.CurrentMapInstance?.Broadcast(GenerateInvisible());
-                  }
+                }             
                 if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.Move && s.SubType.Equals((byte)AdditionalTypes.Move.MovementImpossible / 10)))
                 {
                     NoMove = false;
                     Session.SendPacket(GenerateCond());
                 }
 
-                // TODO : Find another way because it is hardcode
-                if (indicator.Card.CardId == 131)
+                if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.SpecialActions && s.SubType.Equals((byte)AdditionalTypes.SpecialActions.Hide / 10)))
+                {
+                    Invisible = false;
+                    Session.CurrentMapInstance?.Broadcast(GenerateInvisible());
+                    Session.SendPacket(GenerateEq());
+                    Mates.Where(m => m.IsTeamMember).ToList().ForEach(m =>
+                    Session.CurrentMapInstance?.Broadcast(m.GenerateIn(), ReceiverType.AllExceptMe));
+                    Session.CurrentMapInstance?.Broadcast(Session, GenerateIn(),
+                    ReceiverType.AllExceptMe);
+                    Session.CurrentMapInstance?.Broadcast(Session, GenerateGidx(),
+                        ReceiverType.AllExceptMe);
+
+                }
+                if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.FalconSkill && s.SubType == ((byte)AdditionalTypes.FalconSkill.Ambush / 10)))
+                {
+                    Session.Character.Invisible = false; Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateInvisible());
+                    Session.SendPacket(Session.Character.GenerateEq());
+
+                    Session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m =>
+                    Session.CurrentMapInstance?.Broadcast(m.GenerateIn(), ReceiverType.AllExceptMe));
+                    Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateIn(),
+                        ReceiverType.AllExceptMe);
+                    Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateGidx(),
+                        ReceiverType.AllExceptMe);
+
+                }
+
+                    // TODO : Find another way because it is hardcode
+                    if (indicator.Card.CardId == 131)
                 {
                     Session.SendPacket(GeneratePairy());
                 }
@@ -4630,6 +4693,8 @@ namespace OpenNos.GameObject
             Session.SendPacket($"tp {1} {CharacterId} {x} {y} 0");
             Session.SendPacket(GenerateCond());
         }
+
+       
 
         private double XpLoad() => CharacterHelper.XPData[Level - 1];
 

@@ -39,7 +39,7 @@ namespace OpenNos.DAL.EF
 
         public virtual NpcMonster NpcMonster { get; set; }
 
-        public byte Position { get; set; }
+        public int Position { get; set; }
 
         #endregion
     }

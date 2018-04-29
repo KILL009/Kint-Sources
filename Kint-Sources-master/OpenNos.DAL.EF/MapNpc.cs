@@ -59,7 +59,7 @@ namespace OpenNos.DAL.EF
 
         public short NpcVNum { get; set; }
 
-        public byte Position { get; set; }
+        public int Position { get; set; }
 
         public virtual ICollection<RecipeList> RecipeList { get; set; }
 
