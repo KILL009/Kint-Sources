@@ -392,13 +392,52 @@ namespace OpenNos.GameObject
                     break;
 
                 case BCardType.CardType.SpecialActions:
-                    if (type == typeof(Character) && session is Character charact)
+                    if (type == typeof(Character))
                     {
-                        if (SubType.Equals((byte)AdditionalTypes.SpecialActions.Hide))
+                        if (session is Character character && character.Hp > 0)
                         {
-                            charact.Invisible = true;
-                            charact.Mates.Where(s => s.IsTeamMember).ToList().ForEach(s => charact.Session.CurrentMapInstance?.Broadcast(s.GenerateOut()));
-                            charact.Session.CurrentMapInstance?.Broadcast(charact.GenerateInvisible());
+
+                            if (SubType == (byte)AdditionalTypes.SpecialActions.Hide / 10)
+                            {
+                                //Invisiblity
+                                character.Session.Character.Invisible = true;
+                                character.Session.CurrentMapInstance?.Broadcast(character.Session.Character.GenerateInvisible());
+                                character.Session.SendPacket(character.Session.Character.GenerateEq());
+                                if (character.Session.Character.Invisible)
+                                {
+                                    character.Session.Character.Mates.Where(s => s.IsTeamMember).ToList()
+                                        .ForEach(s => character.Session.CurrentMapInstance?.Broadcast(s.GenerateOut()));
+                                    character.Session.CurrentMapInstance?.Broadcast(character.Session,
+                                        StaticPacketHelper.Out(UserType.Player, character.Session.Character.CharacterId), ReceiverType.AllExceptMe);
+                                }
+
+                                //Remove invisibility
+                                System.Threading.Tasks.Task.Delay(120000).ContinueWith(t => {
+
+                                    character.Session.Character.Invisible = false;
+                                    character.Session.CurrentMapInstance?.Broadcast(character.Session.Character.GenerateInvisible());
+                                    character.Session.SendPacket(character.Session.Character.GenerateEq());
+
+                                    character.Session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m =>
+                                        character.Session.CurrentMapInstance?.Broadcast(m.GenerateIn(), ReceiverType.AllExceptMe));
+                                    character.Session.CurrentMapInstance?.Broadcast(character.Session, character.Session.Character.GenerateIn(),
+                                        ReceiverType.AllExceptMe);
+                                    character.Session.CurrentMapInstance?.Broadcast(character.Session, character.Session.Character.GenerateGidx(),
+                                        ReceiverType.AllExceptMe);
+
+                                });
+
+
+                            }
+                            if (SubType == (byte)AdditionalTypes.SpecialActions.Charge / 10)
+                            {
+                                character.Session.Character.isAbsorbing = true;
+                                System.Threading.Tasks.Task.Delay(2000).ContinueWith(t => {
+
+                                    character.Session.Character.isAbsorbing = false;
+
+                                });
+                            }
                         }
                     }
                     break;
@@ -524,17 +563,46 @@ namespace OpenNos.GameObject
 
 
                 case BCardType.CardType.FalconSkill:
-                    if (type == typeof(Character) && session is Character chars)
+                    if (type == typeof(Character))
                     {
-                        if (SubType.Equals((byte)AdditionalTypes.FalconSkill.Ambush))
+                        if (session is Character character && character.Hp > 0)
                         {
-                            chars.Invisible = true;
-                            chars.Mates.Where(s => s.IsTeamMember).ToList().ForEach(s => chars.Session.CurrentMapInstance?.Broadcast(s.GenerateOut()));
-                            chars.Session.CurrentMapInstance?.Broadcast(chars.GenerateInvisible());
-                            
+
+                            if (SubType == (byte)AdditionalTypes.FalconSkill.Hide / 10)
+                            {
+                                //Invisiblity
+                                character.Session.Character.Invisible = true;
+                                character.Session.CurrentMapInstance?.Broadcast(character.Session.Character.GenerateInvisible());
+                                character.Session.SendPacket(character.Session.Character.GenerateEq());
+                                if (character.Session.Character.Invisible)
+                                {
+                                    character.Session.Character.Mates.Where(s => s.IsTeamMember).ToList()
+                                        .ForEach(s => character.Session.CurrentMapInstance?.Broadcast(s.GenerateOut()));
+                                    character.Session.CurrentMapInstance?.Broadcast(character.Session,
+                                        StaticPacketHelper.Out(UserType.Player, character.Session.Character.CharacterId), ReceiverType.AllExceptMe);
+                                }
+
+                                //Remove invisibility
+                                System.Threading.Tasks.Task.Delay(20000).ContinueWith(t => {
+
+                                    character.Session.Character.Invisible = false;
+                                    character.Session.CurrentMapInstance?.Broadcast(character.Session.Character.GenerateInvisible());
+                                    character.Session.SendPacket(character.Session.Character.GenerateEq());
+
+                                    character.Session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m =>
+                                        character.Session.CurrentMapInstance?.Broadcast(m.GenerateIn(), ReceiverType.AllExceptMe));
+                                    character.Session.CurrentMapInstance?.Broadcast(character.Session, character.Session.Character.GenerateIn(),
+                                        ReceiverType.AllExceptMe);
+                                    character.Session.CurrentMapInstance?.Broadcast(character.Session, character.Session.Character.GenerateGidx(),
+                                        ReceiverType.AllExceptMe);
+
+                                });
+
+
                             }
+                             }
                          }
-                        break;
+                            break;
 
                 case BCardType.CardType.AbsorptionAndPowerSkill:
                     break;

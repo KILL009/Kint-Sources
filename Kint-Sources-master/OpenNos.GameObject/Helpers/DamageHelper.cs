@@ -47,7 +47,7 @@ namespace OpenNos.GameObject.Helpers
         /// <param name="onyxWings"></param>
         /// <returns>Damage</returns>
         public int CalculateDamage(BattleEntity attacker, BattleEntity defender, Skill skill, ref int hitMode,
-            ref bool onyxWings)
+            ref bool onyxWings, int charge)
         {
             int[] GetAttackerBenefitingBuffs(BCardType.CardType type, byte subtype)
             {
@@ -1080,6 +1080,11 @@ namespace OpenNos.GameObject.Helpers
             }
 
             #endregion
+
+            if (attacker.EntityType == EntityType.Player && charge >= 0)
+            {
+                totalDamage += charge;
+            }
 
             return totalDamage;
         }

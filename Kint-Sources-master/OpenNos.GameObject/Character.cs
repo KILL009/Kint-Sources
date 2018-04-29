@@ -271,6 +271,10 @@ namespace OpenNos.GameObject
 
         public bool IsDancing { get; set; }
 
+        public bool isAbsorbing { get; set; }
+
+        public int damageAb { get; set; }
+
         /// <summary>
         /// Defines if the Character Is currently sending or getting items thru exchange.
         /// </summary>
@@ -562,24 +566,7 @@ namespace OpenNos.GameObject
             {
                 Buff.Remove(indicator.Card.CardId);
                 Buff[indicator.Card.CardId] = indicator;
-                //TODO: Find a better way to do this
-
-                if (indicator.Card.CardId == 85)
-                {
-                    buffTime = Session.Character.BuffRandomTime = ServerManager.RandomNumber(50, 350);
-                }
-                else if (indicator.Card.CardId == 336)
-                {
-                    buffTime = Session.Character.BuffRandomTime = ServerManager.RandomNumber(30, 70);
-                }
-                else if (indicator.Card.CardId == 559)
-                {
-                    buffTime = Session.Character.BuffRandomTime = ServerManager.RandomNumber(50, 350);
-                }
-                else if (indicator.Card.CardId == 0)
-                {
-                    Session.Character.BuffRandomTime = Session.Character.ChargeValue > 7000 ? 7000 : Session.Character.ChargeValue;
-                }
+                //TODO: Find a better way to do this                             
                 indicator.RemainingTime = indicator.Card.Duration == 0 ? buffTime : indicator.Card.Duration;
                 indicator.Start = DateTime.Now;
 
@@ -3788,35 +3775,7 @@ namespace OpenNos.GameObject
                 {
                     NoMove = false;
                     Session.SendPacket(GenerateCond());
-                }
-
-                if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.SpecialActions && s.SubType.Equals((byte)AdditionalTypes.SpecialActions.Hide / 10)))
-                {
-                    Invisible = false;
-                    Session.CurrentMapInstance?.Broadcast(GenerateInvisible());
-                    Session.SendPacket(GenerateEq());
-                    Mates.Where(m => m.IsTeamMember).ToList().ForEach(m =>
-                    Session.CurrentMapInstance?.Broadcast(m.GenerateIn(), ReceiverType.AllExceptMe));
-                    Session.CurrentMapInstance?.Broadcast(Session, GenerateIn(),
-                    ReceiverType.AllExceptMe);
-                    Session.CurrentMapInstance?.Broadcast(Session, GenerateGidx(),
-                        ReceiverType.AllExceptMe);
-
-                }
-                if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.FalconSkill && s.SubType == ((byte)AdditionalTypes.FalconSkill.Ambush / 10)))
-                {
-                    Session.Character.Invisible = false; Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateInvisible());
-                    Session.SendPacket(Session.Character.GenerateEq());
-
-                    Session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m =>
-                    Session.CurrentMapInstance?.Broadcast(m.GenerateIn(), ReceiverType.AllExceptMe));
-                    Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateIn(),
-                        ReceiverType.AllExceptMe);
-                    Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateGidx(),
-                        ReceiverType.AllExceptMe);
-
-                }
-
+                }                           
                     // TODO : Find another way because it is hardcode
                     if (indicator.Card.CardId == 131)
                 {
