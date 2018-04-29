@@ -254,7 +254,7 @@ namespace OpenNos.GameObject
                 }
                 int hitmode = 0;
                 bool onyxWings = false;
-                int damage = DamageHelper.Instance.CalculateDamage(new BattleEntity(this), new BattleEntity(monster), npcMonsterSkill?.Skill, ref hitmode, ref onyxWings);
+                int damage = DamageHelper.Instance.CalculateDamage(new BattleEntity(this), new BattleEntity(monster), npcMonsterSkill?.Skill, ref hitmode, ref onyxWings,0);
                 if (monster.Monster.BCards.Find(s => s.Type == (byte)CardType.LightAndShadow && s.SubType == (byte)AdditionalTypes.LightAndShadow.InflictDamageToMP) is BCard card)
                 {
                     int reduce = damage / 100 * card.FirstData;

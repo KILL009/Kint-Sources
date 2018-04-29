@@ -450,7 +450,7 @@ namespace OpenNos.GameObject
                     // calculate damage
                     bool onyxWings = false;
                     BattleEntity battleEntity = new BattleEntity(hitRequest.Session.Character, hitRequest.Skill);
-                    int damage = DamageHelper.Instance.CalculateDamage(battleEntity, new BattleEntity(this), hitRequest.Skill, ref hitmode, ref onyxWings);
+                    int damage = DamageHelper.Instance.CalculateDamage(battleEntity, new BattleEntity(this), hitRequest.Skill, ref hitmode, ref onyxWings, hitRequest.Session.Character.damageAb);
                     if (onyxWings)
                     {
                         short onyxX = (short)(hitRequest.Session.Character.PositionX + 2);
@@ -878,7 +878,7 @@ namespace OpenNos.GameObject
             {
                 int hitmode = 0;
                 bool onyxWings = false;
-                int damage = DamageHelper.Instance.CalculateDamage(new BattleEntity(this), new BattleEntity(targetSession.Character, null), npcMonsterSkill?.Skill, ref hitmode, ref onyxWings);
+                int damage = DamageHelper.Instance.CalculateDamage(new BattleEntity(this), new BattleEntity(targetSession.Character, null), npcMonsterSkill?.Skill, ref hitmode, ref onyxWings,0);
 
                 if (npcMonsterSkill != null)
                 {
@@ -892,6 +892,7 @@ namespace OpenNos.GameObject
                     MapInstance.Broadcast(StaticPacketHelper.CastOnTarget(UserType.Monster, MapMonsterId, 1, Target, npcMonsterSkill.Skill.CastAnimation, npcMonsterSkill.Skill.CastEffect, npcMonsterSkill.Skill.SkillVNum));
                 }
                 LastMove = DateTime.Now;
+
 
                 // deal 0 damage to GM with GodMode
                 if (targetSession.Character.HasGodMode)

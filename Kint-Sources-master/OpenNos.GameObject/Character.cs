@@ -271,6 +271,10 @@ namespace OpenNos.GameObject
 
         public bool IsDancing { get; set; }
 
+        public bool isAbsorbing { get; set; }
+
+        public int damageAb { get; set; }
+
         /// <summary>
         /// Defines if the Character Is currently sending or getting items thru exchange.
         /// </summary>

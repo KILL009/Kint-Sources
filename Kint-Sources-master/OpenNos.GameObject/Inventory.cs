@@ -437,7 +437,7 @@ namespace OpenNos.GameObject
             {
                 lock (_lockObject)
                 {
-                    retItem = SingleOrDefault(i => i.Slot.Equals(slot) && i.Type.Equals(type));
+                    retItem = FirstOrDefault(i => i.Slot.Equals(slot) && i.Type.Equals(type));
                 }
             }
             catch (InvalidOperationException ioEx)

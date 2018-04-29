@@ -160,7 +160,7 @@ namespace OpenNos.Handler
                 Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.CastOnTarget(UserType.Npc,
                     attacker.MateTransportId, 1, target.CharacterId, -1, -1, 0));
                 int damage = DamageHelper.Instance.CalculateDamage(battleEntity, battleEntityDefense, skill?.Skill,
-                    ref hitmode, ref onyxWings);
+                    ref hitmode, ref onyxWings,0);
                 if (target.HasGodMode)
                 {
                     damage = 0;
