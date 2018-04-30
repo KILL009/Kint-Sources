@@ -241,7 +241,7 @@ namespace OpenNos.Handler
                         if (useAoeSkillPacket.MapX > Session.Character.PositionX + 8 && useAoeSkillPacket.MapX < Session.Character.PositionX - 8)
                         {
                             Logger.LogUserEvent("Cheat ", Session.GenerateIdentity(), $"Cheat Sp6a fufu");
-                            Session.SendPacket(Session.Character.GenerateSay("Bien tenter ton packet Logger ! :)", 11));
+                            Session.SendPacket(Session.Character.GenerateSay("Pruebe su paquete Logger ! :)", 11));
                         }
 
 
@@ -361,8 +361,7 @@ namespace OpenNos.Handler
                 }
                 if (target.Character.Invisible)
                 {
-                    target.Character.Invisible = false;
-                    target.Character.Invisible = false;
+                    target.Character.Invisible = false;                        
                     target.CurrentMapInstance?.Broadcast(target.Character.GenerateInvisible());
                     target.SendPacket(target.Character.GenerateEq());
 
