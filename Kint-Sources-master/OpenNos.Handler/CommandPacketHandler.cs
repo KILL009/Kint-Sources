@@ -139,7 +139,6 @@ namespace OpenNos.Handler
         /// <param name="packet"></param>
         public void Act6Percent(Act6RaidPacket packet)
         {
-            ;
             if (string.IsNullOrEmpty(packet?.Name))
             {
                 Session.SendPacket(Session.Character.GenerateSay("$Act6Percent Name [Percent]", 11));
