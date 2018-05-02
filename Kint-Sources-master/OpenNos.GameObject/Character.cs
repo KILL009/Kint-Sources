@@ -163,6 +163,7 @@ namespace OpenNos.GameObject
         #endregion
 
         #region Properties
+        public byte ArenaWinnerTemp { get; set; }
 
         public AuthorityType Authority { get; set; }
 

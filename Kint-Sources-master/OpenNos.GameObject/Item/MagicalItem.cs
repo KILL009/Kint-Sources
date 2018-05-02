@@ -62,7 +62,7 @@ namespace OpenNos.GameObject
                                 {
                                     return;
                                 }
-                                if ((wearable.Item.ItemType == ItemType.Weapon && weapon) || (wearable.Item.ItemType == ItemType.Armor && !weapon))
+                                if ((wearable.Item.ItemType == ItemType.Weapon && weapon) || (wearable.Item.ItemType == ItemType.Armor && !weapon && !wearable.Item.IsHeroic))
                                 {
                                     if (inv.ShellEffects.Count > 0 && ServerManager.RandomNumber() < 50)
                                     {

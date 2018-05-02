@@ -849,18 +849,32 @@ namespace OpenNos.Handler
         public void ArenaWinner(ArenaWinnerPacket arenaWinner)
         {
             Logger.LogUserEvent("GMCOMMAND", Session.GenerateIdentity(), $"[ArenaWinner]");
+            if (Session.Account.Authority == AuthorityType.GameMaster)
+            { 
 
             Session.Character.ArenaWinner = Session.Character.ArenaWinner == 0 ? 1 : 0;
             Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateCMode());
             ServerManager.Shout($"Eres el mas feo de todos! ");
             Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("DONE"), 10));
-        }
+            }
 
-        /// <summary>
-        /// $Ban Command
-        /// </summary>
-        /// <param name="banPacket"></param>
-        public void Ban(BanPacket banPacket)
+            else           
+            {
+                if (ServerManager.Instance.TopComplimented.Take(10).Any(s => s.CharacterId.Equals(Session.Character.CharacterId)) || Session.Character.ArenaWinner==1)
+                {
+                    Session.Character.ArenaWinnerTemp = Session.Character.ArenaWinnerTemp == 0 ? (byte)1 : (byte)0;
+                    Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateCMode());
+                    Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("DONE"), 10));
+                     }
+                 }
+             }
+
+
+/// <summary>
+/// $Ban Command
+/// </summary>
+/// <param name="banPacket"></param>
+public void Ban(BanPacket banPacket)
         {
             if (banPacket != null)
             {
