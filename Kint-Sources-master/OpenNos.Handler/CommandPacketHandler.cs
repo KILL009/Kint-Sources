@@ -98,6 +98,20 @@ namespace OpenNos.Handler
         }
 
         /// <summary>
+        /// $GetExp
+        /// </summary>
+        /// <param name="GetExpPacket"></param>
+        public void GetExp(GetExpPacket packet)
+        {
+            Session.SendPacket(Session.Character.GenerateSay("=======Level Exp=======", 15));
+            Session.SendPacket(Session.Character.GenerateSay("Current XP: " + Session.Character.LevelXp, 15));
+            Session.SendPacket(Session.Character.GenerateSay("Required XP: " + Session.Character.XpLoad(), 15));
+            Session.SendPacket(Session.Character.GenerateSay("Current Percentage: " + String.Format("{0:0.00}", Session.Character.LevelXp / Session.Character.XpLoad() * 100D), 15));
+            Session.SendPacket(Session.Character.GenerateSay("=======================", 15));
+
+        }
+
+        /// <summary>
         /// $CreateRaid
         /// </summary>
         /// <param name="createRaidPacket"></param>

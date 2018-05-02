@@ -4656,7 +4656,7 @@ namespace OpenNos.GameObject
 
        
 
-        private double XpLoad() => CharacterHelper.XPData[Level - 1];
+        public double XpLoad() => CharacterHelper.XPData[Level - 1];
 
         #endregion
     }
