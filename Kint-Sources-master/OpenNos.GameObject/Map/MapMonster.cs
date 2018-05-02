@@ -36,6 +36,7 @@ namespace OpenNos.GameObject
 
         private bool _noAttack;
         private bool _noMove;
+        private bool Invisible;
         private Random _random;
 
         #endregion
@@ -654,7 +655,9 @@ namespace OpenNos.GameObject
                 
                     if (hitmode != 1)
                     {
-                        hitRequest.Session.Character.RemoveBuff(85);
+                        hitRequest.Session.Character.RemoveBuff(85);                       
+                        hitRequest.Session.Character.RemoveBuff(559);
+                        hitRequest.Session.Character.Invisible = false;
                     }
 
                     if (CurrentHp <= 0 && !isCaptureSkill)
@@ -848,6 +851,11 @@ namespace OpenNos.GameObject
                 {
                     _noMove = false;
                 }
+
+                if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.SpecialActions && s.SubType.Equals((byte)AdditionalTypes.SpecialActions.Hide/ 10)))
+                {
+                    Invisible = false;
+                }
             }
         }
 
@@ -898,6 +906,25 @@ namespace OpenNos.GameObject
                 if (targetSession.Character.HasGodMode)
                 {
                     damage = 0;
+                }
+
+                if (hitmode != 1)
+                {
+                    targetSession.Character.RemoveBuff(85);
+                    targetSession.Character.Invisible = false;
+                }
+                if (targetSession.Character.Invisible)
+                {
+                    targetSession.Character.Invisible = false;
+                    targetSession.CurrentMapInstance?.Broadcast(targetSession.Character.GenerateInvisible());
+                    targetSession.SendPacket(targetSession.Character.GenerateEq());
+
+                    targetSession.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m =>
+                        targetSession.CurrentMapInstance?.Broadcast(m.GenerateIn(), ReceiverType.AllExceptMe));
+                    targetSession.CurrentMapInstance?.Broadcast(targetSession, targetSession.Character.GenerateIn(),
+                        ReceiverType.AllExceptMe);
+                    targetSession.CurrentMapInstance?.Broadcast(targetSession, targetSession.Character.GenerateGidx(),
+                        ReceiverType.AllExceptMe);
                 }
                 if (targetSession.Character.IsSitting)
                 {

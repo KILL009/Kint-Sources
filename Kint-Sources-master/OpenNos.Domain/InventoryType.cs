@@ -14,7 +14,7 @@
 
 namespace OpenNos.Domain
 {
-    public enum InventoryType : short
+    public enum InventoryType : byte
     {
         Equipment = 0,
         Main = 1,

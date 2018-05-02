@@ -231,6 +231,7 @@ namespace OpenNos.Handler
                                 {
                                     if (Session.Character.Class == ClassType.Archer)
                                     {
+                                        Session.Character.Mp -= 300;
                                         ServerManager.Instance.TeleportOnClick(Session, Session.Character.MapInstanceId, useAoeSkillPacket.MapX, useAoeSkillPacket.MapY);
                                         Session.Character.AddBuff(new Buff(559, 1));
                                     }
@@ -296,6 +297,7 @@ namespace OpenNos.Handler
                 if (hitmode != 1)
                 {
                   Session.Character.RemoveBuff(85);
+                  Session.Character.Invisible = false;
                 }
 
 
