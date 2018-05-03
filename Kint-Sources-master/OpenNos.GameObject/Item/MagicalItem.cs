@@ -47,7 +47,7 @@ namespace OpenNos.GameObject
                         if (inv.ShellEffects.Count != 0 && packetsplit?.Length > 9 && byte.TryParse(packetsplit[9], out byte islot))
                         {
                             ItemInstance wearable = session.Character.Inventory.LoadBySlotAndType<ItemInstance>(islot, InventoryType.Equipment);
-                            if (wearable != null && (wearable.Item.ItemType == ItemType.Weapon || wearable.Item.ItemType == ItemType.Armor) && wearable.Item.LevelMinimum >= inv.Upgrade && wearable.Rare >= inv.Rare && !wearable.Item.IsHeroic)
+                            if (wearable != null && (wearable.Item.ItemType == ItemType.Weapon || wearable.Item.ItemType == ItemType.Armor) && wearable.Item.LevelMinimum >= inv.Upgrade && wearable.Rare >= inv.Rare && wearable.Item.IsHeroic)
                             {
                                 bool weapon = false;
                                 if ((inv.ItemVNum >= 565 && inv.ItemVNum <= 576) || (inv.ItemVNum >= 589 && inv.ItemVNum <= 598))
@@ -62,7 +62,7 @@ namespace OpenNos.GameObject
                                 {
                                     return;
                                 }
-                                if ((wearable.Item.ItemType == ItemType.Weapon && weapon) || (wearable.Item.ItemType == ItemType.Armor && !weapon && !wearable.Item.IsHeroic))
+                                if ((wearable.Item.ItemType == ItemType.Weapon && weapon) || (wearable.Item.ItemType == ItemType.Armor && !weapon))
                                 {
                                     if (inv.ShellEffects.Count > 0 && ServerManager.RandomNumber() < 50)
                                     {

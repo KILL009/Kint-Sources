@@ -9,7 +9,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Character Selection</title>
+    <title>Selección de personajes</title>
     <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/Content/button.css" rel="stylesheet" />
     <style>
@@ -68,14 +68,14 @@
 				{
 					if (r == null)
 					{
-						<p>Please create a personnage</p>
+                     <p>Por favor crea un personaje</p>
 					        /*
 						   TODO : Test it
 						*/
 						//return;
 					}
 					astuce = "ok";
-                     <p>Please choose a character :</p>
+                     <p>Por favor elige un personaje :</p>
 				}
                     <p class="btn btn-success">@Html.ActionLink(r.Name, "Select", "Personnage", new { name = r.Name }, new { @class = "button" })</p>
 			}
