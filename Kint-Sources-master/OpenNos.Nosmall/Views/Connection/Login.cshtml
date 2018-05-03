@@ -1,4 +1,4 @@
-@model ShopApplicationByFizo.Models.Account
+﻿@model ShopApplicationByFizo.Models.Account
 @{
     Layout = null;
 }
@@ -6,23 +6,14 @@
 <!DOCTYPE html>
     <html>
     <head>
-        <meta charset="UTF-8">
+        <meta charset="utf-8" />
         <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet" />
-        <title>NosMall - Conexión</title>
+        <title>NosMall - Connexion</title>
         <style>
 
             .link, .link:visited /* Lien et lien visité */ {
                 color: black;
                 text-decoration: none;
-            }
-             .logotipo{
-                text-align: center;
-                 margin-top: 0%;
-                 margin-right: 0%;
-   
-            }
-            .logotipo img {
-                height: 250px;
             }
 
                 .link:hover /* On pointe le lien */ {
@@ -41,49 +32,35 @@
 
             .login-page {
                 width: 360px;
-                padding: 2% 0 0;
+                padding: 8% 0 0;
                 margin: auto;
             }
 
             .form {
                 position: relative;
                 z-index: 1;
-                background: #7ad5de;
+                background: #FFFFFF;
                 max-width: 360px;
-                margin: 0 auto 50px;
+                margin: 0 auto 100px;
                 padding: 45px;
                 text-align: center;
                 box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
-                border-radius: 42px 42px 42px 42px;
-                -webkit-box-shadow: 2px -9px 33px 3px rgba(5,5,5,1);
-                -moz-box-shadow: 2px -9px 33px 3px rgba(5,5,5,1);
-                box-shadow: 2px -9px 33px 3px rgba(5,5,5,1);
-
-
             }
 
-
                 .form input {
-                    font-family: "Arial", sans-serif;
+                    font-family: "Roboto", sans-serif;
                     outline: 0;
-                    background: #fff3f9;
+                    background: #f2f2f2;
                     width: 100%;
                     border: 0;
                     margin: 0 0 15px;
                     padding: 15px;
                     box-sizing: border-box;
-                    font-size: 25px;
-                    border-radius: 55px 81px 81px 81px;
-                    -moz-border-radius: 55px 81px 81px 81px;
-                    -webkit-border-radius: 55px 81px 81px 81px;
-                    border: 1px groove #7d7a7a;
-                    -webkit-box-shadow: inset -1px 3px 79px -16px rgba(5,5,5,1);
-                    -moz-box-shadow: inset -1px 3px 79px -16px rgba(5,5,5,1);
-                    box-shadow: inset -1px 3px 79px -16px rgba(5,5,5,1);
+                    font-size: 14px;
                 }
 
                 .form button {
-                    font-family: "", sans-serif;
+                    font-family: "Roboto", sans-serif;
                     text-transform: uppercase;
                     outline: 0;
                     background: #4CAF50;
@@ -91,12 +68,12 @@
                     border: 0;
                     padding: 15px;
                     color: #FFFFFF;
-                    font-size: 20px;
+                    font-size: 14px;
                     cursor: pointer;
                 }
 
                     .form button:hover, .form button:active, .form button:focus {
-                        background: peru;
+                        background: #43A047;
                     }
 
                 .form .message {
@@ -153,175 +130,44 @@
                         .container .info span .fa {
                             color: #EF3B3A;
                         }
-                                        *{
-                            margin: 0px;
-                            padding: 0px;
-                            box-sizing: border-box;
-                            font-family: sans-serif;
-                        }
 
-                        footer{
-                            width: 100%;
-                            background: rgba(0,0,0,0.8);
-                            color: white;   
-
-                        }
-
-                        .container-footer-all{
-                            width: 100%;
-                            max-width: 1200px;
-                            margin: auto;
-                            padding: 40px;
-                        }
-
-                        .container-body{
-                            display: flex;
-                            justify-content: space-between;
-                        }
-
-                        .colum1{
-                            max-width: 400px;
-                        }
-
-                        .colum1 h1{
-                            font-size: 22px;
-                        }
-
-                        .colum1 p{
-                            font-size: 14px;
-                            color: #C7C7C7;
-                            margin-top: 20px;
-                        }
-
-                        .colum2{
-                            max-width: 400px;
-
-                        }
-
-                        .colum2 h1{
-                            font-size: 22px;
-                        }
-
-                        .row{
-                            margin-top: 20px;
-                            display: flex;
-                        }
-
-                        .row img{
-                            width: 36px;
-                            height: 36px;
-                        }
-
-                        .row label{
-                            margin-top: 10px;
-                            margin-left: 20px;
-                            color: #C7C7C7;
-                        }
-
-                        .colum3{
-                            max-width: 400px;
-                        }
-
-                        .colum3 h1{
-                            font-size: 22px;
-                        }
-
-                        .row2{
-                            margin-top: 20px;
-                            display: flex;
-                        }
-
-                        .row2 img{
-                            width: 36px;
-                            height: 36px;
-                        }
-
-                        .row2 label{
-                            margin-top: 10px;
-                            margin-left: 20px;
-                            max-width: 140px;
-                        }
-
-                        .container-footer{
-                            width: 100%;  
-                            background: #101010;
-                        }
-
-                        .footer{
-                            max-width: 1200px;
-                            margin: auto;
-                            display: flex;
-                            justify-content: space-between;  
-                            padding: 20px;
-                           
-                        }
-
-                        .copyright{
-                            color: #C7C7C7;
-                        }
-
-                        .copyright a{
-                            text-decoration: none;
-                            color: white;
-                            font-weight: bold;
-                        }
-
-                        .information a{
-                            text-decoration: none;
-                            color: #C7C7C7;
-                        }
-            
-                        *{
-                            font-family: helvetica:;
-                        }
-                        input#boton{
-                            padding: 5px 50px;
-                            color: white;
-                            font-size: 1em;
-                            background-color: #5dade2;
-                            -webkit-transition: background-color .25s ;
-                            border: 0px;
-                            -webkit-border-radius: 5px; 
-                            -webkit-box-shadow: 0px 4px 0px #4AA4DF; 
-
-                        }
-                        input#boton:hover{
-                            background-color: #7abbe7;
-
-                        }
-                
             body {
-                background: url(http://i.epvpimg.com/QK5Neab.jpg) no-repeat center center fixed;
-                -webkit-background-size: cover;
-                -moz-background-size: cover;
-                -o-background-size: cover;
-                background-size: cover;
+                background-image: url(http://i.epvpimg.com/uuVBeab.jpg);
+                font-family: "Roboto", sans-serif;
                 -webkit-font-smoothing: antialiased;
             }
                 link {
                     color:red;
-             }
-            
+                }
         </style>
     </head>
     <body>
-        <div class="logotipo">
-           <img src="../../image/logo.png"> 
-           </div> 
-
         <div class="illustration">
-
             <div class="i-large"></div>
             <div class="i-medium"></div>
             <div class="i-small"></div>
         </div>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+            <a class="navbar-brand" href="#">NosMall - NosHeat</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        @Html.ActionLink("Connexion", "Login", "Connection", null, new { @class = "link" })
+                    </li>
+                </ul>
+            </div>
+        </nav>
         @using (Html.BeginForm("Login", "Connection", FormMethod.Post))
     {
         @Html.AntiForgeryToken();
     @Html.ValidationSummary();
 if (ViewBag.Message != null)
 {
-    <div style="border: 10x solid red">
+    <div style="border: 1px solid red">
         @ViewBag.Message
     </div>
 }
@@ -336,109 +182,9 @@ if (ViewBag.Message != null)
             @Html.PasswordFor(a => a.Password)
 
             @Html.ValidationMessageFor(a => a.Password)
-            <link rel="stylesheet" href="Login.cshtml">
-            <form action="" metodh="post">
-                <input type="submit" value="Entrar" id="boton">
-            </form>
-
-            
-           
+            <input type="submit" value="Connexion" />
         </div>
     </div>
 }
-             
-        
-    <footer>
-
-       
-       <div class="container-footer-all">
-        
-            <div class="container-body">
-
-                <div class="colum1">
-                    <h1>¿Qué es NosDeath?</h1>
-
-                    <p>Descubre NosDeath, el juego de rol de anime gratuito y en línea en el que puedes emprender con tus amigos apasionantes viajes por un mundo lleno de secretos. Participa en una historia trepidante y decide el destino del mundo. Tus aventuras te llevarán a lugares impresionantes: desde el animado pueblo de NosVille hasta el Templo de Fernon, pasando por el misterioso Bosque de Arce y la isla helada Glacernon, sin olvidar el Monte Krem y el Desierto Mortaz.</p>
-
-                </div>
-     
-                <div class="colum2">
-
-                    <h1>Redes Sociales</h1>
-
-                    <div class="row">
-                        <img src="../../image/facebook.png">
-                        <label>Siguenos en Facebook</label>
-                    </div>
-                    <div class="row">
-                        <img src="../image/twitter.png">
-                        <label>Siguenos en Twitter</label>
-                    </div>
-                    <div class="row">
-                        <img src="../../image/instagram.png">
-                        <label>Siguenos en Instagram</label>
-                    </div>
-                    <div class="row">
-                        <img src="../image/google-plus.png">
-                        <label>Siguenos en Google Plus</label>
-                    </div>
-                    <div class="row">
-                        <img src="../image/youtube-icono.png">
-                        <label>Siguenos en Youtube</label>
-                    </div>
-
-
-                </div>
-
-                <div class="colum3">
-
-                    <h1>Informacion Contactos</h1>
-
-                    <div class="row2">
-                        <img src="../image/house.png">
-                        <label>La Romana, 
-                        Republica Dominicana
-                        Manuel del Cabral
-                        Casa # 27</label>
-                    </div>
-
-                    <div class="row2">
-                        <img src="../../image/smartphone.png">
-                        <label>+34-629-95-44-48</label>
-                    </div>
-
-                    <div class="row2">
-                        <img src="../../image/contact.png">
-                         <label>NosDeath@hotmail.com</label>
-                    </div>
-
-                </div>
-
-            </div>
-        
-        </div>
-        
-        <div class="container-footer">
-               <div class="footer">
-                    <div class="copyright">
-                        © 2018 Todos los Derechos Reservados | <a href="https://www.facebook.com/LadimarSilva">Lady</a>
-                    </div>
-
-                    <div class="information">
-                        <a href="">Informacion Compañia</a> | <a href="">Privación y Política</a> | <a href="">Terminos y Condiciones</a>
-                    </div>
-                </div>
-
-            </div>
-        
-    </footer>
     </body>
     </html>
-    
-   
-  
- 
-
-
-
-
