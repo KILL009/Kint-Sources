@@ -33,15 +33,15 @@ namespace OpenNos.GameObject
             List<Portal> list = new List<Portal>();
             switch (entryMap)
             {
-                case 261:
+                case 1:
                     list.Add(new Portal
                     {
-                        SourceX = 78,
-                        SourceY = 129,
+                        SourceX = 48,
+                        SourceY = 132,
                         DestinationX = 5,
                         DestinationY = 8,
                         Type = (short)PortalType.Miniland,
-                        SourceMapId = 261,
+                        SourceMapId = 1,
                         DestinationMapInstanceId = exitMapinstanceId
                     });
                     break;

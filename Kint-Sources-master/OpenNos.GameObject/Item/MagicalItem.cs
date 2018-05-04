@@ -40,19 +40,19 @@ namespace OpenNos.GameObject
         {
             switch (Effect)
             {
-                // airwaves - eventitems
+                // Shell
                 case 0:
                     if (inv.Item.ItemType == ItemType.Shell)
                     {
                         if (inv.ShellEffects.Count != 0 && packetsplit?.Length > 9 && byte.TryParse(packetsplit[9], out byte islot))
                         {
                             ItemInstance wearable = session.Character.Inventory.LoadBySlotAndType<ItemInstance>(islot, InventoryType.Equipment);
-                            if (wearable != null && (wearable.Item.ItemType == ItemType.Weapon || wearable.Item.ItemType == ItemType.Armor) && wearable.Item.LevelMinimum >= inv.Upgrade && wearable.Rare >= inv.Rare && wearable.Item.IsHeroic)
+                            if (wearable != null && (wearable.Item.ItemType == ItemType.Weapon || wearable.Item.ItemType == ItemType.Armor) && wearable.Item.LevelMinimum >= inv.Upgrade && wearable.Rare >= inv.Rare && !wearable.Item.IsHeroic)
                             {
                                 bool weapon = false;
                                 if ((inv.ItemVNum >= 565 && inv.ItemVNum <= 576) || (inv.ItemVNum >= 589 && inv.ItemVNum <= 598))
                                 {
-                                    weapon = true;
+                                    weapon = true; 
                                 }
                                 else if ((inv.ItemVNum >= 577 && inv.ItemVNum <= 588) || (inv.ItemVNum >= 656 && inv.ItemVNum <= 664) || inv.ItemVNum == 599)
                                 {
