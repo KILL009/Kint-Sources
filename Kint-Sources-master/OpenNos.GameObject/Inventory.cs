@@ -437,7 +437,7 @@ namespace OpenNos.GameObject
             {
                 lock (_lockObject)
                 {
-                    retItem = FirstOrDefault(i => i.Slot.Equals(slot) && i.Type.Equals(type));
+                    retItem = SingleOrDefault(i => i.Slot.Equals(slot) && i.Type.Equals(type));
                 }
             }
             catch (InvalidOperationException ioEx)
@@ -586,7 +586,7 @@ namespace OpenNos.GameObject
                     {
                         if (destinationInventory.Amount + amount > MAX_ITEM_AMOUNT)
                         {
-                            short saveItemCount = destinationInventory.Amount;
+                            int saveItemCount = destinationInventory.Amount;
                             destinationInventory.Amount = MAX_ITEM_AMOUNT;
                             sourceInventory.Amount = (short)(saveItemCount + sourceInventory.Amount - MAX_ITEM_AMOUNT);                                                 
                             Save();

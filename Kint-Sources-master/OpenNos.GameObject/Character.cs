@@ -163,6 +163,7 @@ namespace OpenNos.GameObject
         #endregion
 
         #region Properties
+        public byte ArenaWinnerTemp { get; set; }
 
         public AuthorityType Authority { get; set; }
 
@@ -4655,7 +4656,7 @@ namespace OpenNos.GameObject
 
        
 
-        private double XpLoad() => CharacterHelper.XPData[Level - 1];
+        public double XpLoad() => CharacterHelper.XPData[Level - 1];
 
         #endregion
     }

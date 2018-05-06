@@ -355,6 +355,21 @@ namespace OpenNos.GameObject.Networking
             }
         }
 
+        public void TeleportOnClick(ClientSession session, Guid guid, short x, short y)
+        {
+            MapInstance map = GetMapInstance(guid);
+            if (guid == default(Guid))
+            {
+                return;
+            }
+            bool pos = map.Map.GetDefinedPosition(x, y);
+            if (!pos)
+            {
+                return;
+            }
+            session.Character.TeleportOnMap(x, y);
+        }
+
         public void BazaarRefresh(long bazaarItemId)
         {
             InBazaarRefreshMode = true;

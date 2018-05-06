@@ -98,6 +98,20 @@ namespace OpenNos.Handler
         }
 
         /// <summary>
+        /// $GetExp
+        /// </summary>
+        /// <param name="GetExpPacket"></param>
+        public void GetExp(GetExpPacket packet)
+        {
+            Session.SendPacket(Session.Character.GenerateSay("=======Level Exp=======", 15));
+            Session.SendPacket(Session.Character.GenerateSay("Current XP: " + Session.Character.LevelXp, 15));
+            Session.SendPacket(Session.Character.GenerateSay("Required XP: " + Session.Character.XpLoad(), 15));         
+            Session.SendPacket(Session.Character.GenerateSay("Current Percentage: " + String.Format("{0:0.00}", Session.Character.LevelXp / Session.Character.XpLoad() * 100D), 15));         
+            Session.SendPacket(Session.Character.GenerateSay("=======================", 15));
+
+        }
+
+        /// <summary>
         /// $CreateRaid
         /// </summary>
         /// <param name="createRaidPacket"></param>
@@ -139,7 +153,6 @@ namespace OpenNos.Handler
         /// <param name="packet"></param>
         public void Act6Percent(Act6RaidPacket packet)
         {
-            ;
             if (string.IsNullOrEmpty(packet?.Name))
             {
                 Session.SendPacket(Session.Character.GenerateSay("$Act6Percent Name [Percent]", 11));
@@ -850,18 +863,32 @@ namespace OpenNos.Handler
         public void ArenaWinner(ArenaWinnerPacket arenaWinner)
         {
             Logger.LogUserEvent("GMCOMMAND", Session.GenerateIdentity(), $"[ArenaWinner]");
+            if (Session.Account.Authority == AuthorityType.GameMaster)
+            { 
 
             Session.Character.ArenaWinner = Session.Character.ArenaWinner == 0 ? 1 : 0;
             Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateCMode());
             ServerManager.Shout($"Eres el mas feo de todos! ");
             Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("DONE"), 10));
-        }
+            }
 
-        /// <summary>
-        /// $Ban Command
-        /// </summary>
-        /// <param name="banPacket"></param>
-        public void Ban(BanPacket banPacket)
+            else           
+            {
+                if (ServerManager.Instance.TopComplimented.Take(10).Any(s => s.CharacterId.Equals(Session.Character.CharacterId)) || Session.Character.ArenaWinner==1)
+                {
+                    Session.Character.ArenaWinnerTemp = Session.Character.ArenaWinnerTemp == 0 ? (byte)1 : (byte)0;
+                    Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateCMode());
+                    Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("DONE"), 10));
+                     }
+                 }
+             }
+
+
+/// <summary>
+/// $Ban Command
+/// </summary>
+/// <param name="banPacket"></param>
+public void Ban(BanPacket banPacket)
         {
             if (banPacket != null)
             {

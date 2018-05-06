@@ -218,10 +218,35 @@ namespace OpenNos.Handler
                         UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("CANT_ATTACK"), 0));
                     return;
                 }
-
                 if (Session.Character.CanFight && Session.Character.Hp > 0)
                 {
                     ZoneHit(useAoeSkillPacket.CastId, useAoeSkillPacket.MapX, useAoeSkillPacket.MapY);
+                    if (useAoeSkillPacket.CastId == 9)
+                    {
+                        if (useAoeSkillPacket.MapX < Session.Character.PositionX + 8 && useAoeSkillPacket.MapX > Session.Character.PositionX - 8)
+                        {
+                            if (Session.Character.Mp > 301)
+                            {
+                                if (useAoeSkillPacket.CastId == 9)
+                                {
+                                    if (Session.Character.Class == ClassType.Archer)
+                                    {
+                                        Session.Character.Mp -= 300;
+                                        ServerManager.Instance.TeleportOnClick(Session, Session.Character.MapInstanceId, useAoeSkillPacket.MapX, useAoeSkillPacket.MapY);
+                                        Session.Character.AddBuff(new Buff(559, 1));
+                                    }
+                                }
+
+                            }
+                        }
+                        if (useAoeSkillPacket.MapX > Session.Character.PositionX + 8 && useAoeSkillPacket.MapX < Session.Character.PositionX - 8)
+                        {
+                            Logger.LogUserEvent("Cheat ", Session.GenerateIdentity(), $"Cheat Sp6a fufu");
+                            Session.SendPacket(Session.Character.GenerateSay("Pruebe su paquete Logger ! :)", 11));
+                        }
+
+
+                    }
                 }
             }
         }
@@ -272,6 +297,7 @@ namespace OpenNos.Handler
                 if (hitmode != 1)
                 {
                   Session.Character.RemoveBuff(85);
+                  Session.Character.Invisible = false;
                 }
 
 
@@ -337,8 +363,7 @@ namespace OpenNos.Handler
                 }
                 if (target.Character.Invisible)
                 {
-                    target.Character.Invisible = false;
-                    target.Character.Invisible = false;
+                    target.Character.Invisible = false;                        
                     target.CurrentMapInstance?.Broadcast(target.Character.GenerateInvisible());
                     target.SendPacket(target.Character.GenerateEq());
 

@@ -14,7 +14,7 @@ namespace OpenNos.GameObject
         public InventoryType InventoryType { get; set; }
 
         [PacketIndex(1)]
-        public short Slot { get; set; }
+        public byte Slot { get; set; }
 
         [PacketIndex(2)]
         public short Amount { get; set; }

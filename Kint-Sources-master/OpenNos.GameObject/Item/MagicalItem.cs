@@ -36,11 +36,11 @@ namespace OpenNos.GameObject
 
         #region Methods
 
-        public override void Use(ClientSession session, ref ItemInstance inv, short Option = 0, string[] packetsplit = null)
+        public override void Use(ClientSession session, ref ItemInstance inv, byte Option = 0, string[] packetsplit = null)
         {
             switch (Effect)
             {
-                // airwaves - eventitems
+                // Shell
                 case 0:
                     if (inv.Item.ItemType == ItemType.Shell)
                     {
@@ -52,7 +52,7 @@ namespace OpenNos.GameObject
                                 bool weapon = false;
                                 if ((inv.ItemVNum >= 565 && inv.ItemVNum <= 576) || (inv.ItemVNum >= 589 && inv.ItemVNum <= 598))
                                 {
-                                    weapon = true;
+                                    weapon = true; 
                                 }
                                 else if ((inv.ItemVNum >= 577 && inv.ItemVNum <= 588) || (inv.ItemVNum >= 656 && inv.ItemVNum <= 664) || inv.ItemVNum == 599)
                                 {

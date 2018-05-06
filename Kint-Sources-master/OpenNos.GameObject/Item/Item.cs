@@ -119,7 +119,7 @@ namespace OpenNos.GameObject
         }
 
         //TODO: Convert to PacketDefinition
-        public abstract void Use(ClientSession session, ref ItemInstance inv, short Option = 0, string[] packetsplit = null);
+        public abstract void Use(ClientSession session, ref ItemInstance inv, byte Option = 0, string[] packetsplit = null);
 
         #endregion
     }
