@@ -80,7 +80,7 @@
       <HintPath>C:\OpenNos\OpenNos.SCS.dll</HintPath>
     </Reference>
     <Reference Include="RestSharp, Version=106.3.0.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
-      <HintPath>..\packages\RestSharp.106.3.0-alpha0018\lib\net452\RestSharp.dll</HintPath>
+      <HintPath>..\packages\RestSharp.106.3.0-alpha0025\lib\net452\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -103,10 +103,11 @@
     <Reference Include="System.Reactive.Windows.Threading, Version=3.0.1000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reactive.Windows.Threading.4.0.0-preview00001\lib\net45\System.Reactive.Windows.Threading.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web" />
     <Reference Include="System.ValueTuple">
-      <HintPath>..\packages\System.ValueTuple.4.5.0-preview2-26406-04\lib\net47\System.ValueTuple.dll</HintPath>
+      <HintPath>..\packages\System.ValueTuple.4.5.0-rc1\lib\net47\System.ValueTuple.dll</HintPath>
+      <Private>True</Private>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="mscorlib" />
   </ItemGroup>
   <ItemGroup>
