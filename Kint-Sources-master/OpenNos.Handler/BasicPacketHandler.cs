@@ -1863,16 +1863,7 @@ namespace OpenNos.Handler
                     Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateSay(message.Trim(), 1), ReceiverType.AllExceptMe);
                     message = $"[Support {Session.Character.Name}]: {message}";
                 }
-                Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateSay(message.Trim(), type), ReceiverType.AllExceptMe);
-
-               
-                if (Session.Character.Authority == AuthorityType.Donador)
-                {
-                        type = 10;
-                        Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateSay(message.Trim(), 1), ReceiverType.AllExceptMe);
-                        message = $"[DT {Session.Character.Name}]: {message}";
-                }
-                 Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateSay(message.Trim(), type), ReceiverType.AllExceptMe);
+                Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateSay(message.Trim(), type), ReceiverType.AllExceptMe);             
                 
             }
         }
