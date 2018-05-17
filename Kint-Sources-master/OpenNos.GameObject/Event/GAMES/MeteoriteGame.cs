@@ -102,7 +102,7 @@ namespace OpenNos.GameObject.Event.GAMES
                         }
                     }
 
-                    session.Character.Speed = 12;
+                    session.Character.Speed = 8;
                     session.Character.IsVehicled = true;
                     session.Character.IsCustomSpeed = true;
                     session.Character.Morph = 1156;

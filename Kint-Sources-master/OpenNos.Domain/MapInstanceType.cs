@@ -33,6 +33,7 @@ namespace OpenNos.Domain
         EventGameInstance,
         BattleRoyaleMapInstance,
         LobbyMapInstance,
-        CaligorInstance
+        CaligorInstance,
+        EventSheepInstance
     }
 }
