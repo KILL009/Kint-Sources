@@ -4570,7 +4570,7 @@ namespace OpenNos.GameObject
 
             if (partySize > 1 && group != null)
             {
-                xp = (int)Math.Round(xp / (Level * partyPenalty));
+                xp /= this.Group.CharacterCount;
             }
 
             return xp;
