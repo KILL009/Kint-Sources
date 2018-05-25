@@ -555,6 +555,12 @@ namespace OpenNos.GameObject
                     {
                         return;
                     }
+
+                    if (session.Character.HasShopOpened)
+                    {
+                       return;
+                    }
+
                     if (Morph > 0)
                     {
                         if (Option == 0 && !session.Character.IsVehicled)

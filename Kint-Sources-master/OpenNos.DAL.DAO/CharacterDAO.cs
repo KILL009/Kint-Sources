@@ -168,7 +168,7 @@ namespace OpenNos.DAL.DAO
             }
         }
 
-        public IEnumerable<CharacterDTO> LoadByAccount(long accountId)
+        public IEnumerable<CharacterDTO> LoadAllCharactersByAccount(long accountId)
         {
             using (OpenNosContext context = DataAccessHelper.CreateContext())
             {
