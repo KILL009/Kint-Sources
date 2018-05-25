@@ -192,6 +192,11 @@ namespace OpenNos.Handler
         public void ExchangeList(string packet)
         {
             string[] packetsplit = packet.Split(' ');
+            if (packetsplit.Length < 4)
+            {
+                Session.SendPacket(UserInterfaceHelper.GenerateInfo("Update your Client & Download the new launcher"));
+                return;
+            }
             if (!long.TryParse(packetsplit[2], out long gold))
             {
                 return;

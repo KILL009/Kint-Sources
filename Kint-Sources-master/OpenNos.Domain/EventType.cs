@@ -27,6 +27,7 @@ namespace OpenNos.Domain
         TALENTARENA,
         ICEBREAKER,
         BATTLEROYAL,
-        CALIGOR
+        CALIGOR,
+        SHEEP
     }
 }

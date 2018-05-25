@@ -57,7 +57,7 @@ namespace OpenNos.DAL.Mock
 
         public IEnumerable<CharacterDTO> LoadAllByAccount(long accountId) => throw new System.NotImplementedException();
 
-        public IEnumerable<CharacterDTO> LoadByAccount(long accountId) => Container.Where(c => c.AccountId == accountId).ToList();
+        public IEnumerable<CharacterDTO> LoadAllCharactersByAccount(long accountId) => Container.Where(c => c.AccountId == accountId).ToList();
 
         public CharacterDTO LoadById(long characterId) => Container.SingleOrDefault(c => c.CharacterId == characterId);
 

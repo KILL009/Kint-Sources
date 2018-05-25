@@ -59,14 +59,14 @@ namespace OpenNos.Handler
             // TODO: Hold Account Information in Authorized object
             long accountId = Session.Account.AccountId;
             Logger.LogUserEvent("CREATECHARACTER", Session.GenerateIdentity(), $"[CreateCharacter]Name: {characterCreatePacket.Name} Slot: {characterCreatePacket.Slot} Gender: {characterCreatePacket.Gender} HairStyle: {characterCreatePacket.HairStyle} HairColor: {characterCreatePacket.HairColor}");
-            if (characterCreatePacket.Slot <= 2 && DAOFactory.CharacterDAO.LoadBySlot(accountId, characterCreatePacket.Slot) == null && characterCreatePacket.Name.Length > 3 && characterCreatePacket.Name.Length < 15)
+            if (characterCreatePacket.Slot <= 3 && DAOFactory.CharacterDAO.LoadBySlot(accountId, characterCreatePacket.Slot) == null && characterCreatePacket.Name.Length > 3 && characterCreatePacket.Name.Length < 15)
             {
                 Regex rg = new Regex(@"^[A-Za-z0-9_äÄöÖüÜß~*<>°+-.!_-Ð™¤£±†‡×ßø^\S]+$");
                 if (rg.Matches(characterCreatePacket.Name).Count == 1)
                 {
                     if (DAOFactory.CharacterDAO.LoadByName(characterCreatePacket.Name) == null)
                     {
-                        if (characterCreatePacket.Slot > 2)
+                        if (characterCreatePacket.Slot > 3)
                         {
                             return;
                         }
@@ -288,7 +288,7 @@ namespace OpenNos.Handler
             else
             {
                 // TODO: Wrap Database access up to GO
-                IEnumerable<CharacterDTO> characters = DAOFactory.CharacterDAO.LoadByAccount(Session.Account.AccountId);
+                IEnumerable<CharacterDTO> characters = DAOFactory.CharacterDAO.LoadAllCharactersByAccount(Session.Account.AccountId);
                 Logger.Info(string.Format(Language.Instance.GetMessageFromKey("ACCOUNT_ARRIVED"), Session.SessionId));
 
                 // load characterlist packet for each character in CharacterDTO

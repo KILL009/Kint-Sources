@@ -80,7 +80,7 @@ namespace OpenNos.GameObject
             ShellEffectSecondary = new ConcurrentBag<ShellEffectDTO>();
             ObservableBag = new Dictionary<short, IDisposable>();
         }
-
+        
         public Character(CharacterDTO input)
         {
             AccountId = input.AccountId;
@@ -290,6 +290,8 @@ namespace OpenNos.GameObject
         public bool IsVehicled { get; set; }
 
         public bool IsWaitingForEvent { get; set; }
+
+        public bool IsWaitingForEventSheep { get; set; }
 
         public DateTime LastDefence { get; set; }
 
@@ -555,6 +557,15 @@ namespace OpenNos.GameObject
 
         public long LastTargetId { get; set; }
 
+        public bool IsWaitingForGift { get; set; }
+
+        public int Point { get; set; }
+
+        public int Point2 { get; set; }
+
+        public int Point3 { get; set; }
+
+        public bool CanAttack { get; set; }
         #endregion
 
         #region Methods
@@ -3848,7 +3859,7 @@ namespace OpenNos.GameObject
                         // load and concat inventory with equipment
                         List<ItemInstance> inventories = Inventory.GetAllItems();
                         IEnumerable<Guid> currentlySavedInventoryIds = DAOFactory.IteminstanceDAO.LoadSlotAndTypeByCharacterId(CharacterId);
-                        IEnumerable<CharacterDTO> characters = DAOFactory.CharacterDAO.LoadByAccount(Session.Account.AccountId);
+                        IEnumerable<CharacterDTO> characters = DAOFactory.CharacterDAO.LoadAllCharactersByAccount(Session.Account.AccountId);
                         foreach (CharacterDTO characteraccount in characters.Where(s => s.CharacterId != CharacterId))
                         {
                             currentlySavedInventoryIds = currentlySavedInventoryIds.Concat(DAOFactory.IteminstanceDAO.LoadByCharacterId(characteraccount.CharacterId).Where(s => s.Type == InventoryType.Warehouse).Select(i => i.Id).ToList());
@@ -4559,7 +4570,7 @@ namespace OpenNos.GameObject
 
             if (partySize > 1 && group != null)
             {
-                xp = (int)Math.Round(xp / (Level * partyPenalty));
+                xp /= this.Group.CharacterCount;
             }
 
             return xp;

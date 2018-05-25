@@ -92,6 +92,10 @@ namespace OpenNos.GameObject.Helpers
                             MeteoriteGame.GenerateMeteoriteGame();
                             break;
 
+                        case EventType.SHEEP:
+                            Sheep.GenerateSheepGames();
+                            break;
+
                         case EventType.ACT4SHIP:
                             ACT4SHIP.GenerateAct4Ship(1);
                             ACT4SHIP.GenerateAct4Ship(2);

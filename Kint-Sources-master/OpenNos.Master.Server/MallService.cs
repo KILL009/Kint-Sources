@@ -63,7 +63,7 @@ namespace OpenNos.Master.Server
                 return null;
             }
 
-            return DAOFactory.CharacterDAO.LoadByAccount(accountId);
+            return DAOFactory.CharacterDAO.LoadAllCharactersByAccount(accountId);
         }
 
         public void SendItem(long characterId, MallItem item)
