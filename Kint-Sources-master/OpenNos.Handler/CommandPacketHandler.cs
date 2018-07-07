@@ -97,6 +97,37 @@ namespace OpenNos.Handler
             }
         }
 
+        /// $Prestige
+        /// </summary>
+        /// <param name="prestigePacket"></param>
+        public void Prestige(PrestigePacket PrestigePacket)
+        {
+            if (Session.CurrentMapInstance.MapInstanceType == MapInstanceType.BaseMapInstance)
+            {
+                if (Session.Character.Level == ServerManager.Instance.Configuration.MaxLevel
+                    && Session.Character.JobLevel == ServerManager.Instance.Configuration.MaxJobLevel
+                    && Session.Character.HeroLevel == ServerManager.Instance.Configuration.MaxHeroLevel)
+                {
+                    if (Session.Character.Inventory.All(i => i.Type != InventoryType.Wear))
+                    {
+                        Session.Character.ChangeClassPrestige(ClassType.Adventurer);
+                        Session.Character.Prestige += 1;
+                        ServerManager.Instance.ChangeMap(Session.Character.CharacterId);
+                        //  RewardsHelper.Instance.GetLevelUpRewards(Session);
+                        Logger.LogEvent(Session.Character.Name, Session.IpAddress);
+                    }
+                    else
+                    {
+                        Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("EQ_NOT_EMPTY"), 0));
+                    }
+                }
+                else
+                {
+                    Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_LEVEL_PRESTIGE"), 0));
+                }
+            }
+        }
+
         /// <summary>
         /// $GetExp
         /// </summary>

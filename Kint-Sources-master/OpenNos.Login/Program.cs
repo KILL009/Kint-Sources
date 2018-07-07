@@ -14,9 +14,7 @@
 
 using log4net;
 using OpenNos.Core;
-using OpenNos.DAL;
 using OpenNos.DAL.EF.Helpers;
-using OpenNos.Data;
 using OpenNos.GameObject;
 using OpenNos.Handler;
 using OpenNos.Master.Library.Client;
@@ -30,6 +28,7 @@ namespace OpenNos.Login
 {
     public static class Program
     {
+        private const string IpAddress = "127.0.0.1";
         #region Members
 
         private static bool _isDebug;
@@ -90,7 +89,7 @@ namespace OpenNos.Login
                         // initialize PacketSerialization
                         PacketFactory.Initialize<WalkPacket>();
 
-                        NetworkManager<LoginCryptography> networkManager = new NetworkManager<LoginCryptography>("127.0.0.1", port, typeof(LoginPacketHandler), typeof(LoginCryptography), false);
+                        NetworkManager<LoginCryptography> networkManager = new NetworkManager<LoginCryptography>(IpAddress, port, typeof(LoginPacketHandler), typeof(LoginCryptography), false);
                     }
                     catch (Exception ex)
                     {

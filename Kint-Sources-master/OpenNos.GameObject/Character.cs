@@ -160,6 +160,11 @@ namespace OpenNos.GameObject
             ShellEffectSecondary = new ConcurrentBag<ShellEffectDTO>();
         }
 
+        public void ChangeClassPrestige(ClassType adventurer)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
         #region Properties
@@ -566,6 +571,7 @@ namespace OpenNos.GameObject
         public int Point3 { get; set; }
 
         public bool CanAttack { get; set; }
+        public int Prestige { get; set; }
         #endregion
 
         #region Methods

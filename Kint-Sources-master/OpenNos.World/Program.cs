@@ -29,10 +29,6 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using OpenNos.ChatLog.Networking;
-using OpenNos.DAL;
-using OpenNos.Data;
-using System.Linq;
-using System.Net;
 
 
 namespace OpenNos.World
