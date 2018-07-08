@@ -57,7 +57,7 @@ namespace OpenNos.GameObject
                         Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("LOW_LVL"), 0));
                         return;
                     }
-                    if (packet.Type == (byte)Session.Character.Class || packet.Type > 4 || packet.Type < 0)
+                    if (packet.Type == (byte)Session.Character.Class || packet.Type > 3 && Session.Account.Authority < AuthorityType.GameMaster || packet.Type < 0)
                     {
                         return;
                     }
