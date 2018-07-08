@@ -803,14 +803,8 @@ namespace OpenNos.GameObject.Helpers
                 }
                 _hp[(int)ClassType.Swordman, i] = hp;
             }
-
-            //Fighter
-            for (int i = 1; i < _hp.GetLength(1); i++)
-            {
-                _hp[(int)ClassType.Fighter, i] = (int)((1 / 2.0 * i * i) + (31 / 2.0 * i) + 205);
-            }
-
-            // Magician HP
+         
+          // Magician HP
             for (int i = 0; i < _hp.GetLength(1); i++)
             {
                 _hp[(int)ClassType.Magician, i] = (int)(((((i + 15) * (i + 15)) + i + 15.0) / 2.0) - 465 + 550);
@@ -835,6 +829,26 @@ namespace OpenNos.GameObject.Helpers
                 }
                 _hp[(int)ClassType.Archer, i] = hp;
             }
+
+            // Fight HP
+            for (int i = 0; i < _hp.GetLength(1); i++)
+            {
+                int hp = 680;
+                int inc = 35;
+                int j = 16;
+                while (j <= i)
+                {
+                    hp += inc;
+                    ++inc;
+                    if (j % 10 == 1 || j % 10 == 5 || j % 10 == 8)
+                    {
+                        hp += inc;
+                        ++inc;
+                    }
+                    ++j;
+                }
+                _hp[(int)ClassType.Fighter, i] = hp;
+            }
         }
 
         private static void loadHPHealth()
@@ -844,7 +858,7 @@ namespace OpenNos.GameObject.Helpers
             _hpHealth[(int)ClassType.Adventurer] = 30;
             _hpHealth[(int)ClassType.Swordman] = 90;
             _hpHealth[(int)ClassType.Magician] = 30;
-            _hpHealth[(int)ClassType.Fighter] = 30;
+            _hpHealth[(int)ClassType.Fighter] = 80;
         }
 
         private static void loadHPHealthStand()
@@ -854,7 +868,7 @@ namespace OpenNos.GameObject.Helpers
             _hpHealthStand[(int)ClassType.Adventurer] = 25;
             _hpHealthStand[(int)ClassType.Swordman] = 26;
             _hpHealthStand[(int)ClassType.Magician] = 20;
-            _hpHealthStand[(int)ClassType.Fighter] = 30;
+            _hpHealthStand[(int)ClassType.Fighter] = 20;
         }
 
         private static void loadJobXPData()
@@ -886,12 +900,12 @@ namespace OpenNos.GameObject.Helpers
 
         private static void loadMPData()
         {
-            _mp = new int[5, 256];
+            _mp = new int[5, 257];
 
             // ADVENTURER MP
             _mp[(int)ClassType.Adventurer, 0] = 60;
             int baseAdventurer = 9;
-            for (int i = 1; i < _mp.GetLength(1); i += 5)
+            for (int i = 1; i < _mp.GetLength(1); i += 4)
             {
                 _mp[(int)ClassType.Adventurer, i] = _mp[(int)ClassType.Adventurer, i - 1] + baseAdventurer;
                 _mp[(int)ClassType.Adventurer, i + 1] = _mp[(int)ClassType.Adventurer, i] + baseAdventurer;
@@ -906,35 +920,26 @@ namespace OpenNos.GameObject.Helpers
             // SWORDSMAN MP
             for (int i = 1; i < _mp.GetLength(1) - 1; i++)
             {
-                _mp[(int)ClassType.Swordman, i] = 8 * _mp[(int)ClassType.Adventurer, i];
+                _mp[(int)ClassType.Swordman, i] = _mp[(int)ClassType.Adventurer, i];
             }
 
             // ARCHER MP
             for (int i = 0; i < _mp.GetLength(1) - 1; i++)
             {
-                _mp[(int)ClassType.Archer, i] = 10 * _mp[(int)ClassType.Adventurer, i];
+                _mp[(int)ClassType.Archer, i] = _mp[(int)ClassType.Adventurer, i];
             }
 
             // MAGICIAN MP
             for (int i = 0; i < _mp.GetLength(1) - 1; i++)
             {
-                _mp[(int)ClassType.Magician, i] = 15 * _mp[(int)ClassType.Adventurer, i];
+                _mp[(int)ClassType.Magician, i] = 3 * _mp[(int)ClassType.Adventurer, i];
             }
 
             // Fighter MP
-            _mp[(int)ClassType.Fighter, 0] = 100;
-            int baseAdventurer1 = 12;
-            for (int i = 1; i < _mp.GetLength(1); i += 5)
-            {
-                _mp[(int)ClassType.Fighter, i] = _mp[(int)ClassType.Fighter, i - 1] + baseAdventurer1;
-                _mp[(int)ClassType.Fighter, i + 1] = _mp[(int)ClassType.Fighter, i] + baseAdventurer1;
-                _mp[(int)ClassType.Fighter, i + 2] = _mp[(int)ClassType.Fighter, i + 1] + baseAdventurer1;
-                baseAdventurer1++;
-                _mp[(int)ClassType.Fighter, i + 3] = _mp[(int)ClassType.Fighter, i + 2] + baseAdventurer1;
-                baseAdventurer1++;
-
-
-            }
+            for (int i = 1; i < _mp.GetLength(1) - 1; i++)
+                           {
+                _mp[(int)ClassType.Fighter, i] = _mp[(int)ClassType.Adventurer, i];
+                            }
 
         }
 
