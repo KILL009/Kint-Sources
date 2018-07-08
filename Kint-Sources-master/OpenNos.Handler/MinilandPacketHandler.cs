@@ -65,6 +65,11 @@ namespace OpenNos.Handler
         /// <param name="packet"></param>
         public void MinigamePlay(MinigamePacket packet)
         {
+            if (packet == null)
+          {
+            return;
+          }
+
             ClientSession client = ServerManager.Instance.Sessions.FirstOrDefault(s => s.Character?.Miniland == Session.Character.MapInstance);
             MinilandObject mlobj = client?.Character.MinilandObjects.Find(s => s.ItemInstance.ItemVNum == packet.MinigameVNum);
             if (mlobj != null)
@@ -275,6 +280,7 @@ namespace OpenNos.Handler
         /// <param name="addObjPacket"></param>
         public void MinilandAddObject(AddObjPacket addObjPacket)
         {
+                  
             ItemInstance minilandobject = Session.Character.Inventory.LoadBySlotAndType<ItemInstance>(addObjPacket.Slot, InventoryType.Miniland);
             if (minilandobject != null)
             {
@@ -350,6 +356,11 @@ namespace OpenNos.Handler
         /// <param name="mlEditPacket"></param>
         public void MinilandEdit(MLEditPacket mlEditPacket)
         {
+          if (mlEditPacket == null)
+          {
+             return;
+          }
+
             switch (mlEditPacket.Type)
             {
                 case 1:

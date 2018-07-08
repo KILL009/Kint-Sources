@@ -1538,6 +1538,11 @@ namespace OpenNos.Handler
         /// <param name="rlPacket"></param>
         public void RaidListRegister(RlPacket rlPacket)
         {
+            if (rlPacket == null)
+            {
+                return;
+            }
+
             switch (rlPacket.Type)
             {
                 case 0:
@@ -1595,6 +1600,11 @@ namespace OpenNos.Handler
         /// <param name="rdPacket"></param>
         public void RaidManage(RdPacket rdPacket)
         {
+            if (rdPacket == null)
+           {
+             return;
+           }
+
             Group grp;
             switch (rdPacket.Type)
             {
@@ -1605,7 +1615,11 @@ namespace OpenNos.Handler
                         return;
                     }
                     ClientSession target = ServerManager.Instance.GetSessionByCharacterId(rdPacket.CharacterId);
-                    if (rdPacket.Parameter == null && target?.Character?.Group == null && Session.Character.Group.IsLeader(Session))
+                    if (target == null)
+                     {
+                                                return;
+                     }
+                    if (rdPacket.Parameter == null && target.Character?.Group == null && Session?.Character?.Group?.IsLeader(Session) == true)
                     {
                         GroupJoin(new PJoinPacket() { RequestType = GroupRequestType.Invited, CharacterId = rdPacket.CharacterId });
                     }
@@ -1631,6 +1645,7 @@ namespace OpenNos.Handler
                     grp = sender.Character?.Group;
                     Session.SendPacket(Session.Character.GenerateRaid(1, true));
                     Session.SendPacket(Session.Character.GenerateRaid(2, true));
+
 
                     grp.Characters.ForEach(s =>
                     {

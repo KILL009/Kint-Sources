@@ -252,7 +252,7 @@ namespace OpenNos.Handler
                                 AccountId = account.AccountId,
                                 Name = account.Name,
                                 Password = account.Password.ToLower(),
-                                Authority = account.Authority
+                                Authority = account.Authority                              
                             };
                             
                             Session.InitializeAccount(accountobject, isCrossServerLogin);
