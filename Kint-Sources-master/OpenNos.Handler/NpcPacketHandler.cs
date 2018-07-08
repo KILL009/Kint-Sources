@@ -54,7 +54,7 @@ namespace OpenNos.Handler
                 return;
             }
 
-            byte amount = buyPacket.Amount;
+            short amount = buyPacket.Amount;
 
             switch (buyPacket.Type)
             {
@@ -65,7 +65,7 @@ namespace OpenNos.Handler
                     }
                     KeyValuePair<long, MapShop> shop = Session.CurrentMapInstance.UserShops.FirstOrDefault(mapshop => mapshop.Value.OwnerId.Equals(buyPacket.OwnerId));
                     PersonalShopItem item = shop.Value?.Items.Find(i => i.ShopSlot.Equals(buyPacket.Slot));
-                    if (item == null || amount <= 0 || amount > 99)
+                    if (item == null || amount <= 0 || amount > 999)
                     {
                         return;
                     }
@@ -856,7 +856,7 @@ namespace OpenNos.Handler
             }
         }
 
-        private bool buyValidate(ClientSession clientSession, KeyValuePair<long, MapShop> shop, short slot, byte amount)
+        private bool buyValidate(ClientSession clientSession, KeyValuePair<long, MapShop> shop, short slot, short amount)
         {
             if (!clientSession.HasCurrentMapInstance)
             {
