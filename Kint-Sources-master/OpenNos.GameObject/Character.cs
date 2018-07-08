@@ -572,6 +572,7 @@ namespace OpenNos.GameObject
 
         public bool CanAttack { get; set; }
         public int Prestige { get; set; }
+        public bool isCommand { get; private set; }
         #endregion
 
         #region Methods
@@ -777,7 +778,7 @@ namespace OpenNos.GameObject
 
         public void ChangeClass(ClassType characterClass)
         {
-            JobLevel = 1;
+            JobLevel = (byte)(this.isCommand && characterClass != ClassType.Adventurer ? JobLevel : isCommand && characterClass == ClassType.Adventurer ? 20 : 1);
             JobLevelXp = 0;
             Session.SendPacket("npinfo 0");
             Session.SendPacket(UserInterfaceHelper.GeneratePClear());
