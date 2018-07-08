@@ -48,6 +48,10 @@ namespace OpenNos.GameObject.Networking
 
         public bool ShutdownStop;
 
+        public bool LodTimes { get; set; }
+
+       public byte MinLodLevel { get; set; }
+
         private static readonly ConcurrentBag<Card> _cards = new ConcurrentBag<Card>();
 
         private static readonly ConcurrentBag<Item> _items = new ConcurrentBag<Item>();
@@ -833,6 +837,8 @@ namespace OpenNos.GameObject.Networking
         {
             ReputRate = int.Parse(ConfigurationManager.AppSettings["RateReput"]);
             MaxBankGold = long.Parse(ConfigurationManager.AppSettings["MaxBankGold"]);
+            LodTimes = bool.Parse(ConfigurationManager.AppSettings["LodTimes"]);
+            MinLodLevel = byte.Parse(ConfigurationManager.AppSettings["MinLodLevel"]);
             Act4RaidStart = DateTime.Now;
             Act4AngelStat = new Act4Stat();
             Act4DemonStat = new Act4Stat();

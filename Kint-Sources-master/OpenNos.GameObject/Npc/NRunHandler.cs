@@ -336,31 +336,26 @@ namespace OpenNos.GameObject
                     break;
 
                 case 150:
-                    if (npc != null)
+                    if (npc == null || !npc.EffectActivated && ServerManager.Instance.LodTimes ||
+                        Session.Character.Level < ServerManager.Instance.MinLodLevel)
                     {
-                        if (Session.Character.Family != null)
-                        {
-                            if (Session.Character.Family.LandOfDeath != null && npc.EffectActivated)
-                            {
-                                if (Session.Character.Level >= 55)
-                                {
-                                    ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, Session.Character.Family.LandOfDeath.MapInstanceId, 153, 145);
-                                }
-                                else
-                                {
-                                    Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("LOD_REQUIERE_LVL"), 0));
-                                }
-                            }
-                            else
-                            {
-                                Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("LOD_CLOSED"), 0));
-                            }
-                        }
-                        else
-                        {
-                            Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("NEED_FAMILY"), 0));
-                        }
+                        return;
                     }
+
+                    if (Session.Character?.Family == null)
+                    {
+                        Session.SendPacket(
+                            UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("NEED_FAMILY"),
+                                0));
+                        break;
+                    }
+
+                    if (Session.Character?.Family?.LandOfDeath != null)
+                    {
+                        ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId,
+                            Session.Character.Family.LandOfDeath.MapInstanceId, 153, 145);
+                    }
+
                     break;
 
                 case 301:
