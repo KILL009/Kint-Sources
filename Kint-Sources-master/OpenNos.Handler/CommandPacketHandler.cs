@@ -113,7 +113,7 @@ namespace OpenNos.Handler
                         Session.Character.ChangeClassPrestige(ClassType.Adventurer);
                         Session.Character.Prestige += 1;
                         ServerManager.Instance.ChangeMap(Session.Character.CharacterId);
-                        //  RewardsHelper.Instance.GetLevelUpRewards(Session);
+                       //  RewardsHelper.Instance.GetLevelUpRewards(Session);
                         Logger.LogEvent(Session.Character.Name, Session.IpAddress);
                     }
                     else
