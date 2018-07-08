@@ -950,7 +950,7 @@ namespace OpenNos.GameObject.Helpers
             _mpHealth[(int)ClassType.Swordman] = 30;
             _mpHealth[(int)ClassType.Archer] = 50;
             _mpHealth[(int)ClassType.Magician] = 80;
-            _mpHealth[(int)ClassType.Fighter] = 10;
+            _mpHealth[(int)ClassType.Fighter] = 80;
         }
 
         private static void loadMPHealthStand()
