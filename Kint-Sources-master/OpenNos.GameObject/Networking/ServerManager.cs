@@ -1588,6 +1588,7 @@ namespace OpenNos.GameObject.Networking
         {
             GroupsThreadSafe = new ThreadSafeSortedList<long, Group>();
 
+            Observable.Interval(TimeSpan.FromSeconds(5)).Subscribe(x => { Act6Process(); });
             Observable.Interval(TimeSpan.FromSeconds(20)).Subscribe(x => SaveAllProcess());
             Observable.Interval(TimeSpan.FromMinutes(1)).Subscribe(x => Act4Process());
             Observable.Interval(TimeSpan.FromSeconds(2)).Subscribe(x => GroupProcess());
@@ -1710,6 +1711,7 @@ namespace OpenNos.GameObject.Networking
                             SourceY = siObj.PositionY
                         };
                         map.Value.Portals.Add(port);
+
                     }
                 }
             });
@@ -2073,6 +2075,25 @@ namespace OpenNos.GameObject.Networking
             });
         }
 
+        private void OnAuthorityChange(object sender, EventArgs e)
+        {
+            if (sender == null)
+            {
+                return;
+            }
+
+            Tuple<long, AuthorityType> args = (Tuple<long, AuthorityType>)sender;
+            ClientSession account = Sessions.FirstOrDefault(s => s.Account.AccountId == args.Item1);
+            if (account == null)
+            {
+                return;
+            }
+
+            account.Account.Authority = args.Item2;
+            account.SendPacket(
+                $"say 1 0 10 ({Language.Instance.GetMessageFromKey("ADMINISTRATOR")}) You are now {account.Account.Authority.ToString()}");
+        }
+       
         // Server
         private void SaveAllProcess()
         {
