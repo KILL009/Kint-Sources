@@ -57,7 +57,7 @@ namespace OpenNos.GameObject
                         Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("LOW_LVL"), 0));
                         return;
                     }
-                    if (packet.Type == (byte)Session.Character.Class)
+                    if (packet.Type == (byte)Session.Character.Class || packet.Type > 4 || packet.Type < 0)
                     {
                         return;
                     }
@@ -273,7 +273,7 @@ namespace OpenNos.GameObject
                     if (packet.Type < 0)
                     {
                        
-                        Logger.Log.Debug($"ShigeoWall: user {Session.Character.Name} tried an Gold Bug: NRun");
+                        Logger.Log.Debug($"Admin: user {Session.Character.Name} tried an Gold Bug: NRun");
                         return;
                     }
                     if (Session.Character.Gold >= 500 * (1 + packet.Type))
