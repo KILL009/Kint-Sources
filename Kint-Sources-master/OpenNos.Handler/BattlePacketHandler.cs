@@ -964,6 +964,14 @@ namespace OpenNos.Handler
                                     if (clientSessions != null)
                                     {
                                         foreach (ClientSession target in clientSessions)
+
+                                            if (ski.SkillVNum == 871) // No bcard for this skill
+                                           {
+                                            List < BuffType > buffsToDisable = new List<BuffType> { BuffType.Bad };
+                                            target.Character.DisableBuffs(buffsToDisable, 4);
+                                           }
+
+                                        foreach (ClientSession target in clientSessions)
                                         {
                                             ski.Skill.BCards.Where(s => !s.Type.Equals((byte)CardType.MeditationSkill))
                                                 .ToList().ForEach(s =>
