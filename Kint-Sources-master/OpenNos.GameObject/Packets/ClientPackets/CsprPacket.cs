@@ -4,13 +4,13 @@ using OpenNos.Core;
 
 namespace OpenNos.GameObject.Packets.ClientPackets
 {
-    [PacketHeader("say")]
-    public class SayPacket : PacketDefinition
+    [PacketHeader("csp_r")]
+    public class CsprPacket : PacketDefinition
     {
         #region Properties
 
         [PacketIndex(0, SerializeToEnd = true)]
-        public string Message { get; set; }
+        public string Message { get; set; } 
 
         #endregion
     }

@@ -2,14 +2,17 @@
 
 using OpenNos.Core;
 
-namespace OpenNos.GameObject.Packets.ClientPackets
+namespace OpenNos.GameObject.Packets.ServerPackets
 {
-    [PacketHeader("say")]
-    public class SayPacket : PacketDefinition
+    [PacketHeader("csp")]
+    public class CspPacket : PacketDefinition
     {
         #region Properties
 
-        [PacketIndex(0, SerializeToEnd = true)]
+        [PacketIndex(0)]
+        public long CharacterId { get; set; }
+
+        [PacketIndex(1)]
         public string Message { get; set; }
 
         #endregion

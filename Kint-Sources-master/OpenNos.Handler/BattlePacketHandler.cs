@@ -1569,6 +1569,11 @@ namespace OpenNos.Handler
                                             Session.Character.Mp -= ski.Skill.MpCost;
                                         }
 
+                                        if (ski.SkillVNum == 1085) // pas de bcard ...
+                                                        {
+                                            TeleportOnMap(monsterToAttack.MapX, monsterToAttack.MapY);
+                                                        }
+
                                         if (Session.Character.UseSp && ski.Skill.CastEffect != -1)
                                         {
                                             Session.SendPackets(Session.Character.GenerateQuicklist());

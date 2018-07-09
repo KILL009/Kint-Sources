@@ -32,6 +32,10 @@ using System.Reflection;
 using System.Threading.Tasks;
 using OpenNos.ChatLog.Networking;
 using OpenNos.ChatLog.Shared;
+using OpenNos.GameObject.Packets.ServerPackets;
+using HeroPacket = OpenNos.GameObject.Packets.ClientPackets.HeroPacket;
+using NcifPacket = OpenNos.GameObject.Packets.ClientPackets.NcifPacket;
+using SayPacket = OpenNos.GameObject.Packets.ClientPackets.SayPacket;
 
 namespace OpenNos.Handler
 {
@@ -48,6 +52,7 @@ namespace OpenNos.Handler
 
         private ClientSession Session { get; }
         public object Same { get; private set; }
+        public int messageBubbleVNum { get; private set; }
 
         #endregion
 
@@ -177,11 +182,20 @@ namespace OpenNos.Handler
             Session.SendPacket(Session.Character.GenerateStat());
         }
 
-        /// <summary>
-        /// compl packet
+           /// <summary>
+        /// csp packet
         /// </summary>
-        /// <param name="complimentPacket"></param>
-        public void Compliment(ComplimentPacket complimentPacket)
+        /// <param name="cspPacket"></param>
+        public void MessageBubble(CspPacket cspPacket)
+        {
+            Session.Character.MapInstance?.Broadcast($"csp {cspPacket.CharacterId} {cspPacket.Message}");
+        }
+
+    /// <summary>
+    /// compl packet
+    /// </summary>
+    /// <param name="complimentPacket"></param>
+    public void Compliment(ComplimentPacket complimentPacket)
         {
             if (complimentPacket != null)
             {
@@ -1209,9 +1223,21 @@ namespace OpenNos.Handler
                         Session.Character.Inventory.RemoveItemAmount(presentationVNum);
                     }
                 }
+                    if (Session.Character.Inventory.CountItem(messageBubbleVNum) > 0)
+                    {
+                    if (Session.Character.IsMuted())
+                    {
+                      Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("CANT_USE_MSG_BUBBLE"), 10));
+                       return;
+                    }
+                        Session.Character.Inventory.RemoveItemAmount(messageBubbleVNum);
 
-                // Speaker
-                if (guriPacket.Argument == 3 && Session.Character.Inventory.CountItem(speakerVNum) > 0)
+                        Session.SendPacket(new CsprPacket { Message = guriPacket.Value });
+                        Logger.LogEvent(Session.Character.Name, Session.IpAddress);
+                    }
+                    
+                    // Speaker
+                    if (guriPacket.Argument == 3 && Session.Character.Inventory.CountItem(speakerVNum) > 0)
                 {
                     string message = $"<{Language.Instance.GetMessageFromKey("SPEAKER")}> [{Session.Character.Name}]:";
                     int baseLength = message.Length;

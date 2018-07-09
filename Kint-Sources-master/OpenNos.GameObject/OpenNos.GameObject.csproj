@@ -551,6 +551,7 @@
     <Compile Include="Packets\ClientPackets\BlInsPacket.cs" />
     <Compile Include="Packets\ClientPackets\BtkPacket.cs" />
     <Compile Include="Packets\ClientPackets\CreateFamilyPacket.cs" />
+    <Compile Include="Packets\ClientPackets\CsprPacket.cs" />
     <Compile Include="Packets\ClientPackets\EscapePacket.cs" />
     <Compile Include="Packets\ClientPackets\FamilyChatPacket.cs" />
     <Compile Include="Packets\ClientPackets\FamilyDismissPacket.cs" />
@@ -622,6 +623,7 @@
     <Compile Include="Packets\CommandPackets\SetPerfectionPacket.cs" />
     <Compile Include="Packets\CommandPackets\WarningPacket.cs" />
     <Compile Include="Packets\CommandPackets\WarpPacket.cs" />
+    <Compile Include="Packets\ServerPackets\CspPacket.cs" />
     <Compile Include="Packets\ServerPackets\TalkPacket.cs" />
     <Compile Include="ScriptedInstance.cs" />
     <Compile Include="Packets\ClientPackets\AddObjPacket.cs" />
