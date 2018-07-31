@@ -33,6 +33,8 @@ using System.Threading.Tasks;
 using OpenNos.ChatLog.Networking;
 using OpenNos.ChatLog.Shared;
 using OpenNos.GameObject.Packets.ServerPackets;
+using System.Text.RegularExpressions;
+using Group = OpenNos.GameObject.Group;
 using HeroPacket = OpenNos.GameObject.Packets.ClientPackets.HeroPacket;
 using NcifPacket = OpenNos.GameObject.Packets.ClientPackets.NcifPacket;
 using SayPacket = OpenNos.GameObject.Packets.ClientPackets.SayPacket;
@@ -1159,6 +1161,7 @@ namespace OpenNos.Handler
                 else if (guriPacket.Type == 4)
                 {
                     const int speakerVNum = 2173;
+                    const int messageBubbleVNum = 2174;
                     const int petnameVNum = 2157;
                     if (guriPacket.Argument == 1)
                     {
@@ -1192,16 +1195,55 @@ namespace OpenNos.Handler
                         IceBreaker.FrozenPlayers.Remove(target);
                         IceBreaker.AlreadyFrozenPlayers.Add(target);
                         target?.CurrentMapInstance?.Broadcast(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("ICEBREAKER_PLAYER_UNFROZEN"), target?.Character?.Name), 0));
-                    } ;
-                
-           
+                    };
+
+
                     // presentation message
                     if (guriPacket.Argument == 2)
-                {
-                    int presentationVNum = Session.Character.Inventory.CountItem(1117) > 0 ? 1117 : (Session.Character.Inventory.CountItem(9013) > 0 ? 9013 : -1);
-                    if (presentationVNum != -1)
                     {
-                        string message = string.Empty;
+                        int presentationVNum = Session.Character.Inventory.CountItem(1117) > 0 ? 1117 : (Session.Character.Inventory.CountItem(9013) > 0 ? 9013 : -1);
+                        if (presentationVNum != -1)
+                        {
+                            string message = string.Empty;
+                            string[] valuesplit = guriPacket.Value?.Split(' ');
+                            if (valuesplit == null)
+                            {
+                                return;
+                            }
+                            for (int i = 0; i < valuesplit.Length; i++)
+                            {
+                                message += valuesplit[i] + "^";
+                            }
+                            message = message.Substring(0, message.Length - 1); // Remove the last ^
+                            message = message.Trim();
+                            if (message.Length > 60)
+                            {
+                                message = message.Substring(0, 60);
+                            }
+
+                            Session.Character.Biography = message;
+                            Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("INTRODUCTION_SET"), 10));
+                            Session.Character.Inventory.RemoveItemAmount(presentationVNum);
+                        }
+                    }
+                    if (Session.Character.Inventory.CountItem(messageBubbleVNum) > 0)
+                    {
+                        if (Session.Character.IsMuted())
+                        {
+                            Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("CANT_USE_MSG_BUBBLE"), 10));
+                            return;
+                        }
+                        Session.Character.Inventory.RemoveItemAmount(messageBubbleVNum);
+
+                        Session.SendPacket(new CsprPacket { Message = guriPacket.Value });
+                        Logger.LogEvent(Session.Character.Name, Session.IpAddress);
+                    }
+
+                    // Speaker
+                    if (guriPacket.Argument == 3 && Session.Character.Inventory.CountItem(speakerVNum) > 0)
+                    {
+                        string message = $"<{Language.Instance.GetMessageFromKey("SPEAKER")}> [{Session.Character.Name}]:";
+                        int baseLength = message.Length;
                         string[] valuesplit = guriPacket.Value?.Split(' ');
                         if (valuesplit == null)
                         {
@@ -1209,63 +1251,35 @@ namespace OpenNos.Handler
                         }
                         for (int i = 0; i < valuesplit.Length; i++)
                         {
-                            message += valuesplit[i] + "^";
+                            message += valuesplit[i] + " ";
                         }
-                        message = message.Substring(0, message.Length - 1); // Remove the last ^
-                        message = message.Trim();
-                        if (message.Length > 60)
+                        if (message.Length > 120 + baseLength)
                         {
-                            message = message.Substring(0, 60);
+                            message = message.Substring(0, 120 + baseLength);
                         }
 
-                        Session.Character.Biography = message;
-                        Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("INTRODUCTION_SET"), 10));
-                        Session.Character.Inventory.RemoveItemAmount(presentationVNum);
-                    }
-                }
-                    if (Session.Character.Inventory.CountItem(messageBubbleVNum) > 0)
-                    {
-                    if (Session.Character.IsMuted())
-                    {
-                      Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("CANT_USE_MSG_BUBBLE"), 10));
-                       return;
-                    }
+                        message = message.Trim();
+
+                        if (Session.Character.IsMuted())
+                        {
+                            Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("SPEAKER_CANT_BE_USED"), 10));
+                            return;
+                        }
+                        Session.Character.Inventory.RemoveItemAmount(speakerVNum);
+                        ServerManager.Instance.Broadcast(Session.Character.GenerateSay(message, 13));
+                        // Message Bubble
+                        if (guriPacket.Argument == 3 && Session.Character.Inventory.CountItem(messageBubbleVNum) < 0)
+                            if (Session.Character.IsMuted())
+                            {
+                                Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("CANT_USE_MSG_BUBBLE"), 10));
+                                return;
+                            }
+                                         
                         Session.Character.Inventory.RemoveItemAmount(messageBubbleVNum);
-
                         Session.SendPacket(new CsprPacket { Message = guriPacket.Value });
-                        Logger.LogEvent(Session.Character.Name, Session.IpAddress);
-                    }
+                    } 
                     
-                    // Speaker
-                    if (guriPacket.Argument == 3 && Session.Character.Inventory.CountItem(speakerVNum) > 0)
-                {
-                    string message = $"<{Language.Instance.GetMessageFromKey("SPEAKER")}> [{Session.Character.Name}]:";
-                    int baseLength = message.Length;
-                    string[] valuesplit = guriPacket.Value?.Split(' ');
-                    if (valuesplit == null)
-                    {
-                        return;
-                    }
-                    for (int i = 0; i < valuesplit.Length; i++)
-                    {
-                        message += valuesplit[i] + " ";
-                    }
-                    if (message.Length > 120 + baseLength)
-                    {
-                        message = message.Substring(0, 120 + baseLength);
-                    }
-
-                    message = message.Trim();
-
-                    if (Session.Character.IsMuted())
-                    {
-                        Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("SPEAKER_CANT_BE_USED"), 10));
-                        return;
-                    }
-                    Session.Character.Inventory.RemoveItemAmount(speakerVNum);
-                    ServerManager.Instance.Broadcast(Session.Character.GenerateSay(message, 13));
                 }
-            }
             else if (guriPacket.Type == 199 && guriPacket.Argument == 1)
             {
                 if (!Session.Character.IsFriendOfCharacter(guriPacket.User))
