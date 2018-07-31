@@ -33,6 +33,7 @@ using OpenNos.Master.Library.Client;
 using OpenNos.Master.Library.Data;
 using OpenNos.XMLModel.Models.Quest;
 using OpenNos.GameObject.Event.ACT6;
+using OpenNos.GameObject.Event.BattleRoyale;
 
 namespace OpenNos.GameObject.Networking
 {
@@ -114,6 +115,12 @@ namespace OpenNos.GameObject.Networking
         public DateTime Act4RaidStart { get; set; }
 
         public List<Card> Cards { get; set; }
+
+        public byte CylloanPercentRate { get; set; }
+
+        public byte GlacernonPercentRatePvp { get; set; }
+
+        public byte GlacernonPercentRatePvm { get; set; }
 
 
         public MapInstance ArenaInstance { get; private set; }
@@ -248,7 +255,7 @@ namespace OpenNos.GameObject.Networking
 
 
         // PacketHandler -> with Callback?
-        public void AskRevive(long characterId)
+        public void AskRevive(long characterId, ClientSession killer = null)
         {
             ClientSession session = GetSessionByCharacterId(characterId);
             if (session?.HasSelectedCharacter == true && session.HasCurrentMapInstance)
@@ -295,6 +302,10 @@ namespace OpenNos.GameObject.Networking
                         ReviveTask(session);
                         break;
 
+                    case MapInstanceType.BattleRoyaleMapInstance:
+                        BattleRoyaleManager.Instance.Kick(session, killer);
+                        Instance.ReviveFirstPosition(session.Character.CharacterId);
+                        break;
                     case MapInstanceType.RaidInstance:
                         List<long> save = session.CurrentMapInstance.InstanceBag.DeadList.ToList();
                         if (session.CurrentMapInstance.InstanceBag.Lives - session.CurrentMapInstance.InstanceBag.DeadList.Count < 0)
@@ -1069,6 +1080,7 @@ namespace OpenNos.GameObject.Networking
                     Logger.Error(Language.Instance.GetMessageFromKey("NO_MAP"));
                 }
                 Logger.Info(string.Format(Language.Instance.GetMessageFromKey("MAPMONSTERS_LOADED"), monstercount));
+                BattleRoyaleManager.Instance.Initialize(_maps.FirstOrDefault(s => s.MapId == 247));
                 StartedEvents = new List<EventType>();
 
                

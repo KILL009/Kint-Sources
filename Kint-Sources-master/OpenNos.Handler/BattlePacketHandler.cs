@@ -33,6 +33,7 @@ namespace OpenNos.Handler
 {
     public class BattlePacketHandler : IPacketHandler
     {
+        private object CharacterId;
         #region Instantiation
 
         public BattlePacketHandler(ClientSession session) => Session = session;
@@ -42,6 +43,8 @@ namespace OpenNos.Handler
         #region Properties
 
         private ClientSession Session { get; }
+        public bool NoAttack { get; private set; }
+        public bool NoMove { get; private set; }
 
         #endregion
 
@@ -251,6 +254,7 @@ namespace OpenNos.Handler
             }
         }
 
+        
         private void PvpHit(HitRequest hitRequest, ClientSession target)
         {
             
@@ -1567,12 +1571,7 @@ namespace OpenNos.Handler
                                         if (!Session.Character.HasGodMode)
                                         {
                                             Session.Character.Mp -= ski.Skill.MpCost;
-                                        }
-
-                                        if (ski.SkillVNum == 1085) // pas de bcard ...
-                                                        {
-                                            TeleportOnMap(monsterToAttack.MapX, monsterToAttack.MapY);
-                                                        }
+                                        }                                       
 
                                         if (Session.Character.UseSp && ski.Skill.CastEffect != -1)
                                         {

@@ -610,6 +610,7 @@
     <Compile Include="Threading\SequentialItemProcessor.cs" />
     <Compile Include="Threading\Timer.cs" />
     <Compile Include="Cryptography\WorldCryptography.cs" />
+    <Compile Include="Utilities\DependencyContainer.cs" />
     <Compile Include="Utilities\Singleton.cs" />
   </ItemGroup>
   <ItemGroup>

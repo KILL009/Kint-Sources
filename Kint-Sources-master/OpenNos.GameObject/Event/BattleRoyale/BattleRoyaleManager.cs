@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using OpenNos.Domain;
 using OpenNos.Core;
 using OpenNos.GameObject.Helpers;
-using OpenNos.GameObject;
 using OpenNos.GameObject.Networking;
 
 namespace OpenNos.GameObject.Event.BattleRoyale
@@ -19,7 +18,7 @@ namespace OpenNos.GameObject.Event.BattleRoyale
         private const byte _registrationSeconds = 30;
         private readonly List<ClientSession> _clientSessions = new List<ClientSession>();
         private MapInstance _mapInstance;
-        private bool _locked;
+
         private readonly string _introductionInfo =
             $"----- BATTLE ROYALE -----\n" +
             "\n" +
@@ -48,10 +47,7 @@ namespace OpenNos.GameObject.Event.BattleRoyale
 
         public bool HasStarted { get; }
 
-        public bool IsLocked
-        {
-            get { return _locked; }
-        }
+        public bool IsLocked { get; private set; }
 
         #endregion
 
@@ -59,15 +55,16 @@ namespace OpenNos.GameObject.Event.BattleRoyale
 
         public void RegisterSession(ClientSession session)
         {
-            if (_locked)
+            if (IsLocked)
             {
                 return;
             }
+
             _clientSessions.Add(session);
         }
 
         /// <summary>
-        /// Unregister ClientSession
+        ///     Unregister ClientSession
         /// </summary>
         /// <param name="session"></param>
         public void UnregisterSession(ClientSession session)
@@ -76,15 +73,17 @@ namespace OpenNos.GameObject.Event.BattleRoyale
         }
 
         /// <summary>
-        /// Unregister ClientSession by sessionId from BattleRoyaleManager
+        ///     Unregister ClientSession by sessionId from BattleRoyaleManager
         /// </summary>
-        /// <param name="sessionId"><see cref="ClientSession"/></param>
+        /// <param name="sessionId">
+        ///     <see cref="ClientSession" />
+        /// </param>
         public void UnregisterSession(long sessionId)
         {
             _clientSessions.Remove(_clientSessions.FirstOrDefault(s => s.SessionId == sessionId));
         }
 
-        public void Initialize(Map map)
+      public void Initialize(Map map)
         {
             _mapInstance = new MapInstance(map, Guid.NewGuid(), false, MapInstanceType.BattleRoyaleMapInstance, new InstanceBag());
         }
@@ -100,17 +99,18 @@ namespace OpenNos.GameObject.Event.BattleRoyale
 
             ServerManager.Instance.Broadcast(
                 UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("BATTLE_ROYAL_OPEN"), 0));
-            _locked = false;
+            IsLocked = false;
 
             await Task.Delay(_registrationSeconds * 1000);
 
-            _locked = true;
+            IsLocked = true;
             foreach (ClientSession session in _clientSessions) // Send Introduction
             {
                 session.SendPacket(UserInterfaceHelper.GenerateInfo(_introductionInfo));
                 session.SendPacket("gb 3 0 0 0");
                 session.SendPacket($"s_memo 6 {Language.Instance.GetMessageFromKey("BATTLE_ROYALE_BANK_MEMO")}");
             }
+
             await Task.Delay(5000);
             Start();
 
@@ -130,18 +130,23 @@ namespace OpenNos.GameObject.Event.BattleRoyale
         public async void Start()
         {
             ServerManager.Instance.StartedEvents.Remove(EventType.BATTLEROYAL);
-            _clientSessions.ForEach(s => ServerManager.Instance.TeleportOnRandomPlaceInMap(s, _mapInstance.MapInstanceId));
+            _clientSessions.ForEach(s =>
+                ServerManager.Instance.TeleportOnRandomPlaceInMap(s, _mapInstance.MapInstanceId));
             await Task.Delay(5000);
 
             if (_mapInstance.Sessions.Count() < 3)
             {
-                _mapInstance.Broadcast(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("BATTLE_ROYAL_NOT_ENOUGH_PLAYERS"), 0));
+                _mapInstance.Broadcast(
+                    UserInterfaceHelper.GenerateMsg(
+                        Language.Instance.GetMessageFromKey("BATTLE_ROYAL_NOT_ENOUGH_PLAYERS"), 0));
                 await Task.Delay(3000);
                 _mapInstance.Dispose();
                 return;
             }
 
-            _mapInstance.Broadcast(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("BATTLE_ROYAL_STARTED"), 0));
+            _mapInstance.Broadcast(
+                UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("BATTLE_ROYAL_STARTED"),
+                    0));
             _mapInstance.IsPvp = true;
         }
 
@@ -171,8 +176,11 @@ namespace OpenNos.GameObject.Event.BattleRoyale
             {
                 return;
             }
+
             GetRewards(kickedSession, _clientSessions.Count + 1);
-            _mapInstance.Broadcast(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("BR_KILL"), kickedSession?.Character?.Name, killerSession?.Character?.Name, _clientSessions.Count), 0));
+            _mapInstance.Broadcast(UserInterfaceHelper.GenerateMsg(
+                string.Format(Language.Instance.GetMessageFromKey("BR_KILL"), kickedSession?.Character?.Name,
+                    killerSession?.Character?.Name, _clientSessions.Count), 0));
         }
 
         public void GetRewards(ClientSession session, int index)
