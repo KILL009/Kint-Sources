@@ -28,11 +28,8 @@ namespace OpenNos.Master.Library.Data
 
         public int Percentage
         {
-            get { return Mode == 0 ? _percentage : 0; }
-            set
-            {
-                _percentage = value;
-            }
+            get => Mode == 0 ? _percentage : 0;
+            set => _percentage = value;
         }
 
         public short CurrentTime => Mode == 0 ? (short)0 : (short)(_latestUpdate.AddSeconds(_totalTime) - DateTime.Now).TotalSeconds;

@@ -1538,7 +1538,7 @@ namespace OpenNos.GameObject.Networking
             Parallel.ForEach(Sessions, sess => sess.SendPacket(sess.Character.GenerateFc()));
         }
 
-        public void Act6Process()
+       /* public void Act6Process()
         {
             if (Act6Zenas.Percentage >= 1000 && Act6Zenas.Mode == 0)
             {
@@ -1559,14 +1559,20 @@ namespace OpenNos.GameObject.Networking
                 Act6Erenia.Percentage = 0;
                 Act6Erenia.Mode = 0;
             }
+
             if (Act6Zenas.CurrentTime <= 0 && Act6Zenas.Mode != 0)
             {
                 Act6Zenas.KilledMonsters = 0;
                 Act6Zenas.Percentage = 0;
                 Act6Zenas.Mode = 0;
             }
-            Parallel.ForEach(Sessions.Where(s => s?.Character != null && s.CurrentMapInstance?.Map.MapId >= 228 && s.CurrentMapInstance?.Map.MapId < 238 || s?.CurrentMapInstance?.Map.MapId == 2604), sess => sess.SendPacket(sess.Character.GenerateAct6()));
-        }
+
+            Parallel.ForEach(
+                Sessions.Where(s =>
+                    s?.Character != null && s.CurrentMapInstance?.Map.MapId >= 228 &&
+                    s.CurrentMapInstance?.Map.MapId < 238 || s?.CurrentMapInstance?.Map.MapId == 2604),
+                sess => sess.SendPacket(sess.Character.GenerateAct6()));
+        }*/
 
         // Server
         private static void BotProcess()
@@ -1606,7 +1612,7 @@ namespace OpenNos.GameObject.Networking
         {
             GroupsThreadSafe = new ThreadSafeSortedList<long, Group>();
 
-            Observable.Interval(TimeSpan.FromSeconds(5)).Subscribe(x => { Act6Process(); });
+          //  Observable.Interval(TimeSpan.FromSeconds(5)).Subscribe(x => { Act6Process(); });
             Observable.Interval(TimeSpan.FromSeconds(20)).Subscribe(x => SaveAllProcess());
             Observable.Interval(TimeSpan.FromMinutes(1)).Subscribe(x => Act4Process());
             Observable.Interval(TimeSpan.FromSeconds(2)).Subscribe(x => GroupProcess());
