@@ -33,7 +33,7 @@ namespace OpenNos.Handler
 {
     public class BattlePacketHandler : IPacketHandler
     {
-        private object CharacterId;
+        
         #region Instantiation
 
         public BattlePacketHandler(ClientSession session) => Session = session;
@@ -43,8 +43,7 @@ namespace OpenNos.Handler
         #region Properties
 
         private ClientSession Session { get; }
-        public bool NoAttack { get; private set; }
-        public bool NoMove { get; private set; }
+        }
 
         #endregion
 
@@ -1889,4 +1888,3 @@ namespace OpenNos.Handler
 
         #endregion
     }
-}

@@ -20,6 +20,8 @@ using OpenNos.GameObject;
 using OpenNos.GameObject.Packets.ClientPackets;
 using OpenNos.Master.Library.Client;
 using System;
+using OpenNos.Core.Handling;
+using OpenNos.GameObject.Networking;
 using System.Configuration;
 using System.Linq;
 
