@@ -28,7 +28,7 @@ namespace OpenNos.Login
 {
     public static class Program
     {
-        
+        private const string IpAddress = "127.0.0.1";
         #region Members
 
         private static bool _isDebug;
@@ -89,7 +89,7 @@ namespace OpenNos.Login
                         // initialize PacketSerialization
                         PacketFactory.Initialize<WalkPacket>();
 
-                        NetworkManager<LoginCryptography> networkManager = new NetworkManager<LoginCryptography>("173.249.45.51", port, typeof(LoginPacketHandler), typeof(LoginCryptography), false);
+                        NetworkManager<LoginCryptography> networkManager = new NetworkManager<LoginCryptography>(IpAddress, port, typeof(LoginPacketHandler), typeof(LoginCryptography), false);
                     }
                     catch (Exception ex)
                     {
