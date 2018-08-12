@@ -297,7 +297,7 @@ namespace OpenNos.Core
         private static object DeserializeValue(Type packetPropertyType, string currentValue, PacketIndexAttribute packetIndexAttribute, MatchCollection packetMatches, bool includesKeepAliveIdentity = false)
         {
             // check for empty value and cast it to null
-            if (currentValue == "-1" || currentValue == "-")
+            if (currentValue == "-1" || currentValue == "-" || currentValue == "NONE")
             {
                 currentValue = null;
             }

@@ -287,7 +287,7 @@ namespace OpenNos.GameObject.Helpers
                             switch (evt.MapInstance.MapInstanceType)
                             {
                                 case MapInstanceType.TimeSpaceInstance:
-                                    evt.MapInstance.InstanceBag.EndState = (byte)evt.Parameter;
+                                    evt.MapInstance.InstanceBag.EndState = 5;
                                     ClientSession client = evt.MapInstance.Sessions.FirstOrDefault();
                                     if (client != null)
                                     {

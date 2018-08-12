@@ -243,7 +243,7 @@ namespace OpenNos.Handler
                                 {
                                     X = portal.PositionX,
                                     Y = portal.PositionY,
-                                    RecordPress = packet.Param,
+                                    RecordPress = 1,
                                     StartPress = 1
                                 });
                             }
