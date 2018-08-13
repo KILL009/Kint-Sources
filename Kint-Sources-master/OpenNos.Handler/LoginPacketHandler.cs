@@ -62,7 +62,7 @@ namespace OpenNos.Handler
         /// <param name="loginPacket"></param>
         public void VerifyLogin(LoginPacket loginPacket)
         {
-            if (loginPacket.ClientData == null)
+            if (loginPacket == null)
             {
                 return;
             }
@@ -134,7 +134,10 @@ namespace OpenNos.Handler
                                     }
                                     string[] clientData = loginPacket.ClientData.Split('.');
 
-                                 
+                                    if (clientData.Length < 2)
+                                    {
+                                        clientData = loginPacket.ClientDataOld.Split('.');
+                                    }
                                     bool ignoreUserName = short.TryParse(clientData[3], out short clientVersion) ? (clientVersion < 3075 || ConfigurationManager.AppSettings["UseOldCrypto"] == "true") : false;
                                     _session.SendPacket(BuildServersPacket(user.Name, newSessionId, ignoreUserName));
                                 }

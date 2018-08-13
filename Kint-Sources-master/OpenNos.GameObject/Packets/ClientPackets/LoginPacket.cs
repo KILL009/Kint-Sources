@@ -18,13 +18,13 @@ namespace OpenNos.GameObject.Packets.ClientPackets
         [PacketIndex(2)]
         public string Password { get; set; }
 
-        [PacketIndex(3)]
-        public Guid? ClientId { get; set; }
-
         [PacketIndex(4)]
+        public string ClientDataOld { get; set; }
+
+        [PacketIndex(5)]
         public string ClientData { get; set; }
 
-       
+
 
         #endregion
     }

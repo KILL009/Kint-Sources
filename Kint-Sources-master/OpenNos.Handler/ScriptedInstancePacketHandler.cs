@@ -112,11 +112,9 @@ namespace OpenNos.Handler
             if (Session.Character.Timespace?.FirstMap?.MapInstanceType == MapInstanceType.TimeSpaceInstance)
             {
                 Guid mapInstanceId = ServerManager.GetBaseMapInstanceIdByMapId(Session.Character.MapId);
-                MapInstance map = ServerManager.GetMapInstance(mapInstanceId);
-                if (Session.Character.Timespace == null)
-                {
-                    return;
-                }
+
+                if (Session.Character.Timespace?.FirstMap.InstanceBag.EndState == 5)
+
 
                 {
                     Session.Character.SetReputation(Session.Character.Timespace.Reputation);
@@ -248,7 +246,7 @@ namespace OpenNos.Handler
                                 {
                                     X = portal.PositionX,
                                     Y = portal.PositionY,
-                                    RecordPress = 1,
+                                    RecordPress = packet.Param,
                                     StartPress = 1
                                 });
                             }
