@@ -1679,7 +1679,7 @@ namespace OpenNos.GameObject
             short armorUpgrade = 0;
             if (Inventory != null)
             {
-                for (short i = 0; i < 15; i++)
+                for (short i = 0; i < 20; i++)
                 {
                     ItemInstance wearable = Inventory.LoadBySlotAndType(i, InventoryType.Wear);
                     if (wearable != null)
@@ -1708,7 +1708,7 @@ namespace OpenNos.GameObject
             EquipmentBCards.Clear();
             if (Inventory != null)
             {
-                for (short i = 0; i < 16; i++)
+                for (short i = 0; i < 20; i++)
                 {
                     ItemInstance item = Inventory.LoadBySlotAndType(i, InventoryType.Wear);
                     if (item != null)
@@ -4216,6 +4216,11 @@ namespace OpenNos.GameObject
 
                     case ClassType.Magician:
                         return true;
+
+                    case ClassType.Fighter:
+                        return true;
+                        
+                        
                 }
             }
 
