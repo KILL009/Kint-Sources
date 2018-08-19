@@ -573,6 +573,12 @@ namespace OpenNos.GameObject
         public bool CanAttack { get; set; }
         public int Prestige { get; set; }
         public bool isCommand { get; private set; }
+        public IDisposable DragonModeObservable { get; internal set; }
+        public int RetainedHp { get; internal set; }
+        public int AccumulatedDamage { get; internal set; }
+        public IDisposable DotDebuff { get; internal set; }
+
+
         #endregion
 
         #region Methods
@@ -713,6 +719,11 @@ namespace OpenNos.GameObject
             target?.SendPacket(target?.Character.GenerateFinit());
         }
 
+        internal void PushBackToDirection(int v)
+        {
+            throw new NotImplementedException();
+        }
+
         public void AddStaticBuff(StaticBuffDTO staticBuff)
         {
             Buff bf = new Buff(staticBuff.CardId, Level)
@@ -759,6 +770,11 @@ namespace OpenNos.GameObject
 
             Session.SendPacket($"vb {bf.Card.CardId} 1 {bf.RemainingTime * 10}");
             Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("UNDER_EFFECT"), bf.Card.Name), 12));
+        }
+
+        internal void TeleportInRadius(int firstData)
+        {
+            throw new NotImplementedException();
         }
 
         public bool CanAddMate(Mate mate) => mate.MateType == MateType.Pet ? MaxMateCount > Mates.Count : 3 > Mates.Count(s => s.MateType == MateType.Partner);
@@ -1388,6 +1404,11 @@ namespace OpenNos.GameObject
                     }
                 }
             }
+        }
+
+        internal string GenerateDm(ushort drain)
+        {
+            throw new NotImplementedException();
         }
 
         public string GenerateEff(int v)
@@ -4000,7 +4021,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        public void SendGift(long id, short vnum, byte amount, sbyte rare, byte upgrade, bool isNosmall)
+        public void SendGift(long id, short vnum, short amount, sbyte rare, byte upgrade, bool isNosmall)
         {
             Item it = ServerManager.GetItem(vnum);
 
@@ -4027,15 +4048,15 @@ namespace OpenNos.GameObject
                     upgrade = 0;
                 }
 
-                // maximum size of the amount is 99
-                if (amount > 99)
+                // maximum size of the amount is 999
+                if (amount > 999)
                 {
-                    amount = 99;
+                    amount = 999;
                 }
 
                 MailDTO mail = new MailDTO
                 {
-                    AttachmentAmount = it.Type == InventoryType.Etc || it.Type == InventoryType.Main ? amount : (byte)1,
+                    AttachmentAmount = it.Type == InventoryType.Etc || it.Type == InventoryType.Main ? amount : (short)1,
                     IsOpened = false,
                     Date = DateTime.Now,
                     ReceiverId = id,

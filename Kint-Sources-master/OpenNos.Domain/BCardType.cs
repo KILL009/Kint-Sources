@@ -103,11 +103,12 @@
             AngerSkill = 82,
             MeteoriteTeleport = 83,
             StealBuff = 84,
+            DragonSkills = 89,
 
             SPSL = 200,
             EffectSummon = 201,
             Unknown = 202,
-            DragonSkills = 203,
+            
         }
     }
 
@@ -433,7 +434,8 @@
             ResistanceToEffectNegated = 32,
             IncreaseDamageInPVP = 41,
             DecreaseDamageInPVP = 42,
-            RemoveBadEffects = 52
+            RemoveBadEffects = 52,
+            RemoveGoodEffects = 53
         }
 
         public enum Buff : byte
@@ -1101,6 +1103,12 @@
             LastSkillReset = 11,
 
             DamageBoostOnHigherLvl = 31
+        }
+
+        public enum DragonSkills : byte
+        {
+            TransformationInverted = 11,
+            Transformation = 12
         }
 
         // end!

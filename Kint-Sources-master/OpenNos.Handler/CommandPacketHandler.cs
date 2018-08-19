@@ -2614,7 +2614,7 @@ public void Ban(BanPacket banPacket)
             {
                 Logger.LogUserEvent("GMCOMMAND", Session.GenerateIdentity(), $"[Morph]MorphId: {morphPacket.MorphId} MorphDesign: {morphPacket.MorphDesign} Upgrade: {morphPacket.Upgrade} MorphId: {morphPacket.ArenaWinner}");
 
-                if (morphPacket.MorphId < 30 && morphPacket.MorphId > 0)
+                if (morphPacket.MorphId < 31 && morphPacket.MorphId > 0)
                 {
                     Session.Character.UseSp = true;
                     Session.Character.Morph = morphPacket.MorphId;
@@ -2623,7 +2623,7 @@ public void Ban(BanPacket banPacket)
                     Session.Character.ArenaWinner = morphPacket.ArenaWinner;
                     Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateCMode());
                 }
-                else if (morphPacket.MorphId > 30)
+                else if (morphPacket.MorphId > 31)
                 {
                     Session.Character.IsVehicled = true;
                     Session.Character.Morph = morphPacket.MorphId;

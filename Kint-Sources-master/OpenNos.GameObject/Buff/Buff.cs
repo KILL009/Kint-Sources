@@ -22,7 +22,7 @@ namespace OpenNos.GameObject
         #region Members
         public int Level;
 
-        public Buff(int v)
+        public Buff(int v, Battle.BattleEntity entity)
         {
         }
 

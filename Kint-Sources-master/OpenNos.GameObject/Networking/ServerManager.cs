@@ -189,6 +189,8 @@ namespace OpenNos.GameObject.Networking
 
         public int RaidType { get; set; }
 
+      
+
         #endregion
 
         #region Methods
@@ -369,7 +371,7 @@ namespace OpenNos.GameObject.Networking
                 }
             }
         }
-
+       
         public void TeleportOnClick(ClientSession session, Guid guid, short x, short y)
         {
             MapInstance map = GetMapInstance(guid);
@@ -635,7 +637,9 @@ namespace OpenNos.GameObject.Networking
                 }
             }
         }
-      
+
+        
+
         public void FamilyRefresh(long familyId) => CommunicationServiceClient.Instance.UpdateFamily(ServerGroup, familyId);
 
         public static MapInstance GenerateMapInstance(short mapId, MapInstanceType type, InstanceBag mapclock)
@@ -686,6 +690,8 @@ namespace OpenNos.GameObject.Networking
 
         public static MapInstance GetMapInstanceByMapId(short mapId) => _mapinstances.Values.FirstOrDefault(s => s.Map.MapId == mapId);
 
+        public static Card GetCardByCardId(short CardId) => _cards.FirstOrDefault(s => s.CardId == CardId);
+
         public static List<MapInstance> GetMapInstances(Func<MapInstance, bool> predicate) => _mapinstances.Values.Where(predicate).ToList();
 
         public long GetNextGroupId() => ++_lastGroupId;
@@ -701,6 +707,8 @@ namespace OpenNos.GameObject.Networking
             }
             return recipes;
         }
+
+       
 
         public List<Recipe> GetRecipesByMapNpcId(int mapNpcId)
         {
