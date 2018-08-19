@@ -25,15 +25,15 @@ using System.Reactive.Linq;
 
 namespace OpenNos.GameObject
 {
-    
+
 
     public class BCard : BCardDTO
     {
         public BCard()
         {
-            
+
         }
-        
+
 
         public BCard(BCardDTO input)
         {
@@ -412,7 +412,8 @@ namespace OpenNos.GameObject
                                 }
 
                                 //Remove invisibility
-                                System.Threading.Tasks.Task.Delay(120000).ContinueWith(t => {
+                                System.Threading.Tasks.Task.Delay(120000).ContinueWith(t =>
+                                {
 
                                     character.Session.Character.Invisible = false;
                                     character.Session.CurrentMapInstance?.Broadcast(character.Session.Character.GenerateInvisible());
@@ -432,7 +433,8 @@ namespace OpenNos.GameObject
                             if (SubType == (byte)AdditionalTypes.SpecialActions.Charge / 10)
                             {
                                 character.Session.Character.isAbsorbing = true;
-                                System.Threading.Tasks.Task.Delay(2000).ContinueWith(t => {
+                                System.Threading.Tasks.Task.Delay(2000).ContinueWith(t =>
+                                {
 
                                     character.Session.Character.isAbsorbing = false;
 
@@ -562,8 +564,8 @@ namespace OpenNos.GameObject
                     break;
 
                 case BCardType.CardType.FalconSkill:
-                   
-                            break;
+
+                    break;
 
                 case BCardType.CardType.AbsorptionAndPowerSkill:
                     break;
@@ -615,14 +617,53 @@ namespace OpenNos.GameObject
 
                 case BCardType.CardType.EffectSummon:
                     break;
-               
 
-                default:
-                    Logger.Warn($"Card Type {Type} not defined!");
+                case BCardType.CardType.DragonSkills:
+                    switch (SubType)
+                    {
+                        case (byte)AdditionalTypes.DragonSkills.TransformationInverted:
+                            if (session is Character reversedMorph)
+                            {
+                                reversedMorph.Morph = (byte)BrawlerMorphType.Normal;
+                                reversedMorph.Session.SendPacket(reversedMorph.GenerateCMode());
+                                reversedMorph.Session.SendPacket(reversedMorph.GenerateEff(196));
+                                reversedMorph.DragonModeObservable?.Dispose();
+                                reversedMorph.RemoveBuff(676);
+                            }
+                            break;
+                        case (byte)AdditionalTypes.DragonSkills.Transformation:
+                            Card morphCard = ServerManager.Instance.GetCardByCardId(CardId);
+
+                            if (morphCard == null)
+                            {
+                                return;
+                            }
+
+                            if (session is Character morphedChar)
+                            {
+                                morphedChar.Morph = (byte)BrawlerMorphType.Dragon;
+                                morphedChar.Session.SendPacket(morphedChar.GenerateCMode());
+                                morphedChar.Session.SendPacket(morphedChar.GenerateEff(196));
+                                morphedChar.DragonModeObservable?.Dispose();
+
+                                morphedChar.DragonModeObservable = Observable.Timer(TimeSpan.FromSeconds(morphCard.Duration * 0.1)).Subscribe(s =>
+                                {
+                                    morphedChar.Morph = (byte)BrawlerMorphType.Normal;
+                                    morphedChar.Session.SendPacket(morphedChar.GenerateCMode());
+                                    morphedChar.Session.SendPacket(morphedChar.GenerateEff(196));
+                                });
+                            }
+                            break;
+
+                    }
                     break;
+                        default:
+                            Logger.Warn($"Card Type {Type} not defined!");
+                            break;
+                    
+
+                    #endregion
             }
         }
-
-        #endregion
     }
 }

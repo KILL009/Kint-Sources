@@ -107,6 +107,7 @@
             SPSL = 200,
             EffectSummon = 201,
             Unknown = 202,
+            DragonSkills = 203,
         }
     }
 
