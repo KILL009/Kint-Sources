@@ -520,6 +520,33 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a [BATTLE ROYALE] Registration are open !.
+        /// </summary>
+        internal static string BATTLE_ROYAL_OPEN {
+            get {
+                return ResourceManager.GetString("BATTLE_ROYAL_OPEN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a [BATTLE ROYALE] Registration will be opened in {0} minutes..
+        /// </summary>
+        internal static string BATTLE_ROYAL_REGISTRATION {
+            get {
+                return ResourceManager.GetString("BATTLE_ROYAL_REGISTRATION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a The Fight has been.
+        /// </summary>
+        internal static string BATTLE_ROYAL_STARTED {
+            get {
+                return ResourceManager.GetString("BATTLE_ROYAL_STARTED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a {0} BazaarItems cargado!.
         /// </summary>
         internal static string BAZAAR_LOADED {
@@ -705,6 +732,15 @@ namespace OpenNos.World.Resource {
         internal static string BOT_MESSAGE_5 {
             get {
                 return ResourceManager.GetString("BOT_MESSAGE_5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a {0} has been killed by {1}. | {2} players.
+        /// </summary>
+        internal static string BR_KILL {
+            get {
+                return ResourceManager.GetString("BR_KILL", resourceCulture);
             }
         }
         

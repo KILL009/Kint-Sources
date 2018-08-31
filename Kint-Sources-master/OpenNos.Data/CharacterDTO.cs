@@ -135,6 +135,7 @@ namespace OpenNos.Data
         public bool WhisperBlocked { get; set; }
 
         public int NosheatDollar { get; set; }
+        public int prestige { get; set; }
 
 
         #endregion
