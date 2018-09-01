@@ -1705,4 +1705,7 @@
   <data name="BR_KILL" xml:space="preserve">
     <value>{0} has been killed by {1}. | {2} players</value>
   </data>
+  <data name="RECEIVE_SP" xml:space="preserve">
+    <value>You received a new SP ! Congratulations !</value>
+  </data>
 </root>

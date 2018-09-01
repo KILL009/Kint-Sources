@@ -3805,6 +3805,15 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a You received a new SP ! Congratulations !.
+        /// </summary>
+        internal static string RECEIVE_SP {
+            get {
+                return ResourceManager.GetString("RECEIVE_SP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Usted recibió: {0}.
         /// </summary>
         internal static string RECEIVED_ITEM {

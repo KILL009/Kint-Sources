@@ -4402,7 +4402,7 @@ namespace OpenNos.GameObject
                     Session.SendPacket(GenerateLevelUp());
                     GetReferrerReward();
                     Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("LEVELUP"), 0));
-                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 6), PositionX, PositionY);
+                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 100), PositionX, PositionY);
                     Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 23), PositionX, PositionY);
                     ServerManager.Instance.UpdateGroup(CharacterId);
                 }
@@ -4454,6 +4454,7 @@ namespace OpenNos.GameObject
                     Session.SendPacket(GenerateStat());
                     Session.SendPacket(GenerateLevelUp());
                     Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("JOB_LEVELUP"), 0));
+                    RewardsHelper.Instance.GetJobRewards(Session);
                     LearnAdventurerSkill();
                     Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 8), PositionX, PositionY);
                     Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 24), PositionX, PositionY);
