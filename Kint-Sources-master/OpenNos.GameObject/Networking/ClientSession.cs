@@ -584,7 +584,7 @@ namespace OpenNos.GameObject
                 Logger.Warn(string.Format(Language.Instance.GetMessageFromKey("CLIENTSESSION_DISPOSING"), packetHeader));
             }
         }
-
-        #endregion
+          
+       #endregion
     }
 }
