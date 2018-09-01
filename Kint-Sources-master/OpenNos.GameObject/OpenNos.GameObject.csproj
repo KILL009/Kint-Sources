@@ -521,6 +521,7 @@
     <Compile Include="Event\ACT6\Act6Raid.cs" />
     <Compile Include="Event\BattleRoyale\BattleRoyaleManager.cs" />
     <Compile Include="Event\EventWave.cs" />
+    <Compile Include="Event\Fortnite\FortniteManager.cs" />
     <Compile Include="Event\GAMES\MeteoriteGame.cs" />
     <Compile Include="Event\GAMES\Sheep.cs" />
     <Compile Include="Event\ICEBREAKER\IceBreaker.cs" />

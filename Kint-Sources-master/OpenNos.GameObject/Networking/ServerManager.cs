@@ -189,7 +189,13 @@ namespace OpenNos.GameObject.Networking
 
         public int RaidType { get; set; }
 
-      
+        public static object IpAddress { get; set; }
+
+        public int AccountLimit { get; set; }
+
+        public short Port { get; set; }
+
+
 
         #endregion
 
