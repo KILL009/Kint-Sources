@@ -80,7 +80,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenNos.MonitoredApplicatio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenNos.WatchDog", "OpenNos.WatchDog\OpenNos.WatchDog.csproj", "{FFDC0B09-1BC3-4C8E-9EFA-98A651428FD5}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NewFolder1", "NewFolder1", "{81DBEBC8-4D83-46B3-9D8E-1DA6788CB244}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OpenNos.SCripts", "OpenNos.SCripts", "{81DBEBC8-4D83-46B3-9D8E-1DA6788CB244}"
+	ProjectSection(SolutionItems) = preProject
+		OpenNoss.Cripts\windows\install.bat = OpenNoss.Cripts\windows\install.bat
+		OpenNoss.Cripts\windows\login.bat = OpenNoss.Cripts\windows\login.bat
+		OpenNoss.Cripts\windows\master.bat = OpenNoss.Cripts\windows\master.bat
+		OpenNoss.Cripts\windows\world.bat = OpenNoss.Cripts\windows\world.bat
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
