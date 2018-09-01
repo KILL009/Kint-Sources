@@ -1229,6 +1229,20 @@ public void Ban(BanPacket banPacket)
         }
 
         /// <summary>
+        ///     $MuteMap Command
+        /// </summary>
+        /// <param name="muteMapPacket"></param>
+        public void MuteMap(MuteMapPacket muteMapPacket)
+        {
+            if (Session.CurrentMapInstance == null)
+            {
+                return;
+            }
+
+            Session.CurrentMapInstance.IsMute = !Session.CurrentMapInstance.IsMute;
+        }
+
+        /// <summary>
         /// $Buff packet
         /// </summary>
         /// <param name="buffPacket"></param>
@@ -1259,7 +1273,7 @@ public void Ban(BanPacket banPacket)
             }
             else
             {
-                ServerManager.Shout($"Porque cambias de clase simpre eres gay o.o ");
+                ServerManager.Shout($"Porque cambias de clase  eres gay o.o ");
                 Session.SendPacket(Session.Character.GenerateSay(ChangeClassPacket.ReturnHelp(), 10));
             }
         }

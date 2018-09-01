@@ -89,6 +89,8 @@ namespace OpenNos.GameObject
 
         public List<MapButton> Buttons { get; set; }
 
+        public bool IsMute { get; set; }
+
         public Clock Clock { get; set; }
 
         public ThreadSafeSortedList<long, MapItem> DroppedList { get; }
@@ -98,7 +100,9 @@ namespace OpenNos.GameObject
         public InstanceBag InstanceBag { get; set; }
 
         public int InstanceMusic { get; set; }
+
         public bool IsPvp { get; set; }
+
         public bool IsDancing { get; set; }
 
         public bool IsPVP { get; set; }
