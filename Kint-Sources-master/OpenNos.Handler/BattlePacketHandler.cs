@@ -43,9 +43,38 @@ namespace OpenNos.Handler
 
         #region Properties
 
+        public DateTime LastSpeedChange { get; set; }
+        private byte _speed;
         private ClientSession Session { get; }
         public bool NoAttack { get; private set; }
+        public byte Speed
+        {
+            get
+            {
+                //    if (HasBuff(CardType.Move, (byte)AdditionalTypes.Move.MovementImpossible))
+                //    {
+                //        return 0;
+                //    }
+
+                byte bonusSpeed = 0;/*(byte)GetBuff(CardType.Move, (byte)AdditionalTypes.Move.SetMovementNegated)[0];*/
+                if (_speed + bonusSpeed > 59)
+                {
+                    return 59;
+                }
+                return (byte)(_speed + bonusSpeed);
+            }
+
+            set
+            {
+                LastSpeedChange = DateTime.Now;
+                _speed = value > 59 ? (byte)59 : value;
+            }
+        }
         public bool NoMove { get; private set; }
+        public string GenerateCond()
+        {
+            return $"cond 1 {CharacterId} {(NoAttack ? 1 : 0)} {(NoMove ? 1 : 0)} {Speed}";
+        }
 
 
         #endregion
@@ -282,6 +311,7 @@ namespace OpenNos.Handler
                     target.Character.Rest();
                 }
 
+                
                 int hitmode = 0;
                 bool onyxWings = false;
                 BattleEntity battleEntity = new BattleEntity(hitRequest.Session.Character, hitRequest.Skill);
@@ -1575,6 +1605,11 @@ namespace OpenNos.Handler
                                             Session.Character.Mp -= ski.Skill.MpCost;
                                         }
 
+                                        if (ski.SkillVNum == 1085) // pas de bcard ...
+                                        {
+                                            TeleportOnMap(monsterToAttack.MapX, monsterToAttack.MapY);
+                                        }
+
                                         if (Session.Character.UseSp && ski.Skill.CastEffect != -1)
                                         {
                                             Session.SendPackets(Session.Character.GenerateQuicklist());
@@ -1778,6 +1813,14 @@ namespace OpenNos.Handler
             }
 
             Session.Character.LastSkillUse = DateTime.Now;
+        }
+
+        public void TeleportOnMap(short x, short y)
+        {
+            Session.Character.PositionX = x;
+            Session.Character.PositionY = y;
+            Session.SendPacket($"tp {1} {CharacterId} {x} {y} 0");
+            Session.SendPacket(GenerateCond());
         }
 
         private void ZoneHit(int castingId, short x, short y)
