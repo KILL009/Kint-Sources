@@ -37,6 +37,7 @@ namespace OpenNos.GameObject
     {
         private object charact;
         private BattleEntity entity;
+        private object targetEntity;
 
         public BCard()
         {
@@ -134,6 +135,8 @@ namespace OpenNos.GameObject
                     }
                     break;
 
+                
+
                 case BCardType.CardType.Summons:
                     if (type == typeof(Character))
                     {
@@ -200,6 +203,29 @@ namespace OpenNos.GameObject
                     break;
 
                 case BCardType.CardType.Defence:
+                    switch (SubType)
+                    {
+                        case (byte)AdditionalTypes.Defence.AllIncreased:
+                            if (session.GetType() == typeof(Character))
+                            {
+                                if (session is Character character)
+                                {
+                                    if (IsLevelScaled)
+                                    {
+                                        character.Defence += character.Level * FirstData;
+                                        character.DistanceDefence += character.Level * FirstData;
+                                        character.MagicalDefence += character.Level * FirstData;
+                                    }
+                                    else
+                                    {
+                                        character.Defence += FirstData;
+                                        character.DistanceDefence += FirstData;
+                                        character.MagicalDefence += FirstData;
+                                    }
+                                }
+                            }
+                            break;
+                    }
                     break;
 
                 case BCardType.CardType.DodgeAndDefencePercent:
@@ -212,6 +238,31 @@ namespace OpenNos.GameObject
                     break;
 
                 case BCardType.CardType.ElementResistance:
+                    switch (SubType)
+                    {
+                        case (byte)AdditionalTypes.ElementResistance.AllIncreased:
+                            if (session.GetType() == typeof(Character))
+                            {
+                                if (session is Character character)
+                                {
+                                    if (IsLevelScaled)
+                                    {
+                                        character.DarkResistance += character.Level * FirstData;
+                                        character.FireResistance += character.Level * FirstData;
+                                        character.LightResistance += character.Level * FirstData;
+                                        character.WaterResistance += character.Level * FirstData;
+                                    }
+                                    else
+                                    {
+                                        character.DarkResistance += FirstData;
+                                        character.FireResistance += FirstData;
+                                        character.LightResistance += FirstData;
+                                        character.WaterResistance += FirstData;
+                                    }
+                                }
+                            }
+                            break;
+                    }
                     break;
 
                 case BCardType.CardType.EnemyElementResistance:
@@ -764,7 +815,29 @@ namespace OpenNos.GameObject
                     break;
 
                 case BCardType.CardType.Item:
-                    break;
+                    if (session is Character charact)
+                    {
+                        var weapon =
+                            charact.Inventory.LoadBySlotAndType<ItemInstance>((short)EquipmentType.MainWeapon,
+                                InventoryType.Wear);
+                        if (weapon != null)
+                        {
+                            foreach (BCard bcard in weapon.Item.BCards)
+                            {
+                                var b = new Buff((short)SecondData, charact.Level);
+                                switch (b.Card?.BuffType)
+                                {
+                                    case BuffType.Good:
+                                        bcard.ApplyBCards(charact, charact);
+                                        break;
+                                    case BuffType.Bad:
+                                        bcard.ApplyBCards(targetEntity, charact);
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                        break;
 
                 case BCardType.CardType.DebuffResistance:
                     break;
