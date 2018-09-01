@@ -308,6 +308,7 @@ namespace OpenNos.GameObject.Networking
                         BattleRoyaleManager.Instance.Kick(session, killer);
                         Instance.ReviveFirstPosition(session.Character.CharacterId);
                         break;
+
                     case MapInstanceType.RaidInstance:
                         List<long> save = session.CurrentMapInstance.InstanceBag.DeadList.ToList();
                         if (session.CurrentMapInstance.InstanceBag.Lives - session.CurrentMapInstance.InstanceBag.DeadList.Count < 0)
