@@ -28,6 +28,7 @@ namespace OpenNos.Domain
         ICEBREAKER,
         BATTLEROYAL,
         CALIGOR,
-        SHEEP
+        SHEEP,
+        FORTNITE
     }
 }

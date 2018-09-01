@@ -26,6 +26,7 @@ using System.Threading.Tasks;
 using OpenNos.GameObject.Networking;
 using OpenNos.Master.Library.Client;
 using OpenNos.Master.Library.Data;
+using OpenNos.GameObject.Event.Fortnite;
 
 namespace OpenNos.GameObject.Helpers
 {
@@ -107,6 +108,10 @@ namespace OpenNos.GameObject.Helpers
 
                         case EventType.BATTLEROYAL:
                             BattleRoyaleManager.Instance.Prepare(useTimer);
+                            break;
+
+                        case EventType.FORTNITE:
+                            FortniteManager.Instance.Prepare(useTimer);
                             break;
 
                         case EventType.TALENTARENA:

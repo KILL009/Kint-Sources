@@ -33,6 +33,7 @@ using OpenNos.Master.Library.Client;
 using OpenNos.Master.Library.Data;
 using OpenNos.XMLModel.Models.Quest;
 using OpenNos.GameObject.Event.ACT6;
+using OpenNos.GameObject.Event.Fortnite;
 using OpenNos.GameObject.Event.BattleRoyale;
 
 namespace OpenNos.GameObject.Networking
@@ -312,6 +313,11 @@ namespace OpenNos.GameObject.Networking
 
                     case MapInstanceType.BattleRoyaleMapInstance:
                         BattleRoyaleManager.Instance.Kick(session, killer);
+                        Instance.ReviveFirstPosition(session.Character.CharacterId);
+                        break;
+
+                    case MapInstanceType.FortniteMapInstance:
+                        FortniteManager.Instance.Kick(session, killer);
                         Instance.ReviveFirstPosition(session.Character.CharacterId);
                         break;
 
@@ -1096,6 +1102,7 @@ namespace OpenNos.GameObject.Networking
                 }
                 Logger.Info(string.Format(Language.Instance.GetMessageFromKey("MAPMONSTERS_LOADED"), monstercount));
                 BattleRoyaleManager.Instance.Initialize(_maps.FirstOrDefault(s => s.MapId == 247));
+                FortniteManager.Instance.Initialize(_maps.FirstOrDefault(s => s.MapId == 9));
                 StartedEvents = new List<EventType>();
 
                

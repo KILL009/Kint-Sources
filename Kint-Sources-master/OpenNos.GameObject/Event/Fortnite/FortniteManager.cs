@@ -85,7 +85,7 @@ namespace OpenNos.GameObject.Event.Fortnite
 
         public void Initialize(Map map)
         {
-            _mapInstance = new MapInstance(map, Guid.NewGuid(), false, MapInstanceType.BattleRoyaleMapInstance, new InstanceBag());
+            _mapInstance = new MapInstance(map, Guid.NewGuid(), false, MapInstanceType.FortniteMapInstance, new InstanceBag());
         }
 
 
@@ -129,7 +129,7 @@ namespace OpenNos.GameObject.Event.Fortnite
 
         public async void Start()
         {
-            ServerManager.Instance.StartedEvents.Remove(EventType.BATTLEROYAL);
+            ServerManager.Instance.StartedEvents.Remove(EventType.FORTNITE);
             _clientSessions.ForEach(s =>
                 ServerManager.Instance.TeleportOnRandomPlaceInMap(s, _mapInstance.MapInstanceId));
             await Task.Delay(5000);
