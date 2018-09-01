@@ -529,6 +529,7 @@
     <Compile Include="Helpers\MallAPIHelper.cs" />
     <Compile Include="Helpers\MateHelper.cs" />
     <Compile Include="Helpers\PassiveSkillHelper.cs" />
+    <Compile Include="Helpers\RewardsHelper.cs" />
     <Compile Include="Helpers\StaticPacketHelper.cs" />
     <Compile Include="BattleEntity.cs" />
     <Compile Include="Helpers\DamageHelper.cs" />

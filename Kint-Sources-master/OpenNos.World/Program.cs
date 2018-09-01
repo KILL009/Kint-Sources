@@ -29,7 +29,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using OpenNos.ChatLog.Networking;
-
+using System.Linq;
 
 namespace OpenNos.World
 {
@@ -42,7 +42,8 @@ namespace OpenNos.World
         private static EventHandler _exitHandler;
 
         private static bool _isDebug;
-       
+        
+
 
         #endregion
 
@@ -192,12 +193,14 @@ namespace OpenNos.World
             }
 
             ServerManager.Instance.ServerGroup = ConfigurationManager.AppSettings["ServerGroup"];
-            int sessionLimit = 100; // Needs workaround
+            int sessionLimit = 500; // Needs workaround
             int? newChannelId = CommunicationServiceClient.Instance.RegisterWorldServer(new SerializableWorldServer(ServerManager.Instance.WorldId, ConfigurationManager.AppSettings["IPAddress"], port, sessionLimit, ServerManager.Instance.ServerGroup));
 
             if (newChannelId.HasValue)
             {
                 ServerManager.Instance.ChannelId = newChannelId.Value;
+                
+                ServerManager.Instance.AccountLimit = sessionLimit;
                 MailServiceClient.Instance.Authenticate(authKey, ServerManager.Instance.WorldId);
                 ConfigurationServiceClient.Instance.Authenticate(authKey, ServerManager.Instance.WorldId);
                 ServerManager.Instance.Configuration = ConfigurationServiceClient.Instance.GetConfigurationObject();
@@ -206,6 +209,8 @@ namespace OpenNos.World
                     ChatLogServiceClient.Instance.Authenticate(ConfigurationManager.AppSettings["ChatLogKey"]);
                 }
                 ServerManager.Instance.MallApi = new GameObject.Helpers.MallAPIHelper(ServerManager.Instance.Configuration.MallBaseURL);
+                Console.Title = string.Format(Language.Instance.GetMessageFromKey("WORLD_SERVER_CONSOLE_TITLE"), ServerManager.Instance.ChannelId, ServerManager.Instance.Sessions.Count());
+                   
             }
             else
             {

@@ -26,6 +26,26 @@ namespace OpenNos.Master.Library.Data
             LastPulse = DateTime.Now;
         }
 
+        #region CharacterSession
+
+        public class CharacterSession
+        {
+            public CharacterSession(string name, int level, string gender, string @class)
+            {
+                Name = name;
+                Level = level;
+                Gender = gender;
+                Class = @class;
+            }
+
+            public string Name { get; }
+            public int Level { get; }
+            public string Gender { get; }
+            public string Class { get; }
+        }
+
+        #endregion
+
         public long AccountId { get; }
 
         public bool CanLoginCrossServer { get; set; }
@@ -41,5 +61,7 @@ namespace OpenNos.Master.Library.Data
         public WorldServer OriginWorld { get; set; }
 
         public int SessionId { get; }
+
+        public CharacterSession Character { get; set; }
     }
 }
