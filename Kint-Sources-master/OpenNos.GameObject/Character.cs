@@ -2121,7 +2121,7 @@ namespace OpenNos.GameObject
                                             {
                                                 if (Session.HasCurrentMapInstance)
                                                 {
-                                                    if (CharacterId == owner && (StaticBonusList.Any(s => s.StaticBonusType == StaticBonusType.AutoLoot) || DateTime.Now <= new DateTime(2018, 10, 31, 12, 00, 00)))
+                                                    if (CharacterId == owner && (StaticBonusList.Any(s => s.StaticBonusType == StaticBonusType.AutoLoot) || DateTime.Now <= new DateTime(2019, 12, 31, 12, 00, 00)))
                                                     {
                                                         GiftAdd(drop.ItemVNum, (byte)drop.Amount);
                                                     }
@@ -2203,7 +2203,7 @@ namespace OpenNos.GameObject
                                     {
                                         if (Session.HasCurrentMapInstance)
                                         {
-                                            if (CharacterId == dropOwner && (StaticBonusList.Any(s => s.StaticBonusType == StaticBonusType.AutoLoot) || DateTime.Now <= new DateTime(2018, 10, 31, 12, 00, 00)))
+                                            if (CharacterId == dropOwner && (StaticBonusList.Any(s => s.StaticBonusType == StaticBonusType.AutoLoot) || DateTime.Now <= new DateTime(2019, 12, 31, 12, 00, 00)))
                                             {
                                                 Gold += drop2.Amount;
                                                 if (Gold > maxGold)
@@ -2257,6 +2257,7 @@ namespace OpenNos.GameObject
                                 {
                                     GenerateXp(monsterToAttack, true);
                                 }
+                               
                                 else
                                 {
                                     Session.SendPacket(GenerateSay(Language.Instance.GetMessageFromKey("XP_NOTFIRSTHIT"), 10));
