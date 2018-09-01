@@ -418,7 +418,7 @@ namespace OpenNos.GameObject.Battle
                 value2 += entry.SecondData;
             }
 
-            foreach (Buff.Buff buff in Buffs)
+            foreach (Buff buff in Buffs)
             {
                 foreach (BCard entry in buff.Card.BCards.Where(s =>
                     s.Type.Equals((byte)type) && s.SubType.Equals(subtype) &&
