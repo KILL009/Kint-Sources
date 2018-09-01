@@ -1693,4 +1693,16 @@
   <data name="FIGHTER" xml:space="preserve">
     <value>Fighter</value>
   </data>
+  <data name="BATTLE_ROYAL_OPEN" xml:space="preserve">
+    <value>[BATTLE ROYALE] Registration are open !</value>
+  </data>
+  <data name="BATTLE_ROYAL_REGISTRATION" xml:space="preserve">
+    <value>[BATTLE ROYALE] Registration will be opened in {0} minutes.</value>
+  </data>
+  <data name="BATTLE_ROYAL_STARTED" xml:space="preserve">
+    <value>The Fight has been</value>
+  </data>
+  <data name="BR_KILL" xml:space="preserve">
+    <value>{0} has been killed by {1}. | {2} players</value>
+  </data>
 </root>
