@@ -30,6 +30,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using OpenNos.ChatLog.Networking;
 using System.Linq;
+using OpenNos.World.Resource;
 
 namespace OpenNos.World
 {
@@ -74,7 +75,7 @@ namespace OpenNos.World
             _isDebug = true;
             Thread.Sleep(1000);
 #endif
-            CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo("en-US");
+            
             Console.Title = $"World Server{(_isDebug ? " Development Environment" : string.Empty)}";
 
             string isA4 = string.Empty;
@@ -209,7 +210,7 @@ namespace OpenNos.World
                     ChatLogServiceClient.Instance.Authenticate(ConfigurationManager.AppSettings["ChatLogKey"]);
                 }
                 ServerManager.Instance.MallApi = new GameObject.Helpers.MallAPIHelper(ServerManager.Instance.Configuration.MallBaseURL);
-                Console.Title = string.Format(Language.Instance.GetMessageFromKey("WORLD_SERVER_CONSOLE_TITLE"), ServerManager.Instance.ChannelId, ServerManager.Instance.Sessions.Count());
+               
                    
             }
             else

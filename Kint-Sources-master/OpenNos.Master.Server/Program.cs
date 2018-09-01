@@ -50,7 +50,7 @@ namespace OpenNos.Master.Server
                 _isDebug = true;
 #endif
                 CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo("en-US");
-                Console.Title = $"Master Server{(_isDebug ? " Development Environment" : string.Empty)}";
+               
 
                 bool ignoreStartupMessages = false;
                 bool ignoreTelemetry = false;
