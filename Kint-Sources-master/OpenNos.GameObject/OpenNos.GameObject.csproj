@@ -597,6 +597,7 @@
     <Compile Include="Packets\CommandPackets\AddShellEffectPacket.cs" />
     <Compile Include="Packets\CommandPackets\BuffPacket.cs" />
     <Compile Include="Packets\CommandPackets\MapStatisticsPacket.cs" />
+    <Compile Include="Packets\CommandPackets\MuteMapPacket.cs" />
     <Compile Include="Packets\CommandPackets\PenaltyLogPacket.cs" />
     <Compile Include="Packets\CommandPackets\CloneItemPacket.cs" />
     <Compile Include="Packets\CommandPackets\CreateItemPacket.cs" />
