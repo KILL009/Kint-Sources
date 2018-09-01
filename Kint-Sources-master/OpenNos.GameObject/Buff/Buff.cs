@@ -20,7 +20,7 @@ namespace OpenNos.GameObject
     public class Buff
     {
         #region Members
-        public int Level;
+      
 
         public Buff(int v, Battle.BattleEntity entity)
         {
@@ -41,7 +41,7 @@ namespace OpenNos.GameObject
 
         #region Properties
 
-
+        public int Level;
 
         public Card Card { get; set; }
 
@@ -50,7 +50,8 @@ namespace OpenNos.GameObject
         public int RemainingTime { get; set; }
 
         public DateTime Start { get; set; }
-      
+
+
         #endregion
     }
 }
