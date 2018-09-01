@@ -1239,6 +1239,7 @@ public void Ban(BanPacket banPacket)
                 return;
             }
 
+            ServerManager.Shout($"!Todo el mapa hacido muteado gracias!");
             Session.CurrentMapInstance.IsMute = !Session.CurrentMapInstance.IsMute;
         }
 
