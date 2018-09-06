@@ -640,7 +640,7 @@ namespace OpenNos.GameObject
                                 case Character receiverCharacter:
                                     if (IsLevelScaled)
                                     {
-                                        Card hcard = ServerManager.GetCard(CardId.Value);
+                                        Card hcard = ServerManager.GetCardByCardId(CardId);
                                         if (hcard == null)
                                         {
                                             break;
@@ -677,7 +677,7 @@ namespace OpenNos.GameObject
                                 case Character receiverCharacter:
                                     int loss = (int)(receiverCharacter.HPLoad() * (FirstData * 0.01));
                                     IDisposable rObs;
-                                    Card rCard  = ServerManager.GetCard(CardId.Value);
+                                    Card rCard  = ServerManager.GetCardByCardId(CardId);
 
                                     if (rCard == null)
                                     {
@@ -1364,7 +1364,7 @@ namespace OpenNos.GameObject
                             switch (session)
                             {
                                 case Character thoughtCharacter:
-                                    Card thoughtCard = ServerManager.GetCard(CardId.Value);
+                                    Card thoughtCard = ServerManager.GetCardByCardId(CardId);
 
                                     if (thoughtCard == null)
                                     {
@@ -1446,7 +1446,7 @@ namespace OpenNos.GameObject
                             }
                             break;
                         case (byte)AdditionalTypes.DragonSkills.Transformation:
-                            Card morphCard = ServerManager.GetCard(CardId.Value);
+                            Card morphCard = ServerManager.GetCardByCardId(CardId);
 
                             if (session is Character morphedChar)
                             {

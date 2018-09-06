@@ -11,7 +11,7 @@ namespace OpenNos.GameObject.CommandPackets
         #region Properties
 
         [PacketIndex(0)]
-        public byte Level { get; set; }
+        public int Level { get; set; }
 
         public static string ReturnHelp()
         {

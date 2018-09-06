@@ -346,7 +346,7 @@ namespace OpenNos.GameObject.Battle
 
         public bool Invincible { get; set; }
 
-        public byte Level { get; set; }
+        public int Level { get; set; }
 
         public int LightResistance { get; set; }
 

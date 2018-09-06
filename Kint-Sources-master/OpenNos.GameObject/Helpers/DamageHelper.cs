@@ -1100,7 +1100,7 @@ namespace OpenNos.GameObject.Helpers
             return totalDamage;
         }
 
-        private static int[] GetBuff(byte level, List<Buff> buffs, List<BCard> bcards, BCardType.CardType type,
+        private static int[] GetBuff(int level, List<Buff> buffs, List<BCard> bcards, BCardType.CardType type,
             byte subtype, BuffType btype, ref int count)
         {
             int value1 = 0;
@@ -1186,7 +1186,7 @@ namespace OpenNos.GameObject.Helpers
             return new[] { value1, value2, value3 };
         }
 
-        private static int GetMonsterDamageBonus(byte level)
+        private static int GetMonsterDamageBonus(int level)
         {
             if (level < 45)
             {

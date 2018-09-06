@@ -388,6 +388,8 @@ namespace OpenNos.GameObject
             }
         }
 
+
+
         public ItemInstance GetItemInstanceById(Guid id) => this[id];
 
         public T LoadBySlotAndType<T>(short slot, InventoryType type) where T : ItemInstance

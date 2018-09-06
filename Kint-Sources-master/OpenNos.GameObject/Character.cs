@@ -573,10 +573,10 @@ namespace OpenNos.GameObject
         public bool CanAttack { get; set; }
         public int Prestige { get; set; }
         public bool isCommand { get; private set; }
-        public IDisposable DragonModeObservable { get; internal set; }
+        public IDisposable DragonModeObservable { get;  set; }
         public int RetainedHp { get; internal set; }
-        public int AccumulatedDamage { get; internal set; }
-        public IDisposable DotDebuff { get; internal set; }
+        public int AccumulatedDamage { get;  set; }
+        public IDisposable DotDebuff { get;  set; }
 
 
         #endregion
@@ -2716,10 +2716,10 @@ namespace OpenNos.GameObject
             DistanceRate = CharacterHelper.DistanceRate(Class, Level);
             DistanceCriticalRate = CharacterHelper.DistCriticalRate(Class, Level);
             DistanceCritical = CharacterHelper.DistCritical(Class, Level);
-            FireResistance = GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.FireIncreased)[0] + GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllIncreased)[0];
-            LightResistance = GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.LightIncreased)[0] + GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllIncreased)[0];
-            WaterResistance = GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.WaterIncreased)[0] + GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllIncreased)[0];
-            DarkResistance = GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.DarkIncreased)[0] + GetStuffBuff(CardType.ElementResistance, (byte)AdditionalTypes.ElementResistance.AllIncreased)[0];
+            FireResistance = GetStuffBuff(CardType.ElementResistance, (int)AdditionalTypes.ElementResistance.FireIncreased)[0] + GetStuffBuff(CardType.ElementResistance, (int)AdditionalTypes.ElementResistance.AllIncreased)[0];
+            LightResistance = GetStuffBuff(CardType.ElementResistance, (int)AdditionalTypes.ElementResistance.LightIncreased)[0] + GetStuffBuff(CardType.ElementResistance, (int)AdditionalTypes.ElementResistance.AllIncreased)[0];
+            WaterResistance = GetStuffBuff(CardType.ElementResistance, (int)AdditionalTypes.ElementResistance.WaterIncreased)[0] + GetStuffBuff(CardType.ElementResistance, (int)AdditionalTypes.ElementResistance.AllIncreased)[0];
+            DarkResistance = GetStuffBuff(CardType.ElementResistance, (int)AdditionalTypes.ElementResistance.DarkIncreased)[0] + GetStuffBuff(CardType.ElementResistance, (int)AdditionalTypes.ElementResistance.AllIncreased)[0];
             Defence = CharacterHelper.Defence(Class, Level);
             DefenceRate = CharacterHelper.DefenceRate(Class, Level);
             ElementRate = 0;
@@ -3419,7 +3419,7 @@ namespace OpenNos.GameObject
 
         public double HPLoad()
         {
-            double multiplicator = 1.0;
+            double multiplicator = 5.0;
             int hp = 0;
             if (UseSp)
             {
@@ -3440,10 +3440,10 @@ namespace OpenNos.GameObject
                 }
             }
             hp += CellonOptions.Where(s => s.Type == CellonOptionType.HPMax).Sum(s => s.Value);
-            multiplicator += GetBuff(CardType.BearSpirit, (byte)AdditionalTypes.BearSpirit.IncreaseMaximumHP)[0] / 100D;
-            multiplicator += GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.IncreasesMaximumHP)[0] / 100D;
+            multiplicator += GetBuff(CardType.BearSpirit, (int)AdditionalTypes.BearSpirit.IncreaseMaximumHP)[0] / 100D;
+            multiplicator += GetBuff(CardType.MaxHPMP, (int)AdditionalTypes.MaxHPMP.IncreasesMaximumHP)[0] / 100D;
 
-            HPMax = (int)((CharacterHelper.HPData[(byte)Class, Level] + hp + GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.MaximumHPIncreased)[0] + GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.MaximumHPMPIncreased)[0]) * multiplicator);
+            HPMax = (int)((CharacterHelper.HPData[(int)Class, Level] + hp + GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.MaximumHPIncreased)[0] + GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.MaximumHPMPIncreased)[0]) * multiplicator);
             return HPMax;
         }
 
@@ -3686,7 +3686,7 @@ namespace OpenNos.GameObject
         public double MPLoad()
         {
             int mp = 0;
-            double multiplicator = 1.0;
+            double multiplicator = 5.0;
             if (UseSp)
             {
                 ItemInstance specialist = Inventory?.LoadBySlotAndType((byte)EquipmentType.Sp, InventoryType.Wear);
@@ -3707,10 +3707,10 @@ namespace OpenNos.GameObject
             }
             mp += CellonOptions.Where(s => s.Type == CellonOptionType.MPMax).Sum(s => s.Value);
 
-            multiplicator += GetBuff(CardType.BearSpirit, (byte)AdditionalTypes.BearSpirit.IncreaseMaximumMP)[0] / 100D;
-            multiplicator += GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.IncreasesMaximumMP)[0] / 100D;
+            multiplicator += GetBuff(CardType.BearSpirit, (int)AdditionalTypes.BearSpirit.IncreaseMaximumMP)[0] / 100D;
+            multiplicator += GetBuff(CardType.MaxHPMP, (int)AdditionalTypes.MaxHPMP.IncreasesMaximumMP)[0] / 100D;
 
-            MPMax = (int)((CharacterHelper.MPData[(byte)Class, Level] + mp + GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.MaximumMPIncreased)[0] + GetBuff(CardType.MaxHPMP, (byte)AdditionalTypes.MaxHPMP.MaximumHPMPIncreased)[0]) * multiplicator);
+            MPMax = (int)((CharacterHelper.MPData[(int)Class, Level] + mp + GetBuff(CardType.MaxHPMP, (int)AdditionalTypes.MaxHPMP.MaximumMPIncreased)[0] + GetBuff(CardType.MaxHPMP, (int)AdditionalTypes.MaxHPMP.MaximumHPMPIncreased)[0]) * multiplicator);
             return MPMax;
         }
 

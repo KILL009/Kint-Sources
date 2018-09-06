@@ -30,7 +30,7 @@ namespace OpenNos.GameObject
 
         #region Instantiation
 
-        public Buff(short id, byte level)
+        public Buff(short id, int level)
         {
             Card = ServerManager.GetCard(id);
             Level = level;

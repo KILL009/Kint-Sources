@@ -703,7 +703,7 @@ namespace OpenNos.GameObject.Networking
 
         public static MapInstance GetMapInstanceByMapId(short mapId) => _mapinstances.Values.FirstOrDefault(s => s.Map.MapId == mapId);
 
-        public static Card GetCardByCardId(short CardId) => _cards.FirstOrDefault(s => s.CardId == CardId);
+        public static Card GetCardByCardId(short? CardId) => _cards.FirstOrDefault(c => c.CardId == CardId);
 
         public static List<MapInstance> GetMapInstances(Func<MapInstance, bool> predicate) => _mapinstances.Values.Where(predicate).ToList();
 
@@ -1669,7 +1669,7 @@ namespace OpenNos.GameObject.Networking
             MailServiceClient.Instance.MailSent += OnMailSent;
             _lastGroupId = 1;
         }
-
+      
         private void OnStaticBonusRefresh(object sender, EventArgs e)
         {
             long characterId = (long)sender;
