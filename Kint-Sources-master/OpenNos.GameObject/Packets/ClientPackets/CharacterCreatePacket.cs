@@ -5,7 +5,7 @@ using OpenNos.Domain;
 
 namespace OpenNos.GameObject
 {
-    [PacketHeader("Char_NEW_JOB")]
+    [PacketHeader("Char_NEW")]
     public class CharacterCreatePacket : PacketDefinition
     {
         #region Properties
@@ -26,7 +26,7 @@ namespace OpenNos.GameObject
         public HairColorType HairColor { get; set; }
 
         [PacketIndex(5)]
-        public ClassType Class  { get; set; }
+        public ClassType @class { get; set; }
 
         public override string ToString()
         {

@@ -3358,9 +3358,9 @@ namespace OpenNos.GameObject
                                 {
                                     newItem.RarifyItem(Session, RarifyMode.Drop, RarifyProtection.None, forceRare: rare);
                                     newItem.Upgrade = (byte)(newItem.Item.BasicUpgrade + upgrade);
-                                    if (newItem.Upgrade > 10)
+                                    if (newItem.Upgrade > 20)
                                     {
-                                        newItem.Upgrade = 10;
+                                        newItem.Upgrade = 20;
                                     }
                                 }
                                 catch (Exception)
