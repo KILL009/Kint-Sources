@@ -1874,6 +1874,7 @@ namespace OpenNos.GameObject
 
         public void GenerateFamilyXp(int FXP)
         {
+            FXP = FXP * ServerManager.Instance.FamilyXpRate;
             if (!Session.Account.PenaltyLogs.Any(s => s.Penalty == PenaltyType.BlockFExp && s.DateEnd > DateTime.Now) && Family != null && FamilyCharacter != null)
             {
                 FamilyCharacterDTO famchar = FamilyCharacter;

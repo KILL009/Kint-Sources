@@ -361,6 +361,8 @@ namespace OpenNos.GameObject
                         count = (byte)ServerManager.RandomNumber(3, 6);
                     }
 
+                    count = (byte)(count * ServerManager.Instance.PerfectionRate);
+
                     session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 3009), session.Character.MapX, session.Character.MapY);
 
                     if (type < 3)

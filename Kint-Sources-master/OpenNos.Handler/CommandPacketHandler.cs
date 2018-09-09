@@ -96,7 +96,7 @@ namespace OpenNos.Handler
                 Session.SendPacket(Session.Character.GenerateSay(BenchmarkPacket.ReturnHelp(), 10));
             }
         }
-
+                     
         /// $Prestige
         /// </summary>
         /// <param name="prestigePacket"></param>
@@ -113,7 +113,7 @@ namespace OpenNos.Handler
                         Session.Character.ChangeClassPrestige(ClassType.Adventurer);
                         Session.Character.Prestige += 1;
                         ServerManager.Instance.ChangeMap(Session.Character.CharacterId);
-                       //  RewardsHelper.Instance.GetLevelUpRewards(Session);
+                        RewardsHelper.Instance.GetLevelUpRewards(Session);
                         Logger.LogEvent(Session.Character.Name, Session.IpAddress);
                     }
                     else
@@ -3035,6 +3035,8 @@ public void Ban(BanPacket banPacket)
             }
         }
 
+     
+
         /// <summary>
         /// $SetPerfection Command
         /// </summary>
@@ -4169,3 +4171,4 @@ public void Ban(BanPacket banPacket)
         #endregion
     }
 }
+          

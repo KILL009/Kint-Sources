@@ -123,6 +123,9 @@ namespace OpenNos.GameObject.Networking
 
         public byte GlacernonPercentRatePvm { get; set; }
 
+        public int PerfectionRate { get; set; }
+
+        public int FamilyXpRate { get; set; }
 
         public MapInstance ArenaInstance { get; private set; }
 
@@ -867,10 +870,7 @@ namespace OpenNos.GameObject.Networking
 
         public void Initialize()
         {
-            ReputRate = int.Parse(ConfigurationManager.AppSettings["RateReput"]);
-            MaxBankGold = long.Parse(ConfigurationManager.AppSettings["MaxBankGold"]);
-            LodTimes = bool.Parse(ConfigurationManager.AppSettings["LodTimes"]);
-            MinLodLevel = byte.Parse(ConfigurationManager.AppSettings["MinLodLevel"]);
+           
             Act4RaidStart = DateTime.Now;
             Act4AngelStat = new Act4Stat();
             Act4DemonStat = new Act4Stat();
