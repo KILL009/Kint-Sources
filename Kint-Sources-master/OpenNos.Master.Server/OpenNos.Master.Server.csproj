@@ -455,6 +455,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdminToolService.cs" />
     <Compile Include="AuthentificationService.cs" />
     <Compile Include="CommunicationService.cs" />
     <Compile Include="MallService.cs" />

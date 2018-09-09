@@ -13,6 +13,7 @@
  */
 
 using OpenNos.Core;
+using OpenNos.Data;
 using OpenNos.Master.Library.Data;
 using OpenNos.SCS.Communication.ScsServices.Service;
 using System.Collections.Generic;
@@ -58,8 +59,14 @@ namespace OpenNos.Master.Server
                 Act4Port = int.Parse(ConfigurationManager.AppSettings["Act4Port"]),
                 MallBaseURL = ConfigurationManager.AppSettings["MallBaseURL"],
                 MallAPIKey = ConfigurationManager.AppSettings["MallAPIKey"],
-                UseChatLogService = bool.Parse(ConfigurationManager.AppSettings["UseChatLogService"])
-            };
+                UseChatLogService = bool.Parse(ConfigurationManager.AppSettings["UseChatLogService"]),
+                PerfectionRate = int.Parse(ConfigurationManager.AppSettings["PerfectionRate"]),
+                FamilyXpRate = int.Parse(ConfigurationManager.AppSettings["FamilyXpRate"]),
+                 ReputRate = int.Parse(ConfigurationManager.AppSettings["RateReput"]),
+                MaxBankGold = long.Parse(ConfigurationManager.AppSettings["MaxBankGold"]),
+               LodTimes = bool.Parse(ConfigurationManager.AppSettings["LodTimes"]),
+               MinLodLevel = byte.Parse(ConfigurationManager.AppSettings["MinLodLevel"])
+        };
         }
 
         #endregion
@@ -71,6 +78,8 @@ namespace OpenNos.Master.Server
         public List<long> AuthentificatedClients { get; set; }
 
         public ConfigurationObject ConfigurationObject { get; set; }
+
+        public ThreadSafeSortedList<long, AccountDTO> AuthentificatedAdmins { get; set; }
 
         public ThreadSafeGenericList<AccountConnection> ConnectedAccounts { get; set; }
 
