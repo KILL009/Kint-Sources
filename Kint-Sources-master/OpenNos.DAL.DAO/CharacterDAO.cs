@@ -18,6 +18,7 @@ using OpenNos.DAL.EF.Helpers;
 using OpenNos.DAL.Interface;
 using OpenNos.Data;
 using OpenNos.Data.Enums;
+using AutoMapper;
 using OpenNos.Domain;
 using System;
 using System.Collections.Generic;
@@ -27,6 +28,7 @@ namespace OpenNos.DAL.DAO
 {
     public class CharacterDAO : ICharacterDAO
     {
+        protected IMapper _mapper;
         #region Methods
 
         public DeleteResult DeleteByPrimaryKey(long accountId, byte characterSlot)
@@ -180,6 +182,14 @@ namespace OpenNos.DAL.DAO
                     result.Add(dto);
                 }
                 return result;
+            }
+        }
+
+        public IEnumerable<CharacterDTO> LoadByAccount(long accountId)
+        {
+            using (var context = DataAccessHelper.CreateContext())
+            {
+                return context.Character.Where(c => c.AccountId.Equals(accountId) && c.State.Equals((byte)CharacterState.Active)).OrderByDescending(c => c.Slot).ToList().Select(c => this._mapper.Map<CharacterDTO>(c)).ToList();
             }
         }
 

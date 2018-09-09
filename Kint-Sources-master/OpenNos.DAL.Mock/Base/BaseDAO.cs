@@ -13,6 +13,8 @@
  */
 
 using System;
+using AutoMapper;
+using OpenNos.DAL.Interface;
 using System.Collections.Generic;
 
 namespace OpenNos.DAL.Mock
@@ -22,6 +24,7 @@ namespace OpenNos.DAL.Mock
         #region Instantiation
 
         protected BaseDAO() => Container = new List<TDTO>();
+        protected IMapper _mapper;
 
         #endregion
 
@@ -39,6 +42,16 @@ namespace OpenNos.DAL.Mock
             {
                 Insert(dto);
             }
+        }
+
+        /// <summary>
+        /// Map a DTO to a GO
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        protected virtual TDTO MapEntity(TDTO dto)
+        {
+            return _mapper.Map<TDTO>(dto);
         }
 
         public virtual TDTO Insert(TDTO dto)
