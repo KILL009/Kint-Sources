@@ -112,7 +112,10 @@ namespace OpenNos.Handler
             if (Session.Character.Timespace?.FirstMap?.MapInstanceType == MapInstanceType.TimeSpaceInstance)
             {
                 Guid mapInstanceId = ServerManager.GetBaseMapInstanceIdByMapId(Session.Character.MapId);
+
                 if (Session.Character.Timespace?.FirstMap.InstanceBag.EndState == 5)
+
+
                 {
                     Session.Character.SetReputation(Session.Character.Timespace.Reputation);
 

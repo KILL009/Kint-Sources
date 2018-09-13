@@ -48,6 +48,8 @@ namespace OpenNos.Master.Library.Data
 
         public IScsServiceClient ConfigurationServiceClient { get; set; }
 
+        public IScsServiceClient ServiceClient { get; set; }
+
         public IScsServiceClient MailServiceClient { get; set; }
 
 

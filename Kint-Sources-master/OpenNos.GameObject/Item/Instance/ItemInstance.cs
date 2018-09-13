@@ -32,6 +32,7 @@ namespace OpenNos.GameObject
         private long _transportId;
         private List<CellonOptionDTO> _cellonOptions;
         private List<ShellEffectDTO> _shellEffects;
+        private int i1;
 
         #endregion
 
@@ -39,7 +40,7 @@ namespace OpenNos.GameObject
 
         public ItemInstance()
         {
-            
+
         }
 
         public ItemInstance(short vNum, byte amount)
@@ -246,170 +247,177 @@ namespace OpenNos.GameObject
 
         public void PerfectSP(ClientSession session)
         {
-            short[] upsuccess = { 50, 40, 30, 20, 10 };
 
-            int[] goldprice = { 5000, 10000, 20000, 50000, 100000 };
-            byte[] stoneprice = { 1, 2, 3, 4, 5 };
-            short stonevnum;
-            byte upmode = 1;
+            do {
+                short[] upsuccess = { 50, 40, 30, 20, 10 };
 
-            switch (Item.Morph)
-            {
-                case 2:
-                case 6:
-                case 9:
-                case 12:
-                    stonevnum = 2514;
-                    break;
+                int[] goldprice = { 5000, 10000, 20000, 50000, 100000 };
+                byte[] stoneprice = { 1, 2, 3, 4, 5 };
+                short stonevnum;
+                byte upmode = 1;
 
-                case 3:
-                case 4:
-                case 14:
-                    stonevnum = 2515;
-                    break;
+                switch (Item.Morph)
+                {
+                    case 2:
+                    case 6:
+                    case 9:
+                    case 12:
+                        stonevnum = 2514;
+                        break;
 
-                case 5:
-                case 11:
-                case 15:
-                    stonevnum = 2516;
-                    break;
+                    case 3:
+                    case 4:
+                    case 14:
+                        stonevnum = 2515;
+                        break;
 
-                case 10:
-                case 13:
-                case 7:
-                    stonevnum = 2517;
-                    break;
+                    case 5:
+                    case 11:
+                    case 15:
+                        stonevnum = 2516;
+                        break;
 
-                case 17:
-                case 18:
-                case 19:
-                    stonevnum = 2518;
-                    break;
+                    case 10:
+                    case 13:
+                    case 7:
+                        stonevnum = 2517;
+                        break;
 
-                case 20:
-                case 21:
-                case 22:
-                    stonevnum = 2519;
-                    break;
+                    case 17:
+                    case 18:
+                    case 19:
+                        stonevnum = 2518;
+                        break;
 
-                case 23:
-                case 24:
-                case 25:
-                    stonevnum = 2520;
-                    break;
+                    case 20:
+                    case 21:
+                    case 22:
+                        stonevnum = 2519;
+                        break;
 
-                case 26:
-                case 27:
-                case 28:
-                    stonevnum = 2521;
-                    break;
+                    case 23:
+                    case 24:
+                    case 25:
+                        stonevnum = 2520;
+                        break;
 
-                default:
+                    case 26:
+                    case 27:
+                    case 28:
+                        stonevnum = 2521;
+                        break;
+
+                    default:
+                        return;
+
+               
+            }
+                if (SpStoneUpgrade > 99)
+                {
                     return;
-            }
-            if (SpStoneUpgrade > 99)
-            {
-                return;
-            }
-            if (SpStoneUpgrade > 80)
-            {
-                upmode = 5;
-            }
-            else if (SpStoneUpgrade > 60)
-            {
-                upmode = 4;
-            }
-            else if (SpStoneUpgrade > 40)
-            {
-                upmode = 3;
-            }
-            else if (SpStoneUpgrade > 20)
-            {
-                upmode = 2;
-            }
+                }
+                if (SpStoneUpgrade > 80)
+                {
+                    upmode = 5;
+                }
+                else if (SpStoneUpgrade > 60)
+                {
+                    upmode = 4;
+                }
+                else if (SpStoneUpgrade > 40)
+                {
+                    upmode = 3;
+                }
+                else if (SpStoneUpgrade > 20)
+                {
+                    upmode = 2;
+                }
 
-            if (IsFixed)
-            {
-                return;
-            }
-            if (session.Character.Gold < goldprice[upmode - 1])
-            {
-                return;
-            }
-            if (session.Character.Inventory.CountItem(stonevnum) < stoneprice[upmode - 1])
-            {
-                return;
-            }
-
+                if (IsFixed)
+                {
+                    return;
+                }
+                if (session.Character.Gold < goldprice[upmode - 1])
+                {
+                    return;
+                }
+                if (session.Character.Inventory.CountItem(stonevnum) < stoneprice[upmode - 1])
+                {
+                    return;
+                }
+           
             ItemInstance specialist = session.Character.Inventory.GetItemInstanceById(Id);
 
-            int rnd = ServerManager.RandomNumber();
-            if (rnd < upsuccess[upmode - 1])
-            {
-                byte type = (byte)ServerManager.RandomNumber(0, 16), count = 1;
-                if (upmode == 4)
+                int rnd = ServerManager.RandomNumber();
+                if (rnd < upsuccess[upmode - 1])
                 {
-                    count = 2;
-                }
-                if (upmode == 5)
-                {
-                    count = (byte)ServerManager.RandomNumber(3, 6);
-                }
+                    byte type = (byte)ServerManager.RandomNumber(0, 16), count = 1;
+                    if (upmode == 4)
+                    {
+                        count = 2;
+                    }
+                    if (upmode == 5)
+                    {
+                        count = (byte)ServerManager.RandomNumber(3, 6);
+                    }
 
-                session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 3009), session.Character.MapX, session.Character.MapY);
+                    //count = (byte)(count * ServerManager.Instance.PerfectionRate);
 
-                if (type < 3)
-                {
-                    specialist.SpDamage += count;
-                    session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_ATTACK"), count), 12));
-                    session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_ATTACK"), count), 0));
-                }
-                else if (type < 6)
-                {
-                    specialist.SpDefence += count;
-                    session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_DEFENSE"), count), 12));
-                    session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_DEFENSE"), count), 0));
-                }
-                else if (type < 9)
-                {
-                    specialist.SpElement += count;
-                    session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_ELEMENT"), count), 12));
-                    session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_ELEMENT"), count), 0));
-                }
-                else if (type < 12)
-                {
-                    specialist.SpHP += count;
-                    session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_HPMP"), count), 12));
-                    session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_HPMP"), count), 0));
-                }
-                else if (type == 12)
-                {
-                    specialist.SpFire += count;
-                    session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_FIRE"), count), 12));
-                    session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_FIRE"), count), 0));
-                }
-                else if (type == 13)
-                {
-                    specialist.SpWater += count;
-                    session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_WATER"), count), 12));
-                    session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_WATER"), count), 0));
-                }
-                else if (type == 14)
-                {
-                    specialist.SpLight += count;
-                    session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_LIGHT"), count), 12));
-                    session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_LIGHT"), count), 0));
-                }
-                else if (type == 15)
-                {
-                    specialist.SpDark += count;
-                    session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_SHADOW"), count), 12));
-                    session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_SHADOW"), count), 0));
-                }
-                specialist.SpStoneUpgrade++;
+                    session.CurrentMapInstance.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 3009), session.Character.MapX, session.Character.MapY);
+
+                    if (type < 3)
+                    {
+                        specialist.SpDamage += count;
+                        session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_ATTACK"), count), 12));
+                        session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_ATTACK"), count), 0));
+                    }
+                    else if (type < 6)
+                    {
+                        specialist.SpDefence += count;
+                        session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_DEFENSE"), count), 12));
+                        session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_DEFENSE"), count), 0));
+                    }
+                    else if (type < 9)
+                    {
+                        specialist.SpElement += count;
+                        session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_ELEMENT"), count), 12));
+                        session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_ELEMENT"), count), 0));
+                    }
+                    else if (type < 12)
+                    {
+                        specialist.SpHP += count;
+                        session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_HPMP"), count), 12));
+                        session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_HPMP"), count), 0));
+                    }
+                    else if (type == 12)
+                    {
+                        specialist.SpFire += count;
+                        session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_FIRE"), count), 12));
+                        session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_FIRE"), count), 0));
+                    }
+                    else if (type == 13)
+                    {
+                        specialist.SpWater += count;
+                        session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_WATER"), count), 12));
+                        session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_WATER"), count), 0));
+                    }
+                    else if (type == 14)
+                    {
+                        specialist.SpLight += count;
+                        session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_LIGHT"), count), 12));
+                        session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_LIGHT"), count), 0));
+                    }
+                    else if (type == 15)
+                    {
+                        specialist.SpDark += count;
+                        session.SendPacket(session.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_SHADOW"), count), 12));
+                        session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("PERFECTSP_SUCCESS"), Language.Instance.GetMessageFromKey("PERFECTSP_SHADOW"), count), 0));
+                    }
+                    specialist.SpStoneUpgrade++;
+                
             }
-            else
-            {
+                else
+                {
                 session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("PERFECTSP_FAILURE"), 11));
                 session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("PERFECTSP_FAILURE"), 0));
             }
@@ -418,11 +426,14 @@ namespace OpenNos.GameObject
             session.SendPacket(session.Character.GenerateGold());
             session.Character.Inventory.RemoveItemAmount(stonevnum, stoneprice[upmode - 1]);
             session.SendPacket("shop_end 1");
+
+            } while (i1 == 20);
+
         }
 
         public void UpgradeSp(ClientSession sesion, UpgradeProtection protect)
         {
-            if (Upgrade >= 15)
+            if (Upgrade >= 20)
             {
                 return;
             }
@@ -1988,7 +1999,7 @@ namespace OpenNos.GameObject
             void AddEffect(ShellEffectLevelType levelType)
             {
                 int i = 0;
-                while (i < 10)
+                while (i < 20)
                 {
                     i++;
                     switch (levelType)
@@ -2544,13 +2555,13 @@ namespace OpenNos.GameObject
             {
                 return;
             }
-            if (Upgrade < 6)
+            if (Upgrade < 10)
             {
                 short[] upsuccess = { 100, 100, 85, 70, 50, 20 };
                 int[] goldprice = { 1500, 3000, 6000, 12000, 24000, 48000 };
                 short[] sand = { 5, 10, 15, 20, 25, 30 };
                 const int sandVnum = 1027;
-                if (Upgrade + itemToSum.Upgrade < 6 && ((itemToSum.Item.EquipmentSlot == EquipmentType.Gloves && Item.EquipmentSlot == EquipmentType.Gloves) || (Item.EquipmentSlot == EquipmentType.Boots && itemToSum.Item.EquipmentSlot == EquipmentType.Boots)))
+                if (Upgrade + itemToSum.Upgrade < 10 && ((itemToSum.Item.EquipmentSlot == EquipmentType.Gloves && Item.EquipmentSlot == EquipmentType.Gloves) || (Item.EquipmentSlot == EquipmentType.Boots && itemToSum.Item.EquipmentSlot == EquipmentType.Boots)))
                 {
                     if (session.Character.Gold < goldprice[Upgrade])
                     {
@@ -2603,7 +2614,7 @@ namespace OpenNos.GameObject
             {
                 return;
             }
-            if (Upgrade < 10)
+            if (Upgrade < 20)
             {
                 byte[] upfail;
                 byte[] upfix;

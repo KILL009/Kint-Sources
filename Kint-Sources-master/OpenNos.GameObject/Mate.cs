@@ -181,6 +181,7 @@ namespace OpenNos.GameObject
         public ItemInstance WeaponInstance { get; set; }
         public DateTime LastMonsterAggro { get; set; }
         public Node[][] BrushFireJagged { get; set; }
+        public IEnumerable MapInstance { get; internal set; }
 
         #endregion
 
@@ -524,6 +525,11 @@ namespace OpenNos.GameObject
             // Set b according to the desired Mate Type, Race or VNum
 
             return b;
+        }
+
+        internal void DisableBuffs(List<BuffType> buffsToDisable, int firstData)
+        {
+            throw new NotImplementedException();
         }
     }
 }

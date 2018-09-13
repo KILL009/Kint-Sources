@@ -2,7 +2,7 @@
 
 using OpenNos.Core;
 
-namespace OpenNos.GameObject
+namespace OpenNos.GameObject.Packets.ClientPackets
 {
     [PacketHeader("say")]
     public class SayPacket : PacketDefinition

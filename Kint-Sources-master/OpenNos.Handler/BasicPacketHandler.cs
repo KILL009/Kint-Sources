@@ -32,6 +32,12 @@ using System.Reflection;
 using System.Threading.Tasks;
 using OpenNos.ChatLog.Networking;
 using OpenNos.ChatLog.Shared;
+using OpenNos.GameObject.Packets.ServerPackets;
+using System.Text.RegularExpressions;
+using Group = OpenNos.GameObject.Group;
+using HeroPacket = OpenNos.GameObject.Packets.ClientPackets.HeroPacket;
+using NcifPacket = OpenNos.GameObject.Packets.ClientPackets.NcifPacket;
+using SayPacket = OpenNos.GameObject.Packets.ClientPackets.SayPacket;
 
 namespace OpenNos.Handler
 {
@@ -48,6 +54,7 @@ namespace OpenNos.Handler
 
         private ClientSession Session { get; }
         public object Same { get; private set; }
+        public int messageBubbleVNum { get; private set; }
 
         #endregion
 
@@ -177,11 +184,20 @@ namespace OpenNos.Handler
             Session.SendPacket(Session.Character.GenerateStat());
         }
 
-        /// <summary>
-        /// compl packet
+           /// <summary>
+        /// csp packet
         /// </summary>
-        /// <param name="complimentPacket"></param>
-        public void Compliment(ComplimentPacket complimentPacket)
+        /// <param name="cspPacket"></param>
+        public void MessageBubble(CspPacket cspPacket)
+        {
+            Session.Character.MapInstance?.Broadcast($"csp {cspPacket.CharacterId} {cspPacket.Message}");
+        }
+
+    /// <summary>
+    /// compl packet
+    /// </summary>
+    /// <param name="complimentPacket"></param>
+    public void Compliment(ComplimentPacket complimentPacket)
         {
             if (complimentPacket != null)
             {
@@ -1145,6 +1161,7 @@ namespace OpenNos.Handler
                 else if (guriPacket.Type == 4)
                 {
                     const int speakerVNum = 2173;
+                    const int messageBubbleVNum = 2174;
                     const int petnameVNum = 2157;
                     if (guriPacket.Argument == 1)
                     {
@@ -1178,16 +1195,55 @@ namespace OpenNos.Handler
                         IceBreaker.FrozenPlayers.Remove(target);
                         IceBreaker.AlreadyFrozenPlayers.Add(target);
                         target?.CurrentMapInstance?.Broadcast(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("ICEBREAKER_PLAYER_UNFROZEN"), target?.Character?.Name), 0));
-                    } ;
-                
-           
+                    };
+
+
                     // presentation message
                     if (guriPacket.Argument == 2)
-                {
-                    int presentationVNum = Session.Character.Inventory.CountItem(1117) > 0 ? 1117 : (Session.Character.Inventory.CountItem(9013) > 0 ? 9013 : -1);
-                    if (presentationVNum != -1)
                     {
-                        string message = string.Empty;
+                        int presentationVNum = Session.Character.Inventory.CountItem(1117) > 0 ? 1117 : (Session.Character.Inventory.CountItem(9013) > 0 ? 9013 : -1);
+                        if (presentationVNum != -1)
+                        {
+                            string message = string.Empty;
+                            string[] valuesplit = guriPacket.Value?.Split(' ');
+                            if (valuesplit == null)
+                            {
+                                return;
+                            }
+                            for (int i = 0; i < valuesplit.Length; i++)
+                            {
+                                message += valuesplit[i] + "^";
+                            }
+                            message = message.Substring(0, message.Length - 1); // Remove the last ^
+                            message = message.Trim();
+                            if (message.Length > 60)
+                            {
+                                message = message.Substring(0, 60);
+                            }
+
+                            Session.Character.Biography = message;
+                            Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("INTRODUCTION_SET"), 10));
+                            Session.Character.Inventory.RemoveItemAmount(presentationVNum);
+                        }
+                    }
+                    if (Session.Character.Inventory.CountItem(messageBubbleVNum) > 0)
+                    {
+                        if (Session.Character.IsMuted())
+                        {
+                            Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("CANT_USE_MSG_BUBBLE"), 10));
+                            return;
+                        }
+                        Session.Character.Inventory.RemoveItemAmount(messageBubbleVNum);
+
+                        Session.SendPacket(new CsprPacket { Message = guriPacket.Value });
+                        Logger.LogEvent(Session.Character.Name, Session.IpAddress);
+                    }
+
+                    // Speaker
+                    if (guriPacket.Argument == 3 && Session.Character.Inventory.CountItem(speakerVNum) > 0)
+                    {
+                        string message = $"<{Language.Instance.GetMessageFromKey("SPEAKER")}> [{Session.Character.Name}]:";
+                        int baseLength = message.Length;
                         string[] valuesplit = guriPacket.Value?.Split(' ');
                         if (valuesplit == null)
                         {
@@ -1195,51 +1251,35 @@ namespace OpenNos.Handler
                         }
                         for (int i = 0; i < valuesplit.Length; i++)
                         {
-                            message += valuesplit[i] + "^";
+                            message += valuesplit[i] + " ";
                         }
-                        message = message.Substring(0, message.Length - 1); // Remove the last ^
-                        message = message.Trim();
-                        if (message.Length > 60)
+                        if (message.Length > 120 + baseLength)
                         {
-                            message = message.Substring(0, 60);
+                            message = message.Substring(0, 120 + baseLength);
                         }
 
-                        Session.Character.Biography = message;
-                        Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("INTRODUCTION_SET"), 10));
-                        Session.Character.Inventory.RemoveItemAmount(presentationVNum);
-                    }
+                        message = message.Trim();
+
+                        if (Session.Character.IsMuted())
+                        {
+                            Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("SPEAKER_CANT_BE_USED"), 10));
+                            return;
+                        }
+                        Session.Character.Inventory.RemoveItemAmount(speakerVNum);
+                        ServerManager.Instance.Broadcast(Session.Character.GenerateSay(message, 13));
+                        // Message Bubble
+                        if (guriPacket.Argument == 3 && Session.Character.Inventory.CountItem(messageBubbleVNum) < 0)
+                            if (Session.Character.IsMuted())
+                            {
+                                Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("CANT_USE_MSG_BUBBLE"), 10));
+                                return;
+                            }
+                                         
+                        Session.Character.Inventory.RemoveItemAmount(messageBubbleVNum);
+                        Session.SendPacket(new CsprPacket { Message = guriPacket.Value });
+                    } 
+                    
                 }
-
-                // Speaker
-                if (guriPacket.Argument == 3 && Session.Character.Inventory.CountItem(speakerVNum) > 0)
-                {
-                    string message = $"<{Language.Instance.GetMessageFromKey("SPEAKER")}> [{Session.Character.Name}]:";
-                    int baseLength = message.Length;
-                    string[] valuesplit = guriPacket.Value?.Split(' ');
-                    if (valuesplit == null)
-                    {
-                        return;
-                    }
-                    for (int i = 0; i < valuesplit.Length; i++)
-                    {
-                        message += valuesplit[i] + " ";
-                    }
-                    if (message.Length > 120 + baseLength)
-                    {
-                        message = message.Substring(0, 120 + baseLength);
-                    }
-
-                    message = message.Trim();
-
-                    if (Session.Character.IsMuted())
-                    {
-                        Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("SPEAKER_CANT_BE_USED"), 10));
-                        return;
-                    }
-                    Session.Character.Inventory.RemoveItemAmount(speakerVNum);
-                    ServerManager.Instance.Broadcast(Session.Character.GenerateSay(message, 13));
-                }
-            }
             else if (guriPacket.Type == 199 && guriPacket.Argument == 1)
             {
                 if (!Session.Character.IsFriendOfCharacter(guriPacket.User))
@@ -1538,6 +1578,11 @@ namespace OpenNos.Handler
         /// <param name="rlPacket"></param>
         public void RaidListRegister(RlPacket rlPacket)
         {
+            if (rlPacket == null)
+            {
+                return;
+            }
+
             switch (rlPacket.Type)
             {
                 case 0:
@@ -1595,6 +1640,11 @@ namespace OpenNos.Handler
         /// <param name="rdPacket"></param>
         public void RaidManage(RdPacket rdPacket)
         {
+            if (rdPacket == null)
+           {
+             return;
+           }
+
             Group grp;
             switch (rdPacket.Type)
             {
@@ -1605,7 +1655,11 @@ namespace OpenNos.Handler
                         return;
                     }
                     ClientSession target = ServerManager.Instance.GetSessionByCharacterId(rdPacket.CharacterId);
-                    if (rdPacket.Parameter == null && target?.Character?.Group == null && Session.Character.Group.IsLeader(Session))
+                    if (target == null)
+                     {
+                                                return;
+                     }
+                    if (rdPacket.Parameter == null && target.Character?.Group == null && Session?.Character?.Group?.IsLeader(Session) == true)
                     {
                         GroupJoin(new PJoinPacket() { RequestType = GroupRequestType.Invited, CharacterId = rdPacket.CharacterId });
                     }
@@ -1631,6 +1685,7 @@ namespace OpenNos.Handler
                     grp = sender.Character?.Group;
                     Session.SendPacket(Session.Character.GenerateRaid(1, true));
                     Session.SendPacket(Session.Character.GenerateRaid(2, true));
+
 
                     grp.Characters.ForEach(s =>
                     {
@@ -1843,7 +1898,7 @@ namespace OpenNos.Handler
         /// <param name="sayPacket"></param>
         public void Say(SayPacket sayPacket)
         {
-            if (string.IsNullOrWhiteSpace(sayPacket.Message))
+            if (string.IsNullOrEmpty(sayPacket.Message) || Session.CurrentMapInstance == null || Session.CurrentMapInstance.IsMute && Session.Character?.Authority < AuthorityType.GameMaster)
             {
                 return;
             }
@@ -1867,6 +1922,8 @@ namespace OpenNos.Handler
                 
             }
         }
+
+      
 
         /// <summary>
         /// pst packet

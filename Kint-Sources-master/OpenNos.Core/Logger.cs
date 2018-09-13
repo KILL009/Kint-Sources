@@ -137,6 +137,8 @@ namespace OpenNos.Core
             }
         }
 
+       
+
         /// <summary>
         /// Wraps up the error message with the Logging Event
         /// </summary>

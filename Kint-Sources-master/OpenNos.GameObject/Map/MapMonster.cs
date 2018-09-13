@@ -35,8 +35,7 @@ namespace OpenNos.GameObject
         private int _movetime;
 
         private bool _noAttack;
-        private bool _noMove;
-        private bool Invisible;
+        private bool _noMove;       
         private Random _random;
 
         #endregion
@@ -128,7 +127,7 @@ namespace OpenNos.GameObject
         public bool Started { get; internal set; }
 
         public long Target { get; set; }
-
+        public bool Invisible { get; set; }
         private short FirstX { get; set; }
 
         private short FirstY { get; set; }
@@ -1072,6 +1071,11 @@ namespace OpenNos.GameObject
             }
         }
 
+        internal string GenerateDm(ushort drain)
+        {
+            throw new NotImplementedException();
+        }
+
         private void TargetHit2(Mate mate, NpcMonsterSkill npcMonsterSkill, int damage, int hitmode)
         {
             lock (mate.PveLockObject)
@@ -1192,6 +1196,11 @@ namespace OpenNos.GameObject
                     }
                 }
             }
+        }
+
+        internal string GenerateRc(int drain)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

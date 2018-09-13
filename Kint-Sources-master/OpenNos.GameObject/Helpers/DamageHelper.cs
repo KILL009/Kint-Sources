@@ -18,6 +18,7 @@ using System.Linq;
 using OpenNos.Domain;
 using OpenNos.GameObject.Battle;
 using OpenNos.GameObject.Networking;
+using static OpenNos.Domain.BCardType;
 
 namespace OpenNos.GameObject.Helpers
 {
@@ -33,6 +34,8 @@ namespace OpenNos.GameObject.Helpers
 
         public static DamageHelper Instance => _instance ?? (_instance = new DamageHelper());
 
+
+
         #endregion
 
         #region Methods
@@ -46,6 +49,8 @@ namespace OpenNos.GameObject.Helpers
         /// <param name="hitMode">reference to HitMode</param>
         /// <param name="onyxWings"></param>
         /// <returns>Damage</returns>
+        /// 
+
         public int CalculateDamage(BattleEntity attacker, BattleEntity defender, Skill skill, ref int hitMode,
             ref bool onyxWings, int charge)
         {
@@ -895,8 +900,14 @@ namespace OpenNos.GameObject.Helpers
                 }
 
                 normalDamage += (int)(normalDamage * multiplier);
+                if (defender.HasBuff(CardType.Critical, (byte)AdditionalTypes.Critical.DamageFromCriticalDecreased))
+                {
+                    int damageReduction = defender.GetBuff(CardType.Critical, (byte)AdditionalTypes.Critical.DamageFromCriticalDecreased)[0];
+                    baseDamage -= (int)(baseDamage * (damageReduction / 100D));
+                }
                 hitMode = 3;
             }
+
 
             #endregion
 
@@ -1089,7 +1100,7 @@ namespace OpenNos.GameObject.Helpers
             return totalDamage;
         }
 
-        private static int[] GetBuff(byte level, List<Buff> buffs, List<BCard> bcards, BCardType.CardType type,
+        private static int[] GetBuff(int level, List<Buff> buffs, List<BCard> bcards, BCardType.CardType type,
             byte subtype, BuffType btype, ref int count)
         {
             int value1 = 0;
@@ -1175,7 +1186,7 @@ namespace OpenNos.GameObject.Helpers
             return new[] { value1, value2, value3 };
         }
 
-        private static int GetMonsterDamageBonus(byte level)
+        private static int GetMonsterDamageBonus(int level)
         {
             if (level < 45)
             {

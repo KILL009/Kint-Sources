@@ -96,6 +96,37 @@ namespace OpenNos.Handler
                 Session.SendPacket(Session.Character.GenerateSay(BenchmarkPacket.ReturnHelp(), 10));
             }
         }
+                     
+        /// $Prestige
+        /// </summary>
+        /// <param name="prestigePacket"></param>
+        public void Prestige(PrestigePacket PrestigePacket)
+        {
+            if (Session.CurrentMapInstance.MapInstanceType == MapInstanceType.BaseMapInstance)
+            {
+                if (Session.Character.Level == ServerManager.Instance.Configuration.MaxLevel
+                    && Session.Character.JobLevel == ServerManager.Instance.Configuration.MaxJobLevel
+                    && Session.Character.HeroLevel == ServerManager.Instance.Configuration.MaxHeroLevel)
+                {
+                    if (Session.Character.Inventory.All(i => i.Type != InventoryType.Wear))
+                    {
+                        Session.Character.ChangeClassPrestige(ClassType.Adventurer);
+                        Session.Character.Prestige += 1;
+                        ServerManager.Instance.ChangeMap(Session.Character.CharacterId);
+                        RewardsHelper.Instance.GetLevelUpRewards(Session);
+                        Logger.LogEvent(Session.Character.Name, Session.IpAddress);
+                    }
+                    else
+                    {
+                        Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("EQ_NOT_EMPTY"), 0));
+                    }
+                }
+                else
+                {
+                    Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_LEVEL_PRESTIGE"), 0));
+                }
+            }
+        }
 
         /// <summary>
         /// $GetExp
@@ -151,7 +182,7 @@ namespace OpenNos.Handler
         /// $Act6Percent
         /// </summary>
         /// <param name="packet"></param>
-        public void Act6Percent(Act6RaidPacket packet)
+       /* public void Act6Percent(Act6RaidPacket packet)
         {
             if (string.IsNullOrEmpty(packet?.Name))
             {
@@ -174,7 +205,7 @@ namespace OpenNos.Handler
                     Session.SendPacket(Session.Character.GenerateSay("Done !", 11));
                     break;
             }
-        }
+        }*/
 
 
         /// <summary>
@@ -1198,6 +1229,21 @@ public void Ban(BanPacket banPacket)
         }
 
         /// <summary>
+        ///     $MuteMap Command
+        /// </summary>
+        /// <param name="muteMapPacket"></param>
+        public void MuteMap(MuteMapPacket muteMapPacket)
+        {
+            if (Session.CurrentMapInstance == null)
+            {
+                return;
+            }
+
+            ServerManager.Shout($"!Todo el mapa hacido muteado gracias!");
+            Session.CurrentMapInstance.IsMute = !Session.CurrentMapInstance.IsMute;
+        }
+
+        /// <summary>
         /// $Buff packet
         /// </summary>
         /// <param name="buffPacket"></param>
@@ -1228,7 +1274,7 @@ public void Ban(BanPacket banPacket)
             }
             else
             {
-                ServerManager.Shout($"Porque cambias de clase simpre eres gay o.o ");
+                ServerManager.Shout($"Porque cambias de clase  eres gay o.o ");
                 Session.SendPacket(Session.Character.GenerateSay(ChangeClassPacket.ReturnHelp(), 10));
             }
         }
@@ -2583,7 +2629,7 @@ public void Ban(BanPacket banPacket)
             {
                 Logger.LogUserEvent("GMCOMMAND", Session.GenerateIdentity(), $"[Morph]MorphId: {morphPacket.MorphId} MorphDesign: {morphPacket.MorphDesign} Upgrade: {morphPacket.Upgrade} MorphId: {morphPacket.ArenaWinner}");
 
-                if (morphPacket.MorphId < 30 && morphPacket.MorphId > 0)
+                if (morphPacket.MorphId < 31 && morphPacket.MorphId > 0)
                 {
                     Session.Character.UseSp = true;
                     Session.Character.Morph = morphPacket.MorphId;
@@ -2592,7 +2638,7 @@ public void Ban(BanPacket banPacket)
                     Session.Character.ArenaWinner = morphPacket.ArenaWinner;
                     Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateCMode());
                 }
-                else if (morphPacket.MorphId > 30)
+                else if (morphPacket.MorphId > 31)
                 {
                     Session.Character.IsVehicled = true;
                     Session.Character.Morph = morphPacket.MorphId;
@@ -2988,6 +3034,8 @@ public void Ban(BanPacket banPacket)
                 Session.SendPacket(Session.Character.GenerateSay(SearchMonsterPacket.ReturnHelp(), 10));
             }
         }
+
+     
 
         /// <summary>
         /// $SetPerfection Command
@@ -4123,3 +4171,4 @@ public void Ban(BanPacket banPacket)
         #endregion
     }
 }
+          

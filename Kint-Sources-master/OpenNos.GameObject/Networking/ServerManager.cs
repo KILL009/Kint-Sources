@@ -33,6 +33,8 @@ using OpenNos.Master.Library.Client;
 using OpenNos.Master.Library.Data;
 using OpenNos.XMLModel.Models.Quest;
 using OpenNos.GameObject.Event.ACT6;
+using OpenNos.GameObject.Event.Fortnite;
+using OpenNos.GameObject.Event.BattleRoyale;
 
 namespace OpenNos.GameObject.Networking
 {
@@ -47,6 +49,10 @@ namespace OpenNos.GameObject.Networking
         public bool IsReboot { get; set; }
 
         public bool ShutdownStop;
+
+        public bool LodTimes { get; set; }
+
+       public byte MinLodLevel { get; set; }
 
         private static readonly ConcurrentBag<Card> _cards = new ConcurrentBag<Card>();
 
@@ -111,6 +117,15 @@ namespace OpenNos.GameObject.Networking
 
         public List<Card> Cards { get; set; }
 
+        public byte CylloanPercentRate { get; set; }
+
+        public byte GlacernonPercentRatePvp { get; set; }
+
+        public byte GlacernonPercentRatePvm { get; set; }
+
+        public int PerfectionRate { get; set; }
+
+        public int FamilyXpRate { get; set; }
 
         public MapInstance ArenaInstance { get; private set; }
 
@@ -178,6 +193,14 @@ namespace OpenNos.GameObject.Networking
 
         public int RaidType { get; set; }
 
+        public static object IpAddress { get; set; }
+
+        public int AccountLimit { get; set; }
+
+        public short Port { get; set; }
+
+
+
         #endregion
 
         #region Methods
@@ -244,7 +267,7 @@ namespace OpenNos.GameObject.Networking
 
 
         // PacketHandler -> with Callback?
-        public void AskRevive(long characterId)
+        public void AskRevive(long characterId, ClientSession killer = null)
         {
             ClientSession session = GetSessionByCharacterId(characterId);
             if (session?.HasSelectedCharacter == true && session.HasCurrentMapInstance)
@@ -289,6 +312,16 @@ namespace OpenNos.GameObject.Networking
                         session.SendPacket(UserInterfaceHelper.GenerateDialog($"#revival^1 #revival^1 {(session.Character.Level > 10 ? Language.Instance.GetMessageFromKey("ASK_REVIVE_TS_LOW_LEVEL") : Language.Instance.GetMessageFromKey("ASK_REVIVE_TS"))}"));
                         session.CurrentMapInstance.InstanceBag.DeadList.Add(session.Character.CharacterId);
                         ReviveTask(session);
+                        break;
+
+                    case MapInstanceType.BattleRoyaleMapInstance:
+                        BattleRoyaleManager.Instance.Kick(session, killer);
+                        Instance.ReviveFirstPosition(session.Character.CharacterId);
+                        break;
+
+                    case MapInstanceType.FortniteMapInstance:
+                        FortniteManager.Instance.Kick(session, killer);
+                        Instance.ReviveFirstPosition(session.Character.CharacterId);
                         break;
 
                     case MapInstanceType.RaidInstance:
@@ -354,7 +387,7 @@ namespace OpenNos.GameObject.Networking
                 }
             }
         }
-
+       
         public void TeleportOnClick(ClientSession session, Guid guid, short x, short y)
         {
             MapInstance map = GetMapInstance(guid);
@@ -620,7 +653,9 @@ namespace OpenNos.GameObject.Networking
                 }
             }
         }
-      
+
+        
+
         public void FamilyRefresh(long familyId) => CommunicationServiceClient.Instance.UpdateFamily(ServerGroup, familyId);
 
         public static MapInstance GenerateMapInstance(short mapId, MapInstanceType type, InstanceBag mapclock)
@@ -671,6 +706,8 @@ namespace OpenNos.GameObject.Networking
 
         public static MapInstance GetMapInstanceByMapId(short mapId) => _mapinstances.Values.FirstOrDefault(s => s.Map.MapId == mapId);
 
+        public static Card GetCardByCardId(short? CardId) => _cards.FirstOrDefault(c => c.CardId == CardId);
+
         public static List<MapInstance> GetMapInstances(Func<MapInstance, bool> predicate) => _mapinstances.Values.Where(predicate).ToList();
 
         public long GetNextGroupId() => ++_lastGroupId;
@@ -686,6 +723,8 @@ namespace OpenNos.GameObject.Networking
             }
             return recipes;
         }
+
+       
 
         public List<Recipe> GetRecipesByMapNpcId(int mapNpcId)
         {
@@ -831,8 +870,7 @@ namespace OpenNos.GameObject.Networking
 
         public void Initialize()
         {
-            ReputRate = int.Parse(ConfigurationManager.AppSettings["RateReput"]);
-            MaxBankGold = long.Parse(ConfigurationManager.AppSettings["MaxBankGold"]);
+           
             Act4RaidStart = DateTime.Now;
             Act4AngelStat = new Act4Stat();
             Act4DemonStat = new Act4Stat();
@@ -1063,6 +1101,8 @@ namespace OpenNos.GameObject.Networking
                     Logger.Error(Language.Instance.GetMessageFromKey("NO_MAP"));
                 }
                 Logger.Info(string.Format(Language.Instance.GetMessageFromKey("MAPMONSTERS_LOADED"), monstercount));
+                BattleRoyaleManager.Instance.Initialize(_maps.FirstOrDefault(s => s.MapId == 247));
+                FortniteManager.Instance.Initialize(_maps.FirstOrDefault(s => s.MapId == 9));
                 StartedEvents = new List<EventType>();
 
                
@@ -1520,7 +1560,7 @@ namespace OpenNos.GameObject.Networking
             Parallel.ForEach(Sessions, sess => sess.SendPacket(sess.Character.GenerateFc()));
         }
 
-        public void Act6Process()
+       /* public void Act6Process()
         {
             if (Act6Zenas.Percentage >= 1000 && Act6Zenas.Mode == 0)
             {
@@ -1541,14 +1581,20 @@ namespace OpenNos.GameObject.Networking
                 Act6Erenia.Percentage = 0;
                 Act6Erenia.Mode = 0;
             }
+
             if (Act6Zenas.CurrentTime <= 0 && Act6Zenas.Mode != 0)
             {
                 Act6Zenas.KilledMonsters = 0;
                 Act6Zenas.Percentage = 0;
                 Act6Zenas.Mode = 0;
             }
-            Parallel.ForEach(Sessions.Where(s => s?.Character != null && s.CurrentMapInstance?.Map.MapId >= 228 && s.CurrentMapInstance?.Map.MapId < 238 || s?.CurrentMapInstance?.Map.MapId == 2604), sess => sess.SendPacket(sess.Character.GenerateAct6()));
-        }
+
+            Parallel.ForEach(
+                Sessions.Where(s =>
+                    s?.Character != null && s.CurrentMapInstance?.Map.MapId >= 228 &&
+                    s.CurrentMapInstance?.Map.MapId < 238 || s?.CurrentMapInstance?.Map.MapId == 2604),
+                sess => sess.SendPacket(sess.Character.GenerateAct6()));
+        }*/
 
         // Server
         private static void BotProcess()
@@ -1588,6 +1634,7 @@ namespace OpenNos.GameObject.Networking
         {
             GroupsThreadSafe = new ThreadSafeSortedList<long, Group>();
 
+          //  Observable.Interval(TimeSpan.FromSeconds(5)).Subscribe(x => { Act6Process(); });
             Observable.Interval(TimeSpan.FromSeconds(20)).Subscribe(x => SaveAllProcess());
             Observable.Interval(TimeSpan.FromMinutes(1)).Subscribe(x => Act4Process());
             Observable.Interval(TimeSpan.FromSeconds(2)).Subscribe(x => GroupProcess());
@@ -1622,7 +1669,7 @@ namespace OpenNos.GameObject.Networking
             MailServiceClient.Instance.MailSent += OnMailSent;
             _lastGroupId = 1;
         }
-
+      
         private void OnStaticBonusRefresh(object sender, EventArgs e)
         {
             long characterId = (long)sender;
@@ -1710,6 +1757,7 @@ namespace OpenNos.GameObject.Networking
                             SourceY = siObj.PositionY
                         };
                         map.Value.Portals.Add(port);
+
                     }
                 }
             });
@@ -2073,6 +2121,25 @@ namespace OpenNos.GameObject.Networking
             });
         }
 
+        private void OnAuthorityChange(object sender, EventArgs e)
+        {
+            if (sender == null)
+            {
+                return;
+            }
+
+            Tuple<long, AuthorityType> args = (Tuple<long, AuthorityType>)sender;
+            ClientSession account = Sessions.FirstOrDefault(s => s.Account.AccountId == args.Item1);
+            if (account == null)
+            {
+                return;
+            }
+
+            account.Account.Authority = args.Item2;
+            account.SendPacket(
+                $"say 1 0 10 ({Language.Instance.GetMessageFromKey("ADMINISTRATOR")}) You are now {account.Account.Authority.ToString()}");
+        }
+       
         // Server
         private void SaveAllProcess()
         {

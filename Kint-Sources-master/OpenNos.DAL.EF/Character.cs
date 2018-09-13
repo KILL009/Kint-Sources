@@ -108,7 +108,7 @@ namespace OpenNos.DAL.EF
 
         public bool HeroChatBlocked { get; set; }
 
-        public byte HeroLevel { get; set; }
+        public int HeroLevel { get; set; }
 
         public long HeroXp { get; set; }
 
@@ -124,7 +124,7 @@ namespace OpenNos.DAL.EF
 
         public long LastFamilyLeave { get; set; }
 
-        public byte Level { get; set; }
+        public int Level { get; set; }
 
         public long LevelXp { get; set; }
 

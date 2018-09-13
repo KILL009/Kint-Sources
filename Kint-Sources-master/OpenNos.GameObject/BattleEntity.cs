@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
-
+using static OpenNos.Domain.BCardType;
 
 namespace OpenNos.GameObject.Battle
 {
@@ -346,7 +346,7 @@ namespace OpenNos.GameObject.Battle
 
         public bool Invincible { get; set; }
 
-        public byte Level { get; set; }
+        public int Level { get; set; }
 
         public int LightResistance { get; set; }
 
@@ -385,8 +385,57 @@ namespace OpenNos.GameObject.Battle
         public int WeaponDamageMinimum { get; set; }
 
         public List<BCard> StaticBcards { get; set; }
+        public IEnumerable<BCard> SkillBcards { get; private set; }
 
-       
+        public bool HasBuff(CardType type, byte subtype, bool removeWeaponEffects = false)
+        {
+            if (removeWeaponEffects)
+            {
+                return Buffs.Any(buff => buff.Card.BCards.Any(b =>
+                    b.Type == (byte)type && b.SubType == subtype &&
+                    (b.CastType != 1 ||
+                        b.CastType == 1 && buff.Start.AddMilliseconds(buff.Card.Delay * 100) < DateTime.Now)));
+            }
+
+            return Buffs.Any(buff => buff.Card.BCards.Any(b =>
+                    b.Type == (byte)type && b.SubType == subtype &&
+                    (b.CastType != 1 || b.CastType == 1 &&
+                        buff.Start.AddMilliseconds(buff.Card.Delay * 100) < DateTime.Now))) ||
+                StaticBcards.Any(s => s.Type.Equals((byte)type) && s.SubType.Equals(subtype));
+        }
+
+        public int[] GetBuff(CardType type, byte subtype)
+        {
+            int value1 = 0;
+            int value2 = 0;
+
+            foreach (BCard entry in StaticBcards.Concat(SkillBcards)
+                .Where(s => s != null && s.Type.Equals((byte)type) && s.SubType.Equals(subtype)))
+            {
+                value1 += entry.IsLevelScaled
+                    ? entry.IsLevelDivided ? Level / entry.FirstData : entry.FirstData * Level
+                    : entry.FirstData;
+                value2 += entry.SecondData;
+            }
+
+            foreach (Buff buff in Buffs)
+            {
+                foreach (BCard entry in buff.Card.BCards.Where(s =>
+                    s.Type.Equals((byte)type) && s.SubType.Equals(subtype) &&
+                    (s.CastType != 1 ||
+                        s.CastType == 1 && buff.Start.AddMilliseconds(buff.Card.Delay * 100) < DateTime.Now)))
+                {
+                    value1 += entry.IsLevelScaled
+                        ? entry.IsLevelDivided ? buff.Level / entry.FirstData : entry.FirstData * buff.Level
+                        : entry.FirstData;
+                    value2 += entry.SecondData;
+                }
+            }
+
+            return new[] { value1, value2 };
+        }
+
+
         #endregion
     }
 }

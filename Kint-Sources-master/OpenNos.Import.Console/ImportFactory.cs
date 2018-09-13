@@ -2925,7 +2925,7 @@ namespace OpenNos.Import.Console
                                 item.CriticalLuckRate = byte.Parse(currentLine[6]);
                                 item.CriticalRate = short.Parse(currentLine[7]);
                                 item.BasicUpgrade = byte.Parse(currentLine[10]);
-                                item.MaximumAmmo = 100;
+                                item.MaximumAmmo = 255;                             
                                 break;
 
                             case ItemType.Armor:

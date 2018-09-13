@@ -46,5 +46,11 @@ namespace OpenNos.Master.Library.Data
         public string MallAPIKey { get; set; }
 
         public bool UseChatLogService { get; set; }
+        public int PerfectionRate { get; set; }
+        public int ReputRate { get; set; }
+        public long MaxBankGold { get; set; }
+        public bool LodTimes { get; set; }
+        public byte MinLodLevel { get; set; }
+        public int FamilyXpRate { get; set; }
     }
 }

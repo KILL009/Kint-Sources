@@ -33,6 +33,8 @@ namespace OpenNos.Handler
 {
     public class BattlePacketHandler : IPacketHandler
     {
+        private object CharacterId;
+
         #region Instantiation
 
         public BattlePacketHandler(ClientSession session) => Session = session;
@@ -41,7 +43,39 @@ namespace OpenNos.Handler
 
         #region Properties
 
+        public DateTime LastSpeedChange { get; set; }
+        private byte _speed;
         private ClientSession Session { get; }
+        public bool NoAttack { get; private set; }
+        public byte Speed
+        {
+            get
+            {
+                //    if (HasBuff(CardType.Move, (byte)AdditionalTypes.Move.MovementImpossible))
+                //    {
+                //        return 0;
+                //    }
+
+                byte bonusSpeed = 0;/*(byte)GetBuff(CardType.Move, (byte)AdditionalTypes.Move.SetMovementNegated)[0];*/
+                if (_speed + bonusSpeed > 59)
+                {
+                    return 59;
+                }
+                return (byte)(_speed + bonusSpeed);
+            }
+
+            set
+            {
+                LastSpeedChange = DateTime.Now;
+                _speed = value > 59 ? (byte)59 : value;
+            }
+        }
+        public bool NoMove { get; private set; }
+        public string GenerateCond()
+        {
+            return $"cond 1 {CharacterId} {(NoAttack ? 1 : 0)} {(NoMove ? 1 : 0)} {Speed}";
+        }
+
 
         #endregion
 
@@ -71,7 +105,7 @@ namespace OpenNos.Handler
             }
             if (mutliTargetListPacket.TargetsAmount > 0 && mutliTargetListPacket.Targets == null)
             {
-                
+
                 Logger.Log.Debug($"user {Session.Character.Name} tried an Crash: MultiTargetListHit");
                 return;
             }
@@ -98,7 +132,7 @@ namespace OpenNos.Handler
 
             if (Session.Character.CanFight && useSkillPacket != null)
             {
-               
+
                 Session.Character.RemoveBuff(614);
                 Session.Character.RemoveBuff(615);
                 Session.Character.RemoveBuff(616);
@@ -203,7 +237,7 @@ namespace OpenNos.Handler
         /// <param name="useAoeSkillPacket"></param>
         public void UseZonesSkill(UseAOESkillPacket useAoeSkillPacket)
         {
-            
+
             bool isMuted = Session.Character.MuteMessage();
             if (isMuted || Session.Character.IsVehicled)
             {
@@ -251,9 +285,10 @@ namespace OpenNos.Handler
             }
         }
 
+
         private void PvpHit(HitRequest hitRequest, ClientSession target)
         {
-            
+
             if (target?.Character.Hp > 0 && hitRequest?.Session.Character.Hp > 0)
             {
                 if ((Session.CurrentMapInstance.MapInstanceId == ServerManager.Instance.ArenaInstance.MapInstanceId
@@ -276,6 +311,7 @@ namespace OpenNos.Handler
                     target.Character.Rest();
                 }
 
+                
                 int hitmode = 0;
                 bool onyxWings = false;
                 BattleEntity battleEntity = new BattleEntity(hitRequest.Session.Character, hitRequest.Skill);
@@ -296,8 +332,8 @@ namespace OpenNos.Handler
 
                 if (hitmode != 1)
                 {
-                  Session.Character.RemoveBuff(85);
-                  Session.Character.Invisible = false;
+                    Session.Character.RemoveBuff(85);
+                    Session.Character.Invisible = false;
                 }
 
 
@@ -363,7 +399,7 @@ namespace OpenNos.Handler
                 }
                 if (target.Character.Invisible)
                 {
-                    target.Character.Invisible = false;                        
+                    target.Character.Invisible = false;
                     target.CurrentMapInstance?.Broadcast(target.Character.GenerateInvisible());
                     target.SendPacket(target.Character.GenerateEq());
 
@@ -515,7 +551,7 @@ namespace OpenNos.Handler
 
                 if (hitmode != 1)
                 {
-                    
+
                     hitRequest.Skill.BCards.Where(s => s.Type.Equals((byte)CardType.Buff)).ToList()
                         .ForEach(s => s.ApplyBCards(target.Character, Session.Character));
 
@@ -796,7 +832,7 @@ namespace OpenNos.Handler
 
         private void TargetHit(int castingId, int targetId, bool isPvp = false)
         {
-           
+
             bool shouldCancel = true;
             if ((DateTime.Now - Session.Character.LastTransform).TotalSeconds < 3)
             {
@@ -963,6 +999,14 @@ namespace OpenNos.Handler
                                                 Session.Character.PositionY, ski.Skill.TargetRange));
                                     if (clientSessions != null)
                                     {
+                                        foreach (ClientSession target in clientSessions)
+
+                                            if (ski.SkillVNum == 871) // No bcard for this skill
+                                            {
+                                                List<BuffType> buffsToDisable = new List<BuffType> { BuffType.Bad };
+                                                target.Character.DisableBuffs(buffsToDisable, 4);
+                                            }
+
                                         foreach (ClientSession target in clientSessions)
                                         {
                                             ski.Skill.BCards.Where(s => !s.Type.Equals((byte)CardType.MeditationSkill))
@@ -1561,6 +1605,11 @@ namespace OpenNos.Handler
                                             Session.Character.Mp -= ski.Skill.MpCost;
                                         }
 
+                                        if (ski.SkillVNum == 1085) // pas de bcard ...
+                                        {
+                                            TeleportOnMap(monsterToAttack.MapX, monsterToAttack.MapY);
+                                        }
+
                                         if (Session.Character.UseSp && ski.Skill.CastEffect != -1)
                                         {
                                             Session.SendPackets(Session.Character.GenerateQuicklist());
@@ -1766,6 +1815,14 @@ namespace OpenNos.Handler
             Session.Character.LastSkillUse = DateTime.Now;
         }
 
+        public void TeleportOnMap(short x, short y)
+        {
+            Session.Character.PositionX = x;
+            Session.Character.PositionY = y;
+            Session.SendPacket($"tp {1} {CharacterId} {x} {y} 0");
+            Session.SendPacket(GenerateCond());
+        }
+
         private void ZoneHit(int castingId, short x, short y)
         {
             List<CharacterSkill> skills = Session.Character.UseSp
@@ -1874,7 +1931,9 @@ namespace OpenNos.Handler
                 Session.SendPacket(StaticPacketHelper.Cancel(2));
             }
         }
-
-        #endregion
     }
+
+    #endregion
+
 }
+

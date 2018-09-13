@@ -124,6 +124,7 @@ namespace OpenNos.Master.Server
                 {
                     world.CommunicationServiceClient.GetClientProxy<ICommunicationClient>().CharacterConnected(characterId);
                 }
+                Console.Title = $"MASTER SERVER - Channels :{MSManager.Instance.WorldServers.Count} - Players : {MSManager.Instance.ConnectedAccounts.FirstOrDefault(s => s.Character != null)}";
                 return true;
             }
             return false;

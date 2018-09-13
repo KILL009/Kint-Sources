@@ -250,7 +250,7 @@ namespace OpenNos.GameObject.Helpers
 
         #region Methods
 
-        public static float ExperiencePenalty(byte playerLevel, byte monsterLevel)
+        public static float ExperiencePenalty(int playerLevel, byte monsterLevel)
         {
             int leveldifference = playerLevel - monsterLevel;
             float penalty;
@@ -293,7 +293,7 @@ namespace OpenNos.GameObject.Helpers
             return penalty;
         }
 
-        public static float GoldPenalty(byte playerLevel, byte monsterLevel)
+        public static float GoldPenalty(int playerLevel, byte monsterLevel)
         {
             int leveldifference = playerLevel - monsterLevel;
             float penalty;
@@ -437,15 +437,15 @@ namespace OpenNos.GameObject.Helpers
             return AttackType.Melee;
         }
 
-        public static int MagicalDefence(ClassType @class, byte level) => _magicalDef[(byte)@class, level];
+        public static int MagicalDefence(ClassType @class, int level) => _magicalDef[(int)@class, level];
 
-        public static int MaxDistance(ClassType @class, byte level) => _maxDist[(byte)@class, level];
+        public static int MaxDistance(ClassType @class, int level) => _maxDist[(int)@class, level];
 
-        public static int MaxHit(ClassType @class, byte level) => _maxHit[(byte)@class, level];
+        public static int MaxHit(ClassType @class, int level) => _maxHit[(int)@class, level];
 
-        public static int MinDistance(ClassType @class, byte level) => _minDist[(byte)@class, level];
+        public static int MinDistance(ClassType @class, int level) => _minDist[(int)@class, level];
 
-        public static int MinHit(ClassType @class, byte level) => _minHit[(int)@class, level];
+        public static int MinHit(ClassType @class, int level) => _minHit[(int)@class, level];
 
         public static int RarityPoint(short rarity, short lvl)
         {
@@ -740,25 +740,25 @@ namespace OpenNos.GameObject.Helpers
             return point;
         }
 
-        internal static int Defence(ClassType @class, byte level) => _hitDef[(byte)@class, level];
+        internal static int Defence(ClassType @class, int level) => _hitDef[(int)@class, level];
 
-        internal static int DefenceRate(ClassType @class, byte level) => _hitDodge[(byte)@class, level];
+        internal static int DefenceRate(ClassType @class, int level) => _hitDodge[(int)@class, level];
 
-        internal static int DistanceDefence(ClassType @class, byte level) => _distDef[(byte)@class, level];
+        internal static int DistanceDefence(ClassType @class, int level) => _distDef[(int)@class, level];
 
-        internal static int DistanceDefenceRate(ClassType @class, byte level) => _distDodge[(byte)@class, level];
+        internal static int DistanceDefenceRate(ClassType @class, int level) => _distDodge[(int)@class, level];
 
-        internal static int DistanceRate(ClassType @class, byte level) => _distRate[(byte)@class, level];
+        internal static int DistanceRate(ClassType @class, int level) => _distRate[(int)@class, level];
 
-        internal static int DistCritical(ClassType @class, byte level) => _criticalDist[(byte)@class, level];
+        internal static int DistCritical(ClassType @class, int level) => _criticalDist[(int)@class, level];
 
-        internal static int DistCriticalRate(ClassType @class, byte level) => _criticalDistRate[(byte)@class, level];
+        internal static int DistCriticalRate(ClassType @class, int level) => _criticalDistRate[(int)@class, level];
 
-        internal static int HitCritical(ClassType @class, byte level) => _criticalHit[(byte)@class, level];
+        internal static int HitCritical(ClassType @class, int level) => _criticalHit[(int)@class, level];
 
-        internal static int HitCriticalRate(ClassType @class, byte level) => _criticalHitRate[(byte)@class, level];
+        internal static int HitCriticalRate(ClassType @class, int level) => _criticalHitRate[(int)@class, level];
 
-        internal static int HitRate(ClassType @class, byte level) => _hitRate[(byte)@class, level];
+        internal static int HitRate(ClassType @class, int level) => _hitRate[(int)@class, level];
 
         private static void loadHeroXpData()
         {
@@ -773,7 +773,7 @@ namespace OpenNos.GameObject.Helpers
 
         private static void loadHPData()
         {
-            _hp = new int[5, 256];
+            _hp = new int[5, 513];
 
             // Adventurer HP
             for (int i = 1; i < _hp.GetLength(1); i++)
@@ -803,14 +803,8 @@ namespace OpenNos.GameObject.Helpers
                 }
                 _hp[(int)ClassType.Swordman, i] = hp;
             }
-
-            //Fighter
-            for (int i = 1; i < _hp.GetLength(1); i++)
-            {
-                _hp[(int)ClassType.Fighter, i] = (int)((1 / 2.0 * i * i) + (31 / 2.0 * i) + 205);
-            }
-
-            // Magician HP
+         
+          // Magician HP
             for (int i = 0; i < _hp.GetLength(1); i++)
             {
                 _hp[(int)ClassType.Magician, i] = (int)(((((i + 15) * (i + 15)) + i + 15.0) / 2.0) - 465 + 550);
@@ -835,6 +829,26 @@ namespace OpenNos.GameObject.Helpers
                 }
                 _hp[(int)ClassType.Archer, i] = hp;
             }
+
+            // Fight HP
+            for (int i = 0; i < _hp.GetLength(1); i++)
+            {
+                int hp = 680;
+                int inc = 35;
+                int j = 16;
+                while (j <= i)
+                {
+                    hp += inc;
+                    ++inc;
+                    if (j % 10 == 1 || j % 10 == 5 || j % 10 == 8)
+                    {
+                        hp += inc;
+                        ++inc;
+                    }
+                    ++j;
+                }
+                _hp[(int)ClassType.Fighter, i] = hp;
+            }
         }
 
         private static void loadHPHealth()
@@ -844,7 +858,7 @@ namespace OpenNos.GameObject.Helpers
             _hpHealth[(int)ClassType.Adventurer] = 30;
             _hpHealth[(int)ClassType.Swordman] = 90;
             _hpHealth[(int)ClassType.Magician] = 30;
-            _hpHealth[(int)ClassType.Fighter] = 30;
+            _hpHealth[(int)ClassType.Fighter] = 80;
         }
 
         private static void loadHPHealthStand()
@@ -854,7 +868,7 @@ namespace OpenNos.GameObject.Helpers
             _hpHealthStand[(int)ClassType.Adventurer] = 25;
             _hpHealthStand[(int)ClassType.Swordman] = 26;
             _hpHealthStand[(int)ClassType.Magician] = 20;
-            _hpHealthStand[(int)ClassType.Fighter] = 30;
+            _hpHealthStand[(int)ClassType.Fighter] = 20;
         }
 
         private static void loadJobXPData()
@@ -886,12 +900,12 @@ namespace OpenNos.GameObject.Helpers
 
         private static void loadMPData()
         {
-            _mp = new int[5, 256];
+            _mp = new int[5, 513];
 
             // ADVENTURER MP
             _mp[(int)ClassType.Adventurer, 0] = 60;
             int baseAdventurer = 9;
-            for (int i = 1; i < _mp.GetLength(1); i += 5)
+            for (int i = 1; i < _mp.GetLength(1); i += 4)
             {
                 _mp[(int)ClassType.Adventurer, i] = _mp[(int)ClassType.Adventurer, i - 1] + baseAdventurer;
                 _mp[(int)ClassType.Adventurer, i + 1] = _mp[(int)ClassType.Adventurer, i] + baseAdventurer;
@@ -906,35 +920,26 @@ namespace OpenNos.GameObject.Helpers
             // SWORDSMAN MP
             for (int i = 1; i < _mp.GetLength(1) - 1; i++)
             {
-                _mp[(int)ClassType.Swordman, i] = 8 * _mp[(int)ClassType.Adventurer, i];
+                _mp[(int)ClassType.Swordman, i] = _mp[(int)ClassType.Adventurer, i];
             }
 
             // ARCHER MP
             for (int i = 0; i < _mp.GetLength(1) - 1; i++)
             {
-                _mp[(int)ClassType.Archer, i] = 10 * _mp[(int)ClassType.Adventurer, i];
+                _mp[(int)ClassType.Archer, i] = _mp[(int)ClassType.Adventurer, i];
             }
 
             // MAGICIAN MP
             for (int i = 0; i < _mp.GetLength(1) - 1; i++)
             {
-                _mp[(int)ClassType.Magician, i] = 15 * _mp[(int)ClassType.Adventurer, i];
+                _mp[(int)ClassType.Magician, i] = 3 * _mp[(int)ClassType.Adventurer, i];
             }
 
             // Fighter MP
-            _mp[(int)ClassType.Fighter, 0] = 100;
-            int baseAdventurer1 = 12;
-            for (int i = 1; i < _mp.GetLength(1); i += 5)
-            {
-                _mp[(int)ClassType.Fighter, i] = _mp[(int)ClassType.Fighter, i - 1] + baseAdventurer1;
-                _mp[(int)ClassType.Fighter, i + 1] = _mp[(int)ClassType.Fighter, i] + baseAdventurer1;
-                _mp[(int)ClassType.Fighter, i + 2] = _mp[(int)ClassType.Fighter, i + 1] + baseAdventurer1;
-                baseAdventurer1++;
-                _mp[(int)ClassType.Fighter, i + 3] = _mp[(int)ClassType.Fighter, i + 2] + baseAdventurer1;
-                baseAdventurer1++;
-
-
-            }
+            for (int i = 1; i < _mp.GetLength(1) - 1; i++)
+                           {
+                _mp[(int)ClassType.Fighter, i] = _mp[(int)ClassType.Adventurer, i];
+                            }
 
         }
 
@@ -945,7 +950,7 @@ namespace OpenNos.GameObject.Helpers
             _mpHealth[(int)ClassType.Swordman] = 30;
             _mpHealth[(int)ClassType.Archer] = 50;
             _mpHealth[(int)ClassType.Magician] = 80;
-            _mpHealth[(int)ClassType.Fighter] = 10;
+            _mpHealth[(int)ClassType.Fighter] = 80;
         }
 
         private static void loadMPHealthStand()
@@ -987,23 +992,23 @@ namespace OpenNos.GameObject.Helpers
         // TODO: Change or Verify
         private static void loadStats()
         {
-            _minHit = new int[5, 256];
-            _maxHit = new int[5, 256];
-            _hitRate = new int[5, 256];
-            _criticalHitRate = new int[5, 256];
-            _criticalHit = new int[5, 256];
-            _minDist = new int[5, 256];
-            _maxDist = new int[5, 256];
-            _distRate = new int[5, 256];
-            _criticalDistRate = new int[5, 256];
-            _criticalDist = new int[5, 256];
-            _hitDef = new int[5, 256];
-            _hitDodge = new int[5, 256];
-            _distDef = new int[5, 256];
-            _distDodge = new int[5, 256];
-            _magicalDef = new int[5, 256];
+            _minHit = new int[5, 513];
+            _maxHit = new int[5, 513];
+            _hitRate = new int[5, 513];
+            _criticalHitRate = new int[5, 513];
+            _criticalHit = new int[5, 513];
+            _minDist = new int[5, 513];
+            _maxDist = new int[5, 513];
+            _distRate = new int[5, 513];
+            _criticalDistRate = new int[5, 513];
+            _criticalDist = new int[5, 513];
+            _hitDef = new int[5, 513];
+            _hitDodge = new int[5, 513];
+            _distDef = new int[5, 513];
+            _distDodge = new int[5, 513];
+            _magicalDef = new int[5, 513];
 
-            for (int i = 0; i < 256; i++)
+            for (int i = 0; i < 513; i++)
             {
                 // ADVENTURER
                 _minHit[(int)ClassType.Adventurer, i] = i + 9; // approx
@@ -1102,8 +1107,8 @@ namespace OpenNos.GameObject.Helpers
         private static void loadXPData()
         {
             // Load XpData
-            _xpData = new double[256];
-            double[] v = new double[256];
+            _xpData = new double[513];
+            double[] v = new double[513];
             double variable = 1;
             v[0] = 540;
             v[1] = 960;

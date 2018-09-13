@@ -20,6 +20,8 @@ using OpenNos.GameObject;
 using OpenNos.GameObject.Packets.ClientPackets;
 using OpenNos.Master.Library.Client;
 using System;
+using OpenNos.Core.Handling;
+using OpenNos.GameObject.Networking;
 using System.Configuration;
 using System.Linq;
 
@@ -131,6 +133,11 @@ namespace OpenNos.Handler
                                         Logger.Error("General Error SessionId: " + newSessionId, ex);
                                     }
                                     string[] clientData = loginPacket.ClientData.Split('.');
+
+                                    if (clientData.Length < 2)
+                                    {
+                                        clientData = loginPacket.ClientDataOld.Split('.');
+                                    }
                                     bool ignoreUserName = short.TryParse(clientData[3], out short clientVersion) ? (clientVersion < 3075 || ConfigurationManager.AppSettings["UseOldCrypto"] == "true") : false;
                                     _session.SendPacket(BuildServersPacket(user.Name, newSessionId, ignoreUserName));
                                 }

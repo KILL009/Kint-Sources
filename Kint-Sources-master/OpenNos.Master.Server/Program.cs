@@ -15,6 +15,7 @@
 using log4net;
 using OpenNos.Core;
 using OpenNos.DAL.EF.Helpers;
+using OpenNos.Master.Library.Client;
 using OpenNos.Master.Library.Interface;
 using OpenNos.SCS.Communication.Scs.Communication.EndPoints.Tcp;
 using OpenNos.SCS.Communication.ScsServices.Service;
@@ -22,17 +23,10 @@ using System;
 using System.Configuration;
 using System.Diagnostics;
 using System.Globalization;
+using System.Reactive.Linq;
 using System.Reflection;
 using System.Threading;
-using OpenNos.DAL;
-using OpenNos.Data;
-using OpenNos.GameObject;
-using OpenNos.Master.Library.Data;
-using System.Net;
-using System.Reactive.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-
+using System.Threading.Tasks;
 
 namespace OpenNos.Master.Server
 {
@@ -56,7 +50,7 @@ namespace OpenNos.Master.Server
                 _isDebug = true;
 #endif
                 CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo("en-US");
-                Console.Title = $"Master Server{(_isDebug ? " Development Environment" : string.Empty)}";
+               
 
                 bool ignoreStartupMessages = false;
                 bool ignoreTelemetry = false;
@@ -107,12 +101,23 @@ namespace OpenNos.Master.Server
                     _server.AddService<IConfigurationService, ConfigurationService>(new ConfigurationService());
                     _server.AddService<IMailService, MailService>(new MailService());
                     _server.AddService<IMallService, MallService>(new MallService());
+                    _server.AddService<IAdminToolService, AdminToolService>(new AdminToolService());
                     _server.AddService<IAuthentificationService, AuthentificationService>(new AuthentificationService());
                     _server.ClientConnected += onClientConnected;
                     _server.ClientDisconnected += onClientDisconnected;
 
                     _server.Start();
+                    // AUTO SESSION KICK
+                    Observable.Interval(TimeSpan.FromMinutes(3)).Subscribe(x =>
+                    {
+                        Parallel.ForEach(
+                            MSManager.Instance.ConnectedAccounts.Where(s =>
+                                s.LastPulse.AddMinutes(3) <= DateTime.Now),
+                            connection => { CommunicationServiceClient.Instance.KickSession(connection.AccountId, null); });
+                    });
+
                     Logger.Info(Language.Instance.GetMessageFromKey("STARTED"));
+                    Console.Title = $"[Source#] Master - Players : {MSManager.Instance.ConnectedAccounts.Count}";
                 }
                 catch (Exception ex)
                 {

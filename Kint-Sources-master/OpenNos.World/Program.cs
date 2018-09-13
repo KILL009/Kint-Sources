@@ -29,11 +29,8 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using OpenNos.ChatLog.Networking;
-using OpenNos.DAL;
-using OpenNos.Data;
 using System.Linq;
-using System.Net;
-
+using OpenNos.World.Resource;
 
 namespace OpenNos.World
 {
@@ -46,7 +43,8 @@ namespace OpenNos.World
         private static EventHandler _exitHandler;
 
         private static bool _isDebug;
-       
+        
+
 
         #endregion
 
@@ -77,7 +75,7 @@ namespace OpenNos.World
             _isDebug = true;
             Thread.Sleep(1000);
 #endif
-            CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo("en-US");
+            
             Console.Title = $"World Server{(_isDebug ? " Development Environment" : string.Empty)}";
 
             string isA4 = string.Empty;
@@ -196,12 +194,14 @@ namespace OpenNos.World
             }
 
             ServerManager.Instance.ServerGroup = ConfigurationManager.AppSettings["ServerGroup"];
-            int sessionLimit = 100; // Needs workaround
+            int sessionLimit = 500; // Needs workaround
             int? newChannelId = CommunicationServiceClient.Instance.RegisterWorldServer(new SerializableWorldServer(ServerManager.Instance.WorldId, ConfigurationManager.AppSettings["IPAddress"], port, sessionLimit, ServerManager.Instance.ServerGroup));
 
             if (newChannelId.HasValue)
             {
                 ServerManager.Instance.ChannelId = newChannelId.Value;
+                
+                ServerManager.Instance.AccountLimit = sessionLimit;
                 MailServiceClient.Instance.Authenticate(authKey, ServerManager.Instance.WorldId);
                 ConfigurationServiceClient.Instance.Authenticate(authKey, ServerManager.Instance.WorldId);
                 ServerManager.Instance.Configuration = ConfigurationServiceClient.Instance.GetConfigurationObject();
@@ -210,6 +210,8 @@ namespace OpenNos.World
                     ChatLogServiceClient.Instance.Authenticate(ConfigurationManager.AppSettings["ChatLogKey"]);
                 }
                 ServerManager.Instance.MallApi = new GameObject.Helpers.MallAPIHelper(ServerManager.Instance.Configuration.MallBaseURL);
+               
+                   
             }
             else
             {
