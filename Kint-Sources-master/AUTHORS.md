@@ -17,6 +17,10 @@ xDarkGunnerx
 LOLToke
 LadySusy
 KILL009
+BlowaXD
+Elendan
+Kraken
+Syleze
 
 # Helpers
 juhgiyo for his JPS+ algorithm  
