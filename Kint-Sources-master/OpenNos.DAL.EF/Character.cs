@@ -110,6 +110,8 @@ namespace OpenNos.DAL.EF
 
         public int HeroLevel { get; set; }
 
+        public int prestigeLevel { get; set; }
+
         public long HeroXp { get; set; }
 
         public int Hp { get; set; }

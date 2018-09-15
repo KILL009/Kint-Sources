@@ -107,6 +107,7 @@ namespace OpenNos.GameObject
             HairStyle = input.HairStyle;
             HeroChatBlocked = input.HeroChatBlocked;
             HeroLevel = input.HeroLevel;
+            prestigeLevel = input.prestigeLevel;
             HeroXp = input.HeroXp;
             Hp = input.Hp;
             HpBlocked = input.HpBlocked;
@@ -160,10 +161,7 @@ namespace OpenNos.GameObject
             ShellEffectSecondary = new ConcurrentBag<ShellEffectDTO>();
         }
 
-        public void ChangeClassPrestige(ClassType adventurer)
-        {
-            throw new NotImplementedException();
-        }
+      
 
         #endregion
 
@@ -571,12 +569,18 @@ namespace OpenNos.GameObject
         public int Point3 { get; set; }
 
         public bool CanAttack { get; set; }
-        public int Prestige { get; set; }
+       
         public bool isCommand { get; private set; }
+
         public IDisposable DragonModeObservable { get;  set; }
+
         public int RetainedHp { get; internal set; }
+
         public int AccumulatedDamage { get;  set; }
+
         public IDisposable DotDebuff { get;  set; }
+
+        public int PrestigeLevl { get; set; }
 
 
         #endregion
@@ -1605,7 +1609,7 @@ namespace OpenNos.GameObject
 
 
 
-        public string GenerateCInfo() => $"c_info {(Authority == AuthorityType.Moderator && !Undercover ? "[Support]" + Name : Authority == AuthorityType.Donador ? Name + "[DT]" : Name)} - -1 {(Family != null && !Undercover ? $"{Family.FamilyId} {Family.Name}({Language.Instance.GetMessageFromKey(FamilyCharacter.Authority.ToString().ToUpper())})" : "-1 -")} {CharacterId} {(Invisible ? 6 : Undercover ? (byte)AuthorityType.User : Authority < AuthorityType.User ? (byte)AuthorityType.User : (byte)Authority)} {(byte)Gender} {(byte)HairStyle} {(byte)HairColor} {(byte)Class} {(GetDignityIco() == 1 ? GetReputationIco() : -GetDignityIco())} {(Authority == AuthorityType.Moderator ? 500 : Compliment)} {(UseSp || IsVehicled ? Morph : 0)} {(Invisible ? 1 : 0)} {Family?.FamilyLevel ?? 0} {(UseSp ? MorphUpgrade : 0)} {ArenaWinner}";
+        public string GenerateCInfo() => $"c_info {(Authority == AuthorityType.Moderator && !Undercover ? "[Support]" + Name : Authority == AuthorityType.Donador ? Name + "[DT]"  : Name)} - -1 {(Family != null && !Undercover ? $"{Family.FamilyId} {Family.Name}({Language.Instance.GetMessageFromKey(FamilyCharacter.Authority.ToString().ToUpper())})" : "-1 -")} {CharacterId} {(Invisible ? 6 : Undercover ? (byte)AuthorityType.User : Authority < AuthorityType.User ? (byte)AuthorityType.User : (byte)Authority)} {(byte)Gender} {(byte)HairStyle} {(byte)HairColor} {(byte)Class} {(GetDignityIco() == 1 ? GetReputationIco() : -GetDignityIco())} {(Authority == AuthorityType.Moderator ? 500 : Compliment)} {(UseSp || IsVehicled ? Morph : 0)} {(Invisible ? 1 : 0)} {Family?.FamilyLevel ?? 0} {(UseSp ? MorphUpgrade : 0)} {ArenaWinner}";
 
         public string GenerateCMap() => $"c_map 0 {MapInstance.Map.MapId} {(MapInstance.MapInstanceType != MapInstanceType.BaseMapInstance ? 1 : 0)}";
 

@@ -516,6 +516,10 @@
     <Compile Include="Migrations\201809050220396_annais11.Designer.cs">
       <DependentUpon>201809050220396_annais11.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201809151758425_annais12.cs" />
+    <Compile Include="Migrations\201809151758425_annais12.Designer.cs">
+      <DependentUpon>201809151758425_annais12.cs</DependentUpon>
+    </Compile>
     <Compile Include="MinigameLog.cs" />
     <Compile Include="Quest.cs" />
     <Compile Include="QuestProgress.cs" />
@@ -1174,6 +1178,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201809050220396_annais11.resx">
       <DependentUpon>201809050220396_annais11.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201809151758425_annais12.resx">
+      <DependentUpon>201809151758425_annais12.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

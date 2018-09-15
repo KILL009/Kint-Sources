@@ -96,43 +96,51 @@ namespace OpenNos.Handler
                 Session.SendPacket(Session.Character.GenerateSay(BenchmarkPacket.ReturnHelp(), 10));
             }
         }
-                     
+
         /// $Prestige
         /// </summary>
         /// <param name="prestigePacket"></param>
         public void Prestige(PrestigePacket PrestigePacket)
         {
-            if (Session.CurrentMapInstance.MapInstanceType == MapInstanceType.BaseMapInstance)
+            if (PrestigePacket != null)
             {
-                if (Session.Character.Level == ServerManager.Instance.Configuration.MaxLevel
-                    && Session.Character.JobLevel == ServerManager.Instance.Configuration.MaxJobLevel
-                    && Session.Character.HeroLevel == ServerManager.Instance.Configuration.MaxHeroLevel)
+                if (Session.Character.Level == 99
+                    && Session.Character.HeroLevel == 50
+                    && Session.Character.Inventory.CountItemInAnInventory(InventoryType.Wear) == 0)
                 {
-                    if (Session.Character.Inventory.All(i => i.Type != InventoryType.Wear))
+                    Session.Character.prestigeLevel += 1;
+                    Session.Character.Save();
+                    CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage
                     {
-                        Session.Character.ChangeClassPrestige(ClassType.Adventurer);
-                        Session.Character.Prestige += 1;
-                        ServerManager.Instance.ChangeMap(Session.Character.CharacterId);
-                        RewardsHelper.Instance.GetLevelUpRewards(Session);
-                        Logger.LogEvent(Session.Character.Name, Session.IpAddress);
-                    }
-                    else
-                    {
-                        Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("EQ_NOT_EMPTY"), 0));
-                    }
+                        DestinationCharacterId = null,
+                        SourceCharacterId = Session.Character.CharacterId,
+                        SourceWorldId = ServerManager.Instance.WorldId,
+                        Message = $"Player {Session.Character.Name} Prestigio to + {Session.Character.PrestigeLevl}",
+                        Type = MessageType.Shout
+                    });
+                    Session.Character.GiftAdd(5422, 5);
+                    Session.Character.Level = 1;
+                    Session.Character.JobLevel = 1;
+                    Session.Character.HeroLevel = 1;
+                    Session.Character.GenerateLev();
+                    ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId,
+                        Session.Character.MapInstanceId, Session.Character.PositionX, Session.Character.PositionY,
+                        true);
+                    Session.SendPacket(StaticPacketHelper.Cancel(2));
                 }
                 else
                 {
-                    Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_LEVEL_PRESTIGE"), 0));
+                    Session.SendPacket(Session.Character.GenerateSay("Debes desequipar todos tus item y ser levl 99 H50", 15));
                 }
             }
         }
 
-        /// <summary>
-        /// $GetExp
-        /// </summary>
-        /// <param name="GetExpPacket"></param>
-        public void GetExp(GetExpPacket packet)
+
+             /// <summary>
+            /// $GetExp
+           /// </summary>
+          /// <param name="GetExpPacket"></param>
+         public void GetExp(GetExpPacket packet)
         {
             Session.SendPacket(Session.Character.GenerateSay("=======Level Exp=======", 15));
             Session.SendPacket(Session.Character.GenerateSay("Current XP: " + Session.Character.LevelXp, 15));

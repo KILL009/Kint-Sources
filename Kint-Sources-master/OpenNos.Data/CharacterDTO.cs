@@ -70,6 +70,8 @@ namespace OpenNos.Data
 
         public int HeroLevel { get; set; }
 
+        public int prestigeLevel { get; set; }
+
         public long HeroXp { get; set; }
 
         public int Hp { get; set; }
@@ -135,7 +137,8 @@ namespace OpenNos.Data
         public bool WhisperBlocked { get; set; }
 
         public int NosheatDollar { get; set; }
-        public int prestige { get; set; }
+
+    
 
 
         #endregion
