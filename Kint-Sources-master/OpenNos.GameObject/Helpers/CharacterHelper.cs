@@ -39,6 +39,8 @@ namespace OpenNos.GameObject.Helpers
 
         private static double[] _heroXpData;
 
+        private static double[] _pretigeXpData;
+
         private static int[,] _hitDef;
 
         private static int[,] _hitDodge;
@@ -768,6 +770,18 @@ namespace OpenNos.GameObject.Helpers
             for (int i = 1; i < _heroXpData.Length; i++)
             {
                 _heroXpData[i] = Convert.ToInt64(_heroXpData[i - 1] * 1.08);
+            }
+        }
+
+        private static void loadPrestigeXpData()
+
+        {
+            // Load Prestige
+            _pretigeXpData = new double[256];
+            _pretigeXpData[0] = 949560;
+            for (int i = 1; i < _heroXpData.Length; i++)
+            {
+                _pretigeXpData[i] = Convert.ToInt64(_pretigeXpData[i - 1] * 1.08);
             }
         }
 
