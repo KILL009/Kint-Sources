@@ -127,7 +127,9 @@ namespace OpenNos.GameObject
         public bool Started { get; internal set; }
 
         public long Target { get; set; }
+
         public bool Invisible { get; set; }
+
         private short FirstX { get; set; }
 
         private short FirstY { get; set; }

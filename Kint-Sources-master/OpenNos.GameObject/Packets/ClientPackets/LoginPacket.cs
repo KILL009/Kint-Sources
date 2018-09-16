@@ -9,7 +9,7 @@ namespace OpenNos.GameObject.Packets.ClientPackets
     {
         #region Properties
 
-        [PacketIndex(0)]
+        [PacketIndex(0)]     
         public int Number { get; set; }
 
         [PacketIndex(1)]
@@ -18,14 +18,16 @@ namespace OpenNos.GameObject.Packets.ClientPackets
         [PacketIndex(2)]
         public string Password { get; set; }
 
-        [PacketIndex(4)]
-        public string ClientDataOld { get; set; }
+        [PacketIndex(3)]
+        public Guid? ClientId { get; set; }
 
-        [PacketIndex(5)]
+        [PacketIndex(4)]
         public string ClientData { get; set; }
 
+        [PacketIndex(5)]
+        public string ClientDataOld  { get; set; }
 
 
-        #endregion
-    }
+    #endregion
+}
 }

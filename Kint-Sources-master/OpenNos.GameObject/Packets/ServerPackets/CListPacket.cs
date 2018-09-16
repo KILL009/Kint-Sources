@@ -62,6 +62,9 @@ namespace OpenNos.GameObject
         [PacketIndex(16)]
         public byte Unknown3 { get; set; }
 
+        [PacketIndex(17)]
+        public byte prestigeLevel { get; set; }
+
         #endregion
     }
 }

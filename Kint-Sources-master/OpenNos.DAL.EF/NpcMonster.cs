@@ -89,7 +89,11 @@ namespace OpenNos.DAL.EF
 
         public byte HeroLevel { get; set; }
 
+        public byte prestigeLevel { get; set; }
+
         public int HeroXP { get; set; }
+
+        public int PrestigeXp { get; set; }
 
         public bool IsHostile { get; set; }
 

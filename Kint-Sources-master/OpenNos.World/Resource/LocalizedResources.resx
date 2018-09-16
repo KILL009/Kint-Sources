@@ -1708,4 +1708,13 @@
   <data name="RECEIVE_SP" xml:space="preserve">
     <value>You received a new SP ! Congratulations !</value>
   </data>
+  <data name="PRESTIGELEVEL_CHANGED" xml:space="preserve">
+    <value>Nivel de Prestige ha sido cambiado!</value>
+  </data>
+  <data name="PRESTIGEXP_RATE_CHANGED" xml:space="preserve">
+    <value>¡La tasa de Prestige xp ha sido cambiada!</value>
+  </data>
+  <data name="PRESTIGE_XPRATE_NOW" xml:space="preserve">
+    <value>Prestige Rate</value>
+  </data>
 </root>

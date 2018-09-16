@@ -3616,6 +3616,33 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Prestige Rate.
+        /// </summary>
+        internal static string PRESTIGE_XPRATE_NOW {
+            get {
+                return ResourceManager.GetString("PRESTIGE_XPRATE_NOW", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Nivel de Prestige ha sido cambiado!.
+        /// </summary>
+        internal static string PRESTIGELEVEL_CHANGED {
+            get {
+                return ResourceManager.GetString("PRESTIGELEVEL_CHANGED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a ¡La tasa de Prestige xp ha sido cambiada!.
+        /// </summary>
+        internal static string PRESTIGEXP_RATE_CHANGED {
+            get {
+                return ResourceManager.GetString("PRESTIGEXP_RATE_CHANGED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a El límite de precio se excede..
         /// </summary>
         internal static string PRICE_EXCEEDED {
