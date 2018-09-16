@@ -649,6 +649,26 @@ namespace OpenNos.Handler
                             ReceiverType.AllExceptMe);
                         session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 6), session.Character.MapX, session.Character.MapY);
                         session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 198), session.Character.MapX, session.Character.MapY);
+
+                    }
+                    break;
+                case 4:
+                    {
+                        session.Character.prestigeLevel = level;
+                        session.Character.PrestigeXp = 0;
+                        Session.SendPacket(
+                            UserInterfaceHelper.GenerateMsg(
+                                Language.Instance.GetMessageFromKey("PRESTIGELEVEL_CHANGED"), 0));
+                        session.SendPacket(session.Character.GenerateLev());
+                        session.SendPacket(session.Character.GenerateStatInfo());
+                        session.SendPacket(session.Character.GenerateStatChar());
+                        session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateIn(),
+                            ReceiverType.AllExceptMe);
+                        session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateGidx(),
+                            ReceiverType.AllExceptMe);
+                        session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 6), session.Character.MapX, session.Character.MapY);
+                        session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 198), session.Character.MapX, session.Character.MapY);
+
                     }
                     break;
             }
@@ -1390,6 +1410,39 @@ public void Ban(BanPacket banPacket)
             else
             {
                 Session.SendPacket(Session.Character.GenerateSay(ChangeHeroLevelPacket.ReturnHelp(), 10));
+            }
+        }
+
+        /// <summary>
+        /// $PrestigeLvl Command
+        /// </summary>
+        /// <param name="changeprestigeLevelPacket"></param>
+        public void ChangeprestigeLevel(ChangeprestigeLevelPacket changeprestigeLevelPacket)
+        {
+            if (changeprestigeLevelPacket != null)
+            {
+                Logger.LogUserEvent("GMCOMMAND", Session.GenerateIdentity(), $"[PrestigeLvl]PrestigeLevel: {changeprestigeLevelPacket.prestigeLevel}");
+
+                if (changeprestigeLevelPacket.prestigeLevel <= 255)
+                {
+                    Session.Character.prestigeLevel = changeprestigeLevelPacket.prestigeLevel;
+                    Session.Character.PrestigeXp = 0;
+                    Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("PRESTIGELEVEL_CHANGED"), 0));
+                    Session.SendPacket(Session.Character.GenerateLev());
+                    Session.SendPacket(Session.Character.GenerateStatChar());
+                    Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateIn(), ReceiverType.AllExceptMe);
+                    Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateGidx(), ReceiverType.AllExceptMe);
+                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId, 6), Session.Character.PositionX, Session.Character.PositionY);
+                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId, 198), Session.Character.PositionX, Session.Character.PositionY);
+                }
+                else
+                {
+                    Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("WRONG_VALUE"), 0));
+                }
+            }
+            else
+            {
+                Session.SendPacket(Session.Character.GenerateSay(ChangeprestigeLevelPacket.ReturnHelp(), 10));
             }
         }
 
@@ -2262,7 +2315,7 @@ public void Ban(BanPacket banPacket)
 
                 if (heroXpRatePacket.Value <= 1000)
                 {
-                    ServerManager.Instance.Configuration.RateHeroicXP = heroXpRatePacket.Value;
+                    ServerManager.Instance.Configuration.RatePrestigeXP = heroXpRatePacket.Value;
                     Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("HEROXP_RATE_CHANGED"), 0));
                 }
                 else
@@ -2273,6 +2326,32 @@ public void Ban(BanPacket banPacket)
             else
             {
                 Session.SendPacket(Session.Character.GenerateSay(HeroXpRatePacket.ReturnHelp(), 10));
+            }
+        }
+
+        /// <summary>
+        /// $PrestigeXPRate Command
+        /// </summary>
+        /// <param name="PrestigeXpRatePacket"></param>
+        public void PrestigeXpRate(PrestigeXpRatePacket PrestigeXpRatePacket)
+        {
+            if (PrestigeXpRatePacket != null)
+            {
+                Logger.LogUserEvent("GMCOMMAND", Session.GenerateIdentity(), $"[PrestigeXPRate]Value: {PrestigeXpRatePacket.Value}");
+
+                if (PrestigeXpRatePacket.Value <= 1000)
+                {
+                    ServerManager.Instance.Configuration.RatePrestigeXP = PrestigeXpRatePacket.Value;
+                    Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("PRESTIGEXP_RATE_CHANGED"), 0));
+                }
+                else
+                {
+                    Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("WRONG_VALUE"), 0));
+                }
+            }
+            else
+            {
+                Session.SendPacket(Session.Character.GenerateSay(PrestigeXpRatePacket.ReturnHelp(), 10));
             }
         }
 
@@ -3353,7 +3432,8 @@ public void Ban(BanPacket banPacket)
             Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("DROP_RATE_NOW")}: {ServerManager.Instance.Configuration.RateDrop} ", 13));
             Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("GOLD_RATE_NOW")}: {ServerManager.Instance.Configuration.RateGold} ", 13));
             Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("GOLD_DROPRATE_NOW")}: {ServerManager.Instance.Configuration.RateGoldDrop} ", 13));
-            Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("HERO_XPRATE_NOW")}: {ServerManager.Instance.Configuration.RateHeroicXP} ", 13));
+            Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("HERO_XPRATE_NOW")}: {ServerManager.Instance.Configuration.RatePrestigeXP} ", 13));
+            Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("PRESTIGE_XPRATE_NOW")}: {ServerManager.Instance.Configuration.RatePrestigeXP} ", 13));
             Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("FAIRYXP_RATE_NOW")}: {ServerManager.Instance.Configuration.RateFairyXP} ", 13));
             Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("SERVER_WORKING_TIME")}: {(Process.GetCurrentProcess().StartTime - DateTime.Now).ToString(@"d\ hh\:mm\:ss")} ", 13));
 
