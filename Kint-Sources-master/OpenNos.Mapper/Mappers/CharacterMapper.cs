@@ -42,6 +42,7 @@ namespace OpenNos.Mapper.Mappers
             output.HairStyle = input.HairStyle;
             output.HeroChatBlocked = input.HeroChatBlocked;
             output.HeroLevel = input.HeroLevel;
+            output.prestigeLevel = input.prestigeLevel;
             output.HeroXp = input.HeroXp;
             output.Hp = input.Hp;
             output.HpBlocked = input.HpBlocked;
