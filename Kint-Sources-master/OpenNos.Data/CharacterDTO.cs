@@ -74,6 +74,8 @@ namespace OpenNos.Data
 
         public long HeroXp { get; set; }
 
+        public long PrestigeXp { get; set; }
+
         public int Hp { get; set; }
 
         public bool HpBlocked { get; set; }
