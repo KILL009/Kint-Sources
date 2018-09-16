@@ -58,6 +58,17 @@ namespace OpenNos.GameObject.Helpers
             return 0;
         }
 
+        public void GetPrestigeRewards(ClientSession session)
+        {
+            switch (session.Character.prestigeLevel)
+            {
+                case 1:
+                    session.Character.GiftAdd(1010, 50);
+                    session.Character.GiftAdd(1452, 2); 
+                    break;
+            }
+        }
+
         public void GetLevelUpRewards(ClientSession session)
         {
             switch (session.Character.Level)
