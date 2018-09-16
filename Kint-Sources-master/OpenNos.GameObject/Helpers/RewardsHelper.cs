@@ -127,14 +127,123 @@ namespace OpenNos.GameObject.Helpers
                             session.Character.GiftAdd(905, 1);
                             break;
                     }
+                    break;
+                case 35:
+                    switch (session.Character.Class)
+                    {
+                        case ClassType.Swordman:
+                            session.Character.GiftAdd(902, 1);
+                            break;
+                        case ClassType.Archer:
+                            session.Character.GiftAdd(904, 1);
+                            break;
+                        case ClassType.Magician:
+                            session.Character.GiftAdd(906, 1);
+                            break;
+                    }
+                    break;
+                case 50:
+                    switch (session.Character.Class)
+                    {
 
+                        case ClassType.Swordman:
+                            session.Character.GiftAdd(909, 1);
+                            break;
+                        case ClassType.Archer:
+                            session.Character.GiftAdd(911, 1);
+                            break;
+                        case ClassType.Magician:
+                            session.Character.GiftAdd(913, 1);
+                            break;
+                    }
+                    break;
+                case 65:
+                    switch (session.Character.Class)
+                    {
+
+                        case ClassType.Swordman:
+                            session.Character.GiftAdd(910, 1);
+                            break;
+                        case ClassType.Archer:
+                            session.Character.GiftAdd(912, 1);
+                            break;
+                        case ClassType.Magician:
+                            session.Character.GiftAdd(914, 1);
+                            break;
+                    }
+                    break;
+
+                case 75:
+                    switch (session.Character.Class)
+                    {
+
+                        case ClassType.Swordman:
+                            session.Character.GiftAdd(4500, 1);
+                            break;
+                        case ClassType.Archer:
+                            session.Character.GiftAdd(4501, 1);
+                            break;
+                        case ClassType.Magician:
+                            session.Character.GiftAdd(4502, 1);
+                            break;
+                    }
+                    break;
+
+                case 80:
+                    switch (session.Character.Class)
+                    {
+
+                        case ClassType.Swordman:
+                            session.Character.GiftAdd(4497, 1);
+                            break;
+                        case ClassType.Archer:
+                            session.Character.GiftAdd(4498, 1);
+                            break;
+                        case ClassType.Magician:
+                            session.Character.GiftAdd(4499, 1);
+                            break;
+                    }
+                    break;
+                case 90:
+                    switch (session.Character.Class)
+                    {
+
+                        case ClassType.Swordman:
+                            session.Character.GiftAdd(4493, 1);
+                            break;
+                        case ClassType.Archer:
+                            session.Character.GiftAdd(4492, 1);
+                            break;
+                        case ClassType.Magician:
+                            session.Character.GiftAdd(4491, 1);
+                            break;
+                    }
+                    break;
+
+                case 100:
+                    switch (session.Character.Class)
+                    {
+
+                        case ClassType.Swordman:
+                            session.Character.GiftAdd(4489, 1);
+                            break;
+                        case ClassType.Archer:
+                            session.Character.GiftAdd(4488, 1);
+                            break;
+                        case ClassType.Magician:
+                            session.Character.GiftAdd(4487, 1);
+                            break;
+                    }
                     break;
             }
         }
 
+
+
+
         #endregion
 
-        #region Singleton
+                    #region Singleton
 
         private static RewardsHelper _instance;
 
