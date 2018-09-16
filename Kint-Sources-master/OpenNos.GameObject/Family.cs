@@ -85,7 +85,7 @@ namespace OpenNos.GameObject
                 case FamilyLogType.LevelUp:
                     value = $"{characterName}|{level}";
                     break;
-
+             
                 case FamilyLogType.RaidWon:
                     value = raidType.ToString();
                     break;

@@ -109,6 +109,7 @@ namespace OpenNos.GameObject
             HeroLevel = input.HeroLevel;
             prestigeLevel = input.prestigeLevel;
             HeroXp = input.HeroXp;
+            PrestigeXp = input.PrestigeXp;
             Hp = input.Hp;
             HpBlocked = input.HpBlocked;
             JobLevel = input.JobLevel;
@@ -1796,7 +1797,7 @@ namespace OpenNos.GameObject
                     foreach (FamilyCharacter TargetCharacter in Family?.FamilyCharacters)
                     {
                         bool isOnline = CommunicationServiceClient.Instance.IsCharacterConnected(ServerManager.Instance.ServerGroup, TargetCharacter.CharacterId);
-                        str += $" {TargetCharacter.Character.CharacterId}|{Family.FamilyId}|{TargetCharacter.Character.Name}|{TargetCharacter.Character.Level}|{(byte)TargetCharacter.Character.Class}|{(byte)TargetCharacter.Authority}|{(byte)TargetCharacter.Rank}|{(isOnline ? 1 : 0)}|{TargetCharacter.Character.HeroLevel}";
+                        str += $" {TargetCharacter.Character.CharacterId}|{Family.FamilyId}|{TargetCharacter.Character.Name}|{TargetCharacter.Character.Level}|{(byte)TargetCharacter.Character.Class}|{(byte)TargetCharacter.Authority}|{(byte)TargetCharacter.Rank}|{(isOnline ? 1 : 0)}|{TargetCharacter.Character.HeroLevel}|{TargetCharacter.Character.prestigeLevel}";
                     }
                 }
             }
@@ -2031,7 +2032,7 @@ namespace OpenNos.GameObject
                 }
                 fairy = Inventory.LoadBySlotAndType((byte)EquipmentType.Fairy, InventoryType.Wear);
             }
-            return $"in 1 {(Authority == AuthorityType.Moderator && !Undercover ? $"[Support][P{prestigeLevel}]" : Authority == AuthorityType.User ? $"[P{prestigeLevel}]"  + _name : Authority == AuthorityType.Donador ?   _name + $"[DT][P{prestigeLevel}]" :  _name)} - {CharacterId} {PositionX} {PositionY} {Direction} {(Undercover ? (byte)AuthorityType.User :  Authority < AuthorityType.User ?  (byte)AuthorityType.User : (byte)Authority)} {(byte)Gender} {(byte)HairStyle} {color} {(byte)Class} {GenerateEqListForPacket()} {Math.Ceiling(Hp / HPLoad() * 100)} {Math.Ceiling(Mp / MPLoad() * 100)} {(IsSitting ? 1 : 0)} {(Group?.GroupType == GroupType.Group ? (Group?.GroupId ?? -1) : -1)} {(fairy != null && !Undercover ? 4 : 0)} {fairy?.Item.Element ?? 0} 0 {fairy?.Item.Morph ?? 0} 0 {(UseSp || IsVehicled ? Morph : 0)} {GenerateEqRareUpgradeForPacket()} {(!Undercover ? (foe ? -1 : Family?.FamilyId ?? -1) : -1)} {(!Undercover ? (foe ? _name : Family?.Name ?? "-") : "-")} {(GetDignityIco() == 1 ? GetReputationIco() : -GetDignityIco())} {(Invisible ? 1 : 0)} {(UseSp ? MorphUpgrade : 0)} {_faction} {(UseSp ? MorphUpgrade2 : 0)} {Level} {Family?.FamilyLevel ?? 0} {ArenaWinner} {(Authority == AuthorityType.Moderator && !Undercover ? 500 : Compliment)} {Size} {HeroLevel}";
+            return $"in 1 {(Authority == AuthorityType.Moderator && !Undercover ? $"[Support][P{prestigeLevel}]" : Authority == AuthorityType.User ? $"[P{prestigeLevel}]"  + _name : Authority == AuthorityType.Donador ?   _name + $"[DT][P{prestigeLevel}]" :  _name)} - {CharacterId} {PositionX} {PositionY} {Direction} {(Undercover ? (byte)AuthorityType.User :  Authority < AuthorityType.User ?  (byte)AuthorityType.User : (byte)Authority)} {(byte)Gender} {(byte)HairStyle} {color} {(byte)Class} {GenerateEqListForPacket()} {Math.Ceiling(Hp / HPLoad() * 100)} {Math.Ceiling(Mp / MPLoad() * 100)} {(IsSitting ? 1 : 0)} {(Group?.GroupType == GroupType.Group ? (Group?.GroupId ?? -1) : -1)} {(fairy != null && !Undercover ? 4 : 0)} {fairy?.Item.Element ?? 0} 0 {fairy?.Item.Morph ?? 0} 0 {(UseSp || IsVehicled ? Morph : 0)} {GenerateEqRareUpgradeForPacket()} {(!Undercover ? (foe ? -1 : Family?.FamilyId ?? -1) : -1)} {(!Undercover ? (foe ? _name : Family?.Name ?? "-") : "-")} {(GetDignityIco() == 1 ? GetReputationIco() : -GetDignityIco())} {(Invisible ? 1 : 0)} {(UseSp ? MorphUpgrade : 0)} {_faction} {(UseSp ? MorphUpgrade2 : 0)} {Level} {Family?.FamilyLevel ?? 0} {ArenaWinner} {(Authority == AuthorityType.Moderator && !Undercover ? 500 : Compliment)} {Size} {HeroLevel} {prestigeLevel}";
         }
 
         public string GenerateInvisible() => $"cl {CharacterId} {(Invisible ? 1 : 0)} {(InvisibleGm ? 1 : 0)}";
@@ -2286,12 +2287,12 @@ namespace OpenNos.GameObject
             {
                 specialist = Inventory.LoadBySlotAndType((byte)EquipmentType.Sp, InventoryType.Wear);
             }
-            return $"lev {Level} {(int)(Level < 100 ? LevelXp : LevelXp / 100)} {(!UseSp || specialist == null ? JobLevel : specialist.SpLevel)} {(!UseSp || specialist == null ? JobLevelXp : specialist.XP)} {(int)(Level < 100 ? XpLoad() : XpLoad() / 100)} {(!UseSp || specialist == null ? JobXPLoad() : SpXpLoad())} {Reputation} {GetCP()} {(int)(HeroLevel < 100 ? HeroXp : HeroXp / 100)} {HeroLevel} {(int)(HeroLevel < 100 ? HeroXPLoad() : HeroXPLoad() / 100)} 0";
+            return $"lev {Level} {(int)(Level < 100 ? LevelXp : LevelXp / 100)} {(!UseSp || specialist == null ? JobLevel : specialist.SpLevel)} {(!UseSp || specialist == null ? JobLevelXp : specialist.XP)} {(int)(Level < 100 ? XpLoad() : XpLoad() / 100)} {(!UseSp || specialist == null ? JobXPLoad() : SpXpLoad())} {Reputation} {GetCP()} {(int)(HeroLevel < 100 ? HeroXp : HeroXp / 100)} {HeroLevel} {(int)(HeroLevel < 100 ? HeroXPLoad() : HeroXPLoad() / 100)} {(int)(prestigeLevel < 100 ? PrestigeXp : PrestigeXp / 100)} {prestigeLevel} {(int)(prestigeLevel < 100 ? PrestigeXPLoad() : PrestigeXPLoad() / 100)} 0";
         }
 
         public string GenerateLevelUp()
         {
-            Logger.LogUserEvent("LEVELUP", Session.GenerateIdentity(), $"Level: {Level} JobLevel: {JobLevel} SPLevel: {Inventory.LoadBySlotAndType((byte)EquipmentType.Sp, InventoryType.Wear)?.SpLevel} HeroLevel: {HeroLevel} MapId: {Session.CurrentMapInstance?.Map.MapId} MapX: {PositionX} MapY: {PositionY}");
+            Logger.LogUserEvent("LEVELUP", Session.GenerateIdentity(), $"Level: {Level} JobLevel: {JobLevel} SPLevel: {Inventory.LoadBySlotAndType((byte)EquipmentType.Sp, InventoryType.Wear)?.SpLevel} HeroLevel: {HeroLevel} PrestigeLevel: {prestigeLevel} MapId: {Session.CurrentMapInstance?.Map.MapId} MapX: {PositionX} MapY: {PositionY}");
             return $"levelup {CharacterId}";
         }
 
@@ -2404,7 +2405,7 @@ namespace OpenNos.GameObject
                 foreach (ClientSession groupSessionForId in grp.Characters.GetAllItems())
                 {
                     i++;
-                    str += $" 1|{groupSessionForId.Character.CharacterId}|{i}|{groupSessionForId.Character.Level}|{groupSessionForId.Character.Name}|0|{(byte)groupSessionForId.Character.Gender}|{(byte)groupSessionForId.Character.Class}|{(groupSessionForId.Character.UseSp ? groupSessionForId.Character.Morph : 0)}|{groupSessionForId.Character.HeroLevel}";
+                    str += $" 1|{groupSessionForId.Character.CharacterId}|{i}|{groupSessionForId.Character.Level}|{groupSessionForId.Character.Name}|0|{(byte)groupSessionForId.Character.Gender}|{(byte)groupSessionForId.Character.Class}|{(groupSessionForId.Character.UseSp ? groupSessionForId.Character.Morph : 0)}|{groupSessionForId.Character.HeroLevel}|{groupSessionForId.Character.prestigeLevel}";
                 }
             }
             return $"pinit {i} {str}";
@@ -2553,7 +2554,7 @@ namespace OpenNos.GameObject
             // tc_info 0 name 0 0 0 0 -1 - 0 0 0 0 0 0 0 0 0 0 0 wins deaths reput 0 0 0 morph
             // talentwin talentlose capitul rankingpoints arenapoints 0 0 ispvpprimary ispvpsecondary
             // ispvparmor herolvl desc
-            return $"tc_info {Level} {Name} {fairy?.Item.Element ?? 0} {ElementRate} {(byte)Class} {(byte)Gender} {(Family != null ? $"{Family.FamilyId} {Family.Name}({Language.Instance.GetMessageFromKey(FamilyCharacter.Authority.ToString().ToUpper())})" : "-1 -")} {GetReputationIco()} {GetDignityIco()} {(weapon != null ? 1 : 0)} {weapon?.Rare ?? 0} {weapon?.Upgrade ?? 0} {(weapon2 != null ? 1 : 0)} {weapon2?.Rare ?? 0} {weapon2?.Upgrade ?? 0} {(armor != null ? 1 : 0)} {armor?.Rare ?? 0} {armor?.Upgrade ?? 0} {Act4Kill} {Act4Dead} {Reputation} 0 0 0 {(UseSp ? Morph : 0)} {TalentWin} {TalentLose} {TalentSurrender} 0 {MasterPoints} {Compliment} {Act4Points} {(isPvpPrimary ? 1 : 0)} {(isPvpSecondary ? 1 : 0)} {(isPvpArmor ? 1 : 0)} {HeroLevel} {(string.IsNullOrEmpty(Biography) ? Language.Instance.GetMessageFromKey("NO_PREZ_MESSAGE") : Biography)}";
+            return $"tc_info {Level} {Name} {fairy?.Item.Element ?? 0} {ElementRate} {(byte)Class} {(byte)Gender} {(Family != null ? $"{Family.FamilyId} {Family.Name}({Language.Instance.GetMessageFromKey(FamilyCharacter.Authority.ToString().ToUpper())})" : "-1 -")} {GetReputationIco()} {GetDignityIco()} {(weapon != null ? 1 : 0)} {weapon?.Rare ?? 0} {weapon?.Upgrade ?? 0} {(weapon2 != null ? 1 : 0)} {weapon2?.Rare ?? 0} {weapon2?.Upgrade ?? 0} {(armor != null ? 1 : 0)} {armor?.Rare ?? 0} {armor?.Upgrade ?? 0} {Act4Kill} {Act4Dead} {Reputation} 0 0 0 {(UseSp ? Morph : 0)} {TalentWin} {TalentLose} {TalentSurrender} 0 {MasterPoints} {Compliment} {Act4Points} {(isPvpPrimary ? 1 : 0)} {(isPvpSecondary ? 1 : 0)} {(isPvpArmor ? 1 : 0)} {HeroLevel} {prestigeLevel} {(string.IsNullOrEmpty(Biography) ? Language.Instance.GetMessageFromKey("NO_PREZ_MESSAGE") : Biography)}";
         }
 
         public string GenerateRest() => $"rest 1 {CharacterId} {(IsSitting ? 1 : 0)}";
@@ -2959,7 +2960,7 @@ namespace OpenNos.GameObject
             return $"sc {type} {weaponUpgrade} {MinHit} {MaxHit} {HitRate} {HitCriticalRate} {HitCritical} {(Class == ClassType.Archer ? 1 : 0)} {secondaryUpgrade} {MinDistance} {MaxDistance} {DistanceRate} {DistanceCriticalRate} {DistanceCritical} {armorUpgrade} {Defence} {DefenceRate} {DistanceDefence} {DistanceDefenceRate} {MagicalDefence} {FireResistance} {WaterResistance} {LightResistance} {DarkResistance}";
         }
 
-        public string GenerateStatInfo() => $"st 1 {CharacterId} {Level} {HeroLevel} {(int)(Hp / (float)HPLoad() * 100)} {(int)(Mp / (float)MPLoad() * 100)} {Hp} {Mp}{Buff.GetAllItems().Aggregate(string.Empty, (current, buff) => current + $" {buff.Card.CardId}")}";
+        public string GenerateStatInfo() => $"st 1 {CharacterId} {Level} {HeroLevel} {prestigeLevel } {(int)(Hp / (float)HPLoad() * 100)} {(int)(Mp / (float)MPLoad() * 100)} {Hp} {Mp}{Buff.GetAllItems().Aggregate(string.Empty, (current, buff) => current + $" {buff.Card.CardId}")}";
 
         public TalkPacket GenerateTalk(string message)
         {
@@ -4360,6 +4361,18 @@ namespace OpenNos.GameObject
                         HeroXp += (int)((GetHXP(monsterinfo, grp) / 50) / 3D * (1 + (GetBuff(CardType.Item, (byte)AdditionalTypes.Item.EXPIncreased)[0] / 100D)));
                     }
                 }
+                if (prestigeLevel > 0 && prestigeLevel < ServerManager.Instance.Configuration.MaxPrestigeLevel)
+                {
+                    if (isMonsterOwner)
+                    {
+                        PrestigeXp += (int)((GetHXP(monsterinfo, grp) / 50) * (1 + (GetBuff(CardType.Item, (byte)AdditionalTypes.Item.EXPIncreased)[0] / 100D)));
+                    }
+                    else
+                    {
+                        PrestigeXp += (int)((GetHXP(monsterinfo, grp) / 50) / 3D * (1 + (GetBuff(CardType.Item, (byte)AdditionalTypes.Item.EXPIncreased)[0] / 100D)));
+                    }
+                }
+            
                 double experience = XpLoad();
                 while (LevelXp >= experience)
                 {
@@ -4375,6 +4388,11 @@ namespace OpenNos.GameObject
                     {
                         HeroLevel = 1;
                         HeroXp = 0;
+                    }
+                    else if (HeroLevel == ServerManager.Instance.Configuration.PrestigeStartLevel)
+                    {
+                        prestigeLevel = 1;
+                        PrestigeXp = 0;
                     }
                     Hp = (int)HPLoad();
                     Mp = (int)MPLoad();
@@ -4509,7 +4527,27 @@ namespace OpenNos.GameObject
                     Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 8), PositionX, PositionY);
                     Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 3468), PositionX, PositionY);
                 }
-                Session.SendPacket(GenerateLev());
+
+                experience = PrestigeXPLoad();
+                while (PrestigeXp >= experience)
+                {
+                    PrestigeXp -= (long)experience;
+                    prestigeLevel++;
+                    experience = PrestigeXPLoad();
+                    if (prestigeLevel >= ServerManager.Instance.Configuration.MaxPrestigeLevel)
+                    {
+                        prestigeLevel = ServerManager.Instance.Configuration.MaxPrestigeLevel;
+                        PrestigeXp = 0;
+                    }
+                    Hp = (int)HPLoad();
+                    Mp = (int)MPLoad();
+                    Session.SendPacket(GenerateStat());
+                    Session.SendPacket(GenerateLevelUp());
+                    Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("PRESTIGE_LEVELUP"), 0));
+                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 8), PositionX, PositionY);
+                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 3468), PositionX, PositionY);
+                    Session.SendPacket(GenerateLev());
+                }
             }
         }
 
@@ -4541,7 +4579,7 @@ namespace OpenNos.GameObject
                 partyPenalty = (6f / partySize) / levelSum;
             }
 
-            int heroXp = (int)Math.Round(monster.HeroXp * CharacterHelper.ExperiencePenalty(Level, monster.Level) * ServerManager.Instance.Configuration.RateHeroicXP * MapInstance.XpRate);
+            int heroXp = (int)Math.Round(monster.HeroXp * CharacterHelper.ExperiencePenalty(Level, monster.Level) * ServerManager.Instance.Configuration.HeroXpRate * MapInstance.XpRate);
 
             // divide jobexp by multiplication of partyPenalty with level e.g. 57 * 0,014...
             if (partySize > 1 && group != null)
@@ -4550,6 +4588,29 @@ namespace OpenNos.GameObject
             }
 
             return heroXp;
+        }
+
+        private int GetPXP(NpcMonsterDTO monster, Group group)
+        {
+            int partySize = 1;
+            float partyPenalty = 1f;
+
+            if (group != null)
+            {
+                int levelSum = group.Characters.Sum(g => g.Character.Level);
+                partySize = group.CharacterCount;
+                partyPenalty = (6f / partySize) / levelSum;
+            }
+
+            int PrestigeXp = (int)Math.Round(monster.PrestigeXp * CharacterHelper.ExperiencePenalty(Level, monster.Level) * ServerManager.Instance.Configuration.RatePrestigeXP * MapInstance.XpRate);
+
+            // divide jobexp by multiplication of partyPenalty with level e.g. 57 * 0,014...
+            if (partySize > 1 && group != null)
+            {
+                PrestigeXp = (int)Math.Round(PrestigeXp / (prestigeLevel * partyPenalty));
+            }
+
+            return PrestigeXp;
         }
 
         private int GetJXP(NpcMonsterDTO monster, Group group)
@@ -4684,6 +4745,8 @@ namespace OpenNos.GameObject
         }
 
         private double HeroXPLoad() => HeroLevel == 0 ? 1 : CharacterHelper.HeroXpData[HeroLevel - 1];
+
+        private double PrestigeXPLoad() => prestigeLevel == 0 ? 1 : CharacterHelper.PrestigeXpData[prestigeLevel - 1];
 
         private double JobXPLoad() => Class == (byte)ClassType.Adventurer ? CharacterHelper.FirstJobXPData[JobLevel - 1] : CharacterHelper.SecondJobXPData[JobLevel - 1];
 
