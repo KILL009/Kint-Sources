@@ -249,12 +249,9 @@ namespace OpenNos.GameObject.Helpers
             }
         }
 
-
-
-
         #endregion
 
-                    #region Singleton
+        #region Singleton
 
         private static RewardsHelper _instance;
 
