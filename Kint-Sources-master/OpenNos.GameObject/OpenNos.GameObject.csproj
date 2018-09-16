@@ -589,6 +589,7 @@
     <Compile Include="Packets\CommandPackets\BenchmarkPacket.cs" />
     <Compile Include="Packets\CommandPackets\AddPartnerPacket.cs" />
     <Compile Include="Packets\CommandPackets\BankPacket.cs" />
+    <Compile Include="Packets\CommandPackets\ChangeprestigeLevelPacket.cs" />
     <Compile Include="Packets\CommandPackets\CharacterPacket.cs" />
     <Compile Include="Packets\CommandPackets\ClearMapPacket.cs" />
     <Compile Include="Packets\CommandPackets\CreateRaidA4.cs" />
@@ -609,6 +610,7 @@
     <Compile Include="Packets\CommandPackets\ItemRainPacket.cs" />
     <Compile Include="Packets\CommandPackets\MaintenancePacket.cs" />
     <Compile Include="Packets\CommandPackets\PrestigePacket.cs" />
+    <Compile Include="Packets\CommandPackets\PrestigeXpRatePacket.cs" />
     <Compile Include="Packets\CommandPackets\RankDTPacket.cs" />
     <Compile Include="Packets\CommandPackets\RemoveNpcMonsterPacket.cs" />
     <Compile Include="Packets\CommandPackets\RestartAllPacket.cs" />

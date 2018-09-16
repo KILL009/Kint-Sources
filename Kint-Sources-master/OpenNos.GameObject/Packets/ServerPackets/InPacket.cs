@@ -116,6 +116,9 @@ namespace OpenNos.GameObject
         [PacketIndex(37)]
         public byte HeroLevel { get; set; }
 
+        [PacketIndex(38)]
+        public byte prestigeLevel { get; set; }
+
         #endregion
     }
 }
