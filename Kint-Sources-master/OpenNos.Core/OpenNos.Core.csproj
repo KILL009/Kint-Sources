@@ -69,6 +69,9 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=4.8.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.8.1\lib\net45\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -525,6 +528,8 @@
   <ItemGroup>
     <Compile Include="CryptoRandom.cs" />
     <Compile Include="Extension.cs" />
+    <Compile Include="Extensions\AssemblyExtension.cs" />
+    <Compile Include="Extensions\TypeExtension.cs" />
     <Compile Include="Handling\HandlerMethodReference.cs" />
     <Compile Include="Networking\Communication\ScsServices\Communication\Messages\ScsRemoteInvocationException.cs" />
     <Compile Include="Networking\Communication\Scs\Communication\Messages\ScsPingMessage.cs" />

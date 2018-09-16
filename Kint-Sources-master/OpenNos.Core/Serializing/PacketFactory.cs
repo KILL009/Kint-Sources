@@ -15,6 +15,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -297,7 +298,7 @@ namespace OpenNos.Core
         private static object DeserializeValue(Type packetPropertyType, string currentValue, PacketIndexAttribute packetIndexAttribute, MatchCollection packetMatches, bool includesKeepAliveIdentity = false)
         {
             // check for empty value and cast it to null
-            if (currentValue == "-1" || currentValue == "-" )
+            if (currentValue == "-1" || currentValue == "-" || currentValue == "NONE")
             {
                 currentValue = null;
             }
@@ -349,7 +350,7 @@ namespace OpenNos.Core
                     return Enum.Parse(packetPropertyType.GenericTypeArguments[0], currentValue);
                 }
                 
-                return Convert.ChangeType(currentValue, packetPropertyType.GenericTypeArguments[0]);
+                 return TypeDescriptor.GetConverter(packetPropertyType.GenericTypeArguments[0]).ConvertFromInvariantString(currentValue);
             }
 
             
