@@ -17,7 +17,9 @@ namespace OpenNos.Master.Library.Data
 
         public int RateXP { get; set; }
 
-        public int RateHeroicXP { get; set; }
+        public  int HeroXpRate { get; set; }
+
+        public int RatePrestigeXP { get; set; }
 
         public int RateGold { get; set; }
 
@@ -33,7 +35,11 @@ namespace OpenNos.Master.Library.Data
 
         public byte MaxHeroLevel { get; set; }
 
+        public byte MaxPrestigeLevel { get; set; }
+
         public byte HeroicStartLevel { get; set; }
+
+        public byte PrestigeStartLevel { get; set; }
 
         public byte MaxSPLevel { get; set; }
 

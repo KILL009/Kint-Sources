@@ -40,7 +40,8 @@ namespace OpenNos.Master.Server
             ConfigurationObject = new ConfigurationObject()
             {
                 RateXP = int.Parse(ConfigurationManager.AppSettings["RateXp"]),
-                RateHeroicXP = int.Parse(ConfigurationManager.AppSettings["RateHeroicXp"]),
+                RatePrestigeXP = int.Parse(ConfigurationManager.AppSettings["RatePrestigeXp"]),
+                HeroXpRate = int.Parse(ConfigurationManager.AppSettings["RateHeroicXp"]),
                 RateDrop = int.Parse(ConfigurationManager.AppSettings["RateDrop"]),
                 MaxGold = long.Parse(ConfigurationManager.AppSettings["MaxGold"]),
                 RateGoldDrop = int.Parse(ConfigurationManager.AppSettings["GoldRateDrop"]),
@@ -50,7 +51,9 @@ namespace OpenNos.Master.Server
                 MaxJobLevel = byte.Parse(ConfigurationManager.AppSettings["MaxJobLevel"]),
                 MaxSPLevel = byte.Parse(ConfigurationManager.AppSettings["MaxSPLevel"]),
                 MaxHeroLevel = byte.Parse(ConfigurationManager.AppSettings["MaxHeroLevel"]),
+                MaxPrestigeLevel = byte.Parse(ConfigurationManager.AppSettings["  MaxPrestigeLevel"]),
                 HeroicStartLevel = byte.Parse(ConfigurationManager.AppSettings["HeroicStartLevel"]),
+                PrestigeStartLevel = byte.Parse(ConfigurationManager.AppSettings["PrestigeStartLevel"]),
                 MaxUpgrade = byte.Parse(ConfigurationManager.AppSettings["MaxUpgrade"]),
                 SceneOnCreate = bool.Parse(ConfigurationManager.AppSettings["SceneOnCreate"]),
                 SessionLimit = int.Parse(ConfigurationManager.AppSettings["SessionLimit"]),
