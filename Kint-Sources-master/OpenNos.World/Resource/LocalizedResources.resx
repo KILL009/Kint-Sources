@@ -731,7 +731,7 @@
     <value>¡Bienvenido!</value>
   </data>
   <data name="DROP_RATE_NOW" xml:space="preserve">
-    <value>Tasa de abandono</value>
+    <value>Tasa de Drop</value>
   </data>
   <data name="RATEGOLD_NOW" xml:space="preserve">
     <value>Tasa de caída de cantidad de oro</value>

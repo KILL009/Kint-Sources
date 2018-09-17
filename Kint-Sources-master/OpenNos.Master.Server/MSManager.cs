@@ -51,7 +51,7 @@ namespace OpenNos.Master.Server
                 MaxJobLevel = byte.Parse(ConfigurationManager.AppSettings["MaxJobLevel"]),
                 MaxSPLevel = byte.Parse(ConfigurationManager.AppSettings["MaxSPLevel"]),
                 MaxHeroLevel = byte.Parse(ConfigurationManager.AppSettings["MaxHeroLevel"]),
-                MaxPrestigeLevel = byte.Parse(ConfigurationManager.AppSettings["  MaxPrestigeLevel"]),
+                MaxPrestigeLevel = byte.Parse(ConfigurationManager.AppSettings["MaxPrestigeLevel"]),
                 HeroicStartLevel = byte.Parse(ConfigurationManager.AppSettings["HeroicStartLevel"]),
                 PrestigeStartLevel = byte.Parse(ConfigurationManager.AppSettings["PrestigeStartLevel"]),
                 MaxUpgrade = byte.Parse(ConfigurationManager.AppSettings["MaxUpgrade"]),
