@@ -1204,7 +1204,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Tasa de abandono.
+        ///   Busca una cadena traducida similar a Tasa de Drop.
         /// </summary>
         internal static string DROP_RATE_NOW {
             get {
