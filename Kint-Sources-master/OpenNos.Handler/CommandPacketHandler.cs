@@ -97,6 +97,85 @@ namespace OpenNos.Handler
             }
         }
 
+        /// <summary>
+        /// $Buy Packet
+        /// </summary>
+        /// <param name="BuyPacket"></param>
+        public void Buy(GameObject.CommandPackets.BuyPacket buypacket)
+        {
+            try //Not needed but safe is safe
+            {
+                if (buypacket != null)
+                {
+                    if (buypacket.Amount <= 1020)
+                    {
+                        if (buypacket.Item != null && buypacket.Amount != 0)
+                        {
+
+                            int Leftover = buypacket.Amount % 255;
+                            int FulLStacks = buypacket.Amount / 255;
+                            short BuyVNum = 0;
+
+                            switch (buypacket.Item.ToUpper())
+                            {
+                                case "CELLA":
+                                    BuyVNum = 1014;
+                                    break;
+                                case "FULLI":
+                                    BuyVNum = 1244;
+                                    break;
+                                default:
+                                    return;
+                            }
+
+                            Item iteminfo = ServerManager.GetItem(BuyVNum);
+                            if (Session.Character.Gold >= buypacket.Amount * iteminfo.Price)
+                            {
+                                for (int i = 1; i <= FulLStacks; i++)
+                                {
+                                    ItemInstance inv = Session.Character.Inventory.AddNewToInventory(BuyVNum, 255).FirstOrDefault();
+                                    if (inv == null)
+                                    {
+                                        Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_ENOUGH_PLACE"), 0));
+                                    }
+                                    else
+                                    {
+                                        Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: {iteminfo.Name} x {255}", 12));
+                                        Session.Character.Gold -= 255 * inv.Item.Price;
+                                    }
+                                }
+
+                                if (Leftover > 0)
+                                {
+                                    ItemInstance inv = Session.Character.Inventory.AddNewToInventory(BuyVNum, (byte)Leftover).FirstOrDefault();
+                                    if (inv == null)
+                                    {
+                                        Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_ENOUGH_PLACE"), 0));
+                                    }
+                                    else
+                                    {
+                                        Session.SendPacket(Session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: {iteminfo.Name} x {Leftover}", 12));
+                                        Session.Character.Gold -= Leftover * inv.Item.Price;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("NOT_ENOUGH_MONEY"), 0));
+                            }
+                            Session.SendPacket(Session.Character.GenerateGold());
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                //Put Errorlog here
+                return;
+            }
+
+        }
+
         /// $Prestige
         /// </summary>
         /// <param name="prestigePacket"></param>

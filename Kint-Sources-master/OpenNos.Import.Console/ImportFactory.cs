@@ -2955,6 +2955,7 @@ namespace OpenNos.Import.Console
                             item.ReputPrice = item.Price;
                         }
                         item.IsHeroic = currentLine[22] == "1";
+                        item.IsPrestige = currentLine[23] == "1";
                         /*
                         item.IsVehicle = currentLine[11] == "1" ? true : false; // (?)
                         item.BoxedVehicle = currentLine[12] == "1" ? true : false; // (?)

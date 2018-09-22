@@ -107,7 +107,7 @@ namespace OpenNos.GameObject.Helpers
                             break;
 
                         case EventType.BATTLEROYAL:
-                            BattleRoyaleManager.Instance.Prepare(useTimer);
+                            BattleRoyaleManager.Instance.Prepare(useTimer);                           
                             break;
 
                         case EventType.FORTNITE:

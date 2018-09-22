@@ -84,6 +84,8 @@ namespace OpenNos.Data
 
         public bool IsHeroic { get; set; }
 
+        public bool IsPrestige { get; set; }
+
         public bool IsHolder { get; set; }
 
         public bool IsMinilandObject { get; set; }

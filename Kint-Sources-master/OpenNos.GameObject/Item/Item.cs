@@ -74,6 +74,7 @@ namespace OpenNos.GameObject
             IsConsumable = input.IsConsumable;
             IsDroppable = input.IsDroppable;
             IsHeroic = input.IsHeroic;
+            IsPrestige = input.IsPrestige;
             IsHolder = input.IsHolder;
             IsMinilandObject = input.IsMinilandObject;
             IsSoldable = input.IsSoldable;

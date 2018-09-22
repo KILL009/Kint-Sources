@@ -3161,8 +3161,8 @@ namespace OpenNos.GameObject
                         DAOFactory.AccountDAO.WriteGeneralLog(AccountId, Session.Account.RegistrationIP, CharacterId, GeneralLogType.ReferralProgram, $"ReferrerId: {referrerId}");
 
                         // send gifts like you want
-                        //SendGift(CharacterId, 5910, 1, 0, 0, false);
-                        //SendGift(referrerId, 5910, 1, 0, 0, false);
+                       // SendGift(CharacterId, 5910, 1, 0, 0, false);
+                       // SendGift(referrerId, 5910, 1, 0, 0, false);
                     }
                 }
             }

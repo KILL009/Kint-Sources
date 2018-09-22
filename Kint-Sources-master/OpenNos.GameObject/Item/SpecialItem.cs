@@ -411,6 +411,7 @@ namespace OpenNos.GameObject
 
                 // Cupid's arrow
                 case 34: // this is imaginary number I = √(-1)
+                         // Cupid's arrow               
                     if (packetsplit != null && packetsplit.Length > 3)
                     {
                         if (long.TryParse(packetsplit[3], out long characterId))
@@ -420,26 +421,20 @@ namespace OpenNos.GameObject
                                 session.SendPacket($"info {Language.Instance.GetMessageFromKey("ALREADY_MARRIED")}");
                                 return;
                             }
+                            ClientSession otherSession = ServerManager.Instance.GetSessionByCharacterId(characterId);
+                            if (otherSession != null)
+                            {
+                                otherSession.SendPacket(UserInterfaceHelper.GenerateDialog(
+                                $"#fins^-34^{session.Character.CharacterId} #fins^-69^{session.Character.CharacterId} {string.Format(Language.Instance.GetMessageFromKey("MARRY_REQUEST"), session.Character.Name)}"));
+                                session.Character.FriendRequestCharacters.Add(characterId);
+                                session.Character.Inventory.RemoveItemFromInventory(inv.Id, 1);
+                                session.Character.AddStaticBuff(new StaticBuffDTO { CardId = 319 });
 
-                            if (session.Character.IsFriendOfCharacter(characterId))
-                            {
-                                var otherSession = ServerManager.Instance.GetSessionByCharacterId(characterId);
-                                if (otherSession != null)
-                                {
-                                    otherSession.SendPacket(UserInterfaceHelper.GenerateDialog(
-                                        $"#fins^-34^{session.Character.CharacterId} #fins^-69^{session.Character.CharacterId} {string.Format(Language.Instance.GetMessageFromKey("MARRY_REQUEST"), session.Character.Name)}"));
-                                    session.Character.FriendRequestCharacters.Add(characterId);
-                                    session.Character.Inventory.RemoveItemFromInventory(inv.Id);
-                                }
-                            }
-                            else
-                            {
-                                session.SendPacket($"info {Language.Instance.GetMessageFromKey("NOT_FRIEND")}");
                             }
                         }
                     }
-
                     break;
+                    
 
                 case 100:
                     {
