@@ -98,7 +98,7 @@ namespace OpenNos.GameObject.Event.BattleRoyale
             }
 
             ServerManager.Instance.Broadcast(
-                UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("BATTLE_ROYAL_OPEN"), 0));
+                UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("BATTLE_ROYAL_OPEN"), 15));
             IsLocked = false;
 
             await Task.Delay(_registrationSeconds * 1000);

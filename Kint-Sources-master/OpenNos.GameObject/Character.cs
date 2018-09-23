@@ -1186,9 +1186,7 @@ namespace OpenNos.GameObject
                             case 15:
                                 AddBuff(new Buff(109, Level), true);
                                 break;
-                            case 16:
-                                AddBuff(new Buff(664, Level), true);
-                                break;
+                            
 
                         }
                         Mate m = Mates.Find(s => s.IsTeamMember && s.MateType == MateType.Pet);

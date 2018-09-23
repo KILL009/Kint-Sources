@@ -1697,7 +1697,7 @@
     <value>[BATTLE ROYALE] Registration are open !</value>
   </data>
   <data name="BATTLE_ROYAL_REGISTRATION" xml:space="preserve">
-    <value>[BATTLE ROYALE] Registration will be opened in {0} minutes.</value>
+    <value>[BATTLE ROYALE] Registration will be opened in minutes.</value>
   </data>
   <data name="BATTLE_ROYAL_STARTED" xml:space="preserve">
     <value>The Fight has been</value>
