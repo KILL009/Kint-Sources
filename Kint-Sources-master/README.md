@@ -1,4 +1,5 @@
-[<img     src="https://cdn.discordapp.com/attachments/429478365678796831/489627429631950858/Thigh_highs__ponytail_Original_2600x1860_-_Imgur.jpg?style=shield">](https://discord.gg/MVyUedY)
+# Kint #
+[<img src="https://cdn.discordapp.com/attachments/429478365678796831/493754024261058560/Underground_Student_Council_Prison_School_1920x1200_-_Imgur.jpg">](https://discord.gg/MVyUedY)
 
 # Discord #
 [Discord for Help] https://discord.gg/MVyUedY
