@@ -214,12 +214,26 @@ namespace OpenNos.Handler
             }
         }
 
+        /// <summary>
+        /// $GetPrestige
+        /// </summary>
+        /// <param name="GetExpPacket"></param>
+        public void GetPrestige(GetPrestigePacket packet)
+        {
+            Session.SendPacket(Session.Character.GenerateSay("=======Level Exp=======", 15));
+            Session.SendPacket(Session.Character.GenerateSay("Current XP: " + Session.Character.PrestigeXp, 15));
+            Session.SendPacket(Session.Character.GenerateSay("Required XP: " + Session.Character.PrestigeXPLoad(), 15));
+            Session.SendPacket(Session.Character.GenerateSay("Current Percentage: " + String.Format("{0:0.00}", Session.Character.prestigeLevel / Session.Character.PrestigeXPLoad() * 100D), 15));
+            Session.SendPacket(Session.Character.GenerateSay("=======================", 15));
 
-             /// <summary>
-            /// $GetExp
-           /// </summary>
-          /// <param name="GetExpPacket"></param>
-         public void GetExp(GetExpPacket packet)
+        }
+
+
+        /// <summary>
+        /// $GetExp
+        /// </summary>
+        /// <param name="GetExpPacket"></param>
+        public void GetExp(GetExpPacket packet)
         {
             Session.SendPacket(Session.Character.GenerateSay("=======Level Exp=======", 15));
             Session.SendPacket(Session.Character.GenerateSay("Current XP: " + Session.Character.LevelXp, 15));

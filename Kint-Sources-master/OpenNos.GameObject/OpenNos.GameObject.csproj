@@ -596,6 +596,7 @@
     <Compile Include="Packets\CommandPackets\CreateRaidA4.cs" />
     <Compile Include="Packets\CommandPackets\DirectConnectPacket.cs" />
     <Compile Include="Packets\CommandPackets\GetExpPacket.cs" />
+    <Compile Include="Packets\CommandPackets\GetPrestigePacket.cs" />
     <Compile Include="Packets\CommandPackets\HelpMePacket.cs" />
     <Compile Include="Packets\CommandPackets\AddPortalPacket.cs" />
     <Compile Include="Packets\CommandPackets\AddShellEffectPacket.cs" />

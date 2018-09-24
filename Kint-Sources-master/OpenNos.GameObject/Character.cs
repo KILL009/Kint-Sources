@@ -4744,7 +4744,7 @@ namespace OpenNos.GameObject
 
         private double HeroXPLoad() => HeroLevel == 0 ? 1 : CharacterHelper.HeroXpData[HeroLevel - 1];
 
-        private double PrestigeXPLoad() => prestigeLevel == 0 ? 1 : CharacterHelper.PrestigeXpData[prestigeLevel - 1];
+        public double PrestigeXPLoad() => prestigeLevel == 0 ? 1 : CharacterHelper.PrestigeXpData[prestigeLevel - 1];
 
         private double JobXPLoad() => Class == (byte)ClassType.Adventurer ? CharacterHelper.FirstJobXPData[JobLevel - 1] : CharacterHelper.SecondJobXPData[JobLevel - 1];
 
