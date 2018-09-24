@@ -1,13 +1,4 @@
-[<img     src="https://cdn.discordapp.com/attachments/429478365678796831/489627429631950858/Thigh_highs__ponytail_Original_2600x1860_-_Imgur.jpg?style=shield">] 
-
-
-
-
-
-
-
-
-
+[<img     src="https://cdn.discordapp.com/attachments/429478365678796831/489627429631950858/Thigh_highs__ponytail_Original_2600x1860_-_Imgur.jpg?style=shield">](https://discord.gg/MVyUedY)
 
 # Discord #
 [Discord for Help] https://discord.gg/MVyUedY
