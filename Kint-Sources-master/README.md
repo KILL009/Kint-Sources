@@ -1,4 +1,7 @@
-[<img src="https://cdn.discordapp.com/attachments/429478365678796831/489627429631950858/Thigh_highs__ponytail_Original_2600x1860_-_Imgur.jpg?style=shield">](https://discord.gg/h8kTEbe)
+[<img src="https://cdn.discordapp.com/attachments/429478365678796831/489627429631950858/Thigh_highs__ponytail_Original_2600x1860_-_Imgur.jpg?style=shield">] 
+
+# Discord #
+[Discord for Help] (https://discord.gg/MVyUedY).
 
 # Information! #
 A master branch is to which we will push only stable changes that got confirmed, we develop now on dev branch, please dont ask for help with using dev branch, its unstable and designed only for advanced users.
