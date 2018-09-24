@@ -2955,6 +2955,7 @@ namespace OpenNos.Import.Console
                             item.ReputPrice = item.Price;
                         }
                         item.IsHeroic = currentLine[22] == "1";
+                        item.IsPrestige = currentLine[23] == "1";
                         /*
                         item.IsVehicle = currentLine[11] == "1" ? true : false; // (?)
                         item.BoxedVehicle = currentLine[12] == "1" ? true : false; // (?)
@@ -2983,6 +2984,9 @@ namespace OpenNos.Import.Console
                                 item.MaximumAmmo = 255;                             
                                 break;
 
+                            
+
+
                             case ItemType.Armor:
                                 item.LevelMinimum = byte.Parse(currentLine[2]);
                                 item.CloseDefence = short.Parse(currentLine[3]);
@@ -2992,8 +2996,8 @@ namespace OpenNos.Import.Console
                                 item.DistanceDefenceDodge = short.Parse(currentLine[6]);
                                 item.BasicUpgrade = byte.Parse(currentLine[10]);
                                 break;
-
-                            case ItemType.Box:
+                                                                                       
+                                case ItemType.Box:
                                 switch (item.VNum)
                                 {
                                     // add here your custom effect/effectvalue for box item, make
@@ -3383,7 +3387,7 @@ namespace OpenNos.Import.Console
                                         break;
 
                                     default:
-                                        if ((item.VNum > 5891 && item.VNum < 5900) || (item.VNum > 9100 && item.VNum < 9109))
+                                        if ((item.VNum > 5891 && item.VNum < 5900) || (item.VNum > 9100 && item.VNum < 10066))
                                         {
                                             item.Effect = 69; // imagined number as for I = √(-1), complex z = a + bi
                                         }
@@ -3463,6 +3467,7 @@ namespace OpenNos.Import.Console
                                 // item.PartnerClass = short.Parse(currentLine[19]);
                                 item.LevelJobMinimum = byte.Parse(currentLine[20]);
                                 item.ReputationMinimum = byte.Parse(currentLine[21]);
+                               
 
                                 Dictionary<int, int> elementdic = new Dictionary<int, int> { [0] = 0 };
                                 if (item.FireResistance != 0)

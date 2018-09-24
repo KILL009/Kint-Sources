@@ -589,6 +589,7 @@
     <Compile Include="Packets\CommandPackets\BenchmarkPacket.cs" />
     <Compile Include="Packets\CommandPackets\AddPartnerPacket.cs" />
     <Compile Include="Packets\CommandPackets\BankPacket.cs" />
+    <Compile Include="Packets\CommandPackets\BuyPacket.cs" />
     <Compile Include="Packets\CommandPackets\ChangeprestigeLevelPacket.cs" />
     <Compile Include="Packets\CommandPackets\CharacterPacket.cs" />
     <Compile Include="Packets\CommandPackets\ClearMapPacket.cs" />

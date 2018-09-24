@@ -1184,11 +1184,9 @@ namespace OpenNos.GameObject
                                 AddBuff(new Buff(663, Level), true);
                                 break;
                             case 15:
-                                AddBuff(new Buff(109, Level), true);
+                                AddBuff(new Buff(686, Level), true);
                                 break;
-                            case 16:
-                                AddBuff(new Buff(664, Level), true);
-                                break;
+                            
 
                         }
                         Mate m = Mates.Find(s => s.IsTeamMember && s.MateType == MateType.Pet);
@@ -3161,8 +3159,8 @@ namespace OpenNos.GameObject
                         DAOFactory.AccountDAO.WriteGeneralLog(AccountId, Session.Account.RegistrationIP, CharacterId, GeneralLogType.ReferralProgram, $"ReferrerId: {referrerId}");
 
                         // send gifts like you want
-                        //SendGift(CharacterId, 5910, 1, 0, 0, false);
-                        //SendGift(referrerId, 5910, 1, 0, 0, false);
+                       // SendGift(CharacterId, 5910, 1, 0, 0, false);
+                       // SendGift(referrerId, 5910, 1, 0, 0, false);
                     }
                 }
             }

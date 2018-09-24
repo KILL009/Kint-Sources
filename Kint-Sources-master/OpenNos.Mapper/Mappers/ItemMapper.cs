@@ -49,6 +49,7 @@ namespace OpenNos.Mapper.Mappers
             output.IsConsumable = input.IsConsumable;
             output.IsDroppable = input.IsDroppable;
             output.IsHeroic = input.IsHeroic;
+            output.IsPrestige = input.IsPrestige;
             output.IsHolder = input.IsHolder;
             output.IsMinilandObject = input.IsMinilandObject;
             output.IsSoldable = input.IsSoldable;
@@ -129,6 +130,7 @@ namespace OpenNos.Mapper.Mappers
             output.IsConsumable = input.IsConsumable;
             output.IsDroppable = input.IsDroppable;
             output.IsHeroic = input.IsHeroic;
+            output.IsPrestige = input.IsPrestige;
             output.IsHolder = input.IsHolder;
             output.IsMinilandObject = input.IsMinilandObject;
             output.IsSoldable = input.IsSoldable;
