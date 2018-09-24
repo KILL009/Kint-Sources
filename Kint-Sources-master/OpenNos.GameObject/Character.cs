@@ -1184,7 +1184,7 @@ namespace OpenNos.GameObject
                                 AddBuff(new Buff(663, Level), true);
                                 break;
                             case 15:
-                                AddBuff(new Buff(109, Level), true);
+                                AddBuff(new Buff(686, Level), true);
                                 break;
                             
 
