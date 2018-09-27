@@ -23,6 +23,8 @@ using OpenNos.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+
 
 namespace OpenNos.DAL.DAO
 {
@@ -236,6 +238,8 @@ namespace OpenNos.DAL.DAO
             }
             return null;
         }
+
+        
 
         public CharacterDTO LoadBySlot(long accountId, byte slot)
         {

@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
+using OpenNos.Packets.ClientPackets;
 using System.Text.RegularExpressions;
 
 namespace OpenNos.Handler
@@ -44,6 +45,71 @@ namespace OpenNos.Handler
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Char_NEW_JOB creation character
+        /// </summary>
+        /// <param name="brawlerCreatePacket"></param>
+        public void CreateBrawlerCharacter(BrawlerCreatePacket brawlerCreatePacket)
+        {
+            if (Session.HasCurrentMapInstance)
+            {
+                return;
+            }
+
+            // TODO: Hold Account Information in Authorized object
+            long accountId = Session.Account.AccountId;
+            Logger.LogUserEvent("CREATECHARACTER", Session.GenerateIdentity(), $"[CreateCharacter]Name: {brawlerCreatePacket.Name} Slot: {brawlerCreatePacket.Slot} Gender: {brawlerCreatePacket.Gender} HairStyle: {brawlerCreatePacket.HairStyle} HairColor: {brawlerCreatePacket.HairColor}");
+            if (brawlerCreatePacket.Slot <= 3 && DAOFactory.CharacterDAO.LoadBySlot(accountId, brawlerCreatePacket.Slot) == null && brawlerCreatePacket.Name.Length > 3 && brawlerCreatePacket.Name.Length < 15)
+            {
+                Regex rg = new Regex(@"^[A-Za-z0-9_äÄöÖüÜß~*<>°+-.!_-Ð™¤£±†‡×ßø^\S]+$");
+                if (rg.Matches(brawlerCreatePacket.Name).Count == 1)
+                {
+                    if (DAOFactory.CharacterDAO.LoadByName(brawlerCreatePacket.Name) == null)
+                    {
+                        if (brawlerCreatePacket.Slot > 3)
+                        {
+                            return;
+                        }
+                        CharacterDTO newCharacter = new CharacterDTO
+                        {
+                            Class = ClassType.Fighter,
+                            Gender = brawlerCreatePacket.Gender,
+                            HairColor = brawlerCreatePacket.HairColor,
+                            HairStyle = brawlerCreatePacket.HairStyle,
+                            Hp = 12965,
+                            JobLevel = 1,
+                            Level = 81,
+                            MapId = 1,
+                            MapX = 78,
+                            MapY = 81,
+                            Mp = 221,
+                            MaxMateCount = 10,
+                            SpPoint = 10000,
+                            SpAdditionPoint = 0,
+                            Name = brawlerCreatePacket.Name,
+                            Slot = brawlerCreatePacket.Slot,
+                            AccountId = accountId,
+                            MinilandMessage = "Welcome",
+                            State = CharacterState.Active,
+                            MinilandPoint = 2000
+                        };
+
+
+
+                        LoadCharacters(brawlerCreatePacket.OriginalContent);
+                    }
+                    else
+                    {
+                        Session.SendPacketFormat($"info {Language.Instance.GetMessageFromKey("ALREADY_TAKEN")}");
+                    }
+                }
+                else
+                {
+                    Session.SendPacketFormat($"info {Language.Instance.GetMessageFromKey("INVALID_CHARNAME")}");
+                }
+            }
+        }
 
         /// <summary>
         /// Char_NEW character creation character

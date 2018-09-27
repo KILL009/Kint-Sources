@@ -116,6 +116,28 @@ namespace OpenNos.GameObject
                     }
                     break;
 
+                case 1169:
+                    {
+
+                        if (session?.Character != null)
+                        {
+                            if (session.Character.Miniland == session.Character.MapInstance)
+                            {
+                                ServerManager.Instance.JoinMiniland(session, session);
+                            }
+                            else
+                            {
+                                ServerManager.Shout($"GRACIAS POR USAR SERVICIOS HEAT!");
+                                ServerManager.Instance.ChangeMapInstance(session.Character.CharacterId, session.Character.MapInstanceId, session.Character.PositionX, session.Character.PositionY);
+                                session.SendPacket(StaticPacketHelper.Cancel(2));
+                                session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                            }
+
+                        }
+
+                    }
+                    break;
+
                 // Partner Suits/Skins
                 case 305:
                     Mate mate = session.Character.Mates.Find(s => s.MateTransportId == int.Parse(packetsplit[3]));
