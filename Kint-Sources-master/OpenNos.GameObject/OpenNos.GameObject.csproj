@@ -551,6 +551,7 @@
     <Compile Include="MonsterToSummon.cs" />
     <Compile Include="Packets\ClientPackets\BlDelPacket.cs" />
     <Compile Include="Packets\ClientPackets\BlInsPacket.cs" />
+    <Compile Include="Packets\ClientPackets\BrawlerCreatePacket.cs" />
     <Compile Include="Packets\ClientPackets\BtkPacket.cs" />
     <Compile Include="Packets\ClientPackets\CreateFamilyPacket.cs" />
     <Compile Include="Packets\ClientPackets\CsprPacket.cs" />

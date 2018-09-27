@@ -14,6 +14,7 @@
 
 using OpenNos.Data;
 using OpenNos.Data.Enums;
+using System;
 using System.Collections.Generic;
 
 namespace OpenNos.DAL.Interface
@@ -43,8 +44,9 @@ namespace OpenNos.DAL.Interface
         CharacterDTO LoadById(long characterId);
 
         CharacterDTO LoadByName(string name);
-
+     
         CharacterDTO LoadBySlot(long accountId, byte slot);
+       
 
         #endregion
     }

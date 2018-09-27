@@ -15,8 +15,16 @@
 using OpenNos.DAL.Interface;
 using OpenNos.Data;
 using OpenNos.Data.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
+using System.Reflection;
+using System.ComponentModel.DataAnnotations;
+using System.Linq.Expressions;
+using System.Collections;
+using Microsoft.Extensions.Logging;
+using OpenNos.Core;
 
 namespace OpenNos.DAL.Mock
 {
@@ -54,6 +62,7 @@ namespace OpenNos.DAL.Mock
             Insert(character);
             return SaveResult.Inserted;
         }
+        
         public IEnumerable<CharacterDTO> LoadByAccount(long accountId)
         {
             return Container.Where(c => c.AccountId == accountId).Select(MapEntity).ToList();
@@ -68,6 +77,7 @@ namespace OpenNos.DAL.Mock
 
         public CharacterDTO LoadBySlot(long accountId, byte slot) => Container.SingleOrDefault(c => c.AccountId == accountId && c.Slot == slot);
 
-        #endregion
+        
+      #endregion
     }
 }
