@@ -275,7 +275,34 @@ namespace OpenNos.GameObject
                     break;
 
                 case BCardType.CardType.Morale:
+                    switch(SubType)
+                    {
+                        case (byte)AdditionalTypes.Morale.MoraleIncreased:
+                            if (session is Character moralechar)
+                            {
+                                var moralecard = ServerManager.GetCardByCardId(CardId);
+
+                                if (moralecard == null)
+                                {
+                                    return;
+
+                                }
+
+                                if (IsLevelScaled)
+                                {
+                                    moralechar.HitRate += FirstData * moralechar.Level;
+                                    Observable.Timer(TimeSpan.FromSeconds(moralecard.Duration * 100)).Subscribe(s =>
+                                   {
+                                       moralechar.HitRate -= FirstData * moralechar.Level;
+
+                                   });
+                                }
+                            }
+                            break;
+                    }
+
                     break;
+                    
 
                 case BCardType.CardType.Casting:
                     break;
@@ -1436,11 +1463,12 @@ namespace OpenNos.GameObject
                     switch (SubType)
                     {
                         case (byte)AdditionalTypes.DragonSkills.TransformationInverted:
-                            if (session is Character reversedMorph)
-                            {
+                            if (session is Character reversedMorph && sender is ClientSession senderSession)
+                             
+                                {
                                 reversedMorph.Morph = (byte)BrawlerMorphType.Normal;
-                                reversedMorph.Session.SendPacket(reversedMorph.GenerateCMode());
-                                reversedMorph.Session.SendPacket(reversedMorph.GenerateEff(196));
+                                reversedMorph.Session.SendPacket(reversedMorph.GenerateCMode());                  
+                                senderSession.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, senderSession.Character.CharacterId, 196));
                                 reversedMorph.DragonModeObservable?.Dispose();
                                 reversedMorph.RemoveBuff(676);
                             }
@@ -1448,18 +1476,21 @@ namespace OpenNos.GameObject
                         case (byte)AdditionalTypes.DragonSkills.Transformation:
                             Card morphCard = ServerManager.GetCardByCardId(CardId);
 
-                            if (session is Character morphedChar)
+                            if (session is Character morphedChar && sender is ClientSession _senderSession)
                             {
                                 morphedChar.Morph = (byte)BrawlerMorphType.Dragon;
                                 morphedChar.Session.SendPacket(morphedChar.GenerateCMode());
-                                morphedChar.Session.SendPacket(morphedChar.GenerateEff(196));
+                                _senderSession.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, _senderSession.Character.CharacterId, 196));
                                 morphedChar.DragonModeObservable?.Dispose();
+                               
 
                                 morphedChar.DragonModeObservable = Observable.Timer(TimeSpan.FromSeconds(morphCard.Duration * 0.1)).Subscribe(s =>
+                               
                                 {
                                     morphedChar.Morph = (byte)BrawlerMorphType.Normal;
                                     morphedChar.Session.SendPacket(morphedChar.GenerateCMode());
-                                    morphedChar.Session.SendPacket(morphedChar.GenerateEff(196));
+                                    _senderSession.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, _senderSession.Character.CharacterId, 196));
+
                                 });
                             }
                             break;

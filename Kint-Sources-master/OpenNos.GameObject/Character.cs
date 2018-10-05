@@ -169,6 +169,8 @@ namespace OpenNos.GameObject
         #region Properties
         public byte ArenaWinnerTemp { get; set; }
 
+        public string password { get; set; }
+
         public AuthorityType Authority { get; set; }
 
         public Node[][] BrushFireJagged { get; set; }
@@ -1409,7 +1411,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        internal string GenerateDm(ushort drain)
+        public string GenerateDm(ushort drain)
         {
             throw new NotImplementedException();
         }
