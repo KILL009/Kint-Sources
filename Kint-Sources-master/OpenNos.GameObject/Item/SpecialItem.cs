@@ -25,11 +25,13 @@ using System.Linq;
 using System.Reactive.Linq;
 using OpenNos.Master.Library.Client;
 using OpenNos.Master.Library.Data;
+using System.Drawing;
 
 namespace OpenNos.GameObject
 {
     public class SpecialItem : Item
     {
+        private object colorToCheck;
         #region Instantiation
 
         public SpecialItem(ItemDTO item) : base(item)
@@ -137,6 +139,15 @@ namespace OpenNos.GameObject
 
                     }
                     break;
+
+                case 1058:
+                    {
+                        
+
+                    }
+                    break;
+
+
 
                 // Partner Suits/Skins
                 case 305:

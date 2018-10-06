@@ -181,13 +181,13 @@ namespace OpenNos.GameObject
         public ItemInstance WeaponInstance { get; set; }
         public DateTime LastMonsterAggro { get; set; }
         public Node[][] BrushFireJagged { get; set; }
-        public IEnumerable MapInstance { get; internal set; }
+        public IEnumerable MapInstance { get;  set; }
+        public MapInstance GetMatesInRang { get;  set; }
+    #endregion
 
-        #endregion
+    #region Methods
 
-        #region Methods
-
-        public void AddBuff(Buff indicator)
+    public void AddBuff(Buff indicator)
         {
             if (indicator?.Card != null)
             {

@@ -32,6 +32,8 @@ namespace OpenNos.Data
 
         public byte Color { get; set; }
 
+        public byte FromKnownColor { get; set; }
+
         public short Concentrate { get; set; }
 
         public byte CriticalLuckRate { get; set; }

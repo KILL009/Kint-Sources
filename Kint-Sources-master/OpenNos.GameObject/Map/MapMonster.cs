@@ -35,8 +35,9 @@ namespace OpenNos.GameObject
         private int _movetime;
 
         private bool _noAttack;
-        private bool _noMove;       
+        private bool _noMove;
         private Random _random;
+
 
         #endregion
 
@@ -81,6 +82,8 @@ namespace OpenNos.GameObject
         public DateTime Death { get; set; }
 
         public ConcurrentQueue<HitRequest> HitQueue { get; }
+
+        public BattleEntity BattleEntity { get; private set; }
 
         public bool IsAlive { get; set; }
 
@@ -164,8 +167,11 @@ namespace OpenNos.GameObject
                     s.SubType.Equals((byte)AdditionalTypes.Move.MovementImpossible / 10));
             }
         }
+        public void ReflectiveBuffs()
+            {}
 
-        public string GenerateBoss() => $"rboss 3 {MapMonsterId} {CurrentHp} {MaxHp}";
+
+    public string GenerateBoss() => $"rboss 3 {MapMonsterId} {CurrentHp} {MaxHp}";
 
         public string GenerateIn()
         {

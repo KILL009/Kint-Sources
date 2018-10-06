@@ -35,7 +35,7 @@ using OpenNos.Core.ConcurrencyExtensions;
 using OpenNos.GameObject.Networking;
 using OpenNos.Core.Extensions;
 using System.Diagnostics.CodeAnalysis;
-
+using System.Threading.Tasks;
 
 namespace OpenNos.GameObject
 {
@@ -352,6 +352,7 @@ namespace OpenNos.GameObject
         public int MagicalDefence { get; set; }
 
         public IDictionary<int, MailDTO> MailList { get; set; }
+
         public BattleEntity BattleEntity { get; private set; }
 
         public MapInstance MapInstance => ServerManager.GetMapInstance(MapInstanceId);
@@ -779,10 +780,8 @@ namespace OpenNos.GameObject
             Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("UNDER_EFFECT"), bf.Card.Name), 12));
         }
 
-        internal void TeleportInRadius(int firstData)
-        {
-            throw new NotImplementedException();
-        }
+      
+
 
         public bool CanAddMate(Mate mate) => mate.MateType == MateType.Pet ? MaxMateCount > Mates.Count : 3 > Mates.Count(s => s.MateType == MateType.Partner);
 
@@ -870,7 +869,12 @@ namespace OpenNos.GameObject
                 Session.CurrentMapInstance?.Broadcast(Session, $"pidx 1 1.{CharacterId}", ReceiverType.AllExceptMe);
             }
         }
-       
+
+        internal void TeleportInRadius(int firstData)
+        {
+            throw new NotImplementedException();
+        }
+
         public void ChangeSex()
         {
             Gender = Gender == GenderType.Female ? GenderType.Male : GenderType.Female;

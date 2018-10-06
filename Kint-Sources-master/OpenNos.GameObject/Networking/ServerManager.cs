@@ -722,9 +722,7 @@ namespace OpenNos.GameObject.Networking
                 recipes.Add(_recipes[recipeList.RecipeId]);
             }
             return recipes;
-        }
-
-       
+        }    
 
         public List<Recipe> GetRecipesByMapNpcId(int mapNpcId)
         {
