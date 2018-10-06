@@ -3,7 +3,6 @@
   <Import Project="..\packages\Microsoft.AspNetCore.Mvc.Razor.Extensions.2.2.0-preview2-35157\build\netstandard2.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.props" Condition="Exists('..\packages\Microsoft.AspNetCore.Mvc.Razor.Extensions.2.2.0-preview2-35157\build\netstandard2.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.props')" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="..\packages\Microsoft.AspNetCore.Razor.Design.2.2.0-preview2-35157\build\netstandard2.0\Microsoft.AspNetCore.Razor.Design.props" Condition="Exists('..\packages\Microsoft.AspNetCore.Razor.Design.2.2.0-preview2-35157\build\netstandard2.0\Microsoft.AspNetCore.Razor.Design.props')" />
-  <Import Project="..\packages\Microsoft.Net.Compilers.2.9.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.2.9.0\build\Microsoft.Net.Compilers.props')" />
   <Import Project="..\packages\Microsoft.DiaSymReader.Native.1.7.0\build\Microsoft.DiaSymReader.Native.props" Condition="Exists('..\packages\Microsoft.DiaSymReader.Native.1.7.0\build\Microsoft.DiaSymReader.Native.props')" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -307,13 +306,13 @@
       <HintPath>..\packages\Microsoft.Net.Http.Headers.2.2.0-preview2-35157\lib\netstandard2.0\Microsoft.Net.Http.Headers.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.ServiceFabric.Internal, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
-      <HintPath>..\packages\Microsoft.ServiceFabric.6.3.176\lib\net471\Microsoft.ServiceFabric.Internal.dll</HintPath>
+      <HintPath>..\packages\Microsoft.ServiceFabric.6.3.187\lib\net471\Microsoft.ServiceFabric.Internal.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.ServiceFabric.Internal.Strings, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
-      <HintPath>..\packages\Microsoft.ServiceFabric.6.3.176\lib\net471\Microsoft.ServiceFabric.Internal.Strings.dll</HintPath>
+      <HintPath>..\packages\Microsoft.ServiceFabric.6.3.187\lib\net471\Microsoft.ServiceFabric.Internal.Strings.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.ServiceFabric.Preview, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
-      <HintPath>..\packages\Microsoft.ServiceFabric.6.3.176\lib\net471\Microsoft.ServiceFabric.Preview.dll</HintPath>
+      <HintPath>..\packages\Microsoft.ServiceFabric.6.3.187\lib\net471\Microsoft.ServiceFabric.Preview.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Win32.Registry, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Win32.Registry.4.5.0\lib\net461\Microsoft.Win32.Registry.dll</HintPath>
@@ -330,8 +329,8 @@
     <Reference Include="OpenNos.SCS">
       <HintPath>..\..\..\..\..\..\..\OpenNos\OpenNos.SCS.dll</HintPath>
     </Reference>
-    <Reference Include="RestSharp, Version=106.3.1.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
-      <HintPath>..\packages\RestSharp.106.3.1\lib\net452\RestSharp.dll</HintPath>
+    <Reference Include="RestSharp, Version=106.4.2.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.106.4.2\lib\net452\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="RestSharp.Serializers.Newtonsoft.Json, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.Newtonsoft.Json.1.5.0\lib\net452\RestSharp.Serializers.Newtonsoft.Json.dll</HintPath>
@@ -340,16 +339,16 @@
       <HintPath>..\packages\ServiceFabric.Watchdog.Connector.1.0.0\lib\net47\ServiceFabric.Helpers.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Common, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587, processorArchitecture=MSIL">
-      <HintPath>..\packages\ServiceStack.Common.5.2.0\lib\net45\ServiceStack.Common.dll</HintPath>
+      <HintPath>..\packages\ServiceStack.Common.5.4.0\lib\net45\ServiceStack.Common.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Interfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587, processorArchitecture=MSIL">
-      <HintPath>..\packages\ServiceStack.Interfaces.5.2.0\lib\net45\ServiceStack.Interfaces.dll</HintPath>
+      <HintPath>..\packages\ServiceStack.Interfaces.5.4.0\lib\net45\ServiceStack.Interfaces.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Redis, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587, processorArchitecture=MSIL">
-      <HintPath>..\packages\ServiceStack.Redis.5.2.0\lib\net45\ServiceStack.Redis.dll</HintPath>
+      <HintPath>..\packages\ServiceStack.Redis.5.4.0\lib\net45\ServiceStack.Redis.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Text, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587, processorArchitecture=MSIL">
-      <HintPath>..\packages\ServiceStack.Text.5.2.0\lib\net45\ServiceStack.Text.dll</HintPath>
+      <HintPath>..\packages\ServiceStack.Text.5.4.0\lib\net45\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="Speed.Core.Redis, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Speed.Core.1.0.0.3\lib\Speed.Core.Redis.dll</HintPath>
@@ -368,8 +367,8 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.OracleClient" />
-    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.5.0\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.3.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.5.1\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
     <Reference Include="System.Diagnostics.StackTrace, Version=4.0.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Diagnostics.StackTrace.4.3.0\lib\net46\System.Diagnostics.StackTrace.dll</HintPath>
@@ -381,13 +380,13 @@
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Fabric, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
-      <HintPath>..\packages\Microsoft.ServiceFabric.6.3.176\lib\net471\System.Fabric.dll</HintPath>
+      <HintPath>..\packages\Microsoft.ServiceFabric.6.3.187\lib\net471\System.Fabric.dll</HintPath>
     </Reference>
     <Reference Include="System.Fabric.Management.ServiceModel, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
-      <HintPath>..\packages\Microsoft.ServiceFabric.6.3.176\lib\net471\System.Fabric.Management.ServiceModel.dll</HintPath>
+      <HintPath>..\packages\Microsoft.ServiceFabric.6.3.187\lib\net471\System.Fabric.Management.ServiceModel.dll</HintPath>
     </Reference>
     <Reference Include="System.Fabric.Strings, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
-      <HintPath>..\packages\Microsoft.ServiceFabric.6.3.176\lib\net471\System.Fabric.Strings.dll</HintPath>
+      <HintPath>..\packages\Microsoft.ServiceFabric.6.3.187\lib\net471\System.Fabric.Strings.dll</HintPath>
     </Reference>
     <Reference Include="System.IO.Compression, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.Compression.4.3.0\lib\net46\System.IO.Compression.dll</HintPath>
@@ -415,8 +414,8 @@
     <Reference Include="System.Reflection.Metadata, Version=1.4.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reflection.Metadata.1.6.0\lib\netstandard2.0\System.Reflection.Metadata.dll</HintPath>
     </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.1\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
@@ -429,8 +428,8 @@
     <Reference Include="System.Security.Permissions, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.Permissions.4.5.0\lib\net461\System.Security.Permissions.dll</HintPath>
     </Reference>
-    <Reference Include="System.Security.Principal.Windows, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Principal.Windows.4.5.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
+    <Reference Include="System.Security.Principal.Windows, Version=4.1.1.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Principal.Windows.4.5.1\lib\net461\System.Security.Principal.Windows.dll</HintPath>
     </Reference>
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Text.Encoding.CodePages, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -830,8 +829,8 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.2.6.2-beta2\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
-    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.2.6.2-beta2\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.2.6.2\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.2.6.2\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -869,7 +868,6 @@
     <PropertyGroup>
       <ErrorText>Ce projet fait référence à des packages NuGet qui sont manquants sur cet ordinateur. Utilisez l'option de restauration des packages NuGet pour les télécharger. Pour plus d'informations, consultez http://go.microsoft.com/fwlink/?LinkID=322105. Le fichier manquant est : {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.9.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.9.0\build\Microsoft.Net.Compilers.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.AspNetCore.Razor.Design.2.2.0-preview2-35157\build\netstandard2.0\Microsoft.AspNetCore.Razor.Design.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.AspNetCore.Razor.Design.2.2.0-preview2-35157\build\netstandard2.0\Microsoft.AspNetCore.Razor.Design.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.AspNetCore.Mvc.Razor.Extensions.2.2.0-preview2-35157\build\netstandard2.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.AspNetCore.Mvc.Razor.Extensions.2.2.0-preview2-35157\build\netstandard2.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.props'))" />

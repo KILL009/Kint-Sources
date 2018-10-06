@@ -66,7 +66,7 @@ namespace OpenNos.GameObject
 
         #region Methods
 
-        public void ApplyBCards(object session, object sender = null,  short? partnerBuffLevel = null)
+        public void ApplyBCards(object session, object sender = null,  short? partnerBuffLevel = null, object caster = null)
 
         {
             Type type = session.GetType();
@@ -275,7 +275,34 @@ namespace OpenNos.GameObject
                     break;
 
                 case BCardType.CardType.Morale:
+                    switch(SubType)
+                    {
+                        case (byte)AdditionalTypes.Morale.MoraleIncreased:
+                            if (session is Character moralechar)
+                            {
+                                var moralecard = ServerManager.GetCardByCardId(CardId);
+
+                                if (moralecard == null)
+                                {
+                                    return;
+
+                                }
+
+                                if (IsLevelScaled)
+                                {
+                                    moralechar.HitRate += FirstData * moralechar.Level;
+                                    Observable.Timer(TimeSpan.FromSeconds(moralecard.Duration * 100)).Subscribe(s =>
+                                   {
+                                       moralechar.HitRate -= FirstData * moralechar.Level;
+
+                                   });
+                                }
+                            }
+                            break;
+                    }
+
                     break;
+                    
 
                 case BCardType.CardType.Casting:
                     break;
@@ -590,7 +617,7 @@ namespace OpenNos.GameObject
                 case BCardType.CardType.SpecialDamageAndExplosions:
                     break;
 
-                /*case BCardType.CardType.SpecialEffects2:
+                case BCardType.CardType.SpecialEffects2:
                     if (session is Character tp)
                     {
                         switch (SubType)
@@ -601,7 +628,7 @@ namespace OpenNos.GameObject
                         }
                     }
 
-                    if (caster is Character teleportedUser)
+                    if (sender is Character teleportedUser)
                     {
                         switch (SubType)
                         {
@@ -610,7 +637,7 @@ namespace OpenNos.GameObject
                                 break;
                         }
                     }
-                    break;*/
+                    break;
 
                 case BCardType.CardType.CalculatingLevel:
                     break;
@@ -725,7 +752,7 @@ namespace OpenNos.GameObject
                 case BCardType.CardType.NoDefeatAndNoDamage:
                     switch (SubType)
                     {
-                        //case (byte)AdditionalTypes.NoDefeatAndNoDamage.TransferAttackPower: // = Charge
+                        case (byte)AdditionalTypes.NoDefeatAndNoDamage.TransferAttackPower: // = Charge
                         case (byte)AdditionalTypes.NoDefeatAndNoDamage.NeverReceiveDamage:
                             switch (session)
                             {
@@ -911,7 +938,7 @@ namespace OpenNos.GameObject
                                         int range = FirstData;
                                         int timer = ThirdData + 1;
                                         Card buffCard = ServerManager.GetCardByCardId((short)SecondData);
-                                      //  IEnumerable entitiesInRange = inRangeMate.MapInstance?.GetMatesInRange(inRangeMate.MapX, inRangeMate.MapY, (byte)range);
+                                        IEnumerable entitiesInRange = inRangeMate.MapInstance?.GetMatesInRang(inRangeMate.MapX, inRangeMate.MapY, (byte)range);
                                         if ( buffCard == null)
                                         {
                                             return;
@@ -919,11 +946,11 @@ namespace OpenNos.GameObject
 
                                         teamObs = Observable.Interval(TimeSpan.FromSeconds(timer)).Subscribe(s =>
                                         {
-                                          //  foreach (Mate mateInRange in entitiesInRange)
+                                            foreach (Mate mateInRange in entitiesInRange)
                                             {
-                                               // if (mateInRange.Buff.All(x => x.Card.CardId != buffCard.CardId))
+                                                if (mateInRange.Buff.All(x => x.Card.CardId != buffCard.CardId))
                                                 {
-                                                   // mateInRange.AddBuff(new Buff(SecondData, entity: caster));
+                                                    mateInRange.AddBuff(new Buff(SecondData, entity: caster));
                                                 }
                                             }
                                         });
@@ -1100,8 +1127,8 @@ namespace OpenNos.GameObject
                 case BCardType.CardType.FocusEnemyAttentionSkill:
                     break;
 
-                case BCardType.CardType.TauntSkill:
-                    /*switch (SubType)
+              /*  case BCardType.CardType.TauntSkill:
+                    switch (SubType)
                     {
                         case (byte)AdditionalTypes.TauntSkill.ReflectsMaximumDamageFromNegated:
                             switch (session)
@@ -1137,8 +1164,8 @@ namespace OpenNos.GameObject
                                     break;
                             }
                             break;
-                    }*/
-                    break;
+                    }
+                    break;*/
 
                 case BCardType.CardType.FireCannoneerRangeBuff:
                     break;
@@ -1146,8 +1173,8 @@ namespace OpenNos.GameObject
                 case BCardType.CardType.VulcanoElementBuff:
                     break;
 
-                case BCardType.CardType.DamageConvertingSkill:
-                    /*switch (SubType)
+               /* case BCardType.CardType.DamageConvertingSkill:
+                    switch (SubType)
                     {
                         case (byte)AdditionalTypes.DamageConvertingSkill.ReflectMaximumReceivedDamage:
                             switch (session)
@@ -1182,8 +1209,8 @@ namespace OpenNos.GameObject
                                     break;
                             }
                             break;
-                    }*/
-                    break;
+                    }
+                    break;*/
 
                 case BCardType.CardType.MeditationSkill:
                     {
@@ -1436,11 +1463,12 @@ namespace OpenNos.GameObject
                     switch (SubType)
                     {
                         case (byte)AdditionalTypes.DragonSkills.TransformationInverted:
-                            if (session is Character reversedMorph)
-                            {
+                            if (session is Character reversedMorph && sender is ClientSession senderSession)
+                             
+                                {
                                 reversedMorph.Morph = (byte)BrawlerMorphType.Normal;
-                                reversedMorph.Session.SendPacket(reversedMorph.GenerateCMode());
-                                reversedMorph.Session.SendPacket(reversedMorph.GenerateEff(196));
+                                reversedMorph.Session.SendPacket(reversedMorph.GenerateCMode());                  
+                                senderSession.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, senderSession.Character.CharacterId, 196));
                                 reversedMorph.DragonModeObservable?.Dispose();
                                 reversedMorph.RemoveBuff(676);
                             }
@@ -1448,18 +1476,21 @@ namespace OpenNos.GameObject
                         case (byte)AdditionalTypes.DragonSkills.Transformation:
                             Card morphCard = ServerManager.GetCardByCardId(CardId);
 
-                            if (session is Character morphedChar)
+                            if (session is Character morphedChar && sender is ClientSession _senderSession)
                             {
                                 morphedChar.Morph = (byte)BrawlerMorphType.Dragon;
                                 morphedChar.Session.SendPacket(morphedChar.GenerateCMode());
-                                morphedChar.Session.SendPacket(morphedChar.GenerateEff(196));
+                                _senderSession.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, _senderSession.Character.CharacterId, 196));
                                 morphedChar.DragonModeObservable?.Dispose();
+                               
 
                                 morphedChar.DragonModeObservable = Observable.Timer(TimeSpan.FromSeconds(morphCard.Duration * 0.1)).Subscribe(s =>
+                               
                                 {
                                     morphedChar.Morph = (byte)BrawlerMorphType.Normal;
                                     morphedChar.Session.SendPacket(morphedChar.GenerateCMode());
-                                    morphedChar.Session.SendPacket(morphedChar.GenerateEff(196));
+                                    _senderSession.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, _senderSession.Character.CharacterId, 196));
+
                                 });
                             }
                             break;

@@ -49,7 +49,7 @@ namespace OpenNos.GameObject.Event
             ServerManager.Shout(Language.Instance.GetMessageFromKey("TALENTARENA_OPEN"), true);
 
             GroupingThread groupingThread = new GroupingThread();
-            Observable.Timer(TimeSpan.FromSeconds(0)).Subscribe(observer => groupingThread.Run());
+            Observable.Timer(TimeSpan.FromSeconds(1)).Subscribe(observer => groupingThread.Run());
 
             MatchmakingThread matchmakingThread = new MatchmakingThread();
             Observable.Timer(TimeSpan.FromSeconds(3)).Subscribe(observer => matchmakingThread.Run());

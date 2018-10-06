@@ -583,12 +583,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        internal void SpawnMeteorsOnRadius(int v, ClientSession session, Skill sk)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal int GetNextId()
+       public void SpawnMeteorsOnRadius(int v, ClientSession session, Skill sk)
         {
             throw new NotImplementedException();
         }
