@@ -21,11 +21,7 @@ namespace OpenNos.GameObject
     {
         #region Members
       
-
-        public Buff(int v, Battle.BattleEntity entity)
-        {
-        }
-
+        
         #endregion
 
         #region Instantiation

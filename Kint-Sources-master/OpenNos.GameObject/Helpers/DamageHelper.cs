@@ -657,10 +657,10 @@ namespace OpenNos.GameObject.Helpers
                     chance = 1;
                 }
 
-                //if (GetBuff(CardType.Buff, (byte)AdditionalTypes.DodgeAndDefencePercent.)[0] != 0)    TODO: Eagle Eyes AND Other Fixed Hitrates
-                //{
-                //    chance = 10;
-                //}
+                /*if (GetBuff(CardType.Buff, (byte)AdditionalTypes.DodgeAndDefencePercent.DodgeIncreased)[0] != 0)    //TODO: Eagle Eyes AND Other Fixed Hitrates
+                {
+                    chance = 10;
+                }*/
             }
 
             int bonus = 0;
@@ -718,9 +718,9 @@ namespace OpenNos.GameObject.Helpers
 
             attacker.AttackUpgrade -= defender.DefenseUpgrade;
 
-            if (attacker.AttackUpgrade < -10)
+            if (attacker.AttackUpgrade < -15)
             {
-                attacker.AttackUpgrade = 10;
+                attacker.AttackUpgrade = 15;
             }
             else if (attacker.AttackUpgrade > ServerManager.Instance.Configuration.MaxUpgrade)
             {
@@ -772,6 +772,27 @@ namespace OpenNos.GameObject.Helpers
                 case 10:
                     weaponDamage += weaponDamage * 2;
                     break;
+                case 11:
+                    weaponDamage += (int)(weaponDamage * 2.15);
+                    break;
+
+                case 12:
+                    weaponDamage += (int)(weaponDamage * 2.22);
+                    break;
+
+                case 13:
+                    weaponDamage += (int)(weaponDamage * 2.32);
+                    break;
+
+                case 14:
+                    weaponDamage += (int)(weaponDamage * 2.43);
+                    break;
+
+                case 15:
+                    weaponDamage += (int)(weaponDamage * 2.54);
+                    break;
+
+
 
                     //default:
                     //    if (attacker.AttackUpgrade > 0)
@@ -800,6 +821,25 @@ namespace OpenNos.GameObject.Helpers
                 //    }
 
                 //break;
+                case -15:
+                    defender.ArmorDefense += (int)(defender.ArmorDefense * 2.43);
+                    break;
+
+                case -14:
+                    defender.ArmorDefense += (int)(defender.ArmorDefense * 2.32);
+                    break;
+
+                case -13:
+                    defender.ArmorDefense += (int)(defender.ArmorDefense * 2.22);
+                    break;
+
+                case -12:
+                    defender.ArmorDefense += (int)(defender.ArmorDefense * 2.15);
+                    break;
+
+                case -11:
+                    defender.ArmorDefense += (int)(defender.ArmorDefense * 2.1);
+                    break;
 
                 case -10:
                     defender.ArmorDefense += defender.ArmorDefense * 2;
@@ -900,11 +940,11 @@ namespace OpenNos.GameObject.Helpers
                 }
 
                 normalDamage += (int)(normalDamage * multiplier);
-                if (defender.HasBuff(CardType.Critical, (byte)AdditionalTypes.Critical.DamageFromCriticalDecreased))
+               /* if (defender.HasBuff(CardType.Critical, (byte)AdditionalTypes.Critical.DamageFromCriticalDecreased))
                 {
                     int damageReduction = defender.GetBuff(CardType.Critical, (byte)AdditionalTypes.Critical.DamageFromCriticalDecreased)[0];
                     baseDamage -= (int)(baseDamage * (damageReduction / 100D));
-                }
+                }*/
                 hitMode = 3;
             }
 
