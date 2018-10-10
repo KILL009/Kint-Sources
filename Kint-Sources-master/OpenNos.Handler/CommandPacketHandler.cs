@@ -4294,6 +4294,7 @@ public void Ban(BanPacket banPacket)
             Session.SendPacket(Session.Character.GenerateSay($"Level: {character.Level}", 13));
             Session.SendPacket(Session.Character.GenerateSay($"JobLevel: {character.JobLevel}", 13));
             Session.SendPacket(Session.Character.GenerateSay($"HeroLevel: {character.HeroLevel}", 13));
+            Session.SendPacket(Session.Character.GenerateSay($"Prestige: {character.prestigeLevel}", 13));
             Session.SendPacket(Session.Character.GenerateSay($"Gold: {character.Gold}", 13));
             Session.SendPacket(Session.Character.GenerateSay($"Bio: {character.Biography}", 13));
             Session.SendPacket(Session.Character.GenerateSay($"MapId: {Session.CurrentMapInstance.Map.MapId}", 13));
@@ -4342,6 +4343,13 @@ public void Ban(BanPacket banPacket)
                     {
                         Session.SendPacket(Session.Character.GenerateSay($"Character Name: {_character.Name}", 13));
                         Session.SendPacket(Session.Character.GenerateSay($"ChannelId: {connection[1]}", 13));
+                        Session.SendPacket(Session.Character.GenerateSay($"Current IP: {Session.IpAddress}", 13));
+                        Session.SendPacket(Session.Character.GenerateSay($"Session: {Session.SessionId}", 13));
+                        Session.SendPacket(Session.Character.GenerateSay($"TimeRegi: {Session.RegisterTime}", 13));
+                        Session.SendPacket(Session.Character.GenerateSay($"Connected: {Session.IsConnected}", 13));
+                        Session.SendPacket(Session.Character.GenerateSay($"Disposing: {Session.IsDisposing}", 13));
+                        Session.SendPacket(Session.Character.GenerateSay($"Client: {Session.ClientId}", 13));
+                        Session.SendPacket(Session.Character.GenerateSay($"HasSession: {Session.HasSession}", 13));
                         Session.SendPacket(Session.Character.GenerateSay("-----", 13));
                     }
                 }

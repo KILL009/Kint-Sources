@@ -387,7 +387,12 @@ namespace OpenNos.GameObject.Battle
         public List<BCard> StaticBcards { get; set; }
 
         public IEnumerable<BCard> SkillBcards { get; private set; }
+
+        public bool IsReflecting { get; internal set; }
+
+
     }
 }
+     
 
 #endregion

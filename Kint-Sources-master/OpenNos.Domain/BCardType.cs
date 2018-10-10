@@ -1107,8 +1107,9 @@
 
         public enum DragonSkills : byte
         {
-            TransformationInverted = 11,
-            Transformation = 12
+            Transformation = 1,
+            TransformationInverted = 2
+           
         }
 
         // end!

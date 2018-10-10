@@ -33,11 +33,14 @@ namespace OpenNos.GameObject
           
         }
 
+      
         #endregion
 
         #region Properties
 
         public int Level;
+        private int secondData;
+        private object entity;
 
         public Card Card { get; set; }
 
