@@ -389,4 +389,5 @@ namespace OpenNos.GameObject.Battle
         public IEnumerable<BCard> SkillBcards { get; private set; }
     }
 }
+
 #endregion
