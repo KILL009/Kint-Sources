@@ -32,7 +32,7 @@ namespace OpenNos.GameObject
         private long _transportId;
         private List<CellonOptionDTO> _cellonOptions;
         private List<ShellEffectDTO> _shellEffects;
-        private int i1;
+       
 
         #endregion
 
@@ -248,7 +248,7 @@ namespace OpenNos.GameObject
         public void PerfectSP(ClientSession session)
         {
 
-            do {
+             {
                 short[] upsuccess = { 50, 40, 30, 20, 10 };
 
                 int[] goldprice = { 5000, 10000, 20000, 50000, 100000 };
@@ -427,7 +427,7 @@ namespace OpenNos.GameObject
             session.Character.Inventory.RemoveItemAmount(stonevnum, stoneprice[upmode - 1]);
             session.SendPacket("shop_end 1");
 
-            } while (i1 == 20);
+            }
 
         }
 
