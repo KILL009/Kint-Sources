@@ -43,6 +43,8 @@ namespace OpenNos.DAL.EF.Entities
 
         public byte Level { get; set; }
 
+        public byte PrestigeLevl { get; set; }
+
         public short Loyalty { get; set; }
 
         public short MapX { get; set; }
