@@ -42,6 +42,8 @@ namespace OpenNos.Data
 
         public byte Level { get; set; }
 
+        public byte PrestigeLevl { get; set; }
+
         public short Loyalty { get; set; }
 
         public short MapX { get; set; }
