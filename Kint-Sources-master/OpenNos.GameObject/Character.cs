@@ -694,6 +694,7 @@ namespace OpenNos.GameObject
                 //set position to mate because mate will send to miniland
                 mate.MapX = 5;
                 mate.MapY = 8;
+               
             }
             Session.SendPacket($"ctl 2 {mate.MateTransportId} 3");
             Mates.Add(mate);
