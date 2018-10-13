@@ -57,6 +57,7 @@ namespace OpenNos.GameObject
             IsSummonable = input.IsSummonable;
             IsTeamMember = input.IsTeamMember;
             Level = input.Level;
+            PrestigeLevl = input.PrestigeLevl;
             Loyalty = input.Loyalty;
             MapX = input.MapX;
             MapY = input.MapY;
@@ -76,6 +77,7 @@ namespace OpenNos.GameObject
             NpcMonsterVNum = npcMonster.NpcMonsterVNum;
             Monster = npcMonster;
             Level = level;
+            PrestigeLevl = PrestigeLevl;
             Hp = MaxHp;
             Mp = MaxMp;
             Name = npcMonster.Name;
@@ -226,7 +228,7 @@ namespace OpenNos.GameObject
         public string GenerateCond() => $"cond 2 {MateTransportId} 0 0 {Speed}";
 
         public string GenerateEInfo() =>
-            $"e_info 10 {NpcMonsterVNum} {Level} {Monster.Element} {Monster.AttackClass} {Monster.ElementRate} {Monster.AttackUpgrade} {Monster.DamageMinimum} {Monster.DamageMaximum} {Monster.Concentrate} {Monster.CriticalChance} {Monster.CriticalRate} {Monster.DefenceUpgrade} {Monster.CloseDefence} {Monster.DefenceDodge} {Monster.DistanceDefence} {Monster.DistanceDefenceDodge} {Monster.MagicDefence} {Monster.FireResistance} {Monster.WaterResistance} {Monster.LightResistance} {Monster.DarkResistance} {Monster.MaxHP} {Monster.MaxMP} -1 {Name.Replace(' ', '^')}";
+            $"e_info 10 {NpcMonsterVNum} {Level} {PrestigeLevl} {Monster.Element} {Monster.AttackClass} {Monster.ElementRate} {Monster.AttackUpgrade} {Monster.DamageMinimum} {Monster.DamageMaximum} {Monster.Concentrate} {Monster.CriticalChance} {Monster.CriticalRate} {Monster.DefenceUpgrade} {Monster.CloseDefence} {Monster.DefenceDodge} {Monster.DistanceDefence} {Monster.DistanceDefenceDodge} {Monster.MagicDefence} {Monster.FireResistance} {Monster.WaterResistance} {Monster.LightResistance} {Monster.DarkResistance} {Monster.MaxHP} {Monster.MaxMP} -1 {Name.Replace(' ', '^')}";
 
         public string GenerateIn(bool foe = false, bool isAct4 = false)
         {
@@ -280,8 +282,30 @@ namespace OpenNos.GameObject
             return string.Empty;
         }
 
+        public string _GenerateScPacket()
+        {
+            double pxp = PrestigeXpLoad();
+            if (pxp > int.MaxValue)
+            {
+                pxp = (int)(pxp / 100);
+            }
+
+            switch (MateType)
+            {
+                case MateType.Partner:
+                    return
+                        $"sc_n {PetId} {NpcMonsterVNum} {MateTransportId} {Level} {PrestigeLevl} {Loyalty} {Experience} {(WeaponInstance != null ? $"{WeaponInstance.ItemVNum}.{WeaponInstance.Rare}.{WeaponInstance.Upgrade}" : "-1")} {(ArmorInstance != null ? $"{ArmorInstance.ItemVNum}.{ArmorInstance.Rare}.{ArmorInstance.Upgrade}" : "-1")} {(GlovesInstance != null ? $"{GlovesInstance.ItemVNum}.0.0" : "-1")} {(BootsInstance != null ? $"{BootsInstance.ItemVNum}.0.0" : "-1")} 0 0 1 {WeaponInstance?.Upgrade ?? 0} {Monster.DamageMinimum + BaseDamage + (WeaponInstance?.DamageMinimum ?? 0)} {Monster.DamageMaximum + BaseDamage + (WeaponInstance?.DamageMaximum ?? 0)} {Monster.Concentrate + (WeaponInstance?.HitRate ?? 0)} {Monster.CriticalChance + (WeaponInstance?.CriticalLuckRate ?? 0)} {Monster.CriticalRate + (WeaponInstance?.CriticalRate ?? 0)} {ArmorInstance?.Upgrade ?? 0} {Monster.CloseDefence + MeleeDefense + (ArmorInstance?.CloseDefence ?? 0) + (GlovesInstance?.CloseDefence ?? 0) + (BootsInstance?.CloseDefence ?? 0)} {Monster.DefenceDodge + MeleeDefenseDodge + (ArmorInstance?.DefenceDodge ?? 0) + (GlovesInstance?.DefenceDodge ?? 0) + (BootsInstance?.DefenceDodge ?? 0)} {Monster.DistanceDefence + RangeDefense + (ArmorInstance?.DistanceDefence ?? 0) + (GlovesInstance?.DistanceDefence ?? 0) + (BootsInstance?.DistanceDefence ?? 0)} {Monster.DistanceDefenceDodge + RangeDefenseDodge + (ArmorInstance?.DistanceDefenceDodge ?? 0) + (GlovesInstance?.DistanceDefenceDodge ?? 0) + (BootsInstance?.DistanceDefenceDodge ?? 0)} {Monster.MagicDefence + MagicalDefense + (ArmorInstance?.MagicDefence ?? 0) + (GlovesInstance?.MagicDefence ?? 0) + (BootsInstance?.MagicDefence ?? 0)} {0 /*SP Element*/} {Monster.FireResistance + (GlovesInstance?.FireResistance ?? 0) + (BootsInstance?.FireResistance ?? 0)} {Monster.WaterResistance + (GlovesInstance?.WaterResistance ?? 0) + (BootsInstance?.WaterResistance ?? 0)} {Monster.LightResistance + (GlovesInstance?.LightResistance ?? 0) + (BootsInstance?.LightResistance ?? 0)} {Monster.DarkResistance + (GlovesInstance?.DarkResistance ?? 0) + (BootsInstance?.DarkResistance ?? 0)} {Hp} {MaxHp} {Mp} {MaxMp} 0 {xp} {(IsUsingSp ? SpInstance.Item.Name.Replace(' ', '^') : Name.Replace(' ', '^'))} {(IsUsingSp && SpInstance != null ? SpInstance.Item.Morph : Skin != 0 ? Skin : -1)} {(IsSummonable ? 1 : 0)} {(SpInstance != null ? $"{SpInstance.ItemVNum}.100" : "-1")} {(SpInstance != null ? "0.0 0.0 0.0" : "-1 -1 -1")}";
+
+                case MateType.Pet:
+                    return
+                        $"sc_p {PetId} {NpcMonsterVNum} {MateTransportId} {Level} {PrestigeLevl} {Loyalty} {Experience} 0 {Monster.AttackUpgrade + Attack} {Monster.DamageMinimum + BaseDamage} {Monster.DamageMaximum + BaseDamage} {Monster.Concentrate} {Monster.CriticalChance} {Monster.CriticalRate} {Monster.DefenceUpgrade + Defence} {Monster.CloseDefence + MeleeDefense} {Monster.DefenceDodge + MeleeDefenseDodge} {Monster.DistanceDefence + RangeDefense} {Monster.DistanceDefenceDodge + RangeDefenseDodge} {Monster.MagicDefence + MagicalDefense} {Monster.Element} {Monster.FireResistance} {Monster.WaterResistance} {Monster.LightResistance} {Monster.DarkResistance} {Hp} {MaxHp} {Mp} {MaxMp} 0 {pxp} {(CanPickUp ? 1 : 0)} {Name.Replace(' ', '^')} {(IsSummonable ? 1 : 0)}";
+            }
+
+            return string.Empty;
+        }
+
         public string GenerateStatInfo() =>
-            $"st 2 {MateTransportId} {Level} 0 {(int)((float)Hp / (float)MaxHp * 100)} {(int)((float)Mp / (float)MaxMp * 100)} {Hp} {Mp}{Buff.GetAllItems().Aggregate(string.Empty, (current, buff) => current + $" {buff.Card.CardId}.{buff.Level}")}";
+            $"st 2 {MateTransportId} {Level} {PrestigeLevl} 0 {(int)((float)Hp / (float)MaxHp * 100)} {(int)((float)Mp / (float)MaxMp * 100)} {Hp} {Mp}{Buff.GetAllItems().Aggregate(string.Empty, (current, buff) => current + $" {buff.Card.CardId}.{buff.Level}")}";
 
         public void GenerateXp(int xp)
         {
@@ -294,6 +318,30 @@ namespace OpenNos.GameObject
                     {
                         Experience = (long)(Experience - XpLoad());
                         Level++;
+                        Hp = MaxHp;
+                        Mp = MaxMp;
+                        Owner.MapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Npc, MateTransportId, 4732),
+                            PositionX, PositionY);
+                        Owner.MapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Npc, MateTransportId, 4798),
+                            PositionX, PositionY);
+                    }
+                }
+            }
+
+            Owner.Session.SendPacket(GenerateScPacket());
+        }
+
+        public void GeneratePXP(int pxp)
+        {
+            if (PrestigeLevl < ServerManager.Instance.Configuration.MaxPrestigeLevel)
+            {
+                Experience += pxp;
+                if (Experience >= PrestigeXpLoad())
+                {
+                    if (PrestigeLevl + 1 < Owner.PrestigeLevl)
+                    {
+                        Experience = (long)(Experience - PrestigeXpLoad());
+                        PrestigeLevl++;
                         Hp = MaxHp;
                         Mp = MaxMp;
                         Owner.MapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Npc, MateTransportId, 4732),
@@ -487,6 +535,19 @@ namespace OpenNos.GameObject
             try
             {
                 return MateHelper.Instance.XpData[Level - 1];
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+
+        private double PrestigeXpLoad()
+        {
+            try
+            {
+                return MateHelper.Instance.PrestigeXpData[Level - 1];
             }
             catch
             {
