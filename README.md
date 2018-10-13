@@ -1,10 +1,5 @@
-# Laravel Bugherd
+# Laravel
 [![Build Status](https://travis-ci.com/KILL009/Kint-Sources.svg?branch=master)](https://travis-ci.com/KILL009/Kint-Sources)
-
-![Travis (.org)](https://img.shields.io/travis/:user/:repo.svg)
-
-![David](https://img.shields.io/david/dev/expressjs/express.svg)
-
 
 # Kint-Sources
 [<img src="https://cdn.discordapp.com/attachments/429478365678796831/489626838507716609/wallpaper_anime_2_8.jpg?style=shield">](https://discord.gg/h8kTEbe)
