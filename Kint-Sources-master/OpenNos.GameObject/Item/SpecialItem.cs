@@ -140,10 +140,25 @@ namespace OpenNos.GameObject
                     }
                     break;
 
-                case 1058:
+               case 1574:
+                    if (EffectValue == 1574)
                     {
-                        
-
+                        int rnd = ServerManager.RandomNumber(0, 1);
+                        if (rnd < 1)
+                        {
+                            short[] vnums =
+                            {
+                            //ID's of the Items, you will get
+                                4129, 4130, 4131, 4132
+                            };
+                            //This Code counts the Items, you inserted
+                            byte[] counts = { 1, 1, 1, 1 };
+                            int item = ServerManager.RandomNumber(0, 4);
+                            session.Character.GiftAdd(vnums[item], counts[item]);
+                        }
+                        //This Code, deltes the Item from the Inventory         
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                        session.SendPacket("msg 5 Success! You recieved your Items.");
                     }
                     break;
 
@@ -208,7 +223,7 @@ namespace OpenNos.GameObject
                     }
                     break;
                 //sp job booster
-                case 146:
+                case 1362:
                     if (!session.Character.Buff.ContainsKey(146))
                     {
                         session.Character.AddStaticBuff(new StaticBuffDTO() { CardId = 146 });
@@ -416,19 +431,7 @@ namespace OpenNos.GameObject
                         session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("ITEM_IN_USE"), 0));
                     }
                     break;
-
-                case 2081:
-                    if (!session.Character.Buff.ContainsKey(146))
-                    {
-                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
-                        session.Character.AddStaticBuff(new StaticBuffDTO() { CardId = 146 });
-                    }
-                    else
-                    {
-                        session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("ITEM_IN_USE"), 0));
-                    }
-                    break;
-
+                    
                 // Divorce letter
                 case 6969: // this is imaginary number I = √(-1)
                     var rel = session.Character.CharacterRelations.FirstOrDefault(s => s.RelationType == CharacterRelationType.Spouse);

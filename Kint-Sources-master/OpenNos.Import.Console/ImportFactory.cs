@@ -2583,6 +2583,7 @@ namespace OpenNos.Import.Console
                         }
 
                         // item.DesignId = short.Parse(currentLine[6]);
+
                         switch (item.VNum)
                         {
                             case 1906:
