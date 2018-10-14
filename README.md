@@ -1,6 +1,3 @@
-# Label 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/6fc68251bf044ed4959a6bd40c945e44)](https://www.codacy.com/app/KILL009/Kint-Sources?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=KILL009/Kint-Sources&amp;utm_campaign=Badge_Grade)
-
 # Kint-Sources
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/9e6441f2e74f4bfaabb795b33b140068)](https://app.codacy.com/app/KILL009/Kint-Sources?utm_source=github.com&utm_medium=referral&utm_content=KILL009/Kint-Sources&utm_campaign=Badge_Grade_Settings)
