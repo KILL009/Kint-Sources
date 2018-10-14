@@ -897,7 +897,17 @@ namespace OpenNos.GameObject
 
         }
 
-        
+        public void MapLevelNoExp(ClientSession Session, int MapId, int Level)
+        {
+            if (Session.CurrentMapInstance.Map.MapId == 1)
+            {
+                if (Session.Character.Level <= 1)
+                {
+                    return;
+                }
+            }
+        }
+
         public void GetReput(long val)
         {
             Reputation += val * ServerManager.Instance.ReputRate;
@@ -4678,7 +4688,7 @@ namespace OpenNos.GameObject
             {
                 xp /= this.Group.CharacterCount;
             }
-
+            Session.Character.MapLevelNoExp(Session, 1, 1);
             return xp;
         }
 
