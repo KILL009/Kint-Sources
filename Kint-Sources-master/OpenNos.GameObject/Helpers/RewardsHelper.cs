@@ -1,6 +1,7 @@
 ﻿using OpenNos.Domain;
 using OpenNos.Core;
 using OpenNos.GameObject.Networking;
+using System;
 
 namespace OpenNos.GameObject.Helpers
 {
@@ -71,7 +72,7 @@ namespace OpenNos.GameObject.Helpers
 
         public void GetLevelUpRewards(ClientSession session)
         {
-            switch (session.Character.Level)
+             switch (session.Character.Level)
             {
                 case 20:
                     session.Character.GiftAdd(1010, 50); // 1K/1K healing pots
@@ -114,8 +115,11 @@ namespace OpenNos.GameObject.Helpers
                     session.Character.GiftAdd(1452, 5); // Ancelloan's blessing
                     session.Character.GiftAdd(1364, 5); // red sp scroll
                     session.Character.GiftAdd(282, 1); // betting amulet
-                    session.Character.GiftAdd(282, 1); // betting amulet
+                    session.Character.GiftAdd(282, 1); // betting amulet          
                     break;
+                default:
+                    throw new InvalidOperationException("Unexpected value session.Character.Level = " + session.Character.Level);
+
             }
         }
 
@@ -246,6 +250,8 @@ namespace OpenNos.GameObject.Helpers
                             break;
                     }
                     break;
+                default:
+                    throw new InvalidOperationException("Unexpected value session.Character.JobLevel = " + session.Character.JobLevel);
             }
         }
 

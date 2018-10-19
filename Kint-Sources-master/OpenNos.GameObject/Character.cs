@@ -665,7 +665,7 @@ namespace OpenNos.GameObject
                 }
             }
         }
-
+     
         public bool AddPet(Mate mate)
         {
             if (mate.MateType == MateType.Pet ? MaxMateCount > Mates.Count : 3 > Mates.Count(s => s.MateType == MateType.Partner))
@@ -1346,7 +1346,7 @@ namespace OpenNos.GameObject
                         {
                             spType = 3;
                         }
-                        else if (specialist.Item.Morph > 16 && specialist.Item.Morph < 29)
+                        else if (specialist.Item.Morph > 16 && specialist.Item.Morph < 30)
                         {
                             spType = 2;
                         }
@@ -3176,8 +3176,8 @@ namespace OpenNos.GameObject
                         DAOFactory.AccountDAO.WriteGeneralLog(AccountId, Session.Account.RegistrationIP, CharacterId, GeneralLogType.ReferralProgram, $"ReferrerId: {referrerId}");
 
                         // send gifts like you want
-                       // SendGift(CharacterId, 5910, 1, 0, 0, false);
-                       // SendGift(referrerId, 5910, 1, 0, 0, false);
+                        SendGift(CharacterId, 1012, 1, 0, 0, false);
+                        SendGift(referrerId, 1011, 1, 0, 0, false);
                     }
                 }
             }
@@ -4194,7 +4194,7 @@ namespace OpenNos.GameObject
                                     return false;
                                 }
                                 Inventory.RemoveItemAmount(2081);
-                                wearable.Ammo = 100;
+                                wearable.Ammo = 255;
                                 Session.SendPacket(GenerateSay(Language.Instance.GetMessageFromKey("AMMO_LOADED_ADVENTURER"), 10));
                                 return true;
                             }
@@ -4221,7 +4221,7 @@ namespace OpenNos.GameObject
                                 }
 
                                 Inventory.RemoveItemAmount(2082);
-                                inv.Ammo = 100;
+                                inv.Ammo = 255;
                                 Session.SendPacket(GenerateSay(Language.Instance.GetMessageFromKey("AMMO_LOADED_SWORDSMAN"), 10));
                                 return true;
                             }
@@ -4248,7 +4248,7 @@ namespace OpenNos.GameObject
                                 }
 
                                 Inventory.RemoveItemAmount(2083);
-                                inv.Ammo = 100;
+                                inv.Ammo = 255;
                                 Session.SendPacket(GenerateSay(Language.Instance.GetMessageFromKey("AMMO_LOADED_ARCHER"), 10));
                                 return true;
                             }

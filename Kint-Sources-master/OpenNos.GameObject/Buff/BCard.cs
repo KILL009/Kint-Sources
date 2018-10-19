@@ -1127,7 +1127,7 @@ namespace OpenNos.GameObject
                 case BCardType.CardType.FocusEnemyAttentionSkill:
                     break;
 
-              /*  case BCardType.CardType.TauntSkill:
+               /* case BCardType.CardType.TauntSkill:
                     switch (SubType)
                     {
                         case (byte)AdditionalTypes.TauntSkill.ReflectsMaximumDamageFromNegated:

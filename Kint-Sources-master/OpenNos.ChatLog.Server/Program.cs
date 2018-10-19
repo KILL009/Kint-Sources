@@ -73,7 +73,7 @@ namespace OpenNos.ChatLog.Server
                     string text = $"CHAT LOG SERVER v{fileVersionInfo.ProductVersion}dev - PORT : {port} by OpenNos Team";
                     int offset = (Console.WindowWidth / 2) + (text.Length / 2);
                     string separator = new string('=', Console.WindowWidth);
-                    Console.WriteLine(separator + string.Format("{0," + offset + "}\n", text) + separator);
+                   
                 }
 
                 Logger.Info(Language.Instance.GetMessageFromKey("CONFIG_LOADED"));
