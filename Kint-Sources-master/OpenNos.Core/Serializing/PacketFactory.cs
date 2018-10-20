@@ -354,7 +354,11 @@ namespace OpenNos.Core
                  return TypeDescriptor.GetConverter(packetPropertyType.GenericTypeArguments[0]).ConvertFromInvariantString(currentValue);
             }
 
-            
+            if (packetPropertyType == typeof(string) && string.IsNullOrEmpty(currentValue))
+            {
+                throw new NullReferenceException();
+            }
+
 
             return Convert.ChangeType(currentValue, packetPropertyType); // cast to specified type
         }
