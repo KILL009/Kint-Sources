@@ -31,7 +31,7 @@ namespace OpenNos.GameObject
 {
     public class SpecialItem : Item
     {
-        private object colorToCheck;
+        
         #region Instantiation
 
         public SpecialItem(ItemDTO item) : base(item)
@@ -239,7 +239,7 @@ namespace OpenNos.GameObject
                     break;
 
                 // Ice oil
-                case 252:
+                case 5929:
                     if (!session.Character.Buff.ContainsKey(340))
                     {
                         session.Character.AddStaticBuff(new StaticBuffDTO() { CardId = 340 });
@@ -308,8 +308,8 @@ namespace OpenNos.GameObject
                     {
                         return;
                     }
-                    session.CurrentMapInstance?.Broadcast(session.Character.GenerateEff(885), session.Character.MapX, session.Character.MapY);
-                    
+                    session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 885), session.Character.MapX, session.Character.MapY);
+
                     session.Character.Speed += 5;
                     switch (session.Character.Morph)
                     {
