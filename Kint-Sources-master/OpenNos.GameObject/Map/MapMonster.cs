@@ -1201,12 +1201,7 @@ namespace OpenNos.GameObject
                 }
             }
         }
-
-        internal string GenerateRc(int drain)
-        {
-            throw new NotImplementedException();
-        }
-
+     
         #endregion
     }
 }
