@@ -115,6 +115,8 @@ namespace OpenNos.GameObject
 
         public DateTime LastSpeedChange { get; set; }
 
+        public void DisableBuffs(List<BuffType> types, int level = 100) => BattleEntity.DisableBuffs(types, level);
+
         public DateTime LastSkillUse { get; set; }
 
         public int MagicalDefense => MagicalDefenseLoad();
@@ -588,9 +590,6 @@ namespace OpenNos.GameObject
             return b;
         }
 
-        internal void DisableBuffs(List<BuffType> buffsToDisable, int firstData)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }
