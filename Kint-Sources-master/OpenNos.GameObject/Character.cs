@@ -728,11 +728,7 @@ namespace OpenNos.GameObject
             target?.SendPacket(target?.Character.GenerateFinit());
         }
 
-        internal void PushBackToDirection(int v)
-        {
-            throw new NotImplementedException();
-        }
-
+     
         public void AddStaticBuff(StaticBuffDTO staticBuff)
         {
             Buff bf = new Buff(staticBuff.CardId, Level)
@@ -871,10 +867,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        internal void TeleportInRadius(int firstData)
-        {
-            throw new NotImplementedException();
-        }
+      
 
         public void ChangeSex()
         {
@@ -1426,16 +1419,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        public string GenerateDm(ushort drain)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string GenerateEff(int v)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public void CloseExchangeOrTrade()
         {
             if (InExchangeOrTrade)
@@ -2274,7 +2258,7 @@ namespace OpenNos.GameObject
                             }
                             else
                             {
-                                if (monsterToAttack.DamageList.FirstOrDefault().Key == CharacterId)
+                                if (monsterToAttack.DamageList.FirstOrDefault().Key == CharacterId || Mates.Any(m => m.IsTeamMember && m.MateTransportId == monsterToAttack.MatesDamageList.FirstOrDefault().Key))
                                 {
                                     GenerateXp(monsterToAttack, true);
                                 }
