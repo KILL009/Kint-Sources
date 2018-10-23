@@ -1079,11 +1079,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        internal string GenerateDm(ushort drain)
-        {
-            throw new NotImplementedException();
-        }
-
+     
         private void TargetHit2(Mate mate, NpcMonsterSkill npcMonsterSkill, int damage, int hitmode)
         {
             lock (mate.PveLockObject)
