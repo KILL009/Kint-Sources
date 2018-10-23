@@ -224,11 +224,7 @@ namespace OpenNos.GameObject
             return invlist;
         }
 
-        internal IEnumerable<object> Select(Func<ItemInstance, object> p)
-        {
-            throw new NotImplementedException();
-        }
-
+       
         /// <summary>
         /// Add iteminstance to inventory with specified slot and type, iteminstance will be overridden.
         /// </summary>
