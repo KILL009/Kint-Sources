@@ -585,6 +585,7 @@ namespace OpenNos.GameObject
         public IDisposable DotDebuff { get;  set; }
 
         public int PrestigeLevl { get; set; }
+        public Node[,] BrushFire { get; internal set; }
 
 
         #endregion
@@ -1419,7 +1420,11 @@ namespace OpenNos.GameObject
             }
         }
 
-        
+        public string GenerateEff(int v)
+        {
+            throw new NotImplementedException();
+        }
+
         public void CloseExchangeOrTrade()
         {
             if (InExchangeOrTrade)

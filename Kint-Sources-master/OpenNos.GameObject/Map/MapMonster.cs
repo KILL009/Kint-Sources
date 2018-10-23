@@ -79,7 +79,7 @@ namespace OpenNos.GameObject
 
         public IDictionary<long, long> DamageList { get; private set; }
       
-       public IDictionary<long, long> MatesDamageList { get; private set; }
+       public IDictionary<long, long>   MatesDamageList { get; private set; }
 
         public DateTime Death { get; set; }
 
@@ -237,6 +237,7 @@ namespace OpenNos.GameObject
             CurrentMp = MaxMp;
             Skills = Monster.Skills.ToList();
             DamageList = new Dictionary<long, long>();
+            MatesDamageList = new Dictionary<long, long>();
             _random = new Random(MapMonsterId);
             _movetime = ServerManager.RandomNumber(400, 3200);
         }
