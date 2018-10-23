@@ -111,7 +111,7 @@ namespace OpenNos.GameObject
                 case 10541:
                    if (ItemType == ItemType.Event)
                     {
-                        session.CurrentMapInstance?.Broadcast(session.Character.GenerateEff(EffectValue));
+                        session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, EffectValue));
                         if (MappingHelper.GuriItemEffects.ContainsKey(EffectValue))
                         {
                             session.CurrentMapInstance?.Broadcast(UserInterfaceHelper.GenerateGuri(19, 1, session.Character.CharacterId, MappingHelper.GuriItemEffects[EffectValue]), session.Character.MapX, session.Character.MapY);
