@@ -33,9 +33,6 @@ using System.Reactive.Linq;
 using static OpenNos.Domain.BCardType;
 using OpenNos.Core.ConcurrencyExtensions;
 using OpenNos.GameObject.Networking;
-using OpenNos.Core.Extensions;
-using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
 
 namespace OpenNos.GameObject
 {
@@ -585,6 +582,7 @@ namespace OpenNos.GameObject
         public IDisposable DotDebuff { get;  set; }
 
         public int PrestigeLevl { get; set; }
+        public Node[,] BrushFire { get; internal set; }
 
 
         #endregion
@@ -665,7 +663,7 @@ namespace OpenNos.GameObject
                 }
             }
         }
-
+     
         public bool AddPet(Mate mate)
         {
             if (mate.MateType == MateType.Pet ? MaxMateCount > Mates.Count : 3 > Mates.Count(s => s.MateType == MateType.Partner))
@@ -728,11 +726,7 @@ namespace OpenNos.GameObject
             target?.SendPacket(target?.Character.GenerateFinit());
         }
 
-        internal void PushBackToDirection(int v)
-        {
-            throw new NotImplementedException();
-        }
-
+     
         public void AddStaticBuff(StaticBuffDTO staticBuff)
         {
             Buff bf = new Buff(staticBuff.CardId, Level)
@@ -871,10 +865,7 @@ namespace OpenNos.GameObject
             }
         }
 
-        internal void TeleportInRadius(int firstData)
-        {
-            throw new NotImplementedException();
-        }
+      
 
         public void ChangeSex()
         {
@@ -897,7 +888,17 @@ namespace OpenNos.GameObject
 
         }
 
-        
+        public void MapLevelNoExp(ClientSession Session, int MapId, int Level)
+        {
+            if (Session.CurrentMapInstance.Map.MapId == 1)
+            {
+                if (Session.Character.Level <= 1)
+                {
+                    return;
+                }
+            }
+        }
+
         public void GetReput(long val)
         {
             Reputation += val * ServerManager.Instance.ReputRate;
@@ -1336,7 +1337,7 @@ namespace OpenNos.GameObject
                         {
                             spType = 3;
                         }
-                        else if (specialist.Item.Morph > 16 && specialist.Item.Morph < 29)
+                        else if (specialist.Item.Morph > 16 && specialist.Item.Morph < 30)
                         {
                             spType = 2;
                         }
@@ -1414,11 +1415,6 @@ namespace OpenNos.GameObject
                     }
                 }
             }
-        }
-
-        public string GenerateDm(ushort drain)
-        {
-            throw new NotImplementedException();
         }
 
         public string GenerateEff(int v)
@@ -2264,7 +2260,7 @@ namespace OpenNos.GameObject
                             }
                             else
                             {
-                                if (monsterToAttack.DamageList.FirstOrDefault().Key == CharacterId)
+                                if (monsterToAttack.DamageList.FirstOrDefault().Key == CharacterId || Mates.Any(m => m.IsTeamMember && m.MateTransportId == monsterToAttack.MatesDamageList.FirstOrDefault().Key))
                                 {
                                     GenerateXp(monsterToAttack, true);
                                 }
@@ -3166,8 +3162,8 @@ namespace OpenNos.GameObject
                         DAOFactory.AccountDAO.WriteGeneralLog(AccountId, Session.Account.RegistrationIP, CharacterId, GeneralLogType.ReferralProgram, $"ReferrerId: {referrerId}");
 
                         // send gifts like you want
-                       // SendGift(CharacterId, 5910, 1, 0, 0, false);
-                       // SendGift(referrerId, 5910, 1, 0, 0, false);
+                        SendGift(CharacterId, 1012, 1, 0, 0, false);
+                        SendGift(referrerId, 1011, 1, 0, 0, false);
                     }
                 }
             }
@@ -4184,7 +4180,7 @@ namespace OpenNos.GameObject
                                     return false;
                                 }
                                 Inventory.RemoveItemAmount(2081);
-                                wearable.Ammo = 100;
+                                wearable.Ammo = 255;
                                 Session.SendPacket(GenerateSay(Language.Instance.GetMessageFromKey("AMMO_LOADED_ADVENTURER"), 10));
                                 return true;
                             }
@@ -4211,7 +4207,7 @@ namespace OpenNos.GameObject
                                 }
 
                                 Inventory.RemoveItemAmount(2082);
-                                inv.Ammo = 100;
+                                inv.Ammo = 255;
                                 Session.SendPacket(GenerateSay(Language.Instance.GetMessageFromKey("AMMO_LOADED_SWORDSMAN"), 10));
                                 return true;
                             }
@@ -4238,7 +4234,7 @@ namespace OpenNos.GameObject
                                 }
 
                                 Inventory.RemoveItemAmount(2083);
-                                inv.Ammo = 100;
+                                inv.Ammo = 255;
                                 Session.SendPacket(GenerateSay(Language.Instance.GetMessageFromKey("AMMO_LOADED_ARCHER"), 10));
                                 return true;
                             }
@@ -4678,7 +4674,7 @@ namespace OpenNos.GameObject
             {
                 xp /= this.Group.CharacterCount;
             }
-
+            Session.Character.MapLevelNoExp(Session, 1, 1);
             return xp;
         }
 

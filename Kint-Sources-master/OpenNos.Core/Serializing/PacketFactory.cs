@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace OpenNos.Core
@@ -353,7 +354,11 @@ namespace OpenNos.Core
                  return TypeDescriptor.GetConverter(packetPropertyType.GenericTypeArguments[0]).ConvertFromInvariantString(currentValue);
             }
 
-            
+            if (packetPropertyType == typeof(string) && string.IsNullOrEmpty(currentValue))
+            {
+                throw new NullReferenceException();
+            }
+
 
             return Convert.ChangeType(currentValue, packetPropertyType); // cast to specified type
         }

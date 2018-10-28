@@ -107,22 +107,37 @@ namespace OpenNos.Handler
 
         public void AttackMonster(Mate attacker, NpcMonsterSkill skill, MapMonster target)
         {
-            if (target == null || attacker == null || !target.IsAlive || skill?.Skill?.MpCost > attacker.Mp)
+            if (target == null || attacker == null)
             {
                 return;
             }
-            if (skill == null)
+
+            if (target.CurrentHp > 0 && skill == null)
             {
-                skill = new NpcMonsterSkill
+                // TODO: Implement official damage calculation
+                var dmg = (attacker.Level * 15);
+
+                Session?.CurrentMapInstance?.Broadcast($"ct 2 {attacker.MateTransportId} 3 {target.MapMonsterId} -1 -1 0");
+                target.CurrentHp -= dmg;
+
+                if (target.DamageList.ContainsKey(attacker.MateTransportId))
                 {
-                    SkillVNum = attacker.Monster.BasicSkill
-                };
+                    target.DamageList[attacker.MateTransportId] += dmg;
+                }
+                else
+                {
+                    target.DamageList.Add(attacker.MateTransportId, dmg);
+                }
+
+                if (target.CurrentHp <= 0)
+                {
+                    target.CurrentHp = 0;
+                    target.IsAlive = false;
+                    Session.Character.GenerateKillBonus(target);
+                }
+
+                Session?.CurrentMapInstance?.Broadcast($"su 2 {attacker.MateTransportId} 3 {target.MapMonsterId} 0 12 11 200 0 0 {(target.IsAlive ? 1 : 0)} {(int)((double)target.CurrentHp / target.Monster.MaxHP * 100)} {dmg} 0 0");
             }
-            attacker.LastSkillUse = DateTime.Now;
-            attacker.Mp -= skill.Skill == null ? 0 : skill.Skill.MpCost;
-            target.Monster.BCards.Where(s => s.CastType == 1).ToList().ForEach(s => s.ApplyBCards(attacker));
-            Session.CurrentMapInstance?.Broadcast($"ct 2 {attacker.MateTransportId} 3 {target.MapMonsterId} {skill.Skill?.CastAnimation} {skill.Skill?.CastEffect} {skill.Skill?.SkillVNum}");
-            target.HitQueue.Enqueue(new HitRequest(TargetHitType.SingleTargetHit, Session, attacker, skill));
         }
 
         private void AttackCharacter(Mate attacker, NpcMonsterSkill skill, Character target)

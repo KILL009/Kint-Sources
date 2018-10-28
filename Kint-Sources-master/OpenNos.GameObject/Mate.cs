@@ -115,6 +115,8 @@ namespace OpenNos.GameObject
 
         public DateTime LastSpeedChange { get; set; }
 
+        public void DisableBuffs(List<BuffType> types, int level = 100) => BattleEntity.DisableBuffs(types, level);
+
         public DateTime LastSkillUse { get; set; }
 
         public int MagicalDefense => MagicalDefenseLoad();
@@ -185,11 +187,12 @@ namespace OpenNos.GameObject
         public Node[][] BrushFireJagged { get; set; }
         public IEnumerable MapInstance { get;  set; }
         public MapInstance GetMatesInRang { get;  set; }
-    #endregion
+        public Node[,] BrushFire { get; internal set; }
+        #endregion
 
-    #region Methods
+        #region Methods
 
-    public void AddBuff(Buff indicator)
+        public void AddBuff(Buff indicator)
         {
             if (indicator?.Card != null)
             {
@@ -588,9 +591,6 @@ namespace OpenNos.GameObject
             return b;
         }
 
-        internal void DisableBuffs(List<BuffType> buffsToDisable, int firstData)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

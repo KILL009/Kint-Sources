@@ -817,6 +817,7 @@ namespace OpenNos.Handler
                         {
                             target?.CurrentMapInstance?.Broadcast(target?.Character?.GenerateEff(35));
                             Thread.Sleep(1000);
+                         
                         }
                     });
                 }

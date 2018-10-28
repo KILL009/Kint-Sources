@@ -224,11 +224,7 @@ namespace OpenNos.GameObject
             return invlist;
         }
 
-        internal IEnumerable<object> Select(Func<ItemInstance, object> p)
-        {
-            throw new NotImplementedException();
-        }
-
+       
         /// <summary>
         /// Add iteminstance to inventory with specified slot and type, iteminstance will be overridden.
         /// </summary>
@@ -591,7 +587,7 @@ namespace OpenNos.GameObject
                             int saveItemCount = destinationInventory.Amount;
                             destinationInventory.Amount = MAX_ITEM_AMOUNT;
                             sourceInventory.Amount = (short)(saveItemCount + sourceInventory.Amount - MAX_ITEM_AMOUNT);                                                 
-                            Save();
+                            
                         }
                         else
                         {
@@ -631,11 +627,6 @@ namespace OpenNos.GameObject
             }
             sourceInventory = LoadBySlotAndType(sourceSlot, sourcetype);
             destinationInventory = LoadBySlotAndType(destinationSlot, desttype);
-        }
-
-        private void Save()
-        {
-            throw new NotImplementedException();
         }
 
         public void RemoveItemAmount(int vnum, int amount = 1)

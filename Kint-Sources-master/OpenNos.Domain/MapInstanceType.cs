@@ -35,6 +35,7 @@ namespace OpenNos.Domain
         LobbyMapInstance,
         CaligorInstance,
         EventSheepInstance,
-        FortniteMapInstance
+        FortniteMapInstance,
+        Act4Instance
     }
 }

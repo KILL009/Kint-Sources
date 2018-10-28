@@ -617,7 +617,7 @@ namespace OpenNos.GameObject
                 case BCardType.CardType.SpecialDamageAndExplosions:
                     break;
 
-                case BCardType.CardType.SpecialEffects2:
+               /* case BCardType.CardType.SpecialEffects2:
                     if (session is Character tp)
                     {
                         switch (SubType)
@@ -637,7 +637,7 @@ namespace OpenNos.GameObject
                                 break;
                         }
                     }
-                    break;
+                    break;*/
 
                 case BCardType.CardType.CalculatingLevel:
                     break;
@@ -698,7 +698,8 @@ namespace OpenNos.GameObject
                                     break;
                             }
                             break;
-                        case (byte)AdditionalTypes.RecoveryAndDamagePercent.HPReduced:
+
+                       /* case (byte)AdditionalTypes.RecoveryAndDamagePercent.HPReduced:
                             switch (session)
                             {
                                 case Character receiverCharacter:
@@ -742,7 +743,7 @@ namespace OpenNos.GameObject
 
                                     break;
                             }
-                            break;
+                            break;*/
                     }
                     break;
 
@@ -1127,7 +1128,7 @@ namespace OpenNos.GameObject
                 case BCardType.CardType.FocusEnemyAttentionSkill:
                     break;
 
-              /*  case BCardType.CardType.TauntSkill:
+               /* case BCardType.CardType.TauntSkill:
                     switch (SubType)
                     {
                         case (byte)AdditionalTypes.TauntSkill.ReflectsMaximumDamageFromNegated:

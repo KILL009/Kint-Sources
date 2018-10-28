@@ -15,7 +15,7 @@
 using OpenNos.Data;
 using System;
 using System.Linq;
-using OpenNos.GameObject.Networking;
+using OpenNos.Domain;
 
 namespace OpenNos.GameObject
 {
@@ -31,65 +31,79 @@ namespace OpenNos.GameObject
 
         #region Methods
 
-        public override void Use(ClientSession session, ref ItemInstance inv, byte Option = 0, string[] packetsplit = null)
+        public override void Use(ClientSession session, ref ItemInstance inv, byte option = 0, string[] packetsplit = null)
         {
-            if (!session.HasCurrentMapInstance)
-            {
-                return;
-            }
-            if ((DateTime.Now - session.Character.LastPotion).TotalMilliseconds < (session.CurrentMapInstance.Map.MapTypes.OrderByDescending(s => s.PotionDelay).FirstOrDefault()?.PotionDelay ?? 750))
+            if ((DateTime.Now - session.Character.LastPotion).TotalMilliseconds < 750)
             {
                 return;
             }
             session.Character.LastPotion = DateTime.Now;
-            switch (Effect)
+            if (session.Character.Hp == session.Character.HPLoad() && session.Character.Mp == session.Character.MPLoad())
             {
-                default:
-                    if (session.Character.Hp == session.Character.HPLoad() && session.Character.Mp == session.Character.MPLoad())
-                    {
-                        return;
-                    }
-                    if (session.Character.Hp <= 0)
-                    {
-                        return;
-                    }
-                    session.Character.Inventory.RemoveItemFromInventory(inv.Id);
-                    if ((int)session.Character.HPLoad() - session.Character.Hp < Hp)
+                return;
+            }
+            if (session.Character.Hp <= 0)
+            {
+                return;
+            }
+            switch (VNum)
+            {
+                // Full HP
+                case 1242:
+                case 5582:
+                    if (session.CurrentMapInstance?.MapInstanceType != MapInstanceType.Act4Instance && session.CurrentMapInstance?.IsPvp != true)
                     {
                         session.CurrentMapInstance?.Broadcast(session.Character.GenerateRc((int)session.Character.HPLoad() - session.Character.Hp));
+                        session.Character.Hp = (int)session.Character.HPLoad();
+                        foreach (Mate mate in session.Character.Mates.Where(m => m.IsTeamMember))
+                        {
+                            mate.Hp = mate.HpLoad();
+                            session.CurrentMapInstance?.Broadcast(mate.GenerateRc(mate.HpLoad() - mate.Hp));
+                        }
                     }
-                    else if ((int)session.Character.HPLoad() - session.Character.Hp > Hp)
-                    {
-                        session.CurrentMapInstance?.Broadcast(session.Character.GenerateRc(Hp));
-                    }
-                    session.Character.Mp += Mp;
-                    session.Character.Hp += Hp;
-                    if (session.Character.Mp > session.Character.MPLoad())
+                    session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                    session.SendPacket(session.Character.GenerateStat());
+                    break;
+
+                // Full MP
+                case 1243:
+                case 5583:
+                    if (session.CurrentMapInstance?.MapInstanceType != MapInstanceType.Act4Instance && session.CurrentMapInstance?.IsPvp != true)
                     {
                         session.Character.Mp = (int)session.Character.MPLoad();
+                        session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m => m.Mp = m.MpLoad());
                     }
-                    if (session.Character.Hp > session.Character.HPLoad())
+                    session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                    session.SendPacket(session.Character.GenerateStat());
+                    break;
+
+                // Full Mp & Hp
+                case 1244:
+                case 5584:
+                    if (session.CurrentMapInstance?.MapInstanceType != MapInstanceType.Act4Instance && session.CurrentMapInstance?.IsPvp != true)
                     {
+                        session.CurrentMapInstance?.Broadcast(session.Character.GenerateRc((int)session.Character.HPLoad() - session.Character.Hp));
                         session.Character.Hp = (int)session.Character.HPLoad();
+                        session.Character.Mp = (int)session.Character.MPLoad();
                     }
-                    if (ServerManager.Instance.ChannelId != 51 || session.Character.MapId == 130 || session.Character.MapId == 131)
+                    session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                    session.SendPacket(session.Character.GenerateStat());
+                    break;
+
+                default:
+                    int hpHeal = session.Character.Hp + Hp > session.Character.HPLoad() ? (int)session.Character.HPLoad() - session.Character.Hp : Hp;
+                    session.CurrentMapInstance?.Broadcast(session.Character.GenerateRc(hpHeal));
+                    session.Character.Hp += hpHeal;
+                    session.Character.Mp += session.Character.Mp + Mp > session.Character.MPLoad() ? (int)session.Character.MPLoad() - session.Character.Mp : Mp;
+
+                    foreach (Mate mate in session.Character.Mates.Where(m => m.IsTeamMember))
                     {
-                        if (inv.ItemVNum == 1242 || inv.ItemVNum == 5582)
-                        {
-                            session.CurrentMapInstance?.Broadcast(session.Character.GenerateRc((int)session.Character.HPLoad() - session.Character.Hp));
-                            session.Character.Hp = (int)session.Character.HPLoad();
-                        }
-                        else if (inv.ItemVNum == 1243 || inv.ItemVNum == 5583)
-                        {
-                            session.Character.Mp = (int)session.Character.MPLoad();
-                        }
-                        else if (inv.ItemVNum == 1244 || inv.ItemVNum == 5584)
-                        {
-                            session.CurrentMapInstance?.Broadcast(session.Character.GenerateRc((int)session.Character.HPLoad() - session.Character.Hp));
-                            session.Character.Hp = (int)session.Character.HPLoad();
-                            session.Character.Mp = (int)session.Character.MPLoad();
-                        }
+                        int mateHpHeal = mate.Hp + Hp > mate.HpLoad() ? mate.HpLoad() - mate.Hp : Hp;
+                        mate.Hp += mateHpHeal;
+                        mate.Mp += mate.Mp + Mp > mate.MpLoad() ? mate.MpLoad() : Mp;
+                        session.CurrentMapInstance?.Broadcast(mate.GenerateRc(mateHpHeal));
                     }
+                    session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     session.SendPacket(session.Character.GenerateStat());
                     break;
             }
