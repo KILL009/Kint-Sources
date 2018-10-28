@@ -1,0 +1,25 @@
+﻿.test {
+    background-color: #19cf4a;
+    -moz-border-radius: 42px;
+    -webkit-border-radius: 42px;
+    border-radius: 42px;
+    border: 1px solid #18ab29;
+    display: inline-block;
+    cursor: pointer;
+    color: #ffffff;
+    font-family: Georgia;
+    font-size: 23px;
+    padding: 13px 29px;
+    text-decoration: none;
+    color: #ffffff;
+    width:200px;
+}
+
+.test:hover {
+    background-color: #13c944;
+}
+
+.test:active {
+    position: relative;
+    top: 1px;
+}

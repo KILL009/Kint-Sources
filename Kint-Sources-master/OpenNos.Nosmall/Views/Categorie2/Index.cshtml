@@ -1,0 +1,131 @@
+﻿
+@{
+    Layout = null;
+}
+@using ShopApplicationByFizo.Models;
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Categorie2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NosMall - NosHeat</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/button.css" rel="stylesheet" />
+    <!-- <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet" /> -->
+    <style>
+        .text {
+            color: #ffffff;
+            margin-top:-15px;
+        }
+
+        .product {
+            margin: 0 auto;
+            float: left;
+            margin-left: 30px;
+        }
+    </style>
+</head>
+<body style="color:red;">
+    @if (Session["auth"] == null && Session["user"] == null)
+    {
+        Response.Redirect("/Connection/Login");
+    }
+
+    @if (Session["id"] == null && Session["auth"] != null)
+    {
+        Response.Redirect("/Personnage/Select");
+    }
+
+    @if (Session["id"] != null)
+    {
+
+        using (opennosEntities2 context = new opennosEntities2())
+        {
+
+            int id = Convert.ToInt32(Session["id"]);
+
+            IEnumerable<Character> result = context.Character;
+            var product = result.Where(x => x.CharacterId == id);
+
+            string astuce = "pas ok";
+
+            foreach (var prod in product)
+            {
+                if (astuce == "pas ok")
+                {
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#"> NosMall - NosHeat </a>
+            </div>
+
+            <ul class="nav navbar-nav">
+                <li><a href="https://discord.gg/Cw36Tvu"> Discord </a></li>
+                <li>
+                    <p style="margin-top:14.48px;">You currently have @prod.NosheatDollar NosheatDollar &nbsp;</p>
+                </li>
+                <li>
+                    <a href="/Connection/Logout">Sign Out</a>
+                </li>
+            </ul>
+            <div class="btn-group">
+                <button type="button" style="margin-top:9px" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                    Catégories
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="/Categorie2/Index">Spécial NosHeat</a></li>
+                    <li><a href="/Product/Index">Principal</a></li>
+                    <li><a href="/Categorie3/Index">Improvement</a></li>
+                    <li><a href="/Categorie4/Index">Costume</a></li>
+                </ul>          
+            </div>
+        </div>
+    </nav>
+                }
+            }
+        }
+    }
+    <br />
+    <br />
+    <div class="container">
+        @using (opennosEntities1 context = new opennosEntities1())
+        {
+            IEnumerable<shopping> result = context.shopping;
+            var product = result.Where(x => x.Category == 2);
+            if (product == null)
+            {
+                <h1>No products are available for this category</h1>
+            }
+            else
+            {
+                foreach (var shop in product)
+                {
+                    <div class="product">
+                        <img src="@shop.Photo" height="250" widht="400" />
+                        <p style="text-align:left;">Name of the item : <br /> @shop.Name</p>
+                        <p class="btn btn-warning">@Html.ActionLink("Acheter pour " + shop.Price + " NosheatDollar", "OrderA", "Order", new { id = Session["id"], vnum = shop.VNum, amount = 1, rare = 0, upgrade = 0 }, new { @class = "text" })</p>
+                    </div>
+                }
+            }
+        }
+    </div>
+    <script src="~/Scripts/jquery-3.2.1.js"></script>
+    <script src="~/Content/bootstrap.js"></script>
+    <script>
+        (function ($) {
+            $(document).ready(function () {
+                $('ul.dropdown-menu [data-toggle=dropdown]').on('click', function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    $(this).parent().siblings().removeClass('open');
+                    $(this).parent().toggleClass('open');
+                });
+            });
+        })(jQuery);
+    </script>
+</body>
+</html>
