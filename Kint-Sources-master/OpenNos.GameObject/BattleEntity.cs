@@ -211,11 +211,7 @@ namespace OpenNos.GameObject.Battle
             ElementRate = mate.Monster.ElementRate;
         }
 
-        internal static void DisableBuffs(List<BuffType> types, int level)
-        {
-            throw new NotImplementedException();
-        }
-
+       
         public BattleEntity(MapMonster monster)
         {
             HPMax = monster.Monster.MaxHP;

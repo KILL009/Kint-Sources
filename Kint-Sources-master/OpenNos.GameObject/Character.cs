@@ -264,9 +264,7 @@ namespace OpenNos.GameObject
         public Inventory Inventory { get; set; }
 
         public bool Invisible { get; set; }
-
-        public void DisableBuffs(List<BuffType> types, int level = 100) => BattleEntity.DisableBuffs(types, level);
-
+     
         public bool InvisibleGm { get; set; }
 
         public bool IsChangingMapInstance { get; set; }
@@ -2260,7 +2258,7 @@ namespace OpenNos.GameObject
                             }
                             else
                             {
-                                if (monsterToAttack.DamageList.FirstOrDefault().Key == CharacterId || Mates.Any(m => m.IsTeamMember && m.MateTransportId == monsterToAttack.MatesDamageList.FirstOrDefault().Key))
+                                if (monsterToAttack.DamageList.FirstOrDefault().Key == CharacterId)
                                 {
                                     GenerateXp(monsterToAttack, true);
                                 }
@@ -4425,6 +4423,7 @@ namespace OpenNos.GameObject
                     }
                     Session.SendPacket(GenerateLevelUp());
                     GetReferrerReward();
+                    RewardsHelper.Instance.GetLevelUpRewards(Session);
                     Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("LEVELUP"), 0));
                     Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 100), PositionX, PositionY);
                     Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 23), PositionX, PositionY);
@@ -4544,6 +4543,7 @@ namespace OpenNos.GameObject
                     Mp = (int)MPLoad();
                     Session.SendPacket(GenerateStat());
                     Session.SendPacket(GenerateLevelUp());
+                    RewardsHelper.Instance.GetPrestigeRewards(Session);
                     Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("PRESTIGE_LEVELUP"), 0));
                     Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 8), PositionX, PositionY);
                     Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 3468), PositionX, PositionY);

@@ -95,7 +95,7 @@ namespace OpenNos.GameObject
                     ItemInstance raidSeal = session.Character.Inventory.LoadBySlotAndType<ItemInstance>(inv.Slot, InventoryType.Main);
                     session.Character.Inventory.RemoveItemFromInventory(raidSeal.Id);
 
-                    ScriptedInstance raid = ServerManager.Instance.Raids.FirstOrDefault(s => s.RequiredItems?.Any(obj => obj?.VNum == raidSeal.ItemVNum) == true)?.Copy();
+                    ScriptedInstance raid = ServerManager.Instance.Raids.FirstOrDefault(s => s.RequiredItems?.Any(obj => obj?.VNum == raidSeal.ItemVNum) == false)?.Copy();
                     if (raid != null)
                     {
                         Group group = new Group()
@@ -149,10 +149,10 @@ namespace OpenNos.GameObject
                             short[] vnums =
                             {
                             //ID's of the Items, you will get
-                                4129, 4130, 4131, 4132
+                                1011, 1286, 1060,1061
                             };
                             //This Code counts the Items, you inserted
-                            byte[] counts = { 1, 1, 1, 1 };
+                            byte[] counts = { 25, 5, 5, 5 };
                             int item = ServerManager.RandomNumber(0, 4);
                             session.Character.GiftAdd(vnums[item], counts[item]);
                         }
@@ -318,8 +318,8 @@ namespace OpenNos.GameObject
                         case 2522: // Roller M
                         case 2523: // Roller F
                                    // Removes <= lv 4 debuffs
-                            List<BuffType> bufftodisable = new List<BuffType> { BuffType.Bad };
-                            session.Character.DisableBuffs(bufftodisable, 4);
+                          //  List<BuffType> bufftodisable = new List<BuffType> { BuffType.Bad };
+                          //  session.Character.DisableBuffs(bufftodisable, 4);
                             break;
                     }
                     Observable.Timer(TimeSpan.FromSeconds(session.Character.BuffRandomTime * 0.1D)).Subscribe(o =>

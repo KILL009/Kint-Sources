@@ -474,7 +474,7 @@ namespace OpenNos.GameObject
                 case BCardType.CardType.HPMP:
                     break;
 
-                case BCardType.CardType.SpecialisationBuffResistance:
+              /*  case BCardType.CardType.SpecialisationBuffResistance:
                     switch (SubType)
                     {
                         case (byte)AdditionalTypes.SpecialisationBuffResistance.RemoveBadEffects:
@@ -529,7 +529,7 @@ namespace OpenNos.GameObject
                             }
                             break;
                     }
-                    break;
+                    break;*/
 
                 case BCardType.CardType.SpecialEffects:
                     Card speedCard = ServerManager.GetCard(CardId.Value);
@@ -824,7 +824,7 @@ namespace OpenNos.GameObject
                 case BCardType.CardType.NoCharacteristicValue:
                     break;
 
-                case BCardType.CardType.LightAndShadow:
+               /* case BCardType.CardType.LightAndShadow:
                     switch (SubType)
                     {
                         case (byte)AdditionalTypes.LightAndShadow.RemoveBadEffects:
@@ -840,7 +840,7 @@ namespace OpenNos.GameObject
                             }
                             break;
                     }
-                    break;
+                    break;*/
 
                 case BCardType.CardType.Item:
                     if (session is Character charact)

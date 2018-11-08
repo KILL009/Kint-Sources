@@ -29,7 +29,7 @@ namespace OpenNos.GameObject.Event
 
         public static void GenerateLod(int lodtime = 120)
         {
-            const int HornTime = 30;
+            const int HornTime = 60;
             const int HornRepawn = 4;
             const int HornStay = 1;
             EventHelper.Instance.RunEvent(new EventContainer(ServerManager.GetMapInstance(ServerManager.GetBaseMapInstanceIdByMapId(98)), EventActionType.NPCSEFFECTCHANGESTATE, true));

@@ -2298,7 +2298,13 @@ namespace OpenNos.Handler
                 Session.SendPacket(Session.Character.GenerateSay("Use $Bank to deposit your gold.", 10));
                 Session.SendPacket(Session.Character.GenerateSay("Use $HelpMe to contact a team member", 10));
                 Session.SendPacket(Session.Character.GenerateSay("Use $Warp to Move Map", 10));
-                ServerManager.Instance.ChangeMap(Session.Character.CharacterId, 1, 78, 81);
+                Session.SendPacket(Session.Character.GenerateSay("Use $Buy to buy", 10)); 
+                Session.SendPacket(Session.Character.GenerateSay("Use $GetExp to See % Exp", 10));
+                Session.SendPacket(Session.Character.GenerateSay("Use $GetPrestige to See % ExpPrestige", 10));
+                Session.SendPacket(Session.Character.GenerateSay("Use $Prestige to get prestige", 10));
+                Session.SendPacket(Session.Character.GenerateSay("Use $ReturnPoint to Returpoint", 10));
+                Session.SendPacket(Session.Character.GenerateSay("Use $Move to move", 10));
+                // ServerManager.Instance.ChangeMap(Session.Character.CharacterId, 1, 78, 81);
 
 
             }
@@ -2323,7 +2329,13 @@ namespace OpenNos.Handler
                 Session.SendPacket(Session.Character.GenerateSay("Use $Bank to deposit your gold.", 10));
                 Session.SendPacket(Session.Character.GenerateSay("Use $HelpMe to contact a team member", 10));
                 Session.SendPacket(Session.Character.GenerateSay("Use $Warp to Move Map", 10));
-                ServerManager.Instance.ChangeMap(Session.Character.CharacterId, 1, 78, 81);
+                Session.SendPacket(Session.Character.GenerateSay("Use $Buy to buy", 10));
+                Session.SendPacket(Session.Character.GenerateSay("Use $GetExp to See % Exp", 10));
+                Session.SendPacket(Session.Character.GenerateSay("Use $GetPrestige to See % ExpPrestige", 10));
+                Session.SendPacket(Session.Character.GenerateSay("Use $Prestige to get prestige", 10));
+                Session.SendPacket(Session.Character.GenerateSay("Use $ReturnPoint to Returpoint", 10));
+                Session.SendPacket(Session.Character.GenerateSay("Use $Move to move", 10));
+                // ServerManager.Instance.ChangeMap(Session.Character.CharacterId, 1, 78, 81);
 
 
             }

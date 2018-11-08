@@ -3450,12 +3450,16 @@ public void Ban(BanPacket banPacket)
         /// <param name="speedPacket"></param>
         public void Speed(SpeedPacket speedPacket)
         {
-            Logger.LogUserEvent("GMCOMMAND", Session.GenerateIdentity(), $"[Speed]Value: {speedPacket.Value}");
             if (speedPacket != null)
             {
-                Session.Character.Speed = (speedPacket.Value >= 60 ? (byte)59 : speedPacket.Value);
-                Session.Character.IsCustomSpeed = true;
-                Session.SendPacket(Session.Character.GenerateCond());
+                Logger.LogUserEvent("GMCOMMAND", Session.GenerateIdentity(), $"[Speed]Value: {speedPacket.Value}");
+
+                if (speedPacket.Value < 60)
+                {
+                    Session.Character.Speed = speedPacket.Value;
+                    Session.Character.IsCustomSpeed = true;
+                    Session.SendPacket(Session.Character.GenerateCond());
+                }
             }
             else
             {

@@ -114,9 +114,7 @@ namespace OpenNos.GameObject
         public bool IsUsingSp { get; set; }
 
         public DateTime LastSpeedChange { get; set; }
-
-        public void DisableBuffs(List<BuffType> types, int level = 100) => BattleEntity.DisableBuffs(types, level);
-
+      
         public DateTime LastSkillUse { get; set; }
 
         public int MagicalDefense => MagicalDefenseLoad();

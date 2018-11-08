@@ -117,8 +117,7 @@ namespace OpenNos.GameObject.Helpers
                     session.Character.GiftAdd(282, 1); // betting amulet
                     session.Character.GiftAdd(282, 1); // betting amulet          
                     break;
-                default:
-                    throw new InvalidOperationException("Unexpected value session.Character.Level = " + session.Character.Level);
+              
 
             }
         }
@@ -249,9 +248,7 @@ namespace OpenNos.GameObject.Helpers
                             session.Character.GiftAdd(4487, 1);
                             break;
                     }
-                    break;
-                default:
-                    throw new InvalidOperationException("Unexpected value session.Character.JobLevel = " + session.Character.JobLevel);
+                    break;              
             }
         }
 

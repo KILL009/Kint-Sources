@@ -78,8 +78,7 @@ namespace OpenNos.GameObject
         public int CurrentMp { get; set; }
 
         public IDictionary<long, long> DamageList { get; private set; }
-      
-       public IDictionary<long, long>   MatesDamageList { get; private set; }
+     
 
         public DateTime Death { get; set; }
 
@@ -237,7 +236,6 @@ namespace OpenNos.GameObject
             CurrentMp = MaxMp;
             Skills = Monster.Skills.ToList();
             DamageList = new Dictionary<long, long>();
-            MatesDamageList = new Dictionary<long, long>();
             _random = new Random(MapMonsterId);
             _movetime = ServerManager.RandomNumber(400, 3200);
         }
@@ -783,7 +781,36 @@ namespace OpenNos.GameObject
             if (IsMoving && Monster.Speed > 0)
             {
                 double time = (DateTime.Now - LastMove).TotalMilliseconds;
-                if (!Path.Any() && time > _movetime && this.Target == null)
+                if (Path == null)
+                {
+                    Path = new List<Node>();
+                }
+                if (Path.Count > 0) // move back to initial position after following target
+                {
+                    int timetowalk = 2000 / Monster.Speed;
+                    if (time > timetowalk)
+                    {
+                        int maxindex = Path.Count > Monster.Speed / 2 ? Monster.Speed / 2 : Path.Count;
+                        if (Path[maxindex - 1] == null)
+                        {
+                            return;
+                        }
+                        short mapX = Path[maxindex - 1].X;
+                        short mapY = Path[maxindex - 1].Y;
+                        double waitingtime = Map.GetDistance(new MapCell { X = mapX, Y = mapY }, new MapCell { X = MapX, Y = MapY }) / (double)Monster.Speed;
+                        LastMove = DateTime.Now.AddSeconds(waitingtime > 1 ? 1 : waitingtime);
+                        Observable.Timer(TimeSpan.FromMilliseconds(timetowalk)).Subscribe(x =>
+                        {
+                            MapX = mapX;
+                            MapY = mapY;
+                            MoveEvent?.Events.ForEach(e => EventHelper.Instance.RunEvent(e, monster: this));
+                        });
+                        Path.RemoveRange(0, maxindex > Path.Count ? Path.Count : maxindex);
+                        MapInstance.Broadcast(new BroadcastPacket(null, PacketFactory.Serialize(StaticPacketHelper.Move(UserType.Monster, MapMonsterId, MapX, MapY, Monster.Speed)), ReceiverType.All, xCoordinate: mapX, yCoordinate: mapY));
+                        return;
+                    }
+                }
+                else if (time > _movetime)
                 {
                     short mapX = FirstX, mapY = FirstY;
                     if (MapInstance.Map?.GetFreePosition(ref mapX, ref mapY, (byte)ServerManager.RandomNumber(0, 2), (byte)_random.Next(0, 2)) ?? false)
@@ -799,13 +826,11 @@ namespace OpenNos.GameObject
                         });
 
                         double value = 1000d * distance / (2 * Monster.Speed);
-                        Observable.Timer(TimeSpan.FromMilliseconds(value))
-                            .Subscribe(
-                                x =>
-                                {
-                                    MapX = mapX;
-                                    MapY = mapY;
-                                });
+                        Observable.Timer(TimeSpan.FromMilliseconds(value)).Subscribe(x =>
+                        {
+                            MapX = mapX;
+                            MapY = mapY;
+                        });
 
                         LastMove = DateTime.Now.AddMilliseconds(value);
                         MapInstance.Broadcast(new BroadcastPacket(null, PacketFactory.Serialize(StaticPacketHelper.Move(UserType.Monster, MapMonsterId, MapX, MapY, Monster.Speed)), ReceiverType.All));

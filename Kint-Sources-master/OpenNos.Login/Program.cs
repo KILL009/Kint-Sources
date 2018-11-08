@@ -28,7 +28,7 @@ namespace OpenNos.Login
 {
     public static class Program
     {
-        private const string IpAddress = "186.149.133.248";
+        private const string IpAddress = "85.25.210.241";
         #region Members
 
         private static bool _isDebug;

@@ -11,66 +11,66 @@
             <Item VNum="5921" Amount="1"/>
         </RequieredItems>
         <GiftItems>
-            <Item Amount="1" VNum="302" Design="14" IsRandomRare="True"/>
+            <Item Amount="1" VNum="302" Design="14" IsRandomRare="true"/>
         </GiftItems>
     </Globals>
     <InstanceEvents>
         <CreateMap Map="0" VNum="2557" >
-            <SummonMonster VNum="2012" PositionX="89" PositionY="58" IsTarget="True" Move="false">
+            <SummonMonster VNum="2012" PositionX="89" PositionY="58" IsTarget="true" Move="true">
                 <OnDeath>
                     <RemoveMonsterLocker/>
                     <RefreshRaidGoals/>
                 </OnDeath>
             </SummonMonster>
-            <SummonMonster VNum="2012" PositionX="78" PositionY="50" IsTarget="True" Move="false">
+            <SummonMonster VNum="2012" PositionX="78" PositionY="50" IsTarget="true" Move="true">
                 <OnDeath>
                     <RemoveMonsterLocker/>
                     <RefreshRaidGoals/>
                 </OnDeath>
             </SummonMonster>
-            <SummonMonster VNum="2012" PositionX="73" PositionY="53" IsTarget="True" Move="false">
+            <SummonMonster VNum="2012" PositionX="73" PositionY="53" IsTarget="true" Move="true">
                 <OnDeath>
                     <RemoveMonsterLocker/>
                     <RefreshRaidGoals/>
                 </OnDeath>
             </SummonMonster>
-            <SummonMonster VNum="2012" PositionX="51" PositionY="96" IsTarget="True" Move="false">
+            <SummonMonster VNum="2012" PositionX="51" PositionY="96" IsTarget="true" Move="true">
                 <OnDeath>
                     <RemoveMonsterLocker/>
                     <RefreshRaidGoals/>
                 </OnDeath>
             </SummonMonster>
-            <SummonMonster VNum="2012" PositionX="42" PositionY="29" IsTarget="True" Move="false">
+            <SummonMonster VNum="2012" PositionX="42" PositionY="29" IsTarget="true" Move="true">
                 <OnDeath>
                     <RemoveMonsterLocker/>
                     <RefreshRaidGoals/>
                 </OnDeath>
             </SummonMonster>
-            <SummonMonster VNum="2012" PositionX="35" PositionY="165" IsTarget="True" Move="false">
+            <SummonMonster VNum="2012" PositionX="35" PositionY="165" IsTarget="true" Move="true">
                 <OnDeath>
                     <RemoveMonsterLocker/>
                     <RefreshRaidGoals/>
                 </OnDeath>
             </SummonMonster>
-            <SummonMonster VNum="2012" PositionX="34" PositionY="64" IsTarget="True" Move="false">
+            <SummonMonster VNum="2012" PositionX="34" PositionY="64" IsTarget="true" Move="true">
                 <OnDeath>
                     <RemoveMonsterLocker/>
                     <RefreshRaidGoals/>
                 </OnDeath>
             </SummonMonster>
-            <SummonMonster VNum="2012" PositionX="133" PositionY="138" IsTarget="True" Move="false">
+            <SummonMonster VNum="2012" PositionX="133" PositionY="138" IsTarget="true" Move="true">
                 <OnDeath>
                     <RemoveMonsterLocker/>
                     <RefreshRaidGoals/>
                 </OnDeath>
             </SummonMonster>
-            <SummonMonster VNum="2012" PositionX="125" PositionY="93" IsTarget="True" Move="false">
+            <SummonMonster VNum="2012" PositionX="125" PositionY="93" IsTarget="true" Move="true">
                 <OnDeath>
                     <RemoveMonsterLocker/>
                     <RefreshRaidGoals/>
                 </OnDeath>
             </SummonMonster>
-            <SummonMonster VNum="2012" PositionX="107" PositionY="28" IsTarget="True" Move="false">
+            <SummonMonster VNum="2012" PositionX="107" PositionY="28" IsTarget="true" Move="true">
                 <OnDeath>
                     <RemoveMonsterLocker/>
                     <RefreshRaidGoals/>
@@ -216,7 +216,7 @@
         <CreateMap Map="1" VNum="2558" >
                 <SetMonsterLockers Value="1" />
                 <SetButtonLockers Value="0" />
-            <SummonMonster VNum="1044" PositionX="15" PositionY="40" IsBoss="True">
+            <SummonMonster VNum="1044" PositionX="15" PositionY="40" IsBoss="true">
                 <OnDeath>
                     <RemoveMonsterLocker/>
                     <RefreshRaidGoals/>
@@ -254,38 +254,38 @@
                     <SummonMonster VNum="2015" PositionX="27" PositionY="39"/>
                     <SummonMonster VNum="2371" PositionX="27" PositionY="27"/>
                     <SummonMonster VNum="2371" PositionX="29" PositionY="32"/>
-                    <SummonMonster VNum="2013" PositionX="15" PositionY="32" Move="false"/>
-                    <SummonMonster VNum="2013" PositionX="24" PositionY="29" Move="false"/>
-                    <SummonMonster VNum="2013" PositionX="26" PositionY="41" Move="false"/>
-                    <SummonMonster VNum="2013" PositionX="23" PositionY="38" Move="false"/>
-                    <SummonMonster VNum="2013" PositionX="27" PositionY="30" Move="false"/>
-                    <SummonMonster VNum="2013" PositionX="13" PositionY="29" Move="false"/>
-                    <SummonMonster VNum="2016" PositionX="31" PositionY="30" Move="false"/>
-                    <SummonMonster VNum="2016" PositionX="21" PositionY="42" Move="false"/>
-                    <SummonMonster VNum="2016" PositionX="22" PositionY="38" Move="false"/>
-                    <SummonMonster VNum="2016" PositionX="21" PositionY="32" Move="false"/>
-                    <SummonMonster VNum="2016" PositionX="22" PositionY="38" Move="false"/>
-                    <SummonMonster VNum="2016" PositionX="16" PositionY="43" Move="false"/>
-                    <SummonMonster VNum="2016" PositionX="20" PositionY="28" Move="false"/>
-                    <SummonMonster VNum="2016" PositionX="22" PositionY="38" Move="false"/>
-                    <SummonMonster VNum="2016" PositionX="12" PositionY="41" Move="false"/>
-                    <SummonMonster VNum="2016" PositionX="28" PositionY="29" Move="false"/>
-                    <SummonMonster VNum="2016" PositionX="22" PositionY="34" Move="false"/>
-                    <SummonMonster VNum="2016" PositionX="22" PositionY="38" Move="false"/>
-                    <SummonMonster VNum="2016" PositionX="22" PositionY="38" Move="false"/>
-                    <SummonMonster VNum="2016" PositionX="26" PositionY="32" Move="false"/>
-                    <SummonMonster VNum="2016" PositionX="31" PositionY="42" Move="false"/>
-                    <SummonMonster VNum="2016" PositionX="14" PositionY="36" Move="false"/>
-                    <SummonMonster VNum="2016" PositionX="25" PositionY="30" Move="false"/>
-                    <SummonMonster VNum="2016" PositionX="22" PositionY="38" Move="false"/>
-                    <SummonMonster VNum="2016" PositionX="27" PositionY="38" Move="false"/>
-                    <SummonMonster VNum="2016" PositionX="27" PositionY="32" Move="false"/>
-                    <SummonMonster VNum="2016" PositionX="31" PositionY="33" Move="false"/>
-                    <SummonMonster VNum="2016" PositionX="28" PositionY="38" Move="false"/>
-                    <SummonMonster VNum="2016" PositionX="26" PositionY="39" Move="false"/>
-                    <SummonMonster VNum="2016" PositionX="30" PositionY="39" Move="false"/>
-                    <SummonMonster VNum="2016" PositionX="22" PositionY="38" Move="false"/>
-                    <SummonMonster VNum="2016" PositionX="21" PositionY="34" Move="false"/>
+                    <SummonMonster VNum="2013" PositionX="15" PositionY="32" Move="true"/>
+                    <SummonMonster VNum="2013" PositionX="24" PositionY="29" Move="true"/>
+                    <SummonMonster VNum="2013" PositionX="26" PositionY="41" Move="true"/>
+                    <SummonMonster VNum="2013" PositionX="23" PositionY="38" Move="true"/>
+                    <SummonMonster VNum="2013" PositionX="27" PositionY="30" Move="true"/>
+                    <SummonMonster VNum="2013" PositionX="13" PositionY="29" Move="true"/>
+                    <SummonMonster VNum="2016" PositionX="31" PositionY="30" Move="true"/>
+                    <SummonMonster VNum="2016" PositionX="21" PositionY="42" Move="true"/>
+                    <SummonMonster VNum="2016" PositionX="22" PositionY="38" Move="true"/>
+                    <SummonMonster VNum="2016" PositionX="21" PositionY="32" Move="true"/>
+                    <SummonMonster VNum="2016" PositionX="22" PositionY="38" Move="true"/>
+                    <SummonMonster VNum="2016" PositionX="16" PositionY="43" Move="true"/>
+                    <SummonMonster VNum="2016" PositionX="20" PositionY="28" Move="true"/>
+                    <SummonMonster VNum="2016" PositionX="22" PositionY="38" Move="true"/>
+                    <SummonMonster VNum="2016" PositionX="12" PositionY="41" Move="true"/>
+                    <SummonMonster VNum="2016" PositionX="28" PositionY="29" Move="true"/>
+                    <SummonMonster VNum="2016" PositionX="22" PositionY="34" Move="true"/>
+                    <SummonMonster VNum="2016" PositionX="22" PositionY="38" Move="true"/>
+                    <SummonMonster VNum="2016" PositionX="22" PositionY="38" Move="true"/>
+                    <SummonMonster VNum="2016" PositionX="26" PositionY="32" Move="true"/>
+                    <SummonMonster VNum="2016" PositionX="31" PositionY="42" Move="true"/>
+                    <SummonMonster VNum="2016" PositionX="14" PositionY="36" Move="true"/>
+                    <SummonMonster VNum="2016" PositionX="25" PositionY="30" Move="true"/>
+                    <SummonMonster VNum="2016" PositionX="22" PositionY="38" Move="true"/>
+                    <SummonMonster VNum="2016" PositionX="27" PositionY="38" Move="true"/>
+                    <SummonMonster VNum="2016" PositionX="27" PositionY="32" Move="true"/>
+                    <SummonMonster VNum="2016" PositionX="31" PositionY="33" Move="true"/>
+                    <SummonMonster VNum="2016" PositionX="28" PositionY="38" Move="true"/>
+                    <SummonMonster VNum="2016" PositionX="26" PositionY="39" Move="true"/>
+                    <SummonMonster VNum="2016" PositionX="30" PositionY="39" Move="true"/>
+                    <SummonMonster VNum="2016" PositionX="22" PositionY="38" Move="true"/>
+                    <SummonMonster VNum="2016" PositionX="21" PositionY="34" Move="true"/>
                 </Wave>
         </CreateMap>
     </InstanceEvents>

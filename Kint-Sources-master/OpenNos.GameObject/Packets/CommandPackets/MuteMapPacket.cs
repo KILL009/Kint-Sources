@@ -2,7 +2,7 @@
 using OpenNos.Domain;
 namespace OpenNos.GameObject.Packets.CommandPackets
 {
-    [PacketHeader("$MuteMap", PassNonParseablePacket = true, Authority = AuthorityType.GameMaster)]
+    [PacketHeader("$MuteMap", PassNonParseablePacket = true, Authority = AuthorityType.Operator)]
     public class MuteMapPacket : PacketDefinition
     {
         #region Properties

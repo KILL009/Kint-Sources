@@ -103,7 +103,7 @@ namespace OpenNos.GameObject.Helpers
                             break;
 
                         case EventType.ICEBREAKER:
-                            IceBreaker.GenerateIceBreaker(useTimer);
+                         //   IceBreaker.GenerateIceBreaker(useTimer);
                             break;
 
                         case EventType.BATTLEROYAL:
