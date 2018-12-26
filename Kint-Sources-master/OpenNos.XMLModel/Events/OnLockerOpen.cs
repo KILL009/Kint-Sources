@@ -17,6 +17,15 @@ namespace OpenNos.XMLModel.Events
         [XmlElement]
         public SendMessage SendMessage { get; set; }
 
+        [XmlElement]
+        public SetButtonLockers SetButtonLockers { get; set; }
+
+        [XmlElement]
+        public SetMonsterLockers SetMonsterLockers { get; set; }
+
+        [XmlElement]
+        public SummonMonster[] SummonMonster { get; set; }
+
         #endregion
     }
 }

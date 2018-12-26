@@ -20,6 +20,7 @@ using OpenNos.GameObject.Networking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenNos.Data;
 
 namespace OpenNos.GameObject
 {
@@ -160,11 +161,24 @@ namespace OpenNos.GameObject
         {
             session.Character.Group = this;
             Characters.Add(session);
+            if (GroupType == GroupType.Group)
+            {
+                if (Characters.Find(c => c.Character.IsCoupleOfCharacter(session.Character.CharacterId)) is ClientSession couple)
+                {
+                    session.Character.AddStaticBuff(new StaticBuffDTO { CardId = 319 });
+                    couple.Character.AddStaticBuff(new StaticBuffDTO { CardId = 319 });
+                }
+            }
         }
 
         public void LeaveGroup(ClientSession session)
         {
             session.Character.Group = null;
+            if (Characters.Find(c => c.Character.IsCoupleOfCharacter(session.Character.CharacterId)) is ClientSession couple)
+            {
+                session.Character.RemoveBuff(319);
+                couple.Character.RemoveBuff(319);
+            }
             if (IsLeader(session) && GroupType != GroupType.Group && Characters.Count > 1)
             {
                 Characters.ForEach(s => s.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("TEAM_LEADER_CHANGE"), Characters.ElementAt(0).Character?.Name), 0)));

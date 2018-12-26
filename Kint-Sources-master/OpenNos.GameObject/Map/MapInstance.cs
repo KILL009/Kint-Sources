@@ -18,13 +18,13 @@ using OpenNos.Data;
 using OpenNos.Domain;
 using OpenNos.GameObject.Helpers;
 using OpenNos.PathFinder;
-using OpenNos.GameObject.Networking;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using OpenNos.GameObject.Networking;
 
 namespace OpenNos.GameObject
 {
@@ -38,6 +38,7 @@ namespace OpenNos.GameObject
 
         private readonly ThreadSafeSortedList<long, MapMonster> _monsters;
 
+
         private readonly ThreadSafeSortedList<long, MapNpc> _npcs;
 
         private readonly Random _random;
@@ -45,7 +46,7 @@ namespace OpenNos.GameObject
         private bool _isSleeping;
 
         private bool _isSleepingRequest;
-            
+
         #endregion
 
         #region Instantiation
@@ -77,19 +78,16 @@ namespace OpenNos.GameObject
             _mapNpcIds = new ThreadSafeSortedList<int, int>();
             DroppedList = new ThreadSafeSortedList<long, MapItem>();
             Portals = new List<Portal>();
+            UnlockEvents = new List<EventContainer>();
             UserShops = new Dictionary<long, MapShop>();
             StartLife();
         }
-
-       
 
         #endregion
 
         #region Properties
 
         public List<MapButton> Buttons { get; set; }
-
-        public bool IsMute { get; set; }
 
         public Clock Clock { get; set; }
 
@@ -100,8 +98,6 @@ namespace OpenNos.GameObject
         public InstanceBag InstanceBag { get; set; }
 
         public int InstanceMusic { get; set; }
-
-        public bool IsPvp { get; set; }
 
         public bool IsDancing { get; set; }
 
@@ -163,13 +159,15 @@ namespace OpenNos.GameObject
 
         public bool ShopAllowed { get; set; }
 
-        public Dictionary<long, MapShop> UserShops { get; }
-
         public List<EventContainer> UnlockEvents { get; set; }
+
+        public Dictionary<long, MapShop> UserShops { get; }
 
         public List<EventWave> WaveEvents { get; set; }
 
         public int XpRate { get; set; }
+        public bool IsMute { get; set; }
+        public bool IsPvp { get; internal set; }
 
         #endregion
 
@@ -208,10 +206,10 @@ namespace OpenNos.GameObject
                     }
                 }
 
-                foreach (MapCell possibilitie in possibilities.OrderBy(s => ServerManager.RandomNumber()))
+                foreach (MapCell possibility in possibilities.OrderBy(s => ServerManager.RandomNumber()))
                 {
-                    localMapX = (short)(mapX + possibilitie.X);
-                    localMapY = (short)(mapY + possibilitie.Y);
+                    localMapX = (short)(mapX + possibility.X);
+                    localMapY = (short)(mapY + possibility.Y);
                     if (!Map.IsBlockedZone(localMapX, localMapY))
                     {
                         break;
@@ -230,7 +228,6 @@ namespace OpenNos.GameObject
 
         public void DropItems(List<Tuple<short, int, short, short>> list)
         {
-            // TODO: Parallelize, if possible.
             foreach (Tuple<short, int, short, short> drop in list)
             {
                 MonsterMapItem droppedItem = new MonsterMapItem(drop.Item3, drop.Item4, drop.Item1, drop.Item2);
@@ -431,19 +428,11 @@ namespace OpenNos.GameObject
             }
         }
 
-        internal void CreatePortal(Portal portal, int timeInSeconds = 0, bool isTemporary = false)
+        internal void CreatePortal(Portal portal)
         {
             portal.SourceMapInstanceId = MapInstanceId;
             Portals.Add(portal);
             Broadcast(portal.GenerateGp());
-            if (isTemporary)
-            {
-                Observable.Timer(TimeSpan.FromSeconds(timeInSeconds)).Subscribe(o =>
-                {
-                    Portals.Remove(portal);
-                    MapClear();
-                });
-            }
         }
 
         internal IEnumerable<Character> GetCharactersInRange(short mapX, short mapY, byte distance)
@@ -469,21 +458,21 @@ namespace OpenNos.GameObject
             {
                 if (InstanceBag?.EndState != 1)
                 {
-                    WaveEvents.ForEach(s =>
+                    Parallel.ForEach(WaveEvents, waveEvent =>
                     {
-                        if (s.LastStart.AddSeconds(s.Delay) <= DateTime.Now)
+                        if (waveEvent.LastStart.AddSeconds(waveEvent.Delay) <= DateTime.Now)
                         {
-                            if (s.Offset == 0)
+                            if (waveEvent.Offset == 0)
                             {
-                                s.Events.ForEach(e => EventHelper.Instance.RunEvent(e));
+                                waveEvent.Events.ForEach(e => EventHelper.Instance.RunEvent(e));
                             }
-                            s.Offset = s.Offset > 0 ? (byte)(s.Offset - 1) : (byte)0;
-                            s.LastStart = DateTime.Now;
+                            waveEvent.Offset = waveEvent.Offset > 0 ? (byte)(waveEvent.Offset - 1) : (byte)0;
+                            waveEvent.LastStart = DateTime.Now;
                         }
                     });
                     try
                     {
-                        if (Monsters.Count(s => s.IsAlive) == 0)
+                        if (!Monsters.Any(s => s.IsAlive))
                         {
                             OnMapClean.ForEach(e => EventHelper.Instance.RunEvent(e));
                             OnMapClean.RemoveAll(s => s != null);
@@ -540,7 +529,20 @@ namespace OpenNos.GameObject
             NpcMonster npcMonster = ServerManager.GetNpc(summonParameters.VNum);
             if (npcMonster != null)
             {
-                MapNpc mapNpc = new MapNpc { NpcVNum = npcMonster.NpcMonsterVNum, MapY = summonParameters.SpawnCell.X, MapX = summonParameters.SpawnCell.Y, MapId = Map.MapId, IsHostile = true, IsMoving = true, MapNpcId = GetNextNpcId(), Target = summonParameters.Target, OnDeathEvents = summonParameters.DeathEvents, IsMate = summonParameters.IsMate, IsProtected = summonParameters.IsProtected };
+                MapNpc mapNpc = new MapNpc
+                {
+                    NpcVNum = npcMonster.NpcMonsterVNum,
+                    MapY = summonParameters.SpawnCell.X,
+                    MapX = summonParameters.SpawnCell.Y,
+                    MapId = Map.MapId,
+                    IsHostile = false,
+                    IsMoving = summonParameters.Move,
+                    MapNpcId = GetNextNpcId(),
+                    Target = summonParameters.Target,
+                    OnDeathEvents = summonParameters.DeathEvents,
+                    IsMate = summonParameters.IsMate,
+                    IsProtected = summonParameters.IsProtected
+                };
                 mapNpc.Initialize(this);
                 AddNPC(mapNpc);
                 Broadcast(mapNpc.GenerateIn());
@@ -557,7 +559,20 @@ namespace OpenNos.GameObject
                 NpcMonster npcmonster = ServerManager.GetNpc(npcMonster.VNum);
                 if (npcmonster != null)
                 {
-                    MapNpc mapNpc = new MapNpc { NpcVNum = npcmonster.NpcMonsterVNum, MapY = npcMonster.SpawnCell.X, MapX = npcMonster.SpawnCell.Y, MapId = Map.MapId, IsHostile = true, IsMoving = true, MapNpcId = GetNextNpcId(), Target = npcMonster.Target, OnDeathEvents = npcMonster.DeathEvents, IsMate = npcMonster.IsMate, IsProtected = npcMonster.IsProtected };
+                    MapNpc mapNpc = new MapNpc
+                    {
+                        NpcVNum = npcmonster.NpcMonsterVNum,
+                        MapY = npcMonster.SpawnCell.X,
+                        MapX = npcMonster.SpawnCell.Y,
+                        MapId = Map.MapId,
+                        IsHostile = true,
+                        IsMoving = npcMonster.Move,
+                        MapNpcId = GetNextNpcId(),
+                        Target = npcMonster.Target,
+                        OnDeathEvents = npcMonster.DeathEvents,
+                        IsMate = npcMonster.IsMate,
+                        IsProtected = npcMonster.IsProtected
+                    };
                     mapNpc.Initialize(this);
                     AddNPC(mapNpc);
                     Broadcast(mapNpc.GenerateIn());
@@ -581,11 +596,6 @@ namespace OpenNos.GameObject
                     ServerManager.Instance.ChangeMap(session.Character.CharacterId, session.Character.MapId, session.Character.MapX, session.Character.MapY);
                 }
             }
-        }
-
-       public void SpawnMeteorsOnRadius(int v, ClientSession session, Skill sk)
-        {
-            throw new NotImplementedException();
         }
 
         #endregion

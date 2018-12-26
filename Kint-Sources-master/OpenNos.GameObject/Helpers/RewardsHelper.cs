@@ -108,7 +108,7 @@ namespace OpenNos.GameObject.Helpers
                     session.Character.GiftAdd(1244, 60); // Full pots
                     session.Character.GiftAdd(1452, 5); // Ancelloan's blessing
                     session.Character.GiftAdd(1364, 3); // red sp scroll
-                    session.Character.GiftAdd(282, 1); // betting amulet
+                   // session.Character.GiftAdd(282, 1); // betting amulet
                     break;
                 case 90:
                     session.Character.GiftAdd(1244, 99); // Full pot
@@ -203,7 +203,7 @@ namespace OpenNos.GameObject.Helpers
                     }
                     break;
 
-                case 80:
+                case 60:
                     switch (session.Character.Class)
                     {
 
@@ -218,7 +218,7 @@ namespace OpenNos.GameObject.Helpers
                             break;
                     }
                     break;
-                case 90:
+                case 70:
                     switch (session.Character.Class)
                     {
 
@@ -234,7 +234,7 @@ namespace OpenNos.GameObject.Helpers
                     }
                     break;
 
-                case 100:
+                case 80:
                     switch (session.Character.Class)
                     {
 

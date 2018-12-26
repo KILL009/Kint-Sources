@@ -14,6 +14,9 @@ namespace OpenNos.XMLModel.Events
         [XmlAttribute]
         public bool IsProtected { get; set; }
 
+        [XmlAttribute]
+        public bool Move { get; set; }
+
         [XmlElement]
         public OnDeath OnDeath { get; set; }
 
@@ -22,6 +25,9 @@ namespace OpenNos.XMLModel.Events
 
         [XmlAttribute]
         public short PositionY { get; set; }
+
+        [XmlElement]
+        public Roam Roam { get; set; }
 
         [XmlAttribute]
         public short VNum { get; set; }

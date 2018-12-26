@@ -95,7 +95,7 @@ namespace OpenNos.GameObject
                     ItemInstance raidSeal = session.Character.Inventory.LoadBySlotAndType<ItemInstance>(inv.Slot, InventoryType.Main);
                     session.Character.Inventory.RemoveItemFromInventory(raidSeal.Id);
 
-                    ScriptedInstance raid = ServerManager.Instance.Raids.FirstOrDefault(s => s.RequiredItems?.Any(obj => obj?.VNum == raidSeal.ItemVNum) == false)?.Copy();
+                    ScriptedInstance raid = ServerManager.Instance.Raids.FirstOrDefault(s => s.RequiredItems?.Any(obj => obj?.VNum == raidSeal.ItemVNum) == true)?.Copy();
                     if (raid != null)
                     {
                         Group group = new Group()
@@ -140,8 +140,7 @@ namespace OpenNos.GameObject
                     }
                     break;
 
-               case 1574:
-                    if (EffectValue == 1574)
+               case 1574:                    
                     {
                         int rnd = ServerManager.RandomNumber(0, 1);
                         if (rnd < 1)
@@ -149,10 +148,10 @@ namespace OpenNos.GameObject
                             short[] vnums =
                             {
                             //ID's of the Items, you will get
-                                1011, 1286, 1060,1061
+                               4129, 4130, 4131, 4132
                             };
                             //This Code counts the Items, you inserted
-                            byte[] counts = { 25, 5, 5, 5 };
+                            byte[] counts = { 1, 1, 1, 1 };
                             int item = ServerManager.RandomNumber(0, 4);
                             session.Character.GiftAdd(vnums[item], counts[item]);
                         }
@@ -227,6 +226,21 @@ namespace OpenNos.GameObject
                     if (!session.Character.Buff.ContainsKey(146))
                     {
                         session.Character.AddStaticBuff(new StaticBuffDTO() { CardId = 146 });
+                        session.CurrentMapInstance?.Broadcast(session.Character.GeneratePairy());
+                        session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("EFFECT_ACTIVATED"), inv.Item.Name), 0));
+                        session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 3011), session.Character.MapX, session.Character.MapY);
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                    }
+                    else
+                    {
+                        session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("ITEM_IN_USE"), 0));
+                    }
+                    break;
+                    // Fairy Booster
+                case 5370:
+                    if (!session.Character.Buff.ContainsKey(393))
+                    {
+                        session.Character.AddStaticBuff(new StaticBuffDTO() { CardId = 393 });
                         session.CurrentMapInstance?.Broadcast(session.Character.GeneratePairy());
                         session.SendPacket(UserInterfaceHelper.GenerateMsg(string.Format(Language.Instance.GetMessageFromKey("EFFECT_ACTIVATED"), inv.Item.Name), 0));
                         session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 3011), session.Character.MapX, session.Character.MapY);
@@ -392,20 +406,26 @@ namespace OpenNos.GameObject
 
                 // Rainbow Pearl/Magic Eraser
                 case 666:
-                    if (EffectValue == 1 && byte.TryParse(packetsplit[9], out byte islot))
+                    if (EffectValue == 1)
                     {
-                        ItemInstance wearInstance = session.Character.Inventory.LoadBySlotAndType(islot, InventoryType.Equipment);
-
-                        if (wearInstance != null && (wearInstance.Item.ItemType == ItemType.Weapon || wearInstance.Item.ItemType == ItemType.Armor) && wearInstance.ShellEffects.Count != 0 && wearInstance.Item.IsHeroic)
+                        if(packetsplit[9] != null)
                         {
-                            wearInstance.ShellEffects.Clear();
-                            DAOFactory.ShellEffectDAO.DeleteByEquipmentSerialId(wearInstance.EquipmentSerialId);
-                            if (wearInstance.EquipmentSerialId == Guid.Empty)
+                            if (byte.TryParse(packetsplit[9], out byte islot))
                             {
-                                wearInstance.EquipmentSerialId = Guid.NewGuid();
+                                ItemInstance wearInstance = session.Character.Inventory.LoadBySlotAndType(islot, InventoryType.Equipment);
+
+                                if (wearInstance != null && (wearInstance.Item.ItemType == ItemType.Weapon || wearInstance.Item.ItemType == ItemType.Armor) && wearInstance.ShellEffects.Count != 0 && !wearInstance.Item.IsHeroic)
+                                {
+                                    wearInstance.ShellEffects.Clear();
+                                    DAOFactory.ShellEffectDAO.DeleteByEquipmentSerialId(wearInstance.EquipmentSerialId);
+                                    if (wearInstance.EquipmentSerialId == Guid.Empty)
+                                    {
+                                        wearInstance.EquipmentSerialId = Guid.NewGuid();
+                                    }
+                                    session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                                    session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("OPTION_DELETE"), 0));
+                                }
                             }
-                            session.Character.Inventory.RemoveItemFromInventory(inv.Id);
-                            session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("OPTION_DELETE"), 0));
                         }
                     }
                     else
@@ -434,7 +454,7 @@ namespace OpenNos.GameObject
                     
                 // Divorce letter
                 case 6969: // this is imaginary number I = √(-1)
-                    var rel = session.Character.CharacterRelations.FirstOrDefault(s => s.RelationType == CharacterRelationType.Spouse);
+                    var rel = session.Character.CharacterRelations.FirstOrDefault(s => s.RelationType == CharacterRelationType.Friend);
                     if (rel != null)
                     {
                         session.Character.DeleteRelation(rel.CharacterId == session.Character.CharacterId ? rel.RelatedCharacterId : rel.CharacterId);
@@ -470,13 +490,7 @@ namespace OpenNos.GameObject
                         }
                     }
                     break;
-                    
-
-                case 100:
-                    {
-
-                    }
-                    break;
+                                  
                 case 5836:
                     {
                         session.SendPacket($"gb 0 {session.Account.BankGold / 1000} {session.Character.Gold} 0 0");
@@ -582,7 +596,7 @@ namespace OpenNos.GameObject
 
                 // Vehicles
                 case 1000:
-                    if (EffectValue != 0 || ServerManager.Instance.ChannelId == 51 || session.CurrentMapInstance?.MapInstanceType == MapInstanceType.EventGameInstance)
+                    if (EffectValue != 0 || session.CurrentMapInstance?.MapInstanceType == MapInstanceType.EventGameInstance)
                     {
                         return;
                     }
@@ -838,6 +852,186 @@ namespace OpenNos.GameObject
                             session.Character.GiftAdd(vnums[ServerManager.RandomNumber(0, 4)], 1);
                             session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                             break;
+
+                             #region NosHeat Add
+                //-----------------------------------------------------------------
+                //NosHeat Pack Start
+                case 9000:
+                    if (Option == 0)
+                    {
+                        session.SendPacket($"qna #u_i^1^{session.Character.CharacterId}^{(byte)inv.Type}^{inv.Slot}^3 {Language.Instance.GetMessageFromKey("ASK_OPEN_BOX_STARTER_PACK")}");
+                    }
+                    else
+                    {
+                        //ancellona
+                        session.Character.GiftAdd(9041, 1);
+                        //Poción para aumentar la Experiencia
+                        session.Character.GiftAdd(9023, 6);
+                        //Carta de Tarot (Estrella)
+                        session.Character.GiftAdd(8112, 1);
+                        //Poción enorme de recuperación
+                        session.Character.GiftAdd(9042, 50);
+                        //Sellaim Grande
+                        session.Character.GiftAdd(8009, 1);
+                         //Woondine Grande
+                        session.Character.GiftAdd(8010, 1);
+                        //Eperial Grande
+                        session.Character.GiftAdd(8011, 1);
+                        //Turik Grande
+                        session.Character.GiftAdd(8012, 1);
+                         
+                        session.SendPacket(
+                                    session.Character.GenerateSay(
+                                        Language.Instance.GetMessageFromKey("STARTER_PACK_SUCCESSFULLY_GOT"), 0));
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                    }
+                    break;
+
+                case 9001:
+                    break;
+
+                case 9002:
+                    break;
+
+                case 9003:
+                    break;
+
+                     //Conjunto de disfraces de Otofuchs
+                    case 9004:
+                    session.Character.GiftAdd(4177, 1);
+                    session.Character.GiftAdd(4179, 1);
+                    session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                    break;
+
+                     //Set de Disfraces de Tigre Blanco Nieve
+                     case 9005:
+                    session.Character.GiftAdd(4248, 1);
+                    session.Character.GiftAdd(4256, 1);
+                    session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                    break;
+
+              
+                    //aceite de flor de escarcha
+                    case 9008:
+                    session.Character.AddStaticBuff(new StaticBuffDTO
+                    {
+                        CardId = 340,
+                        CharacterId = session.Character.CharacterId,
+                        RemainingTime = 7200
+                    });
+                    session.Character.RemoveBuff(339);
+                    session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                    break;
+
+                    //Segen des Schutzengels
+                    case 9009:
+                    if (!session.Character.Buff.ContainsKey(122))
+                    {
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                        session.Character.AddStaticBuff(new StaticBuffDTO { CardId = 122 });
+                    }
+                    else
+                    {
+                        session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("ITEM_IN_USE"), 0));
+                    }
+                    break;
+
+                       
+                    case 9010:
+                    if (!session.Character.Buff.ContainsKey(109))
+                    {
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                        session.Character.AddStaticBuff(new StaticBuffDTO { CardId = 109 });
+                    }
+                    else
+                    {
+                        session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("ITEM_IN_USE"), 0));
+                    }
+                    break;
+
+                        //Zauberset des Lichts
+                    case 9011:
+                    session.Character.GiftAdd(4181, 1);
+                    session.Character.GiftAdd(4185, 1);
+                    session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                    break;
+
+                        //Zauberset des Schattens
+                    case 9012:
+                    session.Character.GiftAdd(4183, 1);
+                    session.Character.GiftAdd(4187, 1);
+                    session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                    break;
+
+                // Event
+                case 9013:
+                    if (Option == 0)
+                    {
+                        session.SendPacket($"qna #u_i^1^{session.Character.CharacterId}^{(byte)inv.Type}^{inv.Slot}^3 {Language.Instance.GetMessageFromKey("ASK_OPEN_EVENT_BOX")}");
+                    }
+                    else
+                    {
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                        session.Character.GiftAdd(4083, 1, 0, 50, 50);
+                        session.Character.GiftAdd(2333, 5);
+                        session.SendPacket(
+                                        session.Character.GenerateSay(
+                                            Language.Instance.GetMessageFromKey("EVENT_BOX_USED"), 0));
+                    }
+                    break;
+
+                        //1 Bendición de Aniversario
+                    case 9025:
+                    if (!session.Character.Buff.ContainsKey(166))
+                    {
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                        session.Character.AddStaticBuff(new StaticBuffDTO { CardId = 166 });
+                    }
+                    else
+                    {
+                        session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("ITEM_IN_USE"), 0));
+                    }
+                    break;
+                     //Artículo de Combinaciones
+                    case 9031:
+                    session.SendPacket("wopen 8");
+                    break;
+
+                //Donator Buff
+                case 9034:
+                    if (Option == 0)
+                    {
+                        session.SendPacket($"qna #u_i^1^{session.Character.CharacterId}^{(byte)inv.Type}^{inv.Slot}^3 {Language.Instance.GetMessageFromKey("ASK_USE_BUFFBOOK")}");
+                    }
+                    else
+                    {
+                        Buff buff = new Buff(72, 1);
+                        session.Character.AddBuff(buff, true);
+                        Buff buff2 = new Buff(75, 1); 
+                        session.Character.AddBuff(buff2, true);
+                        Buff buff3 = new Buff(67, 1); 
+                        session.Character.AddBuff(buff3, true);
+                        Buff buff4 = new Buff(91, 1); 
+                        session.Character.AddBuff(buff4, true);
+                        Buff buff5 = new Buff(89, 1); 
+                        session.Character.AddBuff(buff5, true);
+                        Buff buff6 = new Buff(138, 1); 
+                        session.Character.AddBuff(buff6, true);
+                        Buff buff9 = new Buff(152, 1);
+                        session.Character.AddBuff(buff9, true);
+                        Buff buff10 = new Buff(153, 1); 
+                        session.Character.AddBuff(buff10, true);
+                        Buff buff11 = new Buff(155, 1); 
+                        session.Character.AddBuff(buff11, true);
+                        Buff buff12 = new Buff(134, 1); 
+                        session.Character.AddBuff(buff12, true);
+                        Buff buff13 = new Buff(166, 1); 
+                        session.Character.AddBuff(buff13, true);
+                        session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("BUFFBOOK_PERMANENT"), 0));
+                    }
+                    break;
+                //-----------------------------------------------------------------
+                #endregion
 
                         default:
                             Logger.Warn(string.Format(Language.Instance.GetMessageFromKey("NO_HANDLER_ITEM"), GetType()) + $" ItemVNum: {VNum} Effect: {Effect} EffectValue: {EffectValue}");

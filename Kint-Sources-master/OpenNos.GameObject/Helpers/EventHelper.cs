@@ -107,11 +107,11 @@ namespace OpenNos.GameObject.Helpers
                             break;
 
                         case EventType.BATTLEROYAL:
-                            BattleRoyaleManager.Instance.Prepare(useTimer);                           
+                           // BattleRoyaleManager.Instance.Prepare(useTimer);                           
                             break;
 
                         case EventType.FORTNITE:
-                            FortniteManager.Instance.Prepare(useTimer);
+                          //  FortniteManager.Instance.Prepare(useTimer);
                             break;
 
                         case EventType.TALENTARENA:
@@ -124,6 +124,7 @@ namespace OpenNos.GameObject.Helpers
                 });
             }
         }
+
 
         public static TimeSpan GetMilisecondsBeforeTime(TimeSpan time)
         {
@@ -181,7 +182,7 @@ namespace OpenNos.GameObject.Helpers
                             switch (even.Item1)
                             {
                                 case "OnCharacterDiscoveringMap":
-                                    even.Item2.ToList().ForEach(s => evt.MapInstance.OnCharacterDiscoveringMapEvents.Add(new Tuple<EventContainer, List<long>>(s, new List<long>())));
+                                    even.Item2.ForEach(s => evt.MapInstance.OnCharacterDiscoveringMapEvents.Add(new Tuple<EventContainer, List<long>>(s, new List<long>())));
                                     break;
 
                                 case "OnMoveOnMap":
@@ -193,7 +194,7 @@ namespace OpenNos.GameObject.Helpers
                                     break;
 
                                 case "OnLockerOpen":
-                                    even.Item2.ToList().ForEach(s => evt.MapInstance.InstanceBag.UnlockEvents.Add(s));
+                                    evt.MapInstance.UnlockEvents.AddRange(even.Item2);
                                     break;
                             }
                             break;
@@ -462,25 +463,26 @@ namespace OpenNos.GameObject.Helpers
                                             {
                                                 if (sess.Character.Faction == winningFaction)
                                                 {
-                                                    sess.Character.GiftAdd(5960, 1);
+                                                    sess.Character.GiftAdd(302, 1, 0, 0, 51);
                                                 }
                                                 else
                                                 {
-                                                    sess.Character.GiftAdd(5961, 1);
+                                                    sess.Character.GiftAdd(302, 1, 0, 0, 51);
                                                 }
                                             }
                                             else
                                             {
                                                 if (sess.Character.Faction == winningFaction)
                                                 {
-                                                    sess.Character.GiftAdd(5961, 1);
+                                                    sess.Character.GiftAdd(302, 1, 0, 0, 51);
                                                 }
                                                 else
                                                 {
-                                                    sess.Character.GiftAdd(5958, 1);
+                                                    sess.Character.GiftAdd(302, 1, 0, 0, 51);
                                                 }
                                             }
-                                            sess.Character.GiftAdd(5959, 1);
+                                            sess.Character.GiftAdd(1244, 50);
+                                            sess.Character.GiftAdd(1134, 1);
                                             sess.Character.GenerateFamilyXp(500);
                                         }
                                     }

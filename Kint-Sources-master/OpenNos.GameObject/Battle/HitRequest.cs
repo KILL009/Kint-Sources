@@ -20,19 +20,17 @@ namespace OpenNos.GameObject.Battle
 {
     public class HitRequest
     {
-        private TargetHitType singleTargetHit;
-        private ClientSession session;
-        private Mate attacker;
-        private NpcMonsterSkill skill;
 
-        public HitRequest(TargetHitType singleTargetHit, ClientSession session, Mate attacker, NpcMonsterSkill skill)
-        {
-            this.singleTargetHit = singleTargetHit;
-            this.session = session;
-            this.attacker = attacker;
-            this.skill = skill;
-        }
         #region Instantiation
+
+        public HitRequest(TargetHitType targetHitType, ClientSession session, Mate mate, NpcMonsterSkill skill)
+        {
+            HitTimestamp = DateTime.Now;
+            Mate = mate;
+            NpcMonsterSkill = skill;
+            TargetHitType = targetHitType;
+            Session = session;
+        }
 
         public HitRequest(TargetHitType targetHitType, ClientSession session, Skill skill, short? skillEffect = null, short? mapX = null, short? mapY = null, ComboDTO skillCombo = null, bool showTargetAnimation = false)
         {
@@ -65,6 +63,8 @@ namespace OpenNos.GameObject.Battle
 
         public DateTime HitTimestamp { get; set; }
 
+        public Mate Mate { get; set; }
+
         public short MapX { get; set; }
 
         public short MapY { get; set; }
@@ -81,6 +81,8 @@ namespace OpenNos.GameObject.Battle
         public ComboDTO SkillCombo { get; set; }
 
         public short SkillEffect { get; set; }
+
+        public NpcMonsterSkill NpcMonsterSkill { get; set; }
 
         public TargetHitType TargetHitType { get; set; }
 

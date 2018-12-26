@@ -8,5 +8,17 @@ namespace OpenNos.XMLModel.Events
     {
         [XmlElement]
         public End End { get; set; }
+
+        [XmlElement]
+        public ChangePortalType[] ChangePortalType { get; set; }
+
+        [XmlElement]
+        public object RefreshMapItems { get; set; }
+
+        [XmlElement]
+        public SendMessage SendMessage { get; set; }
+
+        [XmlElement]
+        public SendPacket SendPacket { get; set; }
     }
 }

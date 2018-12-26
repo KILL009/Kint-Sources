@@ -433,7 +433,7 @@ namespace OpenNos.GameObject
 
         public void UpgradeSp(ClientSession sesion, UpgradeProtection protect)
         {
-            if (Upgrade >= 20)
+            if (Upgrade >= 15)
             {
                 return;
             }
@@ -2610,11 +2610,11 @@ namespace OpenNos.GameObject
 
         public void UpgradeItem(ClientSession session, UpgradeMode mode, UpgradeProtection protection, bool isCommand = false)
         {
-            if (!session.HasCurrentMapInstance)
+            if (!session.HasCurrentMapInstance) 
             {
                 return;
             }
-            if (Upgrade < 20)
+            if (Upgrade < 10)
             {
                 byte[] upfail;
                 byte[] upfix;

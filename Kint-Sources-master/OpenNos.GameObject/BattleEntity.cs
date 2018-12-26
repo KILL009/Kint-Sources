@@ -1,23 +1,19 @@
 ﻿using OpenNos.Data;
 using OpenNos.Domain;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Linq;
-using static OpenNos.Domain.BCardType;
 
-namespace OpenNos.GameObject.Battle
+namespace OpenNos.GameObject
 {
     public class BattleEntity
     {
-        private Character character;
         #region Instantiation
 
         public BattleEntity(Character character, Skill skill)
         {
             Session = character.Session;
-            HPMax = character.HPMax;
-            MPMax = character.MPMax;
+            HpMax = character.HPMax;
+            MpMax = character.MPMax;
             Buffs = character.Buff.GetAllItems();
             BCards = character.EquipmentBCards.GetAllItems();
             Level = character.Level;
@@ -60,7 +56,7 @@ namespace OpenNos.GameObject.Battle
 
                     case 1:
                         AttackType = AttackType.Range;
-                        if (character.Class == ClassType.Adventurer || character.Class == ClassType.Swordman || character.Class == ClassType.Magician || character.Class == ClassType.Fighter)
+                        if (character.Class == ClassType.Adventurer || character.Class == ClassType.Swordman || character.Class == ClassType.Magician)
                         {
                             DamageMinimum = character.MinDistance;
                             DamageMaximum = character.MaxDistance;
@@ -85,7 +81,6 @@ namespace OpenNos.GameObject.Battle
                         switch (character.Class)
                         {
                             case ClassType.Adventurer:
-                            case ClassType.Fighter:
                             case ClassType.Swordman:
                                 AttackType = AttackType.Melee;
                                 break;
@@ -106,7 +101,6 @@ namespace OpenNos.GameObject.Battle
                         {
                             case ClassType.Adventurer:
                             case ClassType.Swordman:
-                            case ClassType.Fighter:
                             case ClassType.Magician:
                                 weapon = character.Inventory.LoadBySlotAndType((byte)EquipmentType.MainWeapon, InventoryType.Wear);
                                 break;
@@ -124,7 +118,6 @@ namespace OpenNos.GameObject.Battle
                 switch (character.Class)
                 {
                     case ClassType.Adventurer:
-                    case ClassType.Fighter:
                     case ClassType.Swordman:
                         AttackType = AttackType.Melee;
                         break;
@@ -145,7 +138,7 @@ namespace OpenNos.GameObject.Battle
                 WeaponDamageMinimum = weapon.DamageMinimum + weapon.Item.DamageMinimum;
                 WeaponDamageMaximum = weapon.DamageMaximum + weapon.Item.DamageMinimum;
 
-                ShellWeaponEffects = new List<ShellEffectDTO>(weapon.ShellEffects);
+                ShellWeaponEffects = character.ShellEffectMain.ToList();
             }
 
             ItemInstance armor = character.Inventory.LoadBySlotAndType((byte)EquipmentType.Armor, InventoryType.Wear);
@@ -156,24 +149,24 @@ namespace OpenNos.GameObject.Battle
                 ArmorRangeDefense = armor.DistanceDefence + armor.Item.DistanceDefence;
                 ArmorMagicalDefense = armor.MagicDefence + armor.Item.MagicDefence;
 
-                ShellArmorEffects = new List<ShellEffectDTO>(armor.ShellEffects);
+                ShellArmorEffects = character.ShellEffectArmor.ToList();
             }
 
             CellonOptions = Session.Character.CellonOptions.GetAllItems();
 
-            MeleeDefense = character.Defence;
+            MeleeDefense = character.Defence - ArmorMeleeDefense;
             MeleeDefenseDodge = character.DefenceRate;
-            RangeDefense = character.DistanceDefence;
+            RangeDefense = character.DistanceDefence - ArmorRangeDefense;
             RangeDefenseDodge = character.DistanceDefenceRate;
-            MagicalDefense = character.MagicalDefence;
+            MagicalDefense = character.MagicalDefence - ArmorMagicalDefense;
             Element = character.Element;
             ElementRate = character.ElementRate + character.ElementRateSP;
         }
 
         public BattleEntity(Mate mate)
         {
-            HPMax = mate.MaxHp;
-            MPMax = mate.MaxMp;
+            HpMax = mate.MaxHp;
+            MpMax = mate.MaxMp;
 
             Buffs = mate.Buff.GetAllItems();
             BCards = mate.Monster.BCards.ToList();
@@ -211,11 +204,10 @@ namespace OpenNos.GameObject.Battle
             ElementRate = mate.Monster.ElementRate;
         }
 
-       
         public BattleEntity(MapMonster monster)
         {
-            HPMax = monster.Monster.MaxHP;
-            MPMax = monster.Monster.MaxMP;
+            HpMax = monster.Monster.MaxHP;
+            MpMax = monster.Monster.MaxMP;
             Buffs = monster.Buff.GetAllItems();
             BCards = monster.Monster.BCards.ToList();
             Level = monster.Monster.Level;
@@ -251,8 +243,8 @@ namespace OpenNos.GameObject.Battle
 
         public BattleEntity(MapNpc npc)
         {
-            HPMax = npc.Npc.MaxHP;
-            MPMax = npc.Npc.MaxMP;
+            HpMax = npc.Npc.MaxHP;
+            MpMax = npc.Npc.MaxMP;
 
             //npc.Buff.CopyTo(Buffs);
             BCards = npc.Npc.BCards.ToList();
@@ -287,40 +279,35 @@ namespace OpenNos.GameObject.Battle
             ElementRate = npc.Npc.ElementRate;
         }
 
-        public BattleEntity(Character character)
-        {
-            this.character = character;
-        }
-
         #endregion
 
         #region Properties
 
         public int ArmorDefense { get; set; }
 
-        public int ArmorMagicalDefense { get; set; }
+        public int ArmorMagicalDefense { get; }
 
-        public int ArmorMeleeDefense { get; set; }
+        public int ArmorMeleeDefense { get; }
 
-        public int ArmorRangeDefense { get; set; }
+        public int ArmorRangeDefense { get; }
 
-        public AttackType AttackType { get; set; }
+        public AttackType AttackType { get; }
 
         public short AttackUpgrade { get; set; }
 
-        public List<BCard> BCards { get; set; }
+        public List<BCard> BCards { get; }
 
-        public List<Buff> Buffs { get; set; }
+        public List<Buff> Buffs { get; }
 
-        public List<CellonOptionDTO> CellonOptions { get; set; }
+        public List<CellonOptionDTO> CellonOptions { get; }
 
         public int CritChance { get; set; }
 
         public int CritRate { get; set; }
 
-        public int DamageMaximum { get; set; }
+        public int DamageMaximum { get; }
 
-        public int DamageMinimum { get; set; }
+        public int DamageMinimum { get; }
 
         public int Defense { get; set; }
 
@@ -328,17 +315,17 @@ namespace OpenNos.GameObject.Battle
 
         public int Dodge { get; set; }
 
-        public byte Element { get; set; }
+        public byte Element { get; }
 
-        public int ElementRate { get; set; }
+        public int ElementRate { get; }
 
-        public EntityType EntityType { get; set; }
+        public EntityType EntityType { get; }
 
         public int FireResistance { get; set; }
 
-        public int Hitrate { get; set; }
+        public int Hitrate { get; }
 
-        public int HPMax { get; set; }
+        public int HpMax { get; }
 
         public bool Invincible { get; set; }
 
@@ -346,49 +333,41 @@ namespace OpenNos.GameObject.Battle
 
         public int LightResistance { get; set; }
 
-        public int MagicalDefense { get; set; }
+        public int MagicalDefense { get; }
 
-        public int MeleeDefense { get; set; }
+        public int MeleeDefense { get; }
 
-        public int MeleeDefenseDodge { get; set; }
+        public int MeleeDefenseDodge { get; }
 
         public int Morale { get; set; }
 
-        public int MPMax { get; set; }
+        public int MpMax { get; set; }
 
-        public short PositionX { get; set; }
+        public short PositionX { get; }
 
-        public short PositionY { get; set; }
+        public short PositionY { get; }
 
-        public int RangeDefense { get; set; }
+        public int RangeDefense { get; }
 
-        public int RangeDefenseDodge { get; set; }
+        public int RangeDefenseDodge { get; }
 
         public int Resistance { get; set; }
 
-        public ClientSession Session { get; set; }
+        public ClientSession Session { get; }
 
         public int ShadowResistance { get; set; }
 
-        public List<ShellEffectDTO> ShellArmorEffects { get; set; }
+        public List<ShellEffectDTO> ShellArmorEffects { get; }
 
-        public List<ShellEffectDTO> ShellWeaponEffects { get; set; }
+        public List<ShellEffectDTO> ShellWeaponEffects { get; }
 
         public int WaterResistance { get; set; }
 
-        public int WeaponDamageMaximum { get; set; }
+        public int WeaponDamageMaximum { get; }
 
-        public int WeaponDamageMinimum { get; set; }
+        public int WeaponDamageMinimum { get; }
+        public static IEnumerable<object> StaticBcards { get; internal set; }
 
-        public List<BCard> StaticBcards { get; set; }
-
-        public IEnumerable<BCard> SkillBcards { get; private set; }
-
-        public bool IsReflecting { get; internal set; }
-
-
+        #endregion
     }
 }
-     
-
-#endregion

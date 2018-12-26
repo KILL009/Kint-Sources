@@ -32,7 +32,6 @@ using OpenNos.GameObject.Helpers;
 using OpenNos.Master.Library.Client;
 using OpenNos.Master.Library.Data;
 using OpenNos.XMLModel.Models.Quest;
-using OpenNos.GameObject.Event.ACT6;
 using OpenNos.GameObject.Event.Fortnite;
 using OpenNos.GameObject.Event.BattleRoyale;
 

@@ -19,6 +19,7 @@ using OpenNos.Data;
 using OpenNos.Data.Enums;
 using OpenNos.GameObject.Networking;
 using OpenNos.Domain;
+
 using OpenNos.GameObject;
 using OpenNos.Master.Library.Client;
 using System;
@@ -47,69 +48,36 @@ namespace OpenNos.Handler
         #region Methods
 
         /// <summary>
-        /// Char_NEW_JOB creation character
+        ///     Char_NEW_JOB character creation character
         /// </summary>
-        /// <param name="brawlerCreatePacket"></param>
-        public void CreateBrawlerCharacter(BrawlerCreatePacket brawlerCreatePacket)
+        /// <param name="martialArtistCreatePacket"></param>
+        /*public void CreateMartialArtist(CharNewJobPacket martialArtistCreatePacket)
         {
-            if (Session.HasCurrentMapInstance)
+            //TODO add a flag on Account
+            if ((DAOFactory.CharacterDAO.FirstOrDefault(s =>
+                s.Level >= 80 && s.Account.AccountId == Session.Account.AccountId && s.State == CharacterState.Active) == null))
             {
+                //Needs at least a level 80 to create a martial artist
+                return;
+            }
+            if ((DAOFactory.CharacterDAO.FirstOrDefault(s =>
+                s.Account.AccountId == Session.Account.AccountId &&
+                s.Class == (byte)ClassType.Fighter && s.State == CharacterState.Active) != null))
+            {
+                //If already a martial artist, can't create another
                 return;
             }
 
-            // TODO: Hold Account Information in Authorized object
-            long accountId = Session.Account.AccountId;
-            Logger.LogUserEvent("CREATECHARACTER", Session.GenerateIdentity(), $"[CreateCharacter]Name: {brawlerCreatePacket.Name} Slot: {brawlerCreatePacket.Slot} Gender: {brawlerCreatePacket.Gender} HairStyle: {brawlerCreatePacket.HairStyle} HairColor: {brawlerCreatePacket.HairColor}");
-            if (brawlerCreatePacket.Slot <= 3 && DAOFactory.CharacterDAO.LoadBySlot(accountId, brawlerCreatePacket.Slot) == null && brawlerCreatePacket.Name.Length > 3 && brawlerCreatePacket.Name.Length < 15)
+            CreateCharacter(new CharacterCreatePacket
             {
-                Regex rg = new Regex(@"^[A-Za-z0-9_äÄöÖüÜß~*<>°+-.!_-Ð™¤£±†‡×ßø^\S]+$");
-                if (rg.Matches(brawlerCreatePacket.Name).Count == 1)
-                {
-                    if (DAOFactory.CharacterDAO.LoadByName(brawlerCreatePacket.Name) == null)
-                    {
-                        if (brawlerCreatePacket.Slot > 3)
-                        {
-                            return;
-                        }
-                        CharacterDTO newCharacter = new CharacterDTO
-                        {
-                            Class = ClassType.Fighter,
-                            Gender = brawlerCreatePacket.Gender,
-                            HairColor = brawlerCreatePacket.HairColor,
-                            HairStyle = brawlerCreatePacket.HairStyle,
-                            Hp = 12965,
-                            JobLevel = 1,
-                            Level = 81,
-                            MapId = 1,
-                            MapX = 78,
-                            MapY = 81,
-                            Mp = 221,
-                            MaxMateCount = 10,
-                            SpPoint = 10000,
-                            SpAdditionPoint = 0,
-                            Name = brawlerCreatePacket.Name,
-                            Slot = brawlerCreatePacket.Slot,
-                            AccountId = accountId,
-                            MinilandMessage = "Welcome",
-                            State = CharacterState.Active,
-                            MinilandPoint = 2000
-                        };
-
-
-
-                        LoadCharacters(brawlerCreatePacket.OriginalContent);
-                    }
-                    else
-                    {
-                        Session.SendPacketFormat($"info {Language.Instance.GetMessageFromKey("ALREADY_TAKEN")}");
-                    }
-                }
-                else
-                {
-                    Session.SendPacketFormat($"info {Language.Instance.GetMessageFromKey("INVALID_CHARNAME")}");
-                }
-            }
-        }
+                Name = martialArtistCreatePacket.Name,
+                Slot = martialArtistCreatePacket.Slot,
+                Gender = martialArtistCreatePacket.Gender,
+                HairStyle = martialArtistCreatePacket.HairStyle,
+                HairColor = martialArtistCreatePacket.HairColor,
+                IsMartialArtist = true
+            });
+        }*/
 
         /// <summary>
         /// Char_NEW character creation character
@@ -122,12 +90,17 @@ namespace OpenNos.Handler
                 return;
             }
 
+            if (characterCreatePacket.Name == null)
+            {
+                
+                return;
+            }
             // TODO: Hold Account Information in Authorized object
             long accountId = Session.Account.AccountId;
             Logger.LogUserEvent("CREATECHARACTER", Session.GenerateIdentity(), $"[CreateCharacter]Name: {characterCreatePacket.Name} Slot: {characterCreatePacket.Slot} Gender: {characterCreatePacket.Gender} HairStyle: {characterCreatePacket.HairStyle} HairColor: {characterCreatePacket.HairColor}");
             if (characterCreatePacket.Slot <= 3 && DAOFactory.CharacterDAO.LoadBySlot(accountId, characterCreatePacket.Slot) == null && characterCreatePacket.Name.Length > 3 && characterCreatePacket.Name.Length < 15)
             {
-                Regex rg = new Regex(@"^[A-Za-z0-9_äÄöÖüÜß~*<>°+-.!_-Ð™¤£±†‡×ßø^\S]+$");
+                Regex rg = new Regex(@"^[\u0021-\u007E\u00A1-\u00AC\u00AE-\u00FF\u4E00-\u9FA5\u0E01-\u0E3A\u0E3F-\u0E5B\u002E]*$");
                 if (rg.Matches(characterCreatePacket.Name).Count == 1)
                 {
                     if (DAOFactory.CharacterDAO.LoadByName(characterCreatePacket.Name) == null)
@@ -138,17 +111,17 @@ namespace OpenNos.Handler
                         }
                         CharacterDTO newCharacter = new CharacterDTO
                         {
-                            Class = (byte)ClassType.Adventurer,
+                            Class = characterCreatePacket.IsMartialArtist ? ClassType.Fighter : (byte)ClassType.Adventurer,
                             Gender = characterCreatePacket.Gender,
                             HairColor = characterCreatePacket.HairColor,
                             HairStyle = characterCreatePacket.HairStyle,
-                            Hp = 221,
+                            Hp = characterCreatePacket.IsMartialArtist ? 12965 : 221,
                             JobLevel = 1,
-                            Level = 1,
+                            Level = (byte)(characterCreatePacket.IsMartialArtist ? 81 : 1),
                             MapId = 1,
                             MapX = 78,
                             MapY = 81,
-                            Mp = 221,
+                            Mp = characterCreatePacket.IsMartialArtist ? 2369 : 221,
                             MaxMateCount = 10,
                             SpPoint = 10000,
                             SpAdditionPoint = 0,
@@ -202,9 +175,9 @@ namespace OpenNos.Handler
                         DAOFactory.CharacterSkillDAO.InsertOrUpdate(sk3);
 
                         Inventory startupInventory = new Inventory(new Character(newCharacter));
-                        startupInventory.AddNewToInventory(1, 1, InventoryType.Wear);
-                        startupInventory.AddNewToInventory(8, 1, InventoryType.Wear);
-                        startupInventory.AddNewToInventory(12, 1, InventoryType.Wear);
+                        startupInventory.AddNewToInventory(1, 1, InventoryType.Wear, 7, 10);
+                        startupInventory.AddNewToInventory(8, 1, InventoryType.Wear, 7, 10);
+                        startupInventory.AddNewToInventory(12, 1, InventoryType.Wear, 7, 10);
                         startupInventory.AddNewToInventory(2024, 10, InventoryType.Etc);
                         startupInventory.AddNewToInventory(2081, 1, InventoryType.Etc);
                         startupInventory.AddNewToInventory(1907, 1, InventoryType.Main);

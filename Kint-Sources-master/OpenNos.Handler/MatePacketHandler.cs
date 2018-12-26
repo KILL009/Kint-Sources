@@ -105,38 +105,18 @@ namespace OpenNos.Handler
             }
         }
 
-        public void AttackMonster(Mate attacker, NpcMonsterSkill skill, MapMonster target)
+        private void AttackMonster(Mate attacker, NpcMonsterSkill skill, MapMonster target)
         {
             if (target == null || attacker == null)
             {
                 return;
             }
 
-            if (target.CurrentHp > 0 && skill == null)
+            if (target.CurrentHp > 0)
             {
-                // TODO: Implement official damage calculation
-                var dmg = (attacker.Level * 15);
-
-                Session?.CurrentMapInstance?.Broadcast($"ct 2 {attacker.MateTransportId} 3 {target.MapMonsterId} -1 -1 0");
-                target.CurrentHp -= dmg;
-
-                if (target.DamageList.ContainsKey(attacker.MateTransportId))
-                {
-                    target.DamageList[attacker.MateTransportId] += dmg;
-                }
-                else
-                {
-                    target.DamageList.Add(attacker.MateTransportId, dmg);
-                }
-
-                if (target.CurrentHp <= 0)
-                {
-                    target.CurrentHp = 0;
-                    target.IsAlive = false;
-                    Session.Character.GenerateKillBonus(target);
-                }
-
-                Session?.CurrentMapInstance?.Broadcast($"su 2 {attacker.MateTransportId} 3 {target.MapMonsterId} 0 12 11 200 0 0 {(target.IsAlive ? 1 : 0)} {(int)((double)target.CurrentHp / target.Monster.MaxHP * 100)} {dmg} 0 0");
+                Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.CastOnTarget(UserType.Npc,
+                    attacker.MateTransportId, 3, target.MapMonsterId, -1, -1, 0));
+                target.HitQueue.Enqueue(new HitRequest(TargetHitType.SingleTargetHit, Session, attacker, skill));
             }
         }
 
@@ -175,7 +155,7 @@ namespace OpenNos.Handler
                 Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.CastOnTarget(UserType.Npc,
                     attacker.MateTransportId, 1, target.CharacterId, -1, -1, 0));
                 int damage = DamageHelper.Instance.CalculateDamage(battleEntity, battleEntityDefense, skill?.Skill,
-                    ref hitmode, ref onyxWings,0);
+                    ref hitmode, ref onyxWings);
                 if (target.HasGodMode)
                 {
                     damage = 0;
@@ -293,21 +273,21 @@ namespace OpenNos.Handler
                         {
                             target.Hp = (int)target.HPLoad();
                             target.Mp = (int)target.MPLoad();
-                            short x = (short)(39 + ServerManager.RandomNumber(-2, 3));
-                            short y = (short)(42 + ServerManager.RandomNumber(-2, 3));
+                            short x = (short)(12 + ServerManager.RandomNumber(-2, 3));
+                            short y = (short)(13 + ServerManager.RandomNumber(-2, 3));
                             if (target.Faction == FactionType.Angel)
                             {
-                                ServerManager.Instance.ChangeMap(target.CharacterId, 130, x, y);
+                                ServerManager.Instance.ChangeMap(target.CharacterId, 2503, x, y);
                             }
                             else if (target.Faction == FactionType.Demon)
                             {
-                                ServerManager.Instance.ChangeMap(target.CharacterId, 131, x, y);
+                                ServerManager.Instance.ChangeMap(target.CharacterId, 2503, x, y);
                             }
                             else
                             {
-                                target.MapId = 145;
-                                target.MapX = 51;
-                                target.MapY = 41;
+                                target.MapId = 2503;
+                                target.MapX = 12;
+                                target.MapY = 13;
                                 string connection =
                                     CommunicationServiceClient.Instance.RetrieveOriginWorld(Session.Account.AccountId);
                                 if (string.IsNullOrWhiteSpace(connection))

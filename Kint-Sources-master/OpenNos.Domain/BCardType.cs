@@ -104,6 +104,7 @@
             MeteoriteTeleport = 83,
             StealBuff = 84,
             DragonSkills = 89,
+            FrozenShield = 114,
 
             SPSL = 200,
             EffectSummon = 201,
@@ -127,6 +128,13 @@
             MagicDisabledNegated = 42,
             FailIfMiss = 51,
             FailIfMissNegated = 52
+        }
+
+        public enum FrozenShield : byte
+        {
+            GoodMode = 11,
+            NoGoodMode = 12
+            
         }
 
         public enum SpecialDefence : byte

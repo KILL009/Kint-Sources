@@ -67,13 +67,9 @@ namespace OpenNos.Data
         public sbyte FireResistance { get; set; }
 
         public byte HeroLevel { get; set; }
-
-        public byte prestigeLevel { get; set; }
-
+      
         public int HeroXp { get; set; }
-
-        public int PrestigeXp { get; set; }
-
+     
         public bool IsHostile { get; set; }
 
         public int JobXP { get; set; }

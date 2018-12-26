@@ -14,6 +14,7 @@
 
 using OpenNos.DAL.EF.Entities;
 using OpenNos.Domain;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -125,6 +126,8 @@ namespace OpenNos.DAL.EF
         public byte JobLevel { get; set; }
 
         public long JobLevelXp { get; set; }
+
+        public DateTime LastLogin { get; set; }
 
         public long LastFamilyLeave { get; set; }
 

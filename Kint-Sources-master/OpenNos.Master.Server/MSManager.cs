@@ -65,10 +65,10 @@ namespace OpenNos.Master.Server
                 UseChatLogService = bool.Parse(ConfigurationManager.AppSettings["UseChatLogService"]),
                 PerfectionRate = int.Parse(ConfigurationManager.AppSettings["PerfectionRate"]),
                 FamilyXpRate = int.Parse(ConfigurationManager.AppSettings["FamilyXpRate"]),
-                 ReputRate = int.Parse(ConfigurationManager.AppSettings["RateReput"]),
+                ReputRate = int.Parse(ConfigurationManager.AppSettings["RateReput"]),
                 MaxBankGold = long.Parse(ConfigurationManager.AppSettings["MaxBankGold"]),
-               LodTimes = bool.Parse(ConfigurationManager.AppSettings["LodTimes"]),
-               MinLodLevel = byte.Parse(ConfigurationManager.AppSettings["MinLodLevel"])
+                LodTimes = bool.Parse(ConfigurationManager.AppSettings["LodTimes"]),
+                MinLodLevel = byte.Parse(ConfigurationManager.AppSettings["MinLodLevel"])
         };
         }
 

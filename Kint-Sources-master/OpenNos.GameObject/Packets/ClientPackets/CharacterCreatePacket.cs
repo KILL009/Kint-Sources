@@ -25,7 +25,9 @@ namespace OpenNos.GameObject
         [PacketIndex(4)]
         public HairColorType HairColor { get; set; }
 
-      
+        public bool IsMartialArtist { get; set; } = false;
+
+
         public override string ToString()
         {
             return $"Create Character Name: {Name} Slot: {Slot}";

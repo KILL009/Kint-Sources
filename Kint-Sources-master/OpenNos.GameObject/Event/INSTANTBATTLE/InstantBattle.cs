@@ -15,12 +15,12 @@
 using OpenNos.Core;
 using OpenNos.Domain;
 using OpenNos.GameObject.Helpers;
-using OpenNos.GameObject.Networking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
+using OpenNos.GameObject.Networking;
 
 namespace OpenNos.GameObject.Event
 {
@@ -100,7 +100,7 @@ namespace OpenNos.GameObject.Event
             foreach (Tuple<MapInstance, byte> mapinstance in maps)
             {
                 InstantBattleTask task = new InstantBattleTask();
-                Observable.Timer(TimeSpan.FromMinutes(0)).Subscribe(X => task.Run(mapinstance));
+                Observable.Timer(TimeSpan.FromMinutes(0)).Subscribe(X => InstantBattleTask.Run(mapinstance));
             }
         }
 
@@ -112,16 +112,8 @@ namespace OpenNos.GameObject.Event
         {
             #region Methods
 
-            public void Run(Tuple<MapInstance, byte> mapinstance)
+            public static void Run(Tuple<MapInstance, byte> mapinstance)
             {
-                if (ServerManager.Instance.ChannelId == 51)
-
-                {
-
-                    return;
-
-                }
-
                 long maxGold = ServerManager.Instance.Configuration.MaxGold;
                 Thread.Sleep(10 * 1000);
                 if (!mapinstance.Item1.Sessions.Skip(3 - 1).Any())
@@ -138,18 +130,20 @@ namespace OpenNos.GameObject.Event
                             mapinstance.Item1.Broadcast(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("INSTANTBATTLE_SUCCEEDED"), 0));
                             foreach (ClientSession cli in mapinstance.Item1.Sessions.Where(s => s.Character != null).ToList())
                             {
-                                cli.Character.GenerateFamilyXp(cli.Character.Level * 4);
-                                cli.Character.SetReputation(cli.Character.Level * 50);
-                                cli.Character.Gold += cli.Character.Level * 1000;
+                                cli.Character.GenerateFamilyXp(cli.Character.Level * 400);
+                                cli.Character.SetReputation(cli.Character.Level * 500);
+                                cli.Character.Gold += cli.Character.Level * 250000;
+                                cli.Character.GiftAdd(1134, 2);
                                 cli.Character.Gold = cli.Character.Gold > maxGold ? maxGold : cli.Character.Gold;
-                                cli.Character.SpAdditionPoint += cli.Character.Level * 100;
+                                cli.Character.SpAdditionPoint += cli.Character.Level * 1090;
                                 cli.Character.SpAdditionPoint = cli.Character.SpAdditionPoint > 1000000 ? 1000000 : cli.Character.SpAdditionPoint;
                                 cli.SendPacket(cli.Character.GenerateSpPoint());
                                 cli.SendPacket(cli.Character.GenerateGold());
-                                cli.SendPacket(cli.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("WIN_MONEY"), cli.Character.Level * 1000), 10));
-                                cli.SendPacket(cli.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("WIN_REPUT"), cli.Character.Level * 50), 10));
-                                cli.SendPacket(cli.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("WIN_FXP"), cli.Character.Level * 4), 10));
-                                cli.SendPacket(cli.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("WIN_SP_POINT"), cli.Character.Level * 100), 10));
+                                cli.SendPacket(cli.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("WIN_MONEY"), cli.Character.Level * 25000), 10));
+                                cli.SendPacket(cli.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("WIN_REPUT"), cli.Character.Level * 500), 10));
+                                cli.SendPacket(cli.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("WIN_FXP"), cli.Character.Level * 40), 10));
+                                cli.SendPacket(cli.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("WIN_SP_POINT"), cli.Character.Level * 1000), 10));
+                                cli.SendPacket(cli.Character.GenerateSay(string.Format(Language.Instance.GetMessageFromKey("WIN_EVENTCOUPON"), cli.Character.Level * 1), 10));
                             }
                             break;
                         }
@@ -325,30 +319,33 @@ namespace OpenNos.GameObject.Event
                         switch (wave)
                         {
                             case 0:
-                                dropParameters.AddRange(generateDrop(map, 1046, 15, 10000));
-                                dropParameters.AddRange(generateDrop(map, 1011, 15, 5));
-                                dropParameters.AddRange(generateDrop(map, 1246, 15, 1));
+                                dropParameters.AddRange(generateDrop(map, 1046, 30, 250000));
+                                dropParameters.AddRange(generateDrop(map, 1011, 30, 5));
+                                dropParameters.AddRange(generateDrop(map, 1030, 30, 5));
+                                dropParameters.AddRange(generateDrop(map, 2282, 12, 5));
                                 break;
 
                             case 1:
-                                dropParameters.AddRange(generateDrop(map, 1046, 15, 12000));
-                                dropParameters.AddRange(generateDrop(map, 1011, 15, 5));
-                                dropParameters.AddRange(generateDrop(map, 1247, 15, 1));
+                                dropParameters.AddRange(generateDrop(map, 1046, 30, 500000));
+                                dropParameters.AddRange(generateDrop(map, 1011, 30, 9));
+                                dropParameters.AddRange(generateDrop(map, 1030, 30, 9));
+                                dropParameters.AddRange(generateDrop(map, 2282, 12, 7));
                                 break;
 
                             case 2:
-                                dropParameters.AddRange(generateDrop(map, 1046, 15, 15000));
-                                dropParameters.AddRange(generateDrop(map, 1011, 20, 5));
-                                dropParameters.AddRange(generateDrop(map, 1246, 15, 1));
-                                dropParameters.AddRange(generateDrop(map, 1247, 15, 1));
+                                dropParameters.AddRange(generateDrop(map, 1046, 30, 250000));
+                                dropParameters.AddRange(generateDrop(map, 1011, 30, 9));
+                                dropParameters.AddRange(generateDrop(map, 1030, 30, 9));
+                                dropParameters.AddRange(generateDrop(map, 2282, 12, 10));
                                 break;
 
                             case 3:
-                                dropParameters.AddRange(generateDrop(map, 1046, 30, 20000));
-                                dropParameters.AddRange(generateDrop(map, 1011, 30, 5));
-                                dropParameters.AddRange(generateDrop(map, 1030, 30, 1));
-                                dropParameters.AddRange(generateDrop(map, 2282, 12, 3));
+                                dropParameters.AddRange(generateDrop(map, 1046, 30, 1000000));
+                                dropParameters.AddRange(generateDrop(map, 1011, 30, 10));
+                                dropParameters.AddRange(generateDrop(map, 1030, 30, 10));
+                                dropParameters.AddRange(generateDrop(map, 2282, 12, 20));
                                 break;
+
                         }
                         break;
                 }

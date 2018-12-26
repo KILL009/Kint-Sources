@@ -38,10 +38,8 @@ namespace OpenNos.Mapper.Mappers
             output.Element = input.Element;
             output.ElementRate = input.ElementRate;
             output.FireResistance = (sbyte)input.FireResistance;
-            output.HeroLevel = input.HeroLevel;
-            output.prestigeLevel = input.prestigeLevel;
-            output.HeroXp = input.HeroXP;
-            output.PrestigeXp = input.PrestigeXp;
+            output.HeroLevel = input.HeroLevel;        
+            output.HeroXp = input.HeroXP;           
             output.IsHostile = input.IsHostile;
             output.JobXP = input.JobXP;
             output.Level = input.Level;
@@ -93,10 +91,8 @@ namespace OpenNos.Mapper.Mappers
             output.Element = input.Element;
             output.ElementRate = input.ElementRate;
             output.FireResistance = input.FireResistance;
-            output.HeroLevel = input.HeroLevel;
-            output.prestigeLevel = input.prestigeLevel;
-            output.HeroXP = input.HeroXp;
-            output.PrestigeXp = input.PrestigeXp;
+            output.HeroLevel = input.HeroLevel;           
+            output.HeroXP = input.HeroXp;      
             output.IsHostile = input.IsHostile;
             output.JobXP = input.JobXP;
             output.Level = input.Level;

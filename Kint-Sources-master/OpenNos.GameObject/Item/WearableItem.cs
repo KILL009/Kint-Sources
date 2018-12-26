@@ -18,6 +18,7 @@ using OpenNos.Domain;
 using OpenNos.GameObject.Helpers;
 using System;
 using System.Diagnostics;
+using OpenNos.Core.ConcurrencyExtensions;
 
 namespace OpenNos.GameObject
 {
@@ -72,7 +73,7 @@ namespace OpenNos.GameObject
                     {
                         return;
                     }
-                    if (ItemValidTime > 0 && inv.IsBound)
+                    if (ItemValidTime > 0 && !inv.IsBound)
                     {
                         inv.ItemDeleteTime = DateTime.Now.AddSeconds(ItemValidTime);
                     }
@@ -119,9 +120,7 @@ namespace OpenNos.GameObject
 
                         if (session.Character.UseSp)
                         {
-                            ItemInstance sp = session.Character.Inventory.LoadBySlotAndType((byte)EquipmentType.Sp, equipment);
-
-                            if (sp.Item.Element != 0 && EquipmentSlot == EquipmentType.Fairy && Element != sp.Item.Element && Element != sp.Item.SecondaryElement)
+                            if (session.Character.Inventory.LoadBySlotAndType((byte)EquipmentType.Sp, equipment) is ItemInstance sp && sp.Item.Element != 0 && EquipmentSlot == EquipmentType.Fairy && Element != sp.Item.Element && Element != sp.Item.SecondaryElement)
                             {
                                 session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("BAD_FAIRY"), 0));
                                 return;
@@ -142,12 +141,57 @@ namespace OpenNos.GameObject
                     }
                     else if (mate != null)
                     {
-                        if ((EquipmentSlot != EquipmentType.Gloves
-                             && EquipmentSlot != EquipmentType.Boots)
-                            || LevelMinimum > mate.Level)
+                        if (mate.Level < LevelMinimum)
                         {
                             session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("BAD_EQUIPMENT"), 10));
                             return;
+                        }
+                        switch (EquipmentSlot)
+                        {
+                            case EquipmentType.Armor:
+                                if (ItemSubType == 4)
+                                {
+                                    mate.ArmorInstance = inv;
+                                    break;
+                                }
+                                else
+                                {
+                                    goto default;
+                                }
+
+                            case EquipmentType.MainWeapon:
+                                if (ItemSubType == 12)
+                                {
+                                    mate.WeaponInstance = inv;
+                                    break;
+                                }
+                                else
+                                {
+                                    goto default;
+                                }
+
+                            case EquipmentType.Gloves:
+                                mate.GlovesInstance = inv;
+                                break;
+
+                            case EquipmentType.Boots:
+                                mate.BootsInstance = inv;
+                                break;
+
+                            case EquipmentType.Sp:
+                                if (ItemSubType == 4)
+                                {
+                                    mate.SpInstance = inv;
+                                    break;
+                                }
+                                else
+                                {
+                                    goto default;
+                                }
+
+                            default:
+                                session.SendPacket(session.Character.GenerateSay(Language.Instance.GetMessageFromKey("BAD_EQUIPMENT"), 10));
+                                return;
                         }
                     }
 
@@ -173,6 +217,40 @@ namespace OpenNos.GameObject
 
                     session.Character.EquipmentBCards.AddRange(inv.Item.BCards);
 
+                    switch (inv.Item.ItemType)
+                    {
+                        case ItemType.Armor:
+                            session.Character.ShellEffectArmor.Clear();
+
+                            foreach (ShellEffectDTO dto in inv.ShellEffects)
+                            {
+                                session.Character.ShellEffectArmor.Add(dto);
+                            }
+                            break;
+                        case ItemType.Weapon:
+                            switch (inv.Item.EquipmentSlot)
+                            {
+                                case EquipmentType.MainWeapon:
+                                    session.Character.ShellEffectMain.Clear();
+
+                                    foreach (ShellEffectDTO dto in inv.ShellEffects)
+                                    {
+                                        session.Character.ShellEffectMain.Add(dto);
+                                    }
+                                    break;
+
+                                case EquipmentType.SecondaryWeapon:
+                                    session.Character.ShellEffectSecondary.Clear();
+
+                                    foreach (ShellEffectDTO dto in inv.ShellEffects)
+                                    {
+                                        session.Character.ShellEffectSecondary.Add(dto);
+                                    }
+                                    break;
+                            }
+                            break;
+                    }
+
                     if (Option == 0)
                     {
                         session.SendPacket(session.Character.GenerateStatChar());
@@ -188,7 +266,7 @@ namespace OpenNos.GameObject
 
                         if (EquipmentSlot == EquipmentType.Amulet)
                         {
-                            session.SendPacket(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 42));
+                            session.SendPacket(StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId, 39));
                             inv.BoundCharacterId = session.Character.CharacterId;
                         }
                     }

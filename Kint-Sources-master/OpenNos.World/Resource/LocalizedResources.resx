@@ -1717,4 +1717,22 @@
   <data name="PRESTIGE_XPRATE_NOW" xml:space="preserve">
     <value>Prestige Rate</value>
   </data>
+  <data name="ASK_OPEN_BOX_STARTER_PACK" xml:space="preserve">
+    <value>Quieres abrir el paquete de bienvenida</value>
+  </data>
+  <data name="ASK_USE_BUFFBOOK" xml:space="preserve">
+    <value>Quieres usar el libro de buff</value>
+  </data>
+  <data name="ASK_USE_EC_KEY" xml:space="preserve">
+    <value>Quieres entrar a la sala vip</value>
+  </data>
+  <data name="ASK_USE_LUINIA" xml:space="preserve">
+    <value>Quieres usar lunia</value>
+  </data>
+  <data name="MARRY_REQUEST" xml:space="preserve">
+    <value>Solicitud de matrimonio</value>
+  </data>
+  <data name="WELCOME_VIP_SHOP_MAP" xml:space="preserve">
+    <value>Bienvenido a la sala vip</value>
+  </data>
 </root>

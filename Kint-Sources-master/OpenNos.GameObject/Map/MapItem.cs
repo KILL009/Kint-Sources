@@ -14,6 +14,7 @@
 
 using OpenNos.GameObject.Helpers;
 using System;
+using OpenNos.Data;
 
 namespace OpenNos.GameObject
 {
@@ -47,7 +48,7 @@ namespace OpenNos.GameObject
         public DateTime CreatedDate { get; set; }
 
         public abstract short ItemVNum { get; set; }
-
+       
         public short PositionX { get; set; }
 
         public short PositionY { get; set; }

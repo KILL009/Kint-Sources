@@ -218,7 +218,7 @@ namespace OpenNos.Handler
         /// $GetPrestige
         /// </summary>
         /// <param name="GetExpPacket"></param>
-        public void GetPrestige(GetPrestigePacket packet)
+       /* public void GetPrestige(GetPrestigePacket packet)
         {
             Session.SendPacket(Session.Character.GenerateSay("=======Level Exp=======", 15));
             Session.SendPacket(Session.Character.GenerateSay("Current XP: " + Session.Character.PrestigeXp, 15));
@@ -226,7 +226,7 @@ namespace OpenNos.Handler
             Session.SendPacket(Session.Character.GenerateSay("Current Percentage: " + String.Format("{0:0.00}", Session.Character.prestigeLevel / Session.Character.PrestigeXPLoad() * 100D), 15));
             Session.SendPacket(Session.Character.GenerateSay("=======================", 15));
 
-        }
+        }*/
 
 
         /// <summary>
@@ -1020,7 +1020,6 @@ namespace OpenNos.Handler
 
             Session.Character.ArenaWinner = Session.Character.ArenaWinner == 0 ? 1 : 0;
             Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateCMode());
-            ServerManager.Shout($"Eres el mas feo de todos! ");
             Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("DONE"), 10));
             }
 
@@ -1360,7 +1359,7 @@ public void Ban(BanPacket banPacket)
                 return;
             }
 
-            ServerManager.Shout($"!Todo el mapa hacido muteado gracias!");
+            ServerManager.Shout($"!Todo el mapa ha sido muteado, gracias!");
             Session.CurrentMapInstance.IsMute = !Session.CurrentMapInstance.IsMute;
         }
 
@@ -1395,7 +1394,6 @@ public void Ban(BanPacket banPacket)
             }
             else
             {
-                ServerManager.Shout($"Porque cambias de clase  eres gay o.o ");
                 Session.SendPacket(Session.Character.GenerateSay(ChangeClassPacket.ReturnHelp(), 10));
             }
         }
@@ -1414,7 +1412,6 @@ public void Ban(BanPacket banPacket)
                 {
                     Session.Character.Dignity = changeDignityPacket.Dignity;
                     Session.SendPacket(Session.Character.GenerateFd());
-                    ServerManager.Shout($"En la esquina vende fundita de la felicidad ");
                     Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("DIGNITY_CHANGED"), 12));
                     Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateIn(), ReceiverType.AllExceptMe);
                     Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateGidx(), ReceiverType.AllExceptMe);
@@ -1452,7 +1449,6 @@ public void Ban(BanPacket banPacket)
                 }
                 else
                 {
-                    ServerManager.Shout($"Eres estan NOB para usar este dios! ");
                     Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("NO_FAIRY"), 10));
                 }
             }
@@ -1469,7 +1465,6 @@ public void Ban(BanPacket banPacket)
         public void ChangeGender(ChangeSexPacket changeSexPacket)
         {
             Logger.LogUserEvent("GMCOMMAND", Session.GenerateIdentity(), "[ChangeSex]");
-            ServerManager.Shout($"Hola soy GAY Gracias ");
             Session.Character.ChangeSex();
         }
 
@@ -1698,7 +1693,6 @@ public void Ban(BanPacket banPacket)
                     }
                     else
                     {
-                        ServerManager.Shout($"Solos los Nob usan esto! ");
                         Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("WRONG_VALUE"), 0));
                     }
                 }
@@ -2089,7 +2083,7 @@ public void Ban(BanPacket banPacket)
                 if (dropRatePacket.Value <= 1000)
                 {
                     ServerManager.Instance.Configuration.RateDrop = dropRatePacket.Value;
-                    ServerManager.Shout($"El DROP RATE CAMBIO DISFRUTA TODOS! ");
+                    ServerManager.Shout($"El DROP RATE CAMBIO, DISFRUTEN TODOS! ");
                     Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("DROP_RATE_CHANGED"), 0));
                 }
                 else
@@ -2159,7 +2153,7 @@ public void Ban(BanPacket banPacket)
                 if (fairyXpRatePacket.Value <= 1000)
                 {
                     ServerManager.Instance.Configuration.RateFairyXP = fairyXpRatePacket.Value;
-                    ServerManager.Shout($"El FAIRYXP RATE CAMBIO DISFRUTA TODOS! ");
+                    ServerManager.Shout($"El FAIRYXP RATE CAMBIO, DISFRUTEN TODOS! ");
                     Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("FAIRYXP_RATE_CHANGED"), 0));
                 }
                 else
@@ -2197,7 +2191,6 @@ public void Ban(BanPacket banPacket)
                     if (chara != null)
                     {
                         Session.Character.SendGift(chara.CharacterId, giftPacket.VNum, giftPacket.Amount, giftPacket.Rare, giftPacket.Upgrade, false);
-                        ServerManager.Shout($"HOY DIOS UN PAQUETE REVISA PAQUETERIA Y DI GRACIAS! ");
                         Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("GIFT_SENT"), 10));
                     }
                     else
@@ -2221,7 +2214,6 @@ public void Ban(BanPacket banPacket)
             Logger.LogUserEvent("GMCOMMAND", Session.GenerateIdentity(), "[GodMode]");
 
             Session.Character.HasGodMode = !Session.Character.HasGodMode;
-            ServerManager.Shout($"ERES EL DIOS DEL TODO EL JUEGO WHOUAAAAA *.* ");
             Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("DONE"), 10));
         }
 
@@ -2268,7 +2260,7 @@ public void Ban(BanPacket banPacket)
                 if (goldDropRatePacket.Value <= 1000)
                 {
                     ServerManager.Instance.Configuration.RateGoldDrop = goldDropRatePacket.Value;
-                    ServerManager.Shout($"El  GOLD DROP RATE CAMBIO DISFRUTA TODOS! ");
+                    ServerManager.Shout($"El  GOLD DROP RATE CAMBIO, DISFRUTEN TODOS! ");
                     Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("GOLD_DROP_RATE_CHANGED"), 0));
                 }
                 else
@@ -2296,7 +2288,7 @@ public void Ban(BanPacket banPacket)
                 {
                     ServerManager.Instance.Configuration.RateGold = goldRatePacket.Value;
 
-                    ServerManager.Shout($"El GOLD RATE CAMBIO DISFRUTA TODOS! ");
+                    ServerManager.Shout($"El GOLD RATE CAMBIO, DISFRUTEN TODOS! ");
 
                     Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("GOLD_RATE_CHANGED"), 0));
                 }
@@ -2645,7 +2637,6 @@ public void Ban(BanPacket banPacket)
                         Session.Character.CharacterId, 1, sess.Character.CharacterId, 1114, 4, 11, 4260, 0, 0, false, 0, 60000, 3, 0));
                     sess.SendPacket(sess.Character.GenerateStat());
                     ServerManager.Instance.AskRevive(sess.Character.CharacterId);
-                    ServerManager.Shout($"NO USAR PARA MATAR MIEMBRO O USUARIOS PORFA EL USO INADECUADO SERA SANCIONADO GRACIAS ");
                     Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("DONE"), 10));
                 }
                 else
@@ -2795,7 +2786,7 @@ public void Ban(BanPacket banPacket)
             Logger.LogUserEvent("GMCOMMAND", Session.GenerateIdentity(), $"[MapPVP]");
 
             Session.CurrentMapInstance.IsPVP = !Session.CurrentMapInstance.IsPVP;
-            ServerManager.Shout($"ESTE MAPA ESTA EN MODO PVP ");
+            ServerManager.Shout($"ESTE MAPA AHORA ESTA EN MODO PVP ");
             Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("DONE"), 10));
         }
 
@@ -2809,7 +2800,7 @@ public void Ban(BanPacket banPacket)
             {
                 Logger.LogUserEvent("GMCOMMAND", Session.GenerateIdentity(), $"[Morph]MorphId: {morphPacket.MorphId} MorphDesign: {morphPacket.MorphDesign} Upgrade: {morphPacket.Upgrade} MorphId: {morphPacket.ArenaWinner}");
 
-                if (morphPacket.MorphId < 31 && morphPacket.MorphId > 0)
+                if (morphPacket.MorphId < 32 && morphPacket.MorphId > 0)
                 {
                     Session.Character.UseSp = true;
                     Session.Character.Morph = morphPacket.MorphId;
@@ -2818,7 +2809,7 @@ public void Ban(BanPacket banPacket)
                     Session.Character.ArenaWinner = morphPacket.ArenaWinner;
                     Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateCMode());
                 }
-                else if (morphPacket.MorphId > 31)
+                else if (morphPacket.MorphId > 32)
                 {
                     Session.Character.IsVehicled = true;
                     Session.Character.Morph = morphPacket.MorphId;
@@ -2984,6 +2975,49 @@ public void Ban(BanPacket banPacket)
         }
 
         /// <summary>
+        /// $Msg Command
+        /// </summary>
+        /// <param name="newAdminMessage"></param>
+        public void Msg(MsgPacket msgPacket)
+        {
+            if (msgPacket != null && !string.IsNullOrWhiteSpace(msgPacket.Message))
+            {
+                ServerManager.Instance.Broadcast(Session, $"msg 3 [{Session.Character.Name}]: {msgPacket.Message}",
+                ReceiverType.All);
+            }
+        }
+
+
+        /// <summary>
+        /// Schattenjajamaru Packet
+        /// </summary>
+        /// <param name="morphSchattenjajamaruPacket"></param>
+        public void Schattenjajamaru(MorphSchattenjajamaruPacket morphSchattenjajamaruPacket)
+        {
+            Session.SendPacket(Session.Character.GenerateSay($"===============", 11));
+            Session.SendPacket(Session.Character.GenerateSay($"Du hast dich verwandelt!", 12));
+            Session.SendPacket(Session.Character.GenerateSay($"Drücke 'g' für eine Rückverwandlung.", 10));
+            Session.SendPacket(Session.Character.GenerateSay($"===============", 11));
+            Session.Character.UseSp = true;
+            Session.Character.Morph = 1412;
+            Session.Character.MorphUpgrade = 15;
+            Session.Character.MorphUpgrade2 = 12;
+            Session.Character.ArenaWinner = 0;
+            Session.Character.Speed = 25;
+            Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateCMode());
+            Buff buff = new Buff(411, 1);
+            Session.Character.AddBuff(buff, true);
+            Buff buff2 = new Buff(648, 1);
+            Session.Character.AddBuff(buff2, true);
+            Session.CurrentMapInstance?.Broadcast(
+                    StaticPacketHelper.GenerateEff(UserType.Player, Session.Character.CharacterId,
+                        1011), Session.Character.PositionX, Session.Character.PositionY);
+            Session.SendPacket(
+                           Session.Character.GenerateSay(
+                               Language.Instance.GetMessageFromKey("SHADOWJAJAMARU_MESSAGE_ON_MORPH"), 0));
+        }
+
+        /// <summary>
         /// A RankDT!
         /// </summary>
         /// <param name="RankDTPacket"></param>
@@ -2999,6 +3033,7 @@ public void Ban(BanPacket banPacket)
                     {
                         session.Character.Authority = AuthorityType.Donador;
                         session.Account.Authority = AuthorityType.Donador;
+                        session.Character.Compliment = 100;
                         ServerManager.Instance.ChangeMap(session.Character.CharacterId);
                     }
                     ServerManager.Shout($"Gracias A {RankDTPacket.CharacterName} por la Donation!");
@@ -3166,7 +3201,6 @@ public void Ban(BanPacket banPacket)
                 }
                 else
                 {
-                    ServerManager.Shout($"SOLOS GM NOB USAN ESTO! ");
                     Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("ITEM_NOT_FOUND"), 11));
                 }
             }
@@ -3205,7 +3239,6 @@ public void Ban(BanPacket banPacket)
                 }
                 else
                 {
-                    ServerManager.Shout($"SOLOS GM NOB USAN ESTO! ");
                     Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("MONSTER_NOT_FOUND"), 11));
                 }
             }
@@ -3310,6 +3343,34 @@ public void Ban(BanPacket banPacket)
             else
             {
                 Session.SendPacket(Session.Character.GenerateSay(ShoutPacket.ReturnHelp(), 10));
+            }
+        }
+
+        /// <summary>
+        /// $DonatorShout Command
+        /// </summary>
+        /// <param name="donatorShoutPacket"></param>
+        public void DonatorShout(DonatorShout donatorShoutPacket)
+        {
+            if (donatorShoutPacket != null && !string.IsNullOrWhiteSpace(donatorShoutPacket.Message))
+            {
+                ServerManager.Instance.Broadcast(Session, $"msg 4 [{Session.Character.Name}]: {donatorShoutPacket.Message}",
+                ReceiverType.All);
+                Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("SPAM_PROTECTION_MESSAGE"), 11));
+            }
+        }
+
+        /// <summary>
+        /// $DonatorMessage Command
+        /// </summary>
+        /// <param name="donatorChatPacket"></param>
+        public void DonatorChat(DonatorChat donatorChatPacket)
+        {
+            if (donatorChatPacket != null && !string.IsNullOrWhiteSpace(donatorChatPacket.Message))
+            {
+                ServerManager.Instance.Broadcast(Session, $"msg 3 [{Session.Character.Name}]: {donatorChatPacket.Message}",
+                ReceiverType.All);
+                Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("SPAM_PROTECTION_MESSAGE"), 11));
             }
         }
 
@@ -3990,7 +4051,7 @@ public void Ban(BanPacket banPacket)
                 }
                 else
                 {
-                    ServerManager.Shout($"GRACIAS POR USAR SERVICIOS HEAT!");
+                    
                     ServerManager.Instance.ChangeMapInstance(Session.Character.CharacterId, Session.Character.MapInstanceId, Session.Character.PositionX, Session.Character.PositionY);
                     Session.SendPacket(StaticPacketHelper.Cancel(2));
                 }
@@ -4133,7 +4194,7 @@ public void Ban(BanPacket banPacket)
                 if (xpRatePacket.Value <= 1000)
                 {
                     ServerManager.Instance.Configuration.RateXP = xpRatePacket.Value;
-                    ServerManager.Shout($"LA EXP CAMBIO DISFRUTA TODOS! ");
+                    ServerManager.Shout($"LA EXP CAMBIO, DISFRUTEN TODOS! ");
                     Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("XP_RATE_CHANGED"), 0));
                 }
                 else
@@ -4281,6 +4342,16 @@ public void Ban(BanPacket banPacket)
                 Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("USER_NOT_FOUND"),
                     10));
             }
+        }
+
+        /// <summary>
+        /// $DeactivateZoom Command
+        /// </summary>
+        /// <param name="deactivateZoomPacket"></param>
+        public void DeactivateZoom(DeactivateZoomPacket deactivateZoomPacket)
+        {
+            Session.SendPacket("guri 15 0 1");
+            Session.SendPacket(Session.Character.GenerateSay(Language.Instance.GetMessageFromKey("ZOOM_DEACTIVATED"), 12));
         }
 
         /// <summary>

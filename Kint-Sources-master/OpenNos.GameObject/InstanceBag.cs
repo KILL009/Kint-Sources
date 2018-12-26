@@ -60,6 +60,7 @@ namespace OpenNos.GameObject
         public int RoomsVisited { get; set; }
 
         public List<EventContainer> UnlockEvents { get; set; }
+        public long CreatorId { get; set; }
 
         #endregion
 

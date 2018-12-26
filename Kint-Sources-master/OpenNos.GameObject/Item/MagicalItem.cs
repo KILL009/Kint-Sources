@@ -98,6 +98,7 @@ namespace OpenNos.GameObject
                     }
                     break;
 
+                 //Bank
                 case 10066:
                     if (session.Character.MapInstance.MapInstanceType != MapInstanceType.BaseMapInstance)
                     {
@@ -301,6 +302,7 @@ namespace OpenNos.GameObject
                     if (!session.Character.IsVehicled && Option == 0)
                     {
                         session.SendPacket(UserInterfaceHelper.GenerateGuri(10, 4, session.Character.CharacterId, 1));
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     }
                     break;
 
@@ -324,6 +326,19 @@ namespace OpenNos.GameObject
                         }
                     }
                     break;
+                //Fresh dye
+                case 31:
+                    if (!session.Character.IsVehicled && session.Character.HairStyle == HairStyleType.Hair7)
+                    {
+                        session.Character.HairStyle = HairStyleType.Hair8;
+                        session.SendPacket(session.Character.GenerateEq());
+                        session.CurrentMapInstance?.Broadcast(session, session.Character.GenerateIn());
+                        session.CurrentMapInstance?.Broadcast(session, session.Character.GenerateGidx());
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                        // idk how it works yet but seems like all characters with this hairstyle have DarkPurple hair
+                        session.Character.HairColor = HairColorType.DarkPurple;
+                    }
+                    break;
 
                 case 300:
                     if (session.Character.Group != null && session.Character.Group.GroupType != GroupType.Group && session.Character.Group.IsLeader(session) && session.CurrentMapInstance.Portals.Any(s => s.Type == (short)PortalType.Raid))
@@ -340,6 +355,75 @@ namespace OpenNos.GameObject
                             });
                             delay += 100;
                         }
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                    }
+                    break;
+
+                //Speedbooster
+                case 9011:
+                    if (!session.Character.Buff.ContainsKey(336))
+                    {
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                        session.Character.AddStaticBuff(new StaticBuffDTO { CardId = 336 });
+                    }
+                    else
+                    {
+                        session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("ITEM_IN_USE"), 0));
+                    }
+                    break;
+
+                //Teleport Vip shop
+                case 9016:
+                    if (Option == 0)
+                    {
+                        session.SendPacket($"qna #u_i^1^{session.Character.CharacterId}^{(byte)inv.Type}^{inv.Slot}^3 {Language.Instance.GetMessageFromKey("ASK_USE_EC_KEY")}");
+                    }
+                    else
+                    {
+                        ServerManager.Instance.ChangeMap(session.Character.CharacterId, 4200, 7, 13);
+                        session.SendPacket(
+                                        session.Character.GenerateSay(
+                                            Language.Instance.GetMessageFromKey("WELCOME_VIP_SHOP_MAP"), 0));
+                    }
+                    break;
+
+                //Haar Fix
+                case 9021:
+                    session.Character.HairStyle = HairStyleType.Hair7;
+                    session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                    ServerManager.Instance.ChangeMapInstance(session.Character.CharacterId,
+                        session.Character.MapInstanceId, session.Character.PositionX, session.Character.PositionY,
+                        true);
+                    break;
+
+                //Haar Fix
+                case 9022:
+                    session.Character.HairStyle = HairStyleType.Hair6;
+                    session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                    ServerManager.Instance.ChangeMapInstance(session.Character.CharacterId,
+                        session.Character.MapInstanceId, session.Character.PositionX, session.Character.PositionY,
+                        true);
+                    break;
+
+                //Pes Item ID: 2457
+                case 9030:
+                    session.SendPacket("wopen 41");
+                    break;
+
+                //Luinia
+                case 9041:
+                    if (Option == 0)
+                    {
+                        session.SendPacket($"qna #u_i^1^{session.Character.CharacterId}^{(byte)inv.Type}^{inv.Slot}^3 {Language.Instance.GetMessageFromKey("ASK_USE_LUINIA")}");
+                    }
+                    else
+                    {
+                        session.CurrentMapInstance?.Broadcast(
+                        StaticPacketHelper.GenerateEff(UserType.Player, session.Character.CharacterId,
+                        647), session.Character.PositionX, session.Character.PositionY);
+                        Buff buff = new Buff(35, 10);
+                        session.Character.AddBuff(buff, true);
+                        session.SendPacket(session.Character.GenerateSay("Luinia la restauración fue utilizada.", 12));
                         session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     }
                     break;

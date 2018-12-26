@@ -14,6 +14,7 @@
 
 using OpenNos.Core;
 using OpenNos.Data;
+using OpenNos.GameObject.Helpers;
 using OpenNos.GameObject.Networking;
 
 namespace OpenNos.GameObject
@@ -132,6 +133,52 @@ namespace OpenNos.GameObject
                         }
 
                         session.Character.GiftAdd(1014, (byte)ServerManager.RandomNumber(5,11));
+                    }
+                    break;
+
+                //Bendición de la Flor del Sonido
+                case 9007:
+                    if (!session.Character.Buff.ContainsKey(378))
+
+                    {
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
+                        session.Character.AddStaticBuff(new StaticBuffDTO { CardId = 378 });
+                    }
+                    else
+                    {
+                        session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("ITEM_IN_USE"), 0));
+                    }
+                    break;
+
+                //Lord Mukraju Buffbuch
+                case 9032:
+                    if (Option == 0)
+                    {
+                        session.SendPacket($"qna #u_i^1^{session.Character.CharacterId}^{(byte)inv.Type}^{inv.Slot}^3 {Language.Instance.GetMessageFromKey("ASK_USE_BUFFBOOK")}");
+                    }
+                    else
+                    {
+                        Buff buff = new Buff(72, 1); //Moral
+                        session.Character.AddBuff(buff, true);
+                        Buff buff2 = new Buff(75, 1); //Windläufer
+                        session.Character.AddBuff(buff2, true);
+                        Buff buff3 = new Buff(67, 1); //Feuersegen
+                        session.Character.AddBuff(buff3, true);
+                        Buff buff4 = new Buff(91, 1); //Segnung
+                        session.Character.AddBuff(buff4, true);
+                        Buff buff5 = new Buff(89, 1); //Heilige Waffe
+                        session.Character.AddBuff(buff5, true);
+                        Buff buff6 = new Buff(138, 1); //Gebet der Verteidigung
+                        session.Character.AddBuff(buff6, true);
+                        Buff buff9 = new Buff(152, 1); //Geist des Bären
+                        session.Character.AddBuff(buff9, true);
+                        Buff buff10 = new Buff(153, 1); //Geist des Adlers
+                        session.Character.AddBuff(buff10, true);
+                        Buff buff11 = new Buff(155, 1); //Elementares Leuchten
+                        session.Character.AddBuff(buff11, true);
+                        Buff buff12 = new Buff(134, 1); //Wassersegen
+                        session.Character.AddBuff(buff12, true);
+                        session.Character.Inventory.RemoveItemFromInventory(inv.Id);
                     }
                     break;
                 default:

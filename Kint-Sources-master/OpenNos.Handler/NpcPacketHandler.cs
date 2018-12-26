@@ -236,7 +236,7 @@ namespace OpenNos.Handler
                         {
                             // npc shop
                             ShopItemDTO shopItem = npc.Shop.ShopItems.Find(it => it.Slot == buyPacket.Slot);
-                            if (shopItem == null || amount <= 0 || amount > 99)
+                            if (shopItem == null || amount <= 0 || amount > 999)
                             {
                                 return;
                             }

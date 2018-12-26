@@ -18,7 +18,6 @@ using System.Linq;
 using OpenNos.Domain;
 using OpenNos.GameObject.Battle;
 using OpenNos.GameObject.Networking;
-using static OpenNos.Domain.BCardType;
 
 namespace OpenNos.GameObject.Helpers
 {
@@ -34,8 +33,6 @@ namespace OpenNos.GameObject.Helpers
 
         public static DamageHelper Instance => _instance ?? (_instance = new DamageHelper());
 
-
-
         #endregion
 
         #region Methods
@@ -49,10 +46,8 @@ namespace OpenNos.GameObject.Helpers
         /// <param name="hitMode">reference to HitMode</param>
         /// <param name="onyxWings"></param>
         /// <returns>Damage</returns>
-        /// 
-
         public int CalculateDamage(BattleEntity attacker, BattleEntity defender, Skill skill, ref int hitMode,
-            ref bool onyxWings, int charge)
+            ref bool onyxWings)
         {
             int[] GetAttackerBenefitingBuffs(BCardType.CardType type, byte subtype)
             {
@@ -149,12 +144,12 @@ namespace OpenNos.GameObject.Helpers
 
             if (attackerpercentdamage[3] != 0)
             {
-                return defender.HPMax / 100 * attackerpercentdamage[2];
+                return defender.HpMax / 100 * attackerpercentdamage[2];
             }
 
             if (defenderpercentdefense[3] != 0)
             {
-                return defender.HPMax / 100 * Math.Abs(defenderpercentdefense[2]);
+                return defender.HpMax / 100 * Math.Abs(defenderpercentdefense[2]);
             }
 
             /*
@@ -308,7 +303,7 @@ namespace OpenNos.GameObject.Helpers
                 if (attacker.EntityType.Equals(EntityType.Player))
                 {
                     attacker.Session?.CurrentMapInstance?.Broadcast(
-                        StaticPacketHelper.GenerateEff(UserType.Player, attacker.Session.Character.CharacterId, 19));
+                        StaticPacketHelper.GenerateEff(UserType.Player, attacker.Session.Character.CharacterId, 15));
                 }
             }
 
@@ -657,10 +652,10 @@ namespace OpenNos.GameObject.Helpers
                     chance = 1;
                 }
 
-                /*if (GetBuff(CardType.Buff, (byte)AdditionalTypes.DodgeAndDefencePercent.DodgeIncreased)[0] != 0)    //TODO: Eagle Eyes AND Other Fixed Hitrates
-                {
-                    chance = 10;
-                }*/
+                //if (GetBuff(CardType.Buff, (byte)AdditionalTypes.DodgeAndDefencePercent.)[0] != 0)    TODO: Eagle Eyes AND Other Fixed Hitrates
+                //{
+                //    chance = 10;
+                //}
             }
 
             int bonus = 0;
@@ -718,9 +713,9 @@ namespace OpenNos.GameObject.Helpers
 
             attacker.AttackUpgrade -= defender.DefenseUpgrade;
 
-            if (attacker.AttackUpgrade < -15)
+            if (attacker.AttackUpgrade < -10)
             {
-                attacker.AttackUpgrade = 15;
+                attacker.AttackUpgrade = -10;
             }
             else if (attacker.AttackUpgrade > ServerManager.Instance.Configuration.MaxUpgrade)
             {
@@ -772,27 +767,6 @@ namespace OpenNos.GameObject.Helpers
                 case 10:
                     weaponDamage += weaponDamage * 2;
                     break;
-                case 11:
-                    weaponDamage += (int)(weaponDamage * 2.15);
-                    break;
-
-                case 12:
-                    weaponDamage += (int)(weaponDamage * 2.22);
-                    break;
-
-                case 13:
-                    weaponDamage += (int)(weaponDamage * 2.32);
-                    break;
-
-                case 14:
-                    weaponDamage += (int)(weaponDamage * 2.43);
-                    break;
-
-                case 15:
-                    weaponDamage += (int)(weaponDamage * 2.54);
-                    break;
-
-
 
                     //default:
                     //    if (attacker.AttackUpgrade > 0)
@@ -821,25 +795,6 @@ namespace OpenNos.GameObject.Helpers
                 //    }
 
                 //break;
-                case -15:
-                    defender.ArmorDefense += (int)(defender.ArmorDefense * 2.43);
-                    break;
-
-                case -14:
-                    defender.ArmorDefense += (int)(defender.ArmorDefense * 2.32);
-                    break;
-
-                case -13:
-                    defender.ArmorDefense += (int)(defender.ArmorDefense * 2.22);
-                    break;
-
-                case -12:
-                    defender.ArmorDefense += (int)(defender.ArmorDefense * 2.15);
-                    break;
-
-                case -11:
-                    defender.ArmorDefense += (int)(defender.ArmorDefense * 2.1);
-                    break;
 
                 case -10:
                     defender.ArmorDefense += defender.ArmorDefense * 2;
@@ -940,14 +895,8 @@ namespace OpenNos.GameObject.Helpers
                 }
 
                 normalDamage += (int)(normalDamage * multiplier);
-               /* if (defender.HasBuff(CardType.Critical, (byte)AdditionalTypes.Critical.DamageFromCriticalDecreased))
-                {
-                    int damageReduction = defender.GetBuff(CardType.Critical, (byte)AdditionalTypes.Critical.DamageFromCriticalDecreased)[0];
-                    baseDamage -= (int)(baseDamage * (damageReduction / 100D));
-                }*/
                 hitMode = 3;
             }
-
 
             #endregion
 
@@ -1101,7 +1050,7 @@ namespace OpenNos.GameObject.Helpers
             if ((attacker.EntityType == EntityType.Player || attacker.EntityType == EntityType.Mate)
                 && (defender.EntityType == EntityType.Player || defender.EntityType == EntityType.Mate))
             {
-                totalDamage /= 5;
+                totalDamage /= 2;
             }
 
             if (defender.EntityType == EntityType.Monster || defender.EntityType == EntityType.NPC)
@@ -1109,7 +1058,7 @@ namespace OpenNos.GameObject.Helpers
                 totalDamage -= GetMonsterDamageBonus(defender.Level);
             }
 
-            if (totalDamage < 8)
+            if (totalDamage < 5)
             {
                 totalDamage = ServerManager.RandomNumber(1, 6);
             }
@@ -1131,11 +1080,6 @@ namespace OpenNos.GameObject.Helpers
             }
 
             #endregion
-
-            if (attacker.EntityType == EntityType.Player && charge >= 0)
-            {
-                totalDamage += charge;
-            }
 
             return totalDamage;
         }

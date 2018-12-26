@@ -35,15 +35,12 @@ namespace OpenNos.GameObject
 
     public class BCard : BCardDTO
     {
-        private object charact;
-        private BattleEntity entity;
-        private object targetEntity;
+
 
         public BCard()
         {
 
         }
-
 
         public BCard(BCardDTO input)
         {
@@ -767,55 +764,19 @@ namespace OpenNos.GameObject
                     break;
 
                 case BCardType.CardType.SpecialActions:
-                    if (type == typeof(Character))
+                    switch (SubType)
                     {
-                        if (session is Character character && character.Hp > 0)
-                        {
-
-                            if (SubType == (byte)AdditionalTypes.SpecialActions.Hide / 10)
+                        case (byte)AdditionalTypes.SpecialActions.Hide:
+                            switch (session)
                             {
-                                //Invisiblity
-                                character.Session.Character.Invisible = true;
-                                character.Session.CurrentMapInstance?.Broadcast(character.Session.Character.GenerateInvisible());
-                                character.Session.SendPacket(character.Session.Character.GenerateEq());
-                                if (character.Session.Character.Invisible)
-                                {
-                                    character.Session.Character.Mates.Where(s => s.IsTeamMember).ToList()
-                                        .ForEach(s => character.Session.CurrentMapInstance?.Broadcast(s.GenerateOut()));
-                                    character.Session.CurrentMapInstance?.Broadcast(character.Session,
-                                        StaticPacketHelper.Out(UserType.Player, character.Session.Character.CharacterId), ReceiverType.AllExceptMe);
-                                }
-
-                                //Remove invisibility
-                                System.Threading.Tasks.Task.Delay(120000).ContinueWith(t =>
-                                {
-
-                                    character.Session.Character.Invisible = false;
-                                    character.Session.CurrentMapInstance?.Broadcast(character.Session.Character.GenerateInvisible());
-                                    character.Session.SendPacket(character.Session.Character.GenerateEq());
-
-                                    character.Session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m =>
-                                        character.Session.CurrentMapInstance?.Broadcast(m.GenerateIn(), ReceiverType.AllExceptMe));
-                                    character.Session.CurrentMapInstance?.Broadcast(character.Session, character.Session.Character.GenerateIn(),
-                                        ReceiverType.AllExceptMe);
-                                    character.Session.CurrentMapInstance?.Broadcast(character.Session, character.Session.Character.GenerateGidx(),
-                                        ReceiverType.AllExceptMe);
-
-                                });
-
-
+                                case Character receiverCharacter:
+                                    receiverCharacter.Invisible = true;
+                                    receiverCharacter.Mates.Where(s => s.IsTeamMember).ToList().ForEach(s =>
+                                        receiverCharacter.Session.CurrentMapInstance?.Broadcast(s.GenerateOut()));
+                                    receiverCharacter.Session.CurrentMapInstance?.Broadcast(receiverCharacter.GenerateInvisible());
+                                    break;
                             }
-                            if (SubType == (byte)AdditionalTypes.SpecialActions.Charge / 10)
-                            {
-                                character.Session.Character.isAbsorbing = true;
-                                System.Threading.Tasks.Task.Delay(2000).ContinueWith(t =>
-                                {
-
-                                    character.Session.Character.isAbsorbing = false;
-
-                                });
-                            }
-                        }
+                            break;
                     }
                     break;
                 case BCardType.CardType.Mode:
@@ -842,7 +803,7 @@ namespace OpenNos.GameObject
                     }
                     break;*/
 
-                case BCardType.CardType.Item:
+              /*case BCardType.CardType.Item:
                     if (session is Character charact)
                     {
                         var weapon =
@@ -865,7 +826,7 @@ namespace OpenNos.GameObject
                             }
                         }
                     }
-                        break;
+                        break;*/
 
                 case BCardType.CardType.DebuffResistance:
                     break;
@@ -1255,81 +1216,23 @@ namespace OpenNos.GameObject
                     }
                     break;
 
-               /* case BCardType.CardType.FalconSkill:
+                case BCardType.CardType.FalconSkill:
+
                     switch (SubType)
                     {
-                        case (byte)AdditionalTypes.FalconSkill.CausingChanceLocation:
-                            if (session is Character trapper)
+                        case (byte)AdditionalTypes.FalconSkill.Hide:
+                            if (type == typeof(Character) && session is Character character)
                             {
-                                var trap = new MapMonster
-                                {
-                                    MonsterVNum = 1436,
-                                    MapX = trapper.PositionX,
-                                    MapY = trapper.PositionY,
-                                    MapMonsterId = trapper.MapInstance.GetNextId(),
-                                    IsHostile = false,
-                                    IsMoving = false,
-                                    ShouldRespawn = false
-                                };
-
-                                trapper.MapInstance?.AddMonster(trap);
-                                trap.Initialize();
-                                trapper.MapInstance?.Broadcast(trap.GenerateIn());
-
-                                IDisposable dispo = null;
-
-                                Thread.Sleep(1000);
-
-                                dispo = Observable.Interval(TimeSpan.FromMilliseconds(250)).Subscribe(s =>
-                                {
-                                    if (trapper.MapInstance.IsPvp)
-                                    {
-                                        foreach (Character trapped in trapper.MapInstance.GetCharactersInRange(trap.MapX, trap.MapY, 2).Where(p => p.CharacterId != trapper.CharacterId))
-                                        {
-                                            trapper.MapInstance.Broadcast(StaticPacketHelper.SkillUsed(UserType.Monster, trap.MapMonsterId, 3, trap.MapMonsterId, 1250, 600, 11, 4270, trap.MapX, trap.MapY, true, 0, 0, -2, 0));
-                                            trapped.AddBuff(new Buff(572, 1));
-                                            trapped.AddBuff(new Buff(557, 1));
-                                            trapper.MapInstance.RemoveMonster(trap);
-                                            trapper.MapInstance.Broadcast(StaticPacketHelper.Out(UserType.Monster, trap.MapMonsterId));
-                                            dispo?.Dispose();
-                                        }
-                                    }
-                                    foreach (MapMonster trappedMonster in trapper.MapInstance.GetListMonsterInRange(trap.MapX, trap.MapY, 2).Where(m => m.MapMonsterId != trap.MapMonsterId))
-                                    {
-                                        trapper.MapInstance.Broadcast(StaticPacketHelper.SkillUsed(UserType.Monster, trap.MapMonsterId, 3, trap.MapMonsterId, 1250, 600, 11, 4270, trap.MapX, trap.MapY, true, 0, 0, -2, 0));
-                                        trappedMonster.AddBuff(new Buff(572, 1));
-                                        trappedMonster.AddBuff(new Buff(557, 1));
-                                        trapper.MapInstance.RemoveMonster(trap);
-                                        trapper.MapInstance.Broadcast(StaticPacketHelper.Out(UserType.Monster, trap.MapMonsterId));
-                                        dispo?.Dispose();
-                                    }
-
-                                });
-
-                                Observable.Timer(TimeSpan.FromSeconds(60)).Subscribe(s =>
-                                {
-                                    trapper.MapInstance.RemoveMonster(trap);
-                                    trapper.MapInstance.Broadcast(StaticPacketHelper.Out(UserType.Monster, trap.MapMonsterId));
-                                    dispo?.Dispose();
-                                });
+                                character.Invisible = true;
+                                character.Mates.Where(s => s.IsTeamMember).ToList().ForEach(s =>
+                                character.Session.CurrentMapInstance?.Broadcast(s.GenerateOut()));
+                                character.Session.CurrentMapInstance?.Broadcast(character.GenerateInvisible());
                             }
                             break;
-                            case (byte)AdditionalTypes.FalconSkill.Hide:
-                                if (charact == null)
-                                {
-                                    break;
-                                }
+                    }
+                    break;
 
-                                charact.Invisible = true;
-                                charact.Mates.Where(s => s.IsTeamMember).ToList().ForEach(s =>
-                                    charact.Session.CurrentMapInstance?.Broadcast(s.GenerateOut()));
-                                charact.Session.CurrentMapInstance?.Broadcast(charact.GenerateInvisible());
-                                break;
-                        }
 
-                        break;*/
-
-                    
 
                 case BCardType.CardType.AbsorptionAndPowerSkill:
                     break;
@@ -1416,6 +1319,8 @@ namespace OpenNos.GameObject
                 case BCardType.CardType.AbsorbedSpirit:
                     break;
 
+                case BCardType.CardType.FrozenShield:
+                    break;
                 case BCardType.CardType.AngerSkill:
                     break;
                     
@@ -1428,7 +1333,7 @@ namespace OpenNos.GameObject
                 case BCardType.CardType.EffectSummon:
                     break;
 
-                case BCardType.CardType.MeteoriteTeleport:
+              /*case BCardType.CardType.MeteoriteTeleport:
                     switch (SubType)
                     {
                         case (byte)AdditionalTypes.MeteoriteTeleport.CauseMeteoriteFall:
@@ -1458,7 +1363,7 @@ namespace OpenNos.GameObject
                             }
                             break;
                     }
-                    break;
+                    break;*/
 
                 case BCardType.CardType.DragonSkills:
                     switch (SubType)

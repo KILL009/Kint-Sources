@@ -21,6 +21,8 @@ namespace OpenNos.Domain
         HairStyleC = 2,
         HairStyleD = 3,
         NoHair = 4,
-        Hair8 = 5
+        Hair6 = 10,
+        Hair7 = 11,
+        Hair8 = 12
     }
 }

@@ -51,10 +51,8 @@ namespace OpenNos.GameObject
             Element = input.Element;
             ElementRate = input.ElementRate;
             FireResistance = input.FireResistance;
-            HeroLevel = input.HeroLevel;
-            prestigeLevel = input.prestigeLevel;
-            HeroXp = input.HeroXp;
-            PrestigeXp = input.PrestigeXp;
+            HeroLevel = input.HeroLevel;           
+            HeroXp = input.HeroXp;           
             IsHostile = input.IsHostile;
             JobXP = input.JobXP;
             Level = input.Level;
@@ -100,7 +98,7 @@ namespace OpenNos.GameObject
 
         #region Methods
 
-        public string GenerateEInfo() => $"e_info 10 {NpcMonsterVNum} {Level} {prestigeLevel} {Element} {AttackClass} {ElementRate} {AttackUpgrade} {DamageMinimum} {DamageMaximum} {Concentrate} {CriticalChance} {CriticalRate} {DefenceUpgrade} {CloseDefence} {DefenceDodge} {DistanceDefence} {DistanceDefenceDodge} {MagicDefence} {FireResistance} {WaterResistance} {LightResistance} {DarkResistance} {MaxHP} {MaxMP} -1 {Name.Replace(' ', '^')}";
+        public string GenerateEInfo() => $"e_info 10 {NpcMonsterVNum} {Level} {Element} {AttackClass} {ElementRate} {AttackUpgrade} {DamageMinimum} {DamageMaximum} {Concentrate} {CriticalChance} {CriticalRate} {DefenceUpgrade} {CloseDefence} {DefenceDodge} {DistanceDefence} {DistanceDefenceDodge} {MagicDefence} {FireResistance} {WaterResistance} {LightResistance} {DarkResistance} {MaxHP} {MaxMP} -1 {Name.Replace(' ', '^')}";
 
         public float GetRes(int skillelement)
         {

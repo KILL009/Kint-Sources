@@ -13,7 +13,6 @@ namespace OpenNos.GameObject.Helpers
         private MateHelper()
         {
             LoadXpData();
-            LoadPrestigeXpData();
             LoadPrimaryMpData();
             LoadSecondaryMpData();
             LoadHpData();
@@ -34,10 +33,6 @@ namespace OpenNos.GameObject.Helpers
 
         public int[,] DamageData { get; private set; }
 
-        public short[,] MinDamageData { get; private set; }
-
-        public short[,] MaxDamageData { get; private set; }
-
         public int[,] HitRateData { get; private set; }
 
         public int[,] MeleeDefenseData { get; private set; }
@@ -52,15 +47,13 @@ namespace OpenNos.GameObject.Helpers
 
         public double[] XpData { get; private set; }
 
-        public double[] PrestigeXpData { get; private set; }
-
         #endregion
 
         #region Methods
 
         private void LoadPrimaryMpData()
         {
-            PrimaryMpData = new double[513];
+            PrimaryMpData = new double[256];
             PrimaryMpData[0] = 10;
             PrimaryMpData[1] = 10;
             PrimaryMpData[2] = 15;
@@ -103,68 +96,9 @@ namespace OpenNos.GameObject.Helpers
             }
         }
 
-        #region Damage
-
-        private void LoadMinDamageData()
-        {
-            MinDamageData = new short[2, 513];
-
-            short baseDamage = 37;
-            short baseUp = 4;
-
-            MinDamageData[0, 0] = baseDamage;
-
-            for (int i = 1; i < MinDamageData.GetLength(1); i++)
-            {
-                MinDamageData[0, i] = baseDamage;
-                baseDamage += (short)(i % 5 == 0 ? 5 : baseUp);
-            }
-
-            baseDamage = 23;
-            baseUp = 6;
-
-            MinDamageData[1, 0] = baseDamage;
-
-            for (int i = 1; i < MinDamageData.GetLength(1); i++)
-            {
-                MinDamageData[1, i] = baseDamage;
-                baseDamage += (short)(i % 5 == 0 ? 5 : baseUp);
-                baseDamage += (short)(i % 2 == 0 ? 1 : 0);
-            }
-        }
-
-        private void LoadMaxDamageData()
-        {
-            MaxDamageData = new short[2, 513];
-
-            short baseDamage = 40;
-            short baseUp = 6;
-
-            MaxDamageData[0, 0] = baseDamage;
-
-            for (int i = 1; i < MaxDamageData.GetLength(1); i++)
-            {
-                MaxDamageData[0, i] = baseDamage;
-                baseDamage += (short)(i % 5 == 0 ? 5 : baseUp);
-            }
-
-            MaxDamageData[1, 0] = baseDamage;
-
-            baseDamage = 38;
-            baseUp = 8;
-
-            for (int i = 1; i < MaxDamageData.GetLength(1); i++)
-            {
-                MaxDamageData[1, i] = baseDamage;
-                baseDamage += (short)(i % 5 == 0 ? 5 : baseUp);
-            }
-        }
-
-        #endregion
-
         private void LoadSecondaryMpData()
         {
-            SecondaryMpData = new double[513];
+            SecondaryMpData = new double[256];
             SecondaryMpData[0] = 60;
             SecondaryMpData[1] = 60;
             SecondaryMpData[2] = 78;
@@ -191,9 +125,9 @@ namespace OpenNos.GameObject.Helpers
 
         private void LoadHpData()
         {
-            HpData = new double[513];
+            HpData = new double[256];
             int baseHp = 138;
-            int hpBaseUp = 18;
+            int hpBaseUp = 88;
             for (int i = 0; i < HpData.Length; i++)
             {
                 HpData[i] = baseHp;
@@ -218,15 +152,15 @@ namespace OpenNos.GameObject.Helpers
 
         private void LoadStats()
         {
-            DamageData = new int[4, 513];
-            HitRateData = new int[4, 513];
-            MeleeDefenseData = new int[4, 513];
-            MeleeDefenseDodgeData = new int[4, 513];
-            RangeDefenseData = new int[4, 513];
-            RangeDefenseDodgeData = new int[4, 513];
-            MagicDefenseData = new int[4, 513];
+            DamageData = new int[4, 256];
+            HitRateData = new int[4, 256];
+            MeleeDefenseData = new int[4, 256];
+            MeleeDefenseDodgeData = new int[4, 256];
+            RangeDefenseData = new int[4, 256];
+            RangeDefenseDodgeData = new int[4, 256];
+            MagicDefenseData = new int[4, 256];
 
-            for (int i = 0; i < 513; i++)
+            for (int i = 0; i < 256; i++)
             {
                 // Default(0)
                 DamageData[0, i] = i + 9; // approx
@@ -316,57 +250,6 @@ namespace OpenNos.GameObject.Helpers
                         break;
                 }
                 XpData[i] = Convert.ToInt64(XpData[i - 1] + (var * (i + 2) * (i + 2)));
-            }
-        }
-
-        private void LoadPrestigeXpData()
-        {
-            // Load LoadPrestigeXpData
-            PrestigeXpData = new double[513];
-            double[] v = new double[513];
-            double var = 1;
-            v[0] = 540;
-            v[1] = 960;
-            PrestigeXpData[0] = 300;
-            for (int i = 2; i < v.Length; i++)
-            {
-                v[i] = v[i - 1] + 420 + (120 * (i - 1));
-            }
-            for (int i = 1; i < PrestigeXpData.Length; i++)
-            {
-                if (i < 79)
-                {
-                    switch (i)
-                    {
-                        case 14:
-                            var = 6 / 3d;
-                            break;
-                        case 39:
-                            var = 19 / 3d;
-                            break;
-                        case 59:
-                            var = 70 / 3d;
-                            break;
-                    }
-                    PrestigeXpData[i] = Convert.ToInt64(PrestigeXpData[i - 1] + (var * v[i - 1]));
-                }
-                if (i < 79)
-                {
-                    continue;
-                }
-                switch (i)
-                {
-                    case 79:
-                        var = 5000;
-                        break;
-                    case 82:
-                        var = 9000;
-                        break;
-                    case 84:
-                        var = 13000;
-                        break;
-                }
-                PrestigeXpData[i] = Convert.ToInt64(PrestigeXpData[i - 1] + (var * (i + 2) * (i + 2)));
             }
         }
 

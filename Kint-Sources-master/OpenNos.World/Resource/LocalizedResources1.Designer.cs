@@ -367,6 +367,15 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Quieres abrir el paquete de bienvenida.
+        /// </summary>
+        internal static string ASK_OPEN_BOX_STARTER_PACK {
+            get {
+                return ResourceManager.GetString("ASK_OPEN_BOX_STARTER_PACK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Quieres expandir las ranuras para mascotas?.
         /// </summary>
         internal static string ASK_PET_MAX {
@@ -435,6 +444,33 @@ namespace OpenNos.World.Resource {
         internal static string ASK_USE {
             get {
                 return ResourceManager.GetString("ASK_USE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quieres usar el libro de buff.
+        /// </summary>
+        internal static string ASK_USE_BUFFBOOK {
+            get {
+                return ResourceManager.GetString("ASK_USE_BUFFBOOK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quieres entrar a la sala vip.
+        /// </summary>
+        internal static string ASK_USE_EC_KEY {
+            get {
+                return ResourceManager.GetString("ASK_USE_EC_KEY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quieres usar lunia.
+        /// </summary>
+        internal static string ASK_USE_LUINIA {
+            get {
+                return ResourceManager.GetString("ASK_USE_LUINIA", resourceCulture);
             }
         }
         
@@ -2541,6 +2577,15 @@ namespace OpenNos.World.Resource {
         internal static string MAPS_LOADED {
             get {
                 return ResourceManager.GetString("MAPS_LOADED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Solicitud de matrimonio.
+        /// </summary>
+        internal static string MARRY_REQUEST {
+            get {
+                return ResourceManager.GetString("MARRY_REQUEST", resourceCulture);
             }
         }
         
@@ -4728,6 +4773,15 @@ namespace OpenNos.World.Resource {
         internal static string WELCOME_MUSIC_INFO {
             get {
                 return ResourceManager.GetString("WELCOME_MUSIC_INFO", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bienvenido a la sala vip.
+        /// </summary>
+        internal static string WELCOME_VIP_SHOP_MAP {
+            get {
+                return ResourceManager.GetString("WELCOME_VIP_SHOP_MAP", resourceCulture);
             }
         }
         

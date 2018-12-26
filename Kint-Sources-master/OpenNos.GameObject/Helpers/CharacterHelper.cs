@@ -38,9 +38,7 @@ namespace OpenNos.GameObject.Helpers
         private static double[] _firstJobXpData;
 
         private static double[] _heroXpData;
-
-        private static double[] _prestigeXpData;
-
+       
         private static int[,] _hitDef;
 
         private static int[,] _hitDodge;
@@ -89,10 +87,9 @@ namespace OpenNos.GameObject.Helpers
             loadSpeedData();
             loadJobXPData();
             loadSPXPData();
-            loadHeroXpData();
-            loadPrestigeXpData();
+            loadHeroXpData();          
             loadXPData();
-            loadHPData();
+            LoadHPData();
             loadMPData();
             loadStats();
             loadHPHealth();
@@ -128,19 +125,7 @@ namespace OpenNos.GameObject.Helpers
                 return _heroXpData;
             }
         }
-
-        public static double[] PrestigeXpData
-        {
-            get
-            {
-                if (_prestigeXpData == null)
-                {
-                    new CharacterHelper();
-                }
-                return _prestigeXpData;
-            }
-        }
-
+       
         public static int[,] HPData
         {
             get
@@ -786,19 +771,9 @@ namespace OpenNos.GameObject.Helpers
             }
         }
 
-        private static void loadPrestigeXpData()
+       
 
-        {
-            // Load Prestige
-            _prestigeXpData = new double[256];
-            _prestigeXpData[0] = 949560;
-            for (int i = 1; i < _heroXpData.Length; i++)
-            {
-                _prestigeXpData[i] = Convert.ToInt64(_prestigeXpData[i - 1] * 1.08);
-            }
-        }
-
-        private static void loadHPData()
+        private static void LoadHPData()
         {
             _hp = new int[5, 513];
 

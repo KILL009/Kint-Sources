@@ -42,9 +42,7 @@ namespace OpenNos.DAL.EF.Entities
         public bool IsTeamMember { get; set; }
 
         public byte Level { get; set; }
-
-        public byte PrestigeLevl { get; set; }
-
+       
         public short Loyalty { get; set; }
 
         public short MapX { get; set; }

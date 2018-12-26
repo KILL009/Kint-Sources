@@ -50,6 +50,8 @@ namespace OpenNos.GameObject
 
         public DateTime Start { get; set; }
 
+        public object StaticVisualEffect { get; internal set; }
+
 
         #endregion
     }

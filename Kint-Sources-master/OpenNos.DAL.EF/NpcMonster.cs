@@ -88,13 +88,9 @@ namespace OpenNos.DAL.EF
         public short FireResistance { get; set; }
 
         public byte HeroLevel { get; set; }
-
-        public byte prestigeLevel { get; set; }
-
+      
         public int HeroXP { get; set; }
-
-        public int PrestigeXp { get; set; }
-
+      
         public bool IsHostile { get; set; }
 
         public int JobXP { get; set; }

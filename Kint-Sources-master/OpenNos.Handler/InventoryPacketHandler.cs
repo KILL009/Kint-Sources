@@ -749,7 +749,8 @@ namespace OpenNos.Handler
         {
             lock (Session.Character.Inventory)
             {
-                if (mviPacket.Amount == 0)
+                // Fixed -2700 Item duplication by Bull
+                if (mviPacket.Amount <= 0)
                 {
                     return;
                 }
@@ -1575,11 +1576,15 @@ namespace OpenNos.Handler
                     inventory = Session.Character.Inventory.LoadBySlotAndType(slot, inventoryType);
                     if (inventory != null)
                     {
-                        if ((inventory.Item.EquipmentSlot == EquipmentType.Armor || inventory.Item.EquipmentSlot == EquipmentType.MainWeapon || inventory.Item.EquipmentSlot == EquipmentType.SecondaryWeapon) && inventory.Item.ItemType != ItemType.Shell && inventory.Item.Type == InventoryType.Equipment)
+                        if ((inventory.Item.EquipmentSlot == EquipmentType.Armor
+                             || inventory.Item.EquipmentSlot == EquipmentType.MainWeapon
+                             || inventory.Item.EquipmentSlot == EquipmentType.SecondaryWeapon)
+                            && inventory.Item.ItemType != ItemType.Shell && inventory.Item.Type == InventoryType.Equipment)
                         {
                             inventory.UpgradeItem(Session, UpgradeMode.Normal, UpgradeProtection.None);
                         }
                     }
+
                     break;
 
                 case 3:
@@ -1635,7 +1640,11 @@ namespace OpenNos.Handler
                         {
                             if (specialist.Item.EquipmentSlot == EquipmentType.Sp)
                             {
-                                specialist.UpgradeSp(Session, UpgradeProtection.None);
+                                var start = DateTime.Now;
+                                while (DateTime.Now - start < TimeSpan.FromSeconds(2))
+                                {
+                                    specialist.UpgradeSp(Session, UpgradeProtection.None);
+                                }
                             }
                         }
                         else
@@ -1711,12 +1720,16 @@ namespace OpenNos.Handler
                         {
                             if (specialist.Item.EquipmentSlot == EquipmentType.Sp)
                             {
-                                specialist.PerfectSP(Session);
+                                var start = DateTime.Now;
+                                while (DateTime.Now - start < TimeSpan.FromSeconds(2))
+                                {
+                                    specialist.PerfectSP(Session);
+                                }
                             }
-                        }
-                        else
-                        {
-                            Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("CANT_UPGRADE_DESTROYED_SP"), 0));
+                            else
+                            {
+                                Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("CANT_UPGRADE_DESTROYED_SP"), 0));
+                            }
                         }
                     }
                     break;

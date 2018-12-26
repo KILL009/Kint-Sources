@@ -84,6 +84,8 @@ namespace OpenNos.Data
 
         public long JobLevelXp { get; set; }
 
+        public DateTime LastLogin { get; set; }
+
         public long LastFamilyLeave { get; set; }
 
         public int Level { get; set; }

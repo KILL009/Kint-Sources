@@ -33,6 +33,12 @@ namespace OpenNos.XMLModel.Events
         public object RemoveMonsterLocker { get; set; }
 
         [XmlElement]
+        public object StopClock { get; set; }
+
+        [XmlElement]
+        public object StopMapClock { get; set; }
+
+        [XmlElement]
         public SummonMonster[] SummonMonster { get; set; }
 
         [XmlElement]

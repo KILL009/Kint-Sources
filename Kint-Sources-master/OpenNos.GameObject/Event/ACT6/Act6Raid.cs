@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*ing System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -50,4 +50,4 @@ namespace OpenNos.GameObject.Event.ACT6
         }
         #endregion
     }
-}
+}*/

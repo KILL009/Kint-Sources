@@ -1219,61 +1219,7 @@ namespace OpenNos.Import.Console
                                 npc.HeroXp = 0;
                                 break;
                         }
-                        // Cambiar despues no son los corectos
-                        switch (npc.NpcMonsterVNum)
-                        {
-                            case 2500:
-                                npc.PrestigeXp = 533;
-                                break;
-
-                            case 2501:
-                                npc.PrestigeXp = 534;
-                                break;
-
-                            case 2502:
-                                npc.PrestigeXp = 535;
-                                break;
-
-                            case 2503:
-                                npc.PrestigeXp = 614;
-                                break;
-
-                            case 2510:
-                                npc.PrestigeXp = 534;
-                                break;
-
-                            case 2511:
-                                npc.PrestigeXp = 533;
-                                break;
-
-                            case 2512:
-                                npc.PrestigeXp = 535;
-                                break;
-
-                            case 2513:
-                                npc.PrestigeXp = 651;
-                                break;
-
-                            case 2521:
-                                npc.PrestigeXp = 170;
-                                break;
-
-                            case 2522:
-                                npc.PrestigeXp = 286;
-                                break;
-
-                            case 2523:
-                                npc.PrestigeXp = 328;
-                                break;
-
-                            case 2525:
-                                npc.PrestigeXp = 261;
-                                break;
-
-                            default:
-                                npc.PrestigeXp = 0;
-                                break;
-                        }
+                     
                     }
                     else if (currentLine.Length > 6 && currentLine[1] == "PREATT")
                     {

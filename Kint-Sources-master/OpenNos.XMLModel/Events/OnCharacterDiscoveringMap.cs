@@ -32,6 +32,12 @@ namespace OpenNos.XMLModel.Events
         [XmlElement]
         public SummonNpc[] SummonNpc { get; set; }
 
+        [XmlElement]
+        public SetButtonLockers SetButtonLockers { get; set; }
+
+        [XmlElement]
+        public SetMonsterLockers SetMonsterLockers { get; set; }
+
         #endregion
     }
 }

@@ -33,6 +33,7 @@ using System.Reactive.Linq;
 using static OpenNos.Domain.BCardType;
 using OpenNos.Core.ConcurrencyExtensions;
 using OpenNos.GameObject.Networking;
+using ServiceStack;
 
 namespace OpenNos.GameObject
 {
@@ -49,6 +50,7 @@ namespace OpenNos.GameObject
         private int _slhpbonus;
 
         private byte _speed;
+        
 
         #endregion
 
@@ -111,6 +113,7 @@ namespace OpenNos.GameObject
             HpBlocked = input.HpBlocked;
             JobLevel = input.JobLevel;
             JobLevelXp = input.JobLevelXp;
+            LastLogin = DateTime.Now.Date;
             LastFamilyLeave = input.LastFamilyLeave;
             Level = input.Level;
             LevelXp = input.LevelXp;
@@ -159,14 +162,19 @@ namespace OpenNos.GameObject
             ShellEffectSecondary = new ConcurrentBag<ShellEffectDTO>();
         }
 
-      
+
 
         #endregion
 
         #region Properties
+
+        public bool TriggerAmbush { get; set; }
+
         public byte ArenaWinnerTemp { get; set; }
 
         public string password { get; set; }
+
+        public new DateTime LastLogin { get; set; }
 
         public AuthorityType Authority { get; set; }
 
@@ -272,11 +280,7 @@ namespace OpenNos.GameObject
         public bool IsCustomSpeed { get; set; }
 
         public bool IsDancing { get; set; }
-
-        public bool isAbsorbing { get; set; }
-
-        public int damageAb { get; set; }
-
+      
         /// <summary>
         /// Defines if the Character Is currently sending or getting items thru exchange.
         /// </summary>
@@ -580,6 +584,7 @@ namespace OpenNos.GameObject
         public IDisposable DotDebuff { get;  set; }
 
         public int PrestigeLevl { get; set; }
+
         public Node[,] BrushFire { get; internal set; }
 
 
@@ -589,14 +594,11 @@ namespace OpenNos.GameObject
 
         public void AddBuff(Buff indicator, bool noMessage = false)
         {
-            int buffTime = 0;
-
             if (indicator.Card != null && (!noMessage || !Buff.Any(s => s.Card.CardId == indicator.Card.CardId)))
             {
                 Buff.Remove(indicator.Card.CardId);
                 Buff[indicator.Card.CardId] = indicator;
-                //TODO: Find a better way to do this                             
-                indicator.RemainingTime = indicator.Card.Duration == 0 ? buffTime : indicator.Card.Duration;
+                indicator.RemainingTime = indicator.Card.Duration;
                 indicator.Start = DateTime.Now;
 
                 Session.SendPacket($"bf 1 {CharacterId} 0.{indicator.Card.CardId}.{indicator.RemainingTime} {Level}");
@@ -609,13 +611,13 @@ namespace OpenNos.GameObject
                     BuffObservables.Remove(indicator.Card.CardId);
                 }
                 BuffObservables[indicator.Card.CardId] = Observable.Timer(TimeSpan.FromMilliseconds(indicator.Card.Duration * 100)).Subscribe(o =>
-              {
-                  RemoveBuff(indicator.Card.CardId);
-                  if (indicator.Card.TimeoutBuff != 0 && ServerManager.RandomNumber() < indicator.Card.TimeoutBuffChance)
-                  {
-                      AddBuff(new Buff(indicator.Card.TimeoutBuff, Level));
-                  }
-              });
+                {
+                    RemoveBuff(indicator.Card.CardId);
+                    if (indicator.Card.TimeoutBuff != 0 && ServerManager.RandomNumber() < indicator.Card.TimeoutBuffChance)
+                    {
+                        AddBuff(new Buff(indicator.Card.TimeoutBuff, Level));
+                    }
+                });
                 if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.Move && !s.SubType.Equals((byte)AdditionalTypes.Move.MovementImpossible / 10)))
                 {
                     LastSpeedChange = DateTime.Now;
@@ -632,36 +634,9 @@ namespace OpenNos.GameObject
                     NoMove = true;
                     Session.SendPacket(GenerateCond());
                 }
-
-                if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.SpecialActions && s.SubType.Equals((byte)AdditionalTypes.SpecialActions.Hide / 10)))
-                {
-                    Invisible = true;
-                    Session.CurrentMapInstance?.Broadcast(GenerateInvisible());
-                    Session.SendPacket(GenerateEq());
-                    Mates.Where(m => m.IsTeamMember).ToList().ForEach(m =>
-                    Session.CurrentMapInstance?.Broadcast(m.GenerateIn(), ReceiverType.AllExceptMe));
-                    Session.CurrentMapInstance?.Broadcast(Session, GenerateIn(),
-                    ReceiverType.AllExceptMe);
-                    Session.CurrentMapInstance?.Broadcast(Session, GenerateGidx(),
-                        ReceiverType.AllExceptMe);
-
-                    if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.FalconSkill && s.SubType == ((byte)AdditionalTypes.FalconSkill.Ambush / 10)))
-                    {
-                        Session.Character.Invisible = true; Session.CurrentMapInstance?.Broadcast(Session.Character.GenerateInvisible());
-                        Session.SendPacket(Session.Character.GenerateEq());
-
-                        Session.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m =>
-                        Session.CurrentMapInstance?.Broadcast(m.GenerateIn(), ReceiverType.AllExceptMe));
-                        Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateIn(),
-                            ReceiverType.AllExceptMe);
-                        Session.CurrentMapInstance?.Broadcast(Session, Session.Character.GenerateGidx(),
-                            ReceiverType.AllExceptMe);
-
-                    }
-                }
             }
         }
-     
+
         public bool AddPet(Mate mate)
         {
             if (mate.MateType == MateType.Pet ? MaxMateCount > Mates.Count : 3 > Mates.Count(s => s.MateType == MateType.Partner))
@@ -771,9 +746,18 @@ namespace OpenNos.GameObject
 
             Session.SendPacket($"vb {bf.Card.CardId} 1 {bf.RemainingTime * 10}");
             Session.SendPacket(GenerateSay(string.Format(Language.Instance.GetMessageFromKey("UNDER_EFFECT"), bf.Card.Name), 12));
+            
+            //Wedding
+            if (bf.Card.CardId == 319)
+            {
+                bf.StaticVisualEffect = Observable.Interval(TimeSpan.FromSeconds(4)).Subscribe(o =>
+                {
+                    Session.SendPacket(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 881));
+                });
+            }
         }
 
-      
+
 
 
         public bool CanAddMate(Mate mate) => mate.MateType == MateType.Pet ? MaxMateCount > Mates.Count : 3 > Mates.Count(s => s.MateType == MateType.Partner);
@@ -1704,7 +1688,7 @@ namespace OpenNos.GameObject
             short armorUpgrade = 0;
             if (Inventory != null)
             {
-                for (short i = 0; i < 20; i++)
+                for (short i = 0; i < 10; i++)
                 {
                     ItemInstance wearable = Inventory.LoadBySlotAndType(i, InventoryType.Wear);
                     if (wearable != null)
@@ -1733,7 +1717,7 @@ namespace OpenNos.GameObject
             EquipmentBCards.Clear();
             if (Inventory != null)
             {
-                for (short i = 0; i < 20; i++)
+                for (short i = 0; i < 15; i++)
                 {
                     ItemInstance item = Inventory.LoadBySlotAndType(i, InventoryType.Wear);
                     if (item != null)
@@ -2038,6 +2022,62 @@ namespace OpenNos.GameObject
 
         public void GenerateKillBonus(MapMonster monsterToAttack)
         {
+            void _handleGoldDrop(DropDTO drop, long maxGold, long? dropOwner, short posX, short posY)
+            {
+                Observable.Timer(TimeSpan.FromMilliseconds(500)).Subscribe(o =>
+                {
+                    if (Session.HasCurrentMapInstance)
+                    {
+                        if (CharacterId == dropOwner && StaticBonusList.Any(s => s.StaticBonusType == StaticBonusType.AutoLoot))
+                        {
+                            double multiplier = 1 + (Session.Character.GetBuff(CardType.Item, (byte)AdditionalTypes.Item.IncreaseEarnedGold)[0] / 100D);
+                            multiplier += (Session.Character.ShellEffectMain.FirstOrDefault(s => s.Effect == (byte)ShellWeaponEffectType.GainMoreGold)?.Value ?? 0) / 100D;
+                            Gold += (int)(drop.Amount * multiplier);
+                            if (Gold > maxGold)
+                            {
+                                Gold = maxGold;
+                                Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("MAX_GOLD"), 0));
+                            }
+                            Session.SendPacket(GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: {ServerManager.GetItem(drop.ItemVNum).Name} x {drop.Amount}{(multiplier > 1 ? $" + {(int)(drop.Amount * multiplier) - drop.Amount}" : string.Empty)}", 12));
+                            Session.SendPacket(GenerateGold());
+                        }
+                        else
+                        {
+                            double multiplier = 1 + (Session.Character.GetBuff(CardType.Item, (byte)AdditionalTypes.Item.IncreaseEarnedGold)[0] / 100D);
+                            multiplier += (Session.Character.ShellEffectMain.FirstOrDefault(s => s.Effect == (byte)ShellWeaponEffectType.GainMoreGold)?.Value ?? 0) / 100D;
+                            Gold += (int)(drop.Amount * multiplier);
+                            if (Gold > maxGold)
+                            {
+                                Gold = maxGold;
+                                Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("MAX_GOLD"), 0));
+                            }
+                            Session.SendPacket(GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: {ServerManager.GetItem(drop.ItemVNum).Name} x {drop.Amount}{(multiplier > 1 ? $" + {(int)(drop.Amount * multiplier) - drop.Amount}" : string.Empty)}", 12));
+                            Session.SendPacket(GenerateGold());
+                            //Session.CurrentMapInstance.DropItemByMonster(dropOwner, drop, monsterToAttack.MapX, monsterToAttack.MapY);
+                        }
+                    }
+                });
+            }
+
+            void _handleItemDrop(DropDTO drop, long? owner, short posX, short posY)
+            {
+                Observable.Timer(TimeSpan.FromMilliseconds(500)).Subscribe(o =>
+                {
+                    if (Session.HasCurrentMapInstance)
+                    {
+                        if (CharacterId == owner && StaticBonusList.Any(s => s.StaticBonusType == StaticBonusType.AutoLoot))
+                        {
+                            GiftAdd(drop.ItemVNum, (byte)drop.Amount);
+                        }
+                        else
+                        {
+                            GiftAdd(drop.ItemVNum, (byte)drop.Amount);
+                            //Session.CurrentMapInstance.DropItemByMonster(owner, drop, posX, posY);
+                        }
+                    }
+                });
+            }
+
             lock (_syncObj)
             {
                 if (monsterToAttack == null || monsterToAttack.IsAlive)
@@ -2121,21 +2161,7 @@ namespace OpenNos.GameObject
                                                 }
                                             }
 
-                                            long? owner = dropOwner;
-                                            Observable.Timer(TimeSpan.FromMilliseconds(500)).Subscribe(o =>
-                                            {
-                                                if (Session.HasCurrentMapInstance)
-                                                {
-                                                    if (CharacterId == owner && (StaticBonusList.Any(s => s.StaticBonusType == StaticBonusType.AutoLoot) || DateTime.Now <= new DateTime(2019, 12, 31, 12, 00, 00)))
-                                                    {
-                                                        GiftAdd(drop.ItemVNum, (byte)drop.Amount);
-                                                    }
-                                                    else
-                                                    {
-                                                        Session.CurrentMapInstance.DropItemByMonster(owner, drop, monsterToAttack.MapX, monsterToAttack.MapY);
-                                                    }
-                                                }
-                                            });
+                                            _handleItemDrop(drop, dropOwner, monsterToAttack.MapX, monsterToAttack.MapY);
                                         }
                                     }
                                 }
@@ -2171,13 +2197,14 @@ namespace OpenNos.GameObject
                                             ClientSession session = ServerManager.Instance.GetSessionByCharacterId(charId);
                                             if (session != null)
                                             {
-                                                session.Character.Gold += drop2.Amount;
+                                                double multiplier = 1 + (GetBuff(CardType.Item, (byte)AdditionalTypes.Item.IncreaseEarnedGold)[0] / 100D);
+                                                multiplier += (ShellEffectMain.FirstOrDefault(s => s.Effect == (byte)ShellWeaponEffectType.GainMoreGold)?.Value ?? 0) / 100D;
                                                 if (session.Character.Gold > maxGold)
                                                 {
                                                     session.Character.Gold = maxGold;
                                                     session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("MAX_GOLD"), 0));
                                                 }
-                                                session.SendPacket(session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: {ServerManager.GetItem(drop2.ItemVNum).Name} x {drop2.Amount}", 10));
+                                                session.SendPacket(session.Character.GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: {ServerManager.GetItem(drop2.ItemVNum).Name} x {drop2.Amount}{(multiplier > 1 ? $" + {(int)(drop2.Amount * multiplier) - drop2.Amount}" : string.Empty)}", 10));
                                                 session.SendPacket(session.Character.GenerateGold());
                                             }
                                             alreadyGifted.Add(charId);
@@ -2203,32 +2230,7 @@ namespace OpenNos.GameObject
                                         }
                                     }
 
-                                    // delayed Drop
-                                    Observable.Timer(TimeSpan.FromMilliseconds(500)).Subscribe(o =>
-                                    {
-                                        if (Session.HasCurrentMapInstance)
-                                        {
-                                            if (CharacterId == dropOwner && (StaticBonusList.Any(s => s.StaticBonusType == StaticBonusType.AutoLoot) || DateTime.Now <= new DateTime(2019, 12, 31, 12, 00, 00)))
-                                            {
-                                                Gold += drop2.Amount;
-                                                if (Gold > maxGold)
-                                                {
-
-                                                    Gold = maxGold;
-                                                    Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("MAX_GOLD"), 0));
-
-                                                }
-                                                Session.SendPacket(GenerateSay($"{Language.Instance.GetMessageFromKey("ITEM_ACQUIRED")}: {ServerManager.GetItem(drop2.ItemVNum).Name} x {drop2.Amount}", 10));
-                                                Session.SendPacket(GenerateGold());
-                                            }
-
-                                            else
-
-                                            {
-                                                Session.CurrentMapInstance.DropItemByMonster(dropOwner, drop2, monsterToAttack.MapX, monsterToAttack.MapY);
-                                            }
-                                        }
-                                    });
+                                    _handleGoldDrop(drop2, maxGold, dropOwner, monsterToAttack.MapX, monsterToAttack.MapY);
                                 }
                             }
                         }
@@ -2262,7 +2264,6 @@ namespace OpenNos.GameObject
                                 {
                                     GenerateXp(monsterToAttack, true);
                                 }
-                               
                                 else
                                 {
                                     Session.SendPacket(GenerateSay(Language.Instance.GetMessageFromKey("XP_NOTFIRSTHIT"), 10));
@@ -2286,7 +2287,7 @@ namespace OpenNos.GameObject
             {
                 specialist = Inventory.LoadBySlotAndType((byte)EquipmentType.Sp, InventoryType.Wear);
             }
-            return $"lev {Level} {(int)(Level < 100 ? LevelXp : LevelXp / 100)} {(!UseSp || specialist == null ? JobLevel : specialist.SpLevel)} {(!UseSp || specialist == null ? JobLevelXp : specialist.XP)} {(int)(Level < 100 ? XpLoad() : XpLoad() / 100)} {(!UseSp || specialist == null ? JobXPLoad() : SpXpLoad())} {Reputation} {GetCP()} {(int)(HeroLevel < 100 ? HeroXp : HeroXp / 100)} {HeroLevel} {(int)(HeroLevel < 100 ? HeroXPLoad() : HeroXPLoad() / 100)} {(int)(prestigeLevel < 100 ? PrestigeXp : PrestigeXp / 100)} {prestigeLevel} {(int)(prestigeLevel < 100 ? PrestigeXPLoad() : PrestigeXPLoad() / 100)} 0";
+            return $"lev {Level} {(int)(Level < 100 ? LevelXp : LevelXp / 100)} {(!UseSp || specialist == null ? JobLevel : specialist.SpLevel)} {(!UseSp || specialist == null ? JobLevelXp : specialist.XP)} {(int)(Level < 100 ? XpLoad() : XpLoad() / 100)} {(!UseSp || specialist == null ? JobXPLoad() : SpXpLoad())} {Reputation} {GetCP()} {(int)(HeroLevel < 100 ? HeroXp : HeroXp / 100)} {HeroLevel} {(int)(HeroLevel < 100 ? HeroXPLoad() : HeroXPLoad() / 100)}0";
         }
 
         public string GenerateLevelUp()
@@ -3484,7 +3485,6 @@ namespace OpenNos.GameObject
             LastEffect = DateTime.Now;
             Session = null;
             MailList = new Dictionary<int, MailDTO>();
-            BattleEntity = new BattleEntity(this);
             Group = null;
             GmPvtBlock = false;
         }
@@ -3502,7 +3502,12 @@ namespace OpenNos.GameObject
         public bool IsFriendlistFull() => CharacterRelations.Where(s => s.RelationType == CharacterRelationType.Friend).ToList().Count >= 80;
 
         public bool IsFriendOfCharacter(long characterId) => CharacterRelations.Any(c => c.RelationType == CharacterRelationType.Friend && (c.RelatedCharacterId.Equals(characterId) || c.CharacterId.Equals(characterId)));
+        //Wedding
+        public bool IsCoupleOfCharacter(long characterId) => CharacterRelations.Any(c => (c.RelationType == CharacterRelationType.Spouse) && (c.RelatedCharacterId.Equals(characterId) || c.CharacterId.Equals(characterId)));
 
+        public bool IsMarried => CharacterRelations.Any(c => c.RelationType == CharacterRelationType.Spouse);
+
+        public CharacterRelationType RelationType { get; set; }
         /// <summary>
         /// Checks if the current character is in range of the given position
         /// </summary>
@@ -3827,8 +3832,33 @@ namespace OpenNos.GameObject
                 {
                     Session.SendPacket(GeneratePairy());
                 }
+
+               if (indicator.Card.BCards.Any(s => s.Type == (byte)CardType.Move))
+                {
+                    Session.Character.LoadSpeed();
+                    Session.Character.LastSpeedChange = DateTime.Now;
+                    Session.Character.Session.SendPacket(Session.Character.GenerateCond());
+                }
+
+                if (!indicator.Card.BCards.Any(s =>
+                    s.Type == (byte)CardType.SpecialActions &&
+                    s.SubType.Equals((byte)AdditionalTypes.SpecialActions.Hide)) &&
+                    indicator.Card.CardId != 559 && indicator.Card.CardId != 560)
+                {
+                    return;
+                }
+
+                if (indicator.Card.CardId == 559 && Session.Character.TriggerAmbush)
+                {
+                    Session.Character.AddBuff(new Buff(560, 1));
+                    Session.Character.TriggerAmbush = false;
+                    return;
+                }
+                Session.Character.Invisible = false;
+                Session.Character.MapInstance?.Broadcast(Session.Character.GenerateInvisible());
             }
         }
+
 
         public void RemoveVehicle()
         {
@@ -3917,16 +3947,16 @@ namespace OpenNos.GameObject
                         {
                             DAOFactory.ShellEffectDAO.InsertOrUpdateFromList(itemInstance.ShellEffects, itemInstance.EquipmentSerialId);
                             DAOFactory.CellonOptionDAO.InsertOrUpdateFromList(itemInstance.CellonOptions, itemInstance.EquipmentSerialId);
-                            //foreach (ShellEffectDTO effect in wearInstance.ShellEffects)
-                            //{
-                            //    effect.EquipmentSerialId = wearInstance.EquipmentSerialId;
-                            //    effect.ShellEffectId = DAOFactory.ShellEffectDAO.InsertOrUpdate(effect).ShellEffectId;
-                            //}
-                            //foreach (CellonOptionDTO effect in wearInstance.CellonOptions)
-                            //{
-                            //    effect.EquipmentSerialId = wearInstance.EquipmentSerialId;
-                            //    effect.CellonOptionId = DAOFactory.CellonOptionDAO.InsertOrUpdate(effect).CellonOptionId;
-                            //}
+                            foreach (ShellEffectDTO effect in itemInstance.ShellEffects)
+                           {
+                               effect.EquipmentSerialId = itemInstance.EquipmentSerialId;
+                               effect.ShellEffectId = DAOFactory.ShellEffectDAO.InsertOrUpdate(effect).ShellEffectId;
+                            }
+                           foreach (CellonOptionDTO effect in itemInstance.CellonOptions)
+                           {
+                               effect.EquipmentSerialId = itemInstance.EquipmentSerialId;
+                               effect.CellonOptionId = DAOFactory.CellonOptionDAO.InsertOrUpdate(effect).CellonOptionId;
+                            }
                         }
                     }
                 }
@@ -4526,29 +4556,7 @@ namespace OpenNos.GameObject
                     Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("HERO_LEVELUP"), 0));
                     Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 8), PositionX, PositionY);
                     Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 3468), PositionX, PositionY);
-                }
-
-                experience = PrestigeXPLoad();
-                while (PrestigeXp >= experience)
-                {
-                    PrestigeXp -= (long)experience;
-                    prestigeLevel++;
-                    experience = PrestigeXPLoad();
-                    if (prestigeLevel >= ServerManager.Instance.Configuration.MaxPrestigeLevel)
-                    {
-                        prestigeLevel = ServerManager.Instance.Configuration.MaxPrestigeLevel;
-                        PrestigeXp = 0;
-                    }
-                    Hp = (int)HPLoad();
-                    Mp = (int)MPLoad();
-                    Session.SendPacket(GenerateStat());
-                    Session.SendPacket(GenerateLevelUp());
-                    RewardsHelper.Instance.GetPrestigeRewards(Session);
-                    Session.SendPacket(UserInterfaceHelper.GenerateMsg(Language.Instance.GetMessageFromKey("PRESTIGE_LEVELUP"), 0));
-                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 8), PositionX, PositionY);
-                    Session.CurrentMapInstance?.Broadcast(StaticPacketHelper.GenerateEff(UserType.Player, CharacterId, 3468), PositionX, PositionY);
-                    Session.SendPacket(GenerateLev());
-                }
+                }               
             }
         }
 
@@ -4591,28 +4599,8 @@ namespace OpenNos.GameObject
             return heroXp;
         }
 
-        private int GetPXP(NpcMonsterDTO monster, Group group)
-        {
-            int partySize = 1;
-            float partyPenalty = 1f;
-
-            if (group != null)
-            {
-                int levelSum = group.Characters.Sum(g => g.Character.Level);
-                partySize = group.CharacterCount;
-                partyPenalty = (6f / partySize) / levelSum;
-            }
-
-            int PrestigeXp = (int)Math.Round(monster.PrestigeXp * CharacterHelper.ExperiencePenalty(Level, monster.Level) * ServerManager.Instance.Configuration.RatePrestigeXP * MapInstance.XpRate);
-
-            // divide jobexp by multiplication of partyPenalty with level e.g. 57 * 0,014...
-            if (partySize > 1 && group != null)
-            {
-                PrestigeXp = (int)Math.Round(PrestigeXp / (prestigeLevel * partyPenalty));
-            }
-
-            return PrestigeXp;
-        }
+       
+        
 
         private int GetJXP(NpcMonsterDTO monster, Group group)
         {
@@ -4746,8 +4734,7 @@ namespace OpenNos.GameObject
         }
 
         private double HeroXPLoad() => HeroLevel == 0 ? 1 : CharacterHelper.HeroXpData[HeroLevel - 1];
-
-        public double PrestigeXPLoad() => prestigeLevel == 0 ? 1 : CharacterHelper.PrestigeXpData[prestigeLevel - 1];
+       
 
         private double JobXPLoad() => Class == (byte)ClassType.Adventurer ? CharacterHelper.FirstJobXPData[JobLevel - 1] : CharacterHelper.SecondJobXPData[JobLevel - 1];
 

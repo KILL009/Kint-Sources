@@ -317,7 +317,7 @@ namespace OpenNos.Handler
                 BattleEntity battleEntity = new BattleEntity(hitRequest.Session.Character, hitRequest.Skill);
                 BattleEntity battleEntityDefense = new BattleEntity(target.Character, null);
                 int damage = DamageHelper.Instance.CalculateDamage(battleEntity, battleEntityDefense, hitRequest.Skill,
-                    ref hitmode, ref onyxWings, Session.Character.damageAb);
+                    ref hitmode, ref onyxWings);
                 if (target.Character.HasGodMode)
                 {
                     damage = 0;
@@ -329,13 +329,7 @@ namespace OpenNos.Handler
                     damage = 0;
                     hitmode = 1;
                 }
-
-                if (hitmode != 1)
-                {
-                    Session.Character.RemoveBuff(85);
-                    Session.Character.Invisible = false;
-                }
-
+       
 
                 int[] manaShield = target.Character.GetBuff(CardType.LightAndShadow,
                     (byte)AdditionalTypes.LightAndShadow.InflictDamageToMP);
@@ -383,35 +377,7 @@ namespace OpenNos.Handler
                             onyx.MapMonsterId));
                     });
                 }
-
-                if (target.Character.isAbsorbing)
-                {
-                    target.Character.damageAb = damage / 2; // 
-                    target.Character.LastDefence = DateTime.Now;
-                    target.SendPacket(target.Character.GenerateStat());
-                }
-                else if (!target.Character.isAbsorbing)
-                {
-                    target.Character.GetDamage((damage + hitRequest.Session.Character.damageAb) / 2);
-                    hitRequest.Session.Character.damageAb = 0;
-                    target.Character.LastDefence = DateTime.Now;
-                    target.SendPacket(target.Character.GenerateStat());
-                }
-                if (target.Character.Invisible)
-                {
-                    target.Character.Invisible = false;
-                    target.CurrentMapInstance?.Broadcast(target.Character.GenerateInvisible());
-                    target.SendPacket(target.Character.GenerateEq());
-
-                    target.Character.Mates.Where(m => m.IsTeamMember).ToList().ForEach(m =>
-                        target.CurrentMapInstance?.Broadcast(m.GenerateIn(), ReceiverType.AllExceptMe));
-                    target.CurrentMapInstance?.Broadcast(target, target.Character.GenerateIn(),
-                        ReceiverType.AllExceptMe);
-                    target.CurrentMapInstance?.Broadcast(target, target.Character.GenerateGidx(),
-                        ReceiverType.AllExceptMe);
-                }
-
-
+               
                 target.Character.GetDamage(damage / 2);
                 target.Character.LastDefence = DateTime.Now;
                 target.SendPacket(target.Character.GenerateStat());

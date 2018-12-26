@@ -28,8 +28,7 @@ namespace OpenNos.Mapper.Mappers
             output.Hp = input.Hp;
             output.IsSummonable = input.IsSummonable;
             output.IsTeamMember = input.IsTeamMember;
-            output.Level = input.Level;
-            output.PrestigeLevl = input.PrestigeLevl;
+            output.Level = input.Level;          
             output.Loyalty = input.Loyalty;
             output.MapX = input.MapX;
             output.MapY = input.MapY;
@@ -58,8 +57,7 @@ namespace OpenNos.Mapper.Mappers
             output.Hp = input.Hp;
             output.IsSummonable = input.IsSummonable;
             output.IsTeamMember = input.IsTeamMember;
-            output.Level = input.Level;
-            output.PrestigeLevl = input.PrestigeLevl;
+            output.Level = input.Level;         
             output.Loyalty = input.Loyalty;
             output.MapX = input.MapX;
             output.MapY = input.MapY;
