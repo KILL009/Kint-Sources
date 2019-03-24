@@ -28,7 +28,6 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
-using OpenNos.ChatLog.Networking;
 using System.Linq;
 using OpenNos.World.Resource;
 
@@ -204,11 +203,7 @@ namespace OpenNos.World
                 ServerManager.Instance.AccountLimit = sessionLimit;
                 MailServiceClient.Instance.Authenticate(authKey, ServerManager.Instance.WorldId);
                 ConfigurationServiceClient.Instance.Authenticate(authKey, ServerManager.Instance.WorldId);
-                ServerManager.Instance.Configuration = ConfigurationServiceClient.Instance.GetConfigurationObject();
-                if (ServerManager.Instance.Configuration.UseChatLogService)
-                {
-                    ChatLogServiceClient.Instance.Authenticate(ConfigurationManager.AppSettings["ChatLogKey"]);
-                }
+                ServerManager.Instance.Configuration = ConfigurationServiceClient.Instance.GetConfigurationObject();               
                 ServerManager.Instance.MallApi = new GameObject.Helpers.MallAPIHelper(ServerManager.Instance.Configuration.MallBaseURL);
                
                    

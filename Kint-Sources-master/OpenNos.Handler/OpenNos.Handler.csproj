@@ -552,14 +552,6 @@
     <Compile Include="BasicPacketHandler.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OpenNos.ChatLog.Networking\OpenNos.ChatLog.Networking.csproj">
-      <Project>{3cdec84b-42fb-49bd-90e9-5893a827359e}</Project>
-      <Name>OpenNos.ChatLog.Networking</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OpenNos.ChatLog.Shared\OpenNos.ChatLog.Shared.csproj">
-      <Project>{cb47dc8b-ef9a-44f9-9f28-e6cdc7cb7752}</Project>
-      <Name>OpenNos.ChatLog.Shared</Name>
-    </ProjectReference>
     <ProjectReference Include="..\OpenNos.Core\OpenNos.Core.csproj">
       <Project>{c93a0a40-0551-4732-b594-171b87679ac1}</Project>
       <Name>OpenNos.Core</Name>

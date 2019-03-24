@@ -30,8 +30,6 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using OpenNos.ChatLog.Networking;
-using OpenNos.ChatLog.Shared;
 using OpenNos.GameObject.Packets.ServerPackets;
 using System.Text.RegularExpressions;
 using Group = OpenNos.GameObject.Group;
@@ -479,20 +477,7 @@ namespace OpenNos.Handler
                     SourceWorldId = ServerManager.Instance.WorldId,
                     Message = PacketFactory.Serialize(Session.Character.GenerateTalk(message)),
                     Type = MessageType.PrivateChat
-                });
-
-                if (ServerManager.Instance.Configuration.UseChatLogService)
-                {
-                    ChatLogServiceClient.Instance.LogChatMessage(new ChatLogEntry()
-                    {
-                        Sender = Session.Character.Name,
-                        SenderId = Session.Character.CharacterId,
-                        Receiver = character.Name,
-                        ReceiverId = character.CharacterId,
-                        MessageType = ChatLogType.BuddyTalk,
-                        Message = btkPacket.Message
-                    });
-                }
+                });               
 
                 if (!sentChannelId.HasValue) //character is even offline on different world
                 {
@@ -1252,20 +1237,7 @@ namespace OpenNos.Handler
                         }
 
                         Session.Character.Inventory.RemoveItemAmount(speakerVNum);
-                        ServerManager.Instance.Broadcast(Session.Character.GenerateSay(message, 13));
-
-                        if (ServerManager.Instance.Configuration.UseChatLogService)
-                        {
-                            ChatLogServiceClient.Instance.LogChatMessage(new ChatLogEntry()
-                            {
-                                Sender = Session.Character.Name,
-                                SenderId = Session.Character.CharacterId,
-                                Receiver = null,
-                                ReceiverId = null,
-                                MessageType = ChatLogType.Speaker,
-                                Message = message
-                            });
-                        }
+                        ServerManager.Instance.Broadcast(Session.Character.GenerateSay(message, 13));                                          
                     }
                 }
                 else if (guriPacket.Type == 199 && guriPacket.Argument == 1)
@@ -2660,19 +2632,7 @@ namespace OpenNos.Handler
                         {
                             receiverSession?.SendPacket(Session.Character.GenerateSay(message, 2));
                         }
-
-                        if (ServerManager.Instance.Configuration.UseChatLogService)
-                        {
-                            ChatLogServiceClient.Instance.LogChatMessage(new ChatLogEntry()
-                            {
-                                Sender = Session.Character.Name,
-                                SenderId = Session.Character.CharacterId,
-                                Receiver = receiver.Name,
-                                ReceiverId = receiver.CharacterId,
-                                MessageType = ChatLogType.Whisper,
-                                Message = message
-                            });
-                        }
+                  
 
                         sentChannelId = CommunicationServiceClient.Instance.SendMessageToCharacter(new SCSCharacterMessage
                         {
