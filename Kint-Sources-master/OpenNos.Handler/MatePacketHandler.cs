@@ -48,8 +48,11 @@ namespace OpenNos.Handler
                 return;
             }
 
-            Mate attacker = Session.Character.Mates.First(x => x.MateTransportId == suctlPacket.MateTransportId);
-            if (attacker != null)
+            Mate attacker = Session.Character.Mates.FirstOrDefault(x => x.MateTransportId == suctlPacket.MateTransportId);
+            if (attacker == null)
+            {
+                return;
+            }
             {
                 switch (suctlPacket.TargetType)
                 {

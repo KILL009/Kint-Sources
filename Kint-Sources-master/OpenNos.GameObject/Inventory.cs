@@ -607,6 +607,7 @@ namespace OpenNos.GameObject
                         destinationInventory = takeItem(destinationInventory.Slot, destinationInventory.Type);
                         if (destinationInventory == null)
                         {
+                            
                             return;
                         }
 
@@ -615,6 +616,7 @@ namespace OpenNos.GameObject
                         sourceInventory = takeItem(sourceInventory.Slot, sourceInventory.Type);
                         if (sourceInventory == null)
                         {
+                          
                             return;
                         }
 
