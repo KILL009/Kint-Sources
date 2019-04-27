@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following set of attributes.
 // Change these attribute values to modify the information associated with an assembly.
-[assembly: AssemblyDescription("ZroFreaks Login")]
-[assembly: AssemblyCompany("ZroFreaks Inc.")]
-[assembly: AssemblyCopyright("ZroFreaks Copyright © 2019")]
+[assembly: AssemblyDescription("Source# Login")]
+[assembly: AssemblyCompany("Source# Inc.")]
+[assembly: AssemblyCopyright("Source# Copyright Â© 2019")]
 [assembly: AssemblyProduct("OpenNos.Login")]
 
 // Version information for an assembly consists of the following four values:
