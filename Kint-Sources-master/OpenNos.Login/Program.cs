@@ -44,7 +44,7 @@ namespace OpenNos.Login
                 try
                 {
                     CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo("en-US");
-                    Console.Title = $"Login Server{(_isDebug ? " Development Environment" : string.Empty)}";
+                    Console.Title = $"Login Server{(_isDebug ? " Entorno de desarrollo" : string.Empty)}";
 
                     bool ignoreStartupMessages = false;
                     foreach (string arg in args)
@@ -63,7 +63,7 @@ namespace OpenNos.Login
                     {
                         Assembly assembly = Assembly.GetExecutingAssembly();
                         FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
-                        string text = $"LOGIN SERVER v{fileVersionInfo.ProductVersion}dev - PORT : {port} by Source# Team";
+                        string text = $"Login {fileVersionInfo.ProductVersion} - Puerto : {port} by ZroFreaks";
                         int offset = (Console.WindowWidth / 2) + (text.Length / 2);
                         string separator = new string('=', Console.WindowWidth);
                         Console.WriteLine(separator + string.Format("{0," + offset + "}\n", text) + separator);
@@ -82,7 +82,7 @@ namespace OpenNos.Login
                         return;
                     }
 
-                    Logger.Info(Language.Instance.GetMessageFromKey("CONFIG_LOADED"));
+                    Logger.Info(Language.Instance.GetMessageFromKey("Configuracón cargada"));
 
                     try
                     {

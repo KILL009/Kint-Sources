@@ -28,6 +28,7 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
+using OpenNos.ChatLog.Networking;
 using System.Linq;
 using OpenNos.World.Resource;
 
@@ -75,7 +76,7 @@ namespace OpenNos.World
             Thread.Sleep(1000);
 #endif
             
-            Console.Title = $"World Server{(_isDebug ? " Development Environment" : string.Empty)}";
+            Console.Title = $"World {(_isDebug ? " Entorno de desarrollo" : string.Empty)}";
 
             string isA4 = string.Empty;
 
@@ -103,7 +104,7 @@ namespace OpenNos.World
              
             while (isA4 != "Y" && isA4 != "n")
             {
-                Console.Write("Do you want to run this channel as Act4 mode? (Y/n): ");
+                Console.Write("¿Quieres activar el modo de act4 para este world? (Y/n): ");
                 isA4 = Console.ReadLine();
 
             }
@@ -125,18 +126,18 @@ namespace OpenNos.World
             {
                 Assembly assembly = Assembly.GetExecutingAssembly();
                 FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
-                string text = $"WORLD SERVER v{fileVersionInfo.ProductVersion}dev - ";
+                string text = $"World v{fileVersionInfo.ProductVersion} - ";
 
                 if (isA4 == "Y")
                 {
-                    text += $"ACT4 MODE";
+                    text += $"Modo act4";
                 }
                 else
                 {
-                    text += $"PORT : {port}";
+                    text += $"Puerto : {port}";
                 }
 
-                text += " by Source# Team";
+                text += " by ZroFreaks";
                 int offset = (Console.WindowWidth / 2) + (text.Length / 2);
                 string separator = new string('=', Console.WindowWidth);
                 Console.WriteLine(separator + string.Format("{0," + offset + "}\n", text) + separator);
@@ -172,7 +173,7 @@ namespace OpenNos.World
             }
             catch (Exception ex)
             {
-                Logger.Error("General Error", ex);
+                Logger.Error("Error general", ex);
             }
             NetworkManager<WorldCryptography> networkManager = null;
         portloop:
@@ -185,10 +186,10 @@ namespace OpenNos.World
                 if (ex.ErrorCode == 10048)
                 {
                     port++;
-                    Logger.Info("Port already in use! Incrementing...");
+                    Logger.Info("Este puerto ya esta en uso, se creara otro canal...");
                     goto portloop;
                 }
-                Logger.Error("General Error", ex);
+                Logger.Error("Error general", ex);
                 Environment.Exit(ex.ErrorCode);
             }
 
@@ -203,7 +204,11 @@ namespace OpenNos.World
                 ServerManager.Instance.AccountLimit = sessionLimit;
                 MailServiceClient.Instance.Authenticate(authKey, ServerManager.Instance.WorldId);
                 ConfigurationServiceClient.Instance.Authenticate(authKey, ServerManager.Instance.WorldId);
-                ServerManager.Instance.Configuration = ConfigurationServiceClient.Instance.GetConfigurationObject();               
+                ServerManager.Instance.Configuration = ConfigurationServiceClient.Instance.GetConfigurationObject();
+                if (ServerManager.Instance.Configuration.UseChatLogService)
+                {
+                    ChatLogServiceClient.Instance.Authenticate(ConfigurationManager.AppSettings["ChatLogKey"]);
+                }
                 ServerManager.Instance.MallApi = new GameObject.Helpers.MallAPIHelper(ServerManager.Instance.Configuration.MallBaseURL);
                
                    
@@ -233,7 +238,7 @@ namespace OpenNos.World
             ServerManager.Instance.InShutdown = true;
             Logger.Error((Exception)e.ExceptionObject);
 
-            Logger.Debug("Server crashed! Rebooting gracefully...");
+            Logger.Debug("El servidor se crasheo, reinicielos");
             string serverGroup = ConfigurationManager.AppSettings["ServerGroup"];
             int port = Convert.ToInt32(ConfigurationManager.AppSettings["WorldPort"]);
             CommunicationServiceClient.Instance.UnregisterWorldServer(ServerManager.Instance.WorldId);

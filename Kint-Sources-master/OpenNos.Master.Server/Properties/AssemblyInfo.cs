@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Allgemeine Informationen über eine Assembly werden über die folgenden Attribute gesteuert. Ändern
 // Sie diese Attributwerte, um die Informationen zu ändern, die einer Assembly zugeordnet sind.
 [assembly: AssemblyTitle("OpenNos Master Server")]
-[assembly: AssemblyDescription("Source Team  nos-emulation project")]
+[assembly: AssemblyDescription("ZroFreaks Master")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Source Team")]
+[assembly: AssemblyCompany("ZroFreaks Inc.")]
 [assembly: AssemblyProduct("OpenNos.Master.Server")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyCopyright("ZroFreaks Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

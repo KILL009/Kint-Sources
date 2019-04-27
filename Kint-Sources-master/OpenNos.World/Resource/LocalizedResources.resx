@@ -157,31 +157,31 @@
     <value>¡Contraseña incorrecta!</value>
   </data>
   <data name="BN0" xml:space="preserve">
-    <value>NosHeat^Team</value>
+    <value>Welcome to Edolas PS</value>
   </data>
   <data name="BN1" xml:space="preserve">
-    <value>NosHeat^Team</value>
+    <value />
   </data>
   <data name="BN2" xml:space="preserve">
-    <value>NosHeat^Team</value>
+    <value>The gm no say "Give me you password", only de developer or owner</value>
   </data>
   <data name="BN3" xml:space="preserve">
-    <value>NosHeat^Team</value>
+    <value />
   </data>
   <data name="BN4" xml:space="preserve">
-    <value>NosHeat^Team</value>
+    <value>Please, report the bugs in the discord server</value>
   </data>
   <data name="BN5" xml:space="preserve">
-    <value>NosHeat^Team</value>
+    <value />
   </data>
   <data name="BN6" xml:space="preserve">
-    <value>NosHeat^Team</value>
+    <value>Are you ready for the better private server?</value>
   </data>
   <data name="BUFF_BLOCKED" xml:space="preserve">
-    <value>Iconos Buff deshabilitados</value>
+    <value>Los iconos de los buffs han sido deshabilitados</value>
   </data>
   <data name="BUFF_UNLOCKED" xml:space="preserve">
-    <value>Iconos Buff habilitados</value>
+    <value>Los iconos de los buffs han sido habilitados</value>
   </data>
   <data name="BUY_ITEM" xml:space="preserve">
     <value>Jugador: {0} compra &lt;{1} {2}: pieza&gt;</value>
@@ -211,7 +211,7 @@
     <value>Tienes que esperar {0} minutos antes de poder felicitar a alguien.</value>
   </data>
   <data name="COMPLIMENT_NOT_MINLVL" xml:space="preserve">
-    <value>Solo puede felicitar a un jugador si ha alcanzado la Lv 30.</value>
+    <value>Solo puede felicitar a un jugador si ha alcanzado el lvl 30.</value>
   </data>
   <data name="COMPLIMENT_RECEIVED" xml:space="preserve">
     <value>Has sido felicitado por {0}.</value>
@@ -238,10 +238,10 @@
     <value>¡Hecho!</value>
   </data>
   <data name="EMO_BLOCKED" xml:space="preserve">
-    <value>Emoticones deshabilitados</value>
+    <value>Los emoticonos deshabilitados</value>
   </data>
   <data name="EMO_UNLOCKED" xml:space="preserve">
-    <value>Emoticones habilitados</value>
+    <value>Los emoticonos habilitados</value>
   </data>
   <data name="EQ_NOT_EMPTY" xml:space="preserve">
     <value>¡Tu equipo no está vacío!</value>
@@ -289,7 +289,7 @@
     <value>El grupo está lleno.</value>
   </data>
   <data name="GROUP_LEFT" xml:space="preserve">
-    <value>Te fuiste de la fiesta</value>
+    <value>Te fuiste del grupo</value>
   </data>
   <data name="GROUP_REQUEST" xml:space="preserve">
     <value>Solicitud de grupo enviada a: {0}</value>
@@ -352,7 +352,7 @@
     <value>¡Tu nivel de trabajo ha sido cambiado!</value>
   </data>
   <data name="CLASS_CHANGED" xml:space="preserve">
-    <value>Tu clase ha sido cambiada</value>
+    <value>Cambiastes de clase</value>
   </data>
   <data name="LEAVE_GROUP" xml:space="preserve">
     <value>{0} salió de la fiesta</value>
@@ -704,7 +704,7 @@
     <value>La tasa de caída ha sido cambiada!</value>
   </data>
   <data name="GOLD_RATE_CHANGED" xml:space="preserve">
-    <value>¡La tasa de caída del oro cambió!</value>
+    <value>¡La cantidad de caída del oro cambió!</value>
   </data>
   <data name="XP_RATE_CHANGED" xml:space="preserve">
     <value>¡Tasa de XP cambiada!</value>
@@ -749,7 +749,7 @@
     <value>¡El nivel de trabajo se ha incrementado!</value>
   </data>
   <data name="FAIRYXP_RATE_CHANGED" xml:space="preserve">
-    <value>Fairy xp rate changed!</value>
+    <value>Se cambio la xp rate de las hadas!</value>
   </data>
   <data name="FAIRYMAX" xml:space="preserve">
     <value>¡Tu hada alcanzó el nivel máximo!</value>
@@ -758,10 +758,10 @@
     <value>Fairy XP: {0}/{1}</value>
   </data>
   <data name="FAIRY_LEVEL_CHANGED" xml:space="preserve">
-    <value>El nivel de tu {0} ha sido cambiado</value>
+    <value>El nivel de tu {0} hada ha sido cambiado</value>
   </data>
   <data name="FAIRYXP_RATE_NOW" xml:space="preserve">
-    <value>Fairy exp rate</value>
+    <value>XP rate de hada</value>
   </data>
   <data name="GOLD_RATE_NOW" xml:space="preserve">
     <value>Cantidad de caída del oro</value>
@@ -806,10 +806,10 @@
     <value>Error al eliminar PenaltyLog con Id {0}, {1}</value>
   </data>
   <data name="CANT_EQUIP_DESTROYED_SP" xml:space="preserve">
-    <value>No se puede equipar destruido sp!</value>
+    <value>No se puede equipar una sp destruida</value>
   </data>
   <data name="CANT_UPGRADE_DESTROYED_SP" xml:space="preserve">
-    <value>No puedes actualizar sp con alma muerta!</value>
+    <value>No puedes actualizar una sp destruida!!</value>
   </data>
   <data name="UPGRADESP_DESTROYED" xml:space="preserve">
     <value>SP destruido</value>
@@ -818,13 +818,13 @@
     <value>¡Te uniste al grupo de {0}!</value>
   </data>
   <data name="BN7" xml:space="preserve">
-    <value>NosHeat^Team</value>
+    <value />
   </data>
   <data name="BN8" xml:space="preserve">
-    <value>NosHeat^Team</value>
+    <value>Now is your moment</value>
   </data>
   <data name="BN9" xml:space="preserve">
-    <value>NosHeat^Team</value>
+    <value />
   </data>
   <data name="NO_WIG" xml:space="preserve">
     <value>No llevas ese afro genial;)</value>
@@ -851,7 +851,7 @@
     <value>¿Quieres usar ese artículo? esto unirá ese elemento a tu personaje.</value>
   </data>
   <data name="IN_BATTLE" xml:space="preserve">
-    <value>No puedes invitar jugadores cuando batallas.</value>
+    <value>No puedes invitar jugadores cuando estas en una pelea.</value>
   </data>
   <data name="PLAYER_IN_BATTLE" xml:space="preserve">
     <value>El jugador {0} está en la batalla</value>
@@ -917,7 +917,7 @@
     <value>Sumando exitoso!</value>
   </data>
   <data name="DROPPED_ITEM" xml:space="preserve">
-    <value>eliminado {0} x {1}</value>
+    <value>Eliminado {0} x {1}</value>
   </data>
   <data name="ITEM_BOUND_TO" xml:space="preserve">
     <value>{1} cayó {0} x {2}</value>
@@ -947,7 +947,7 @@
     <value>Mal valor de dignidad.</value>
   </data>
   <data name="DIGNITY_CHANGED" xml:space="preserve">
-    <value>¡Dignidad cambiada!</value>
+    <value>¡Cambiastes tu dignidad!</value>
   </data>
   <data name="NEAREST_PORTAL" xml:space="preserve">
     <value>¡Portal más cercano (MapID: {0}, MapX: {1}, MapY: {2}) ha sido eliminado!</value>
@@ -986,16 +986,16 @@
     <value>Packet with Header {0} está dañado o PacketDefinition no es válido. Contenido: {1}</value>
   </data>
   <data name="BOT_MESSAGE_0" xml:space="preserve">
-    <value>NosHeat^Team</value>
+    <value>Welcome to Edolas PS</value>
   </data>
   <data name="BOT_MESSAGE_1" xml:space="preserve">
-    <value>NosHeat^Team</value>
+    <value>The gm no say "Give me you password", only de developer or owner</value>
   </data>
   <data name="BOT_MESSAGE_2" xml:space="preserve">
-    <value>NosHeat^Team</value>
+    <value>Please, report the bugs in the discord server</value>
   </data>
   <data name="BOT_MESSAGE_3" xml:space="preserve">
-    <value>NosHeat^Team</value>
+    <value>Are you ready for the better private server?</value>
   </data>
   <data name="INTRODUCTION_SET" xml:space="preserve">
     <value>¡Tu descripción ha sido actualizada!</value>
@@ -1013,7 +1013,7 @@
     <value>Ahora ninguno puede contactarlo a través de la MP</value>
   </data>
   <data name="GM_CHAT_BLOCKED" xml:space="preserve">
-    <value>Este pequeño mono está ocupado atm. ¡Intenta más tarde!</value>
+    <value>Este pequeño mono está ocupado. ¡Intentalo más tarde!</value>
   </data>
   <data name="DROPS_LOADED" xml:space="preserve">
     <value>{0} ¡Gotas cargadas!</value>
@@ -1124,10 +1124,10 @@
     <value>Tasa de caída de oro</value>
   </data>
   <data name="BOT_MESSAGE_4" xml:space="preserve">
-    <value>NosHeat^Team</value>
+    <value>Now is your moment</value>
   </data>
   <data name="BOT_MESSAGE_5" xml:space="preserve">
-    <value>NosHeat^Team</value>
+    <value>Edolas!!</value>
   </data>
   <data name="SHIP_NOTARRIVED" xml:space="preserve">
     <value>¡Barco no ha llegado!</value>
@@ -1151,13 +1151,13 @@
     <value>¿Quieres cambio?</value>
   </data>
   <data name="DEMON" xml:space="preserve">
-    <value>Demon</value>
+    <value>Demonio</value>
   </data>
   <data name="ANGEL" xml:space="preserve">
     <value>Angel</value>
   </data>
   <data name="CREATE_FAMILY" xml:space="preserve">
-    <value>¿Quieres crear tu familia?</value>
+    <value>¿Quieres crear esta familia?</value>
   </data>
   <data name="DISMISS_FAMILY" xml:space="preserve">
     <value>¿Quieres despedir a tu familia?</value>
@@ -1166,10 +1166,10 @@
     <value>¡No tienes permiso para invitar jugadores!</value>
   </data>
   <data name="FAMILY_NAME_ALREADY_USED" xml:space="preserve">
-    <value>¡Este apellido ya está en uso!</value>
+    <value>¡Este nombre ya está en uso!</value>
   </data>
   <data name="GROUP_MEMBER_ALREADY_IN_FAMILY" xml:space="preserve">
-    <value>¡Alguien en la fiesta ya tiene familia!</value>
+    <value>¡Alguien en el grupo ya tiene familia!</value>
   </data>
   <data name="NOT_ALLOWED_KICK" xml:space="preserve">
     <value>¡No tienes permiso para patear jugadores!</value>
@@ -1178,7 +1178,7 @@
     <value>¡La familia {0} fue fundada!</value>
   </data>
   <data name="FAMILY_GROUP_NOT_FULL" xml:space="preserve">
-    <value>¡No puedes crear una familia sin un grupo completo!</value>
+    <value>¡No puedes crear una familia sin un grupo formado por 3 personas!</value>
   </data>
   <data name="FAMILY_INVITED" xml:space="preserve">
     <value>¡El jugador {0} ha sido invitado!</value>
@@ -1280,7 +1280,7 @@
     <value>{0} ({1}) inició sesión!</value>
   </data>
   <data name="CANT_CHANGE_MESSAGE" xml:space="preserve">
-    <value>Ya has modificado tu mensaje hoy. ¡Reintenta mañana!</value>
+    <value>Ya has modificado tu mensaje hoy. ¡Reintentalo mañana!</value>
   </data>
   <data name="NO_HANDLER_GURI" xml:space="preserve">
     <value>Sin controlador guri para: {0}</value>
@@ -1577,7 +1577,7 @@
     <value>Solo puedes capturar animales de un nivel inferior al tuyo.</value>
   </data>
   <data name="CURRENT_HP_TOO_HIGH" xml:space="preserve">
-    <value>Solo puedes capturar animales cuyo HP es 50% o menos.</value>
+    <value>Solo puedes capturar animales cuyo HP es de 50% o menor</value>
   </data>
   <data name="MONSTER_CANT_BE_CAPTURED" xml:space="preserve">
     <value>Los monstruos no pueden ser capturados.</value>
@@ -1592,7 +1592,7 @@
     <value>Quieres Abrir esta Caja?</value>
   </data>
   <data name="CANT_KICK_HEAD" xml:space="preserve">
-    <value>No Puede Arrancar La Cabeza</value>
+    <value>No puedes arrancar la cabeza</value>
   </data>
   <data name="ITEM_IS_NOT_FIXED" xml:space="preserve">
     <value>Este artículo no esta fijo.</value>
@@ -1619,7 +1619,7 @@
     <value>Este objecto esta en uso</value>
   </data>
   <data name="EXCHANGE_NOT_ALLOWED_IN_RAID" xml:space="preserve">
-    <value>No se permiten cambios en Raid.</value>
+    <value>No se permiten cambios cuando 1 de los 2 esta en  un raid</value>
   </data>
   <data name="JOIN_TEAM" xml:space="preserve">
     <value>Entraste al eguipo.</value>
@@ -1640,7 +1640,7 @@
     <value>Quieres Cambiar La Ubicacion De Spawn.</value>
   </data>
   <data name="CANT_USE_THAT" xml:space="preserve">
-    <value>No puedo usar eso.</value>
+    <value>No puedes usar eso.</value>
   </data>
   <data name="FAMILY_FULL" xml:space="preserve">
     <value>Familia completa.</value>
@@ -1658,10 +1658,10 @@
     <value>TIENES UNA VIDA INCORPORADA.</value>
   </data>
   <data name="CALIGOR_END" xml:space="preserve">
-    <value>Galigor End</value>
+    <value>Caligor terminó</value>
   </data>
   <data name="CALIGOR_OPEN" xml:space="preserve">
-    <value>Galigor Open For All</value>
+    <value>Caligor abrió</value>
   </data>
   <data name="MONSTER_NOT_FOUND" xml:space="preserve">
     <value>Monstruo no encontrado</value>
@@ -1734,5 +1734,14 @@
   </data>
   <data name="WELCOME_VIP_SHOP_MAP" xml:space="preserve">
     <value>Bienvenido a la sala vip</value>
+  </data>
+  <data name="RANGELEVEL_CHANGED" xml:space="preserve">
+    <value>Tu rango ha sido cambiado</value>
+  </data>
+  <data name="RANGEXP_RATE" xml:space="preserve">
+    <value>La tasa de el rango ha sido cambiada</value>
+  </data>
+  <data name="RANGE_XPRATE_NOW" xml:space="preserve">
+    <value>Range Rate</value>
   </data>
 </root>

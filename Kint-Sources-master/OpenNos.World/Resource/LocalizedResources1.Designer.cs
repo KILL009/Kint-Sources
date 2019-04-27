@@ -19,7 +19,7 @@ namespace OpenNos.World.Resource {
     // a través de una herramienta como ResGen o Visual Studio.
     // Para agregar o quitar un miembro, edite el archivo .ResX y, a continuación, vuelva a ejecutar ResGen
     // con la opción /str o recompile su proyecto de VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class LocalizedResources {
@@ -628,7 +628,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a NosHeat^Team.
+        ///   Busca una cadena traducida similar a Welcome to Edolas PS.
         /// </summary>
         internal static string BN0 {
             get {
@@ -637,7 +637,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a NosHeat^Team.
+        ///   Busca una cadena traducida similar a .
         /// </summary>
         internal static string BN1 {
             get {
@@ -646,7 +646,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a NosHeat^Team.
+        ///   Busca una cadena traducida similar a The gm no say &quot;Give me you password&quot;, only de developer or owner.
         /// </summary>
         internal static string BN2 {
             get {
@@ -655,7 +655,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a NosHeat^Team.
+        ///   Busca una cadena traducida similar a .
         /// </summary>
         internal static string BN3 {
             get {
@@ -664,7 +664,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a NosHeat^Team.
+        ///   Busca una cadena traducida similar a Please, report the bugs in the discord server.
         /// </summary>
         internal static string BN4 {
             get {
@@ -673,7 +673,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a NosHeat^Team.
+        ///   Busca una cadena traducida similar a .
         /// </summary>
         internal static string BN5 {
             get {
@@ -682,7 +682,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a NosHeat^Team.
+        ///   Busca una cadena traducida similar a Are you ready for the better private server?.
         /// </summary>
         internal static string BN6 {
             get {
@@ -691,7 +691,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a NosHeat^Team.
+        ///   Busca una cadena traducida similar a .
         /// </summary>
         internal static string BN7 {
             get {
@@ -700,7 +700,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a NosHeat^Team.
+        ///   Busca una cadena traducida similar a Now is your moment.
         /// </summary>
         internal static string BN8 {
             get {
@@ -709,7 +709,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a NosHeat^Team.
+        ///   Busca una cadena traducida similar a .
         /// </summary>
         internal static string BN9 {
             get {
@@ -718,7 +718,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a NosHeat^Team.
+        ///   Busca una cadena traducida similar a Welcome to Edolas PS.
         /// </summary>
         internal static string BOT_MESSAGE_0 {
             get {
@@ -727,7 +727,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a NosHeat^Team.
+        ///   Busca una cadena traducida similar a The gm no say &quot;Give me you password&quot;, only de developer or owner.
         /// </summary>
         internal static string BOT_MESSAGE_1 {
             get {
@@ -736,7 +736,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a NosHeat^Team.
+        ///   Busca una cadena traducida similar a Please, report the bugs in the discord server.
         /// </summary>
         internal static string BOT_MESSAGE_2 {
             get {
@@ -745,7 +745,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a NosHeat^Team.
+        ///   Busca una cadena traducida similar a Are you ready for the better private server?.
         /// </summary>
         internal static string BOT_MESSAGE_3 {
             get {
@@ -754,7 +754,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a NosHeat^Team.
+        ///   Busca una cadena traducida similar a Now is your moment.
         /// </summary>
         internal static string BOT_MESSAGE_4 {
             get {
@@ -763,7 +763,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a NosHeat^Team.
+        ///   Busca una cadena traducida similar a Edolas!!.
         /// </summary>
         internal static string BOT_MESSAGE_5 {
             get {
@@ -781,7 +781,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Iconos Buff deshabilitados.
+        ///   Busca una cadena traducida similar a Los iconos de los buffs han sido deshabilitados.
         /// </summary>
         internal static string BUFF_BLOCKED {
             get {
@@ -790,7 +790,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Iconos Buff habilitados.
+        ///   Busca una cadena traducida similar a Los iconos de los buffs han sido habilitados.
         /// </summary>
         internal static string BUFF_UNLOCKED {
             get {
@@ -817,7 +817,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Galigor End.
+        ///   Busca una cadena traducida similar a Caligor terminó.
         /// </summary>
         internal static string CALIGOR_END {
             get {
@@ -826,7 +826,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Galigor Open For All.
+        ///   Busca una cadena traducida similar a Caligor abrió.
         /// </summary>
         internal static string CALIGOR_OPEN {
             get {
@@ -844,7 +844,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Ya has modificado tu mensaje hoy. ¡Reintenta mañana!.
+        ///   Busca una cadena traducida similar a Ya has modificado tu mensaje hoy. ¡Reintentalo mañana!.
         /// </summary>
         internal static string CANT_CHANGE_MESSAGE {
             get {
@@ -853,7 +853,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a No se puede equipar destruido sp!.
+        ///   Busca una cadena traducida similar a No se puede equipar una sp destruida.
         /// </summary>
         internal static string CANT_EQUIP_DESTROYED_SP {
             get {
@@ -862,7 +862,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a No Puede Arrancar La Cabeza.
+        ///   Busca una cadena traducida similar a No puedes arrancar la cabeza.
         /// </summary>
         internal static string CANT_KICK_HEAD {
             get {
@@ -880,7 +880,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a No puedes actualizar sp con alma muerta!.
+        ///   Busca una cadena traducida similar a No puedes actualizar una sp destruida!!.
         /// </summary>
         internal static string CANT_UPGRADE_DESTROYED_SP {
             get {
@@ -889,7 +889,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a No puedo usar eso..
+        ///   Busca una cadena traducida similar a No puedes usar eso..
         /// </summary>
         internal static string CANT_USE_THAT {
             get {
@@ -979,7 +979,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Tu clase ha sido cambiada.
+        ///   Busca una cadena traducida similar a Cambiastes de clase.
         /// </summary>
         internal static string CLASS_CHANGED {
             get {
@@ -1051,7 +1051,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Solo puede felicitar a un jugador si ha alcanzado la Lv 30..
+        ///   Busca una cadena traducida similar a Solo puede felicitar a un jugador si ha alcanzado el lvl 30..
         /// </summary>
         internal static string COMPLIMENT_NOT_MINLVL {
             get {
@@ -1105,7 +1105,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a ¿Quieres crear tu familia?.
+        ///   Busca una cadena traducida similar a ¿Quieres crear esta familia?.
         /// </summary>
         internal static string CREATE_FAMILY {
             get {
@@ -1114,7 +1114,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Solo puedes capturar animales cuyo HP es 50% o menos..
+        ///   Busca una cadena traducida similar a Solo puedes capturar animales cuyo HP es de 50% o menor.
         /// </summary>
         internal static string CURRENT_HP_TOO_HIGH {
             get {
@@ -1168,7 +1168,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Demon.
+        ///   Busca una cadena traducida similar a Demonio.
         /// </summary>
         internal static string DEMON {
             get {
@@ -1177,7 +1177,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a ¡Dignidad cambiada!.
+        ///   Busca una cadena traducida similar a ¡Cambiastes tu dignidad!.
         /// </summary>
         internal static string DIGNITY_CHANGED {
             get {
@@ -1249,7 +1249,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a eliminado {0} x {1}.
+        ///   Busca una cadena traducida similar a Eliminado {0} x {1}.
         /// </summary>
         internal static string DROPPED_ITEM {
             get {
@@ -1285,7 +1285,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Emoticones deshabilitados.
+        ///   Busca una cadena traducida similar a Los emoticonos deshabilitados.
         /// </summary>
         internal static string EMO_BLOCKED {
             get {
@@ -1294,7 +1294,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Emoticones habilitados.
+        ///   Busca una cadena traducida similar a Los emoticonos habilitados.
         /// </summary>
         internal static string EMO_UNLOCKED {
             get {
@@ -1321,7 +1321,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a No se permiten cambios en Raid..
+        ///   Busca una cadena traducida similar a No se permiten cambios cuando 1 de los 2 esta en  un raid.
         /// </summary>
         internal static string EXCHANGE_NOT_ALLOWED_IN_RAID {
             get {
@@ -1348,7 +1348,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a El nivel de tu {0} ha sido cambiado.
+        ///   Busca una cadena traducida similar a El nivel de tu {0} hada ha sido cambiado.
         /// </summary>
         internal static string FAIRY_LEVEL_CHANGED {
             get {
@@ -1384,7 +1384,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Fairy xp rate changed!.
+        ///   Busca una cadena traducida similar a Se cambio la xp rate de las hadas!.
         /// </summary>
         internal static string FAIRYXP_RATE_CHANGED {
             get {
@@ -1393,7 +1393,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Fairy exp rate.
+        ///   Busca una cadena traducida similar a XP rate de hada.
         /// </summary>
         internal static string FAIRYXP_RATE_NOW {
             get {
@@ -1420,7 +1420,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a ¡No puedes crear una familia sin un grupo completo!.
+        ///   Busca una cadena traducida similar a ¡No puedes crear una familia sin un grupo formado por 3 personas!.
         /// </summary>
         internal static string FAMILY_GROUP_NOT_FULL {
             get {
@@ -1465,7 +1465,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a ¡Este apellido ya está en uso!.
+        ///   Busca una cadena traducida similar a ¡Este nombre ya está en uso!.
         /// </summary>
         internal static string FAMILY_NAME_ALREADY_USED {
             get {
@@ -1672,7 +1672,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Este pequeño mono está ocupado atm. ¡Intenta más tarde!.
+        ///   Busca una cadena traducida similar a Este pequeño mono está ocupado. ¡Intentalo más tarde!.
         /// </summary>
         internal static string GM_CHAT_BLOCKED {
             get {
@@ -1699,7 +1699,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a ¡La tasa de caída del oro cambió!.
+        ///   Busca una cadena traducida similar a ¡La cantidad de caída del oro cambió!.
         /// </summary>
         internal static string GOLD_RATE_CHANGED {
             get {
@@ -1789,7 +1789,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Te fuiste de la fiesta.
+        ///   Busca una cadena traducida similar a Te fuiste del grupo.
         /// </summary>
         internal static string GROUP_LEFT {
             get {
@@ -1798,7 +1798,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a ¡Alguien en la fiesta ya tiene familia!.
+        ///   Busca una cadena traducida similar a ¡Alguien en el grupo ya tiene familia!.
         /// </summary>
         internal static string GROUP_MEMBER_ALREADY_IN_FAMILY {
             get {
@@ -1978,7 +1978,7 @@ namespace OpenNos.World.Resource {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a No puedes invitar jugadores cuando batallas..
+        ///   Busca una cadena traducida similar a No puedes invitar jugadores cuando estas en una pelea..
         /// </summary>
         internal static string IN_BATTLE {
             get {
@@ -3837,6 +3837,33 @@ namespace OpenNos.World.Resource {
         internal static string RAID_UNREGISTERED {
             get {
                 return ResourceManager.GetString("RAID_UNREGISTERED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Range Rate.
+        /// </summary>
+        internal static string RANGE_XPRATE_NOW {
+            get {
+                return ResourceManager.GetString("RANGE_XPRATE_NOW", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Tu rango ha sido cambiado.
+        /// </summary>
+        internal static string RANGELEVEL_CHANGED {
+            get {
+                return ResourceManager.GetString("RANGELEVEL_CHANGED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a La tasa de el rango ha sido cambiada.
+        /// </summary>
+        internal static string RANGEXP_RATE {
+            get {
+                return ResourceManager.GetString("RANGEXP_RATE", resourceCulture);
             }
         }
         

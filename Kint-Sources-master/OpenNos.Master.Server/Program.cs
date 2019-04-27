@@ -76,7 +76,7 @@ namespace OpenNos.Master.Server
                 {
                     Assembly assembly = Assembly.GetExecutingAssembly();
                     FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
-                    string text = $"MASTER SERVER v{fileVersionInfo.ProductVersion}dev - PORT : {port} by Source# Team";
+                    string text = $"Master v{fileVersionInfo.ProductVersion} - Puerto : {port} by ZroFreaks";
                     int offset = (Console.WindowWidth / 2) + (text.Length / 2);
                     string separator = new string('=', Console.WindowWidth);
                     Console.WriteLine(separator + string.Format("{0," + offset + "}\n", text) + separator);
@@ -89,7 +89,7 @@ namespace OpenNos.Master.Server
                     return;
                 }
 
-                Logger.Info(Language.Instance.GetMessageFromKey("CONFIG_LOADED"));
+                Logger.Info(Language.Instance.GetMessageFromKey("Configuración cargada"));
 
                 try
                 {
@@ -116,8 +116,8 @@ namespace OpenNos.Master.Server
                             connection => { CommunicationServiceClient.Instance.KickSession(connection.AccountId, null); });
                     });
 
-                    Logger.Info(Language.Instance.GetMessageFromKey("STARTED"));
-                    Console.Title = $"[Source#] Master - Players : {MSManager.Instance.ConnectedAccounts.Count}";
+                    Logger.Info(Language.Instance.GetMessageFromKey("Comenzado"));
+                    Console.Title = $"[ZroSource] Master - Jugadores : {MSManager.Instance.ConnectedAccounts.Count}";
                 }
                 catch (Exception ex)
                 {
@@ -131,9 +131,9 @@ namespace OpenNos.Master.Server
             }
         }
 
-        private static void onClientConnected(object sender, ServiceClientEventArgs e) => Logger.Info(Language.Instance.GetMessageFromKey("NEW_CONNECT") + e.Client.ClientId);
+        private static void onClientConnected(object sender, ServiceClientEventArgs e) => Logger.Info(Language.Instance.GetMessageFromKey("Nueva conexion") + e.Client.ClientId);
 
-        private static void onClientDisconnected(object sender, ServiceClientEventArgs e) => Logger.Info(Language.Instance.GetMessageFromKey("DISCONNECT") + e.Client.ClientId);
+        private static void onClientDisconnected(object sender, ServiceClientEventArgs e) => Logger.Info(Language.Instance.GetMessageFromKey("Desconectado") + e.Client.ClientId);
 
 #endregion
     }
