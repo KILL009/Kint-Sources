@@ -63,7 +63,7 @@ namespace OpenNos.Login
                     {
                         Assembly assembly = Assembly.GetExecutingAssembly();
                         FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
-                        string text = $"Login {fileVersionInfo.ProductVersion} - Puerto : {port} by ZroFreaks";
+                        string text = $"Login {fileVersionInfo.ProductVersion} - Puerto : {port} by Source#";
                         int offset = (Console.WindowWidth / 2) + (text.Length / 2);
                         string separator = new string('=', Console.WindowWidth);
                         Console.WriteLine(separator + string.Format("{0," + offset + "}\n", text) + separator);
@@ -82,7 +82,7 @@ namespace OpenNos.Login
                         return;
                     }
 
-                    Logger.Info(Language.Instance.GetMessageFromKey("Configuracón cargada"));
+                    Logger.Info(Language.Instance.GetMessageFromKey("ConfiguracÃ³n cargada"));
 
                     try
                     {
