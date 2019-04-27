@@ -137,7 +137,7 @@ namespace OpenNos.World
                     text += $"Puerto : {port}";
                 }
 
-                text += " by ZroFreaks";
+                text += " by Source#";
                 int offset = (Console.WindowWidth / 2) + (text.Length / 2);
                 string separator = new string('=', Console.WindowWidth);
                 Console.WriteLine(separator + string.Format("{0," + offset + "}\n", text) + separator);
