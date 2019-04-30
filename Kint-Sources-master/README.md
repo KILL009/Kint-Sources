@@ -4,6 +4,10 @@
 # Discord #
 [Discord for Help] https://discord.gg/MVyUedY
 
+# Nosmall #
+Nosmall : https://github.com/Fizo55/NosMall
+Nosmall WebAPI : https://github.com/Fizo55/NosMall-WebAPI
+
 # Information! #
 A master branch is to which we will push only stable changes that got confirmed, we develop now on dev branch, please dont ask for help with using dev branch, its unstable and designed only for advanced users.
 
