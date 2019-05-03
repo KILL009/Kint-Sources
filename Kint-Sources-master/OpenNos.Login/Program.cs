@@ -82,7 +82,7 @@ namespace OpenNos.Login
                         return;
                     }
 
-                    Logger.Info(Language.Instance.GetMessageFromKey("Configuracón cargada"));
+                    Logger.Info(Language.Instance.GetMessageFromKey("CONFIG_LOADED"));
 
                     try
                     {

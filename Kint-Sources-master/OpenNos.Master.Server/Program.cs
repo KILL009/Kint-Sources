@@ -53,7 +53,6 @@ namespace OpenNos.Master.Server
                
 
                 bool ignoreStartupMessages = false;
-                bool ignoreTelemetry = false;
                 foreach (string arg in args)
                 {
                     switch (arg)
@@ -63,7 +62,6 @@ namespace OpenNos.Master.Server
                             break;
 
                         case "--notelemetry":
-                            ignoreTelemetry = true;
                             break;
                     }
                 }
@@ -89,7 +87,7 @@ namespace OpenNos.Master.Server
                     return;
                 }
 
-                Logger.Info(Language.Instance.GetMessageFromKey("Configuración cargada"));
+                Logger.Info(Language.Instance.GetMessageFromKey("CONFIG_LOADED"));
 
                 try
                 {
@@ -116,8 +114,8 @@ namespace OpenNos.Master.Server
                             connection => { CommunicationServiceClient.Instance.KickSession(connection.AccountId, null); });
                     });
 
-                    Logger.Info(Language.Instance.GetMessageFromKey("Comenzado"));
-                    Console.Title = $"[ZroSource] Master - Jugadores : {MSManager.Instance.ConnectedAccounts.Count}";
+                    Logger.Info(Language.Instance.GetMessageFromKey("STARTED"));
+                    Console.Title = $"[Source c#] Master - Jugadores : {MSManager.Instance.ConnectedAccounts.Count}";
                 }
                 catch (Exception ex)
                 {
@@ -131,9 +129,9 @@ namespace OpenNos.Master.Server
             }
         }
 
-        private static void onClientConnected(object sender, ServiceClientEventArgs e) => Logger.Info(Language.Instance.GetMessageFromKey("Nueva conexion") + e.Client.ClientId);
+        private static void onClientConnected(object sender, ServiceClientEventArgs e) => Logger.Info(Language.Instance.GetMessageFromKey("NEW_CONNECT") + e.Client.ClientId);
 
-        private static void onClientDisconnected(object sender, ServiceClientEventArgs e) => Logger.Info(Language.Instance.GetMessageFromKey("Desconectado") + e.Client.ClientId);
+        private static void onClientDisconnected(object sender, ServiceClientEventArgs e) => Logger.Info(Language.Instance.GetMessageFromKey("DISCONNECT") + e.Client.ClientId);
 
 #endregion
     }
