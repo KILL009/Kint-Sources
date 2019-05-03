@@ -138,6 +138,7 @@ namespace OpenNos.GameObject
         private short FirstX { get; set; }
 
         private short FirstY { get; set; }
+        public object BattleEntity { get; internal set; }
 
         #endregion
 

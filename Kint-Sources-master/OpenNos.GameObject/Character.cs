@@ -1593,11 +1593,11 @@ namespace OpenNos.GameObject
 
 
 
-        public string GenerateCInfo() => $"c_info {(Authority == AuthorityType.Moderator && !Undercover ? $"[Support][P{prestigeLevel}]" + Name : Authority == AuthorityType.User ? $"[P{prestigeLevel}]" + Name : Authority == AuthorityType.Donador ? Name + $"[DT][P{prestigeLevel}]" : Name)} - -1 {(Family != null && !Undercover ? $"{Family.FamilyId} {Family.Name}({Language.Instance.GetMessageFromKey(FamilyCharacter.Authority.ToString().ToUpper())})" : "-1 -")} {CharacterId} {(Invisible ? 6 : Undercover ? (byte)AuthorityType.User : Authority < AuthorityType.User ? (byte)AuthorityType.User : (byte)Authority)} {(byte)Gender} {(byte)HairStyle} {(byte)HairColor} {(byte)Class} {(GetDignityIco() == 1 ? GetReputationIco() : -GetDignityIco())} {(Authority == AuthorityType.Moderator ? 500 : Compliment)} {(UseSp || IsVehicled ? Morph : 0)} {(Invisible ? 1 : 0)} {Family?.FamilyLevel ?? 0} {(UseSp ? MorphUpgrade : 0)} {ArenaWinner}";
+        public string GenerateCInfo() => $"c_info {(Authority == AuthorityType.Moderator && !Undercover ? $"[Support][P{prestigeLevel}]" + Name : Authority == AuthorityType.User ? $"[P{prestigeLevel}]" + Name : Authority == AuthorityType.Donador ? Name + $"[DT][P{prestigeLevel}]" : Name)} - -1 {(Family != null && !Undercover ? $"{Family.FamilyId} {Family.Name}({Language.Instance.GetMessageFromKey(FamilyCharacter.Authority.ToString().ToUpper())})" : "-1 -")} {CharacterId} {(Invisible ? 6 : Undercover ? (byte)AuthorityType.User : Authority < AuthorityType.User ? (byte)AuthorityType.User : (byte)Authority)} {(byte)Gender} {(byte)HairStyle} {(byte)HairColor} {(byte)Class} {(GetDignityIco() == 1 ? GetReputationIco() : -GetDignityIco())} {(Authority == AuthorityType.Moderator ? 500 : Compliment)} {(UseSp || IsVehicled ? Morph : 0)} {(Invisible ? 1 : 0)} {Family?.FamilyLevel ?? 0} 0|0|0 {(UseSp ? MorphUpgrade : 0)} {ArenaWinner} {Size} {HeroLevel}";
 
         public string GenerateCMap() => $"c_map 0 {MapInstance.Map.MapId} {(MapInstance.MapInstanceType != MapInstanceType.BaseMapInstance ? 1 : 0)}";
 
-        public string GenerateCMode() => $"c_mode 1 {CharacterId} {(UseSp || IsVehicled ? Morph : 0)} {(UseSp ? MorphUpgrade : 0)} {(UseSp ? MorphUpgrade2 : 0)} {ArenaWinner}";
+        public string GenerateCMode() => $"c_mode 1 {CharacterId} {(UseSp || IsVehicled ? Morph : 0)} {(UseSp ? MorphUpgrade : 0)} {(UseSp ? MorphUpgrade2 : 0)} {ArenaWinner} {Size}";
 
         public string GenerateCond() => $"cond 1 {CharacterId} {(NoAttack ? 1 : 0)} {(NoMove ? 1 : 0)} {Speed}";
 
@@ -1661,10 +1661,10 @@ namespace OpenNos.GameObject
 
         public string GenerateEqListForPacket()
         {
-            string[] invarray = new string[16];
+            string[] invarray = new string[17];
             if (Inventory != null)
             {
-                for (short i = 0; i < 16; i++)
+                for (short i = 0; i < 17; i++)
                 {
                     ItemInstance item = Inventory.LoadBySlotAndType(i, InventoryType.Wear);
                     if (item != null)
@@ -1677,7 +1677,7 @@ namespace OpenNos.GameObject
                     }
                 }
             }
-            return $"{invarray[(byte)EquipmentType.Hat]}.{invarray[(byte)EquipmentType.Armor]}.{invarray[(byte)EquipmentType.MainWeapon]}.{invarray[(byte)EquipmentType.SecondaryWeapon]}.{invarray[(byte)EquipmentType.Mask]}.{invarray[(byte)EquipmentType.Fairy]}.{invarray[(byte)EquipmentType.CostumeSuit]}.{invarray[(byte)EquipmentType.CostumeHat]}.{invarray[(byte)EquipmentType.WeaponSkin]}";
+            return $"{invarray[(byte)EquipmentType.Hat]}.{invarray[(byte)EquipmentType.Armor]}.{invarray[(byte)EquipmentType.MainWeapon]}.{invarray[(byte)EquipmentType.SecondaryWeapon]}.{invarray[(byte)EquipmentType.Mask]}.{invarray[(byte)EquipmentType.Fairy]}.{invarray[(byte)EquipmentType.CostumeSuit]}.{invarray[(byte)EquipmentType.CostumeHat]}.{invarray[(byte)EquipmentType.WeaponSkin]}.{invarray[(byte)EquipmentType.Wings]}";
         }
 
         public string GenerateEqRareUpgradeForPacket()
@@ -1717,7 +1717,7 @@ namespace OpenNos.GameObject
             EquipmentBCards.Clear();
             if (Inventory != null)
             {
-                for (short i = 0; i < 15; i++)
+                for (short i = 0; i < 17; i++)
                 {
                     ItemInstance item = Inventory.LoadBySlotAndType(i, InventoryType.Wear);
                     if (item != null)
@@ -1963,7 +1963,12 @@ namespace OpenNos.GameObject
             return str;
         }
 
-        public string GenerateGidx() => Family != null ? $"gidx 1 {CharacterId} {Family.FamilyId} {Family.Name}({Language.Instance.GetMessageFromKey(Family.FamilyCharacters.Find(s => s.CharacterId == CharacterId)?.Authority.ToString().ToUpper())}) {Family.FamilyLevel}" : $"gidx 1 {CharacterId} -1 - 0";
+        public string GenerateGidx()
+        {
+            return Family != null
+                ? $"gidx 1 {CharacterId} {Family.FamilyId} {Family.Name}({Language.Instance.GetMessageFromKey(Family.FamilyCharacters.FirstOrDefault(s => s.CharacterId == CharacterId)?.Authority.ToString().ToUpper())}) {Family.FamilyLevel} 0|0|0"
+                : $"gidx 1 {CharacterId} -1 - 0";
+        }
 
         public string GenerateGInfo()
         {
@@ -2021,7 +2026,8 @@ namespace OpenNos.GameObject
         public string GenerateInvisible() => $"cl {CharacterId} {(Invisible ? 1 : 0)} {(InvisibleGm ? 1 : 0)}";
 
         public void GenerateKillBonus(MapMonster monsterToAttack)
-        {
+
+        { 
             void _handleGoldDrop(DropDTO drop, long maxGold, long? dropOwner, short posX, short posY)
             {
                 Observable.Timer(TimeSpan.FromMilliseconds(500)).Subscribe(o =>

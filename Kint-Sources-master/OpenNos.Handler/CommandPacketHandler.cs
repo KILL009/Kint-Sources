@@ -2536,6 +2536,11 @@ public void Ban(BanPacket banPacket)
         /// <param name="itemRainPacket"></param>
         public void ItemRain(ItemRainPacket itemRainPacket)
         {
+            if(itemRainPacket == null)
+            {
+                return;
+            }
+
             if (itemRainPacket != null)
             {
                 short vnum = itemRainPacket.VNum;

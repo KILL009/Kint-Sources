@@ -228,14 +228,18 @@ namespace OpenNos.GameObject
             if (skillsSp.Count == 0)
             {
                 skill = "-1";
-            }
-            short firstskillvnum = skillsSp[0].SkillVNum;
+            }           
 
-            for (int i = 1; i < 11; i++)
+            if (skillsSp.Count > 0)
             {
-                if (skillsSp.Count >= i + 1 && skillsSp[i].SkillVNum <= firstskillvnum + 10)
+                var firstskillvnum = skillsSp[0].SkillVNum;
+
+                for (var i = 1; i < 11; i++)
                 {
-                    skill += $"{skillsSp[i].SkillVNum}.";
+                    if (skillsSp.Count >= i + 1 && skillsSp[i].SkillVNum <= firstskillvnum + 10)
+                    {
+                        skill += $"{skillsSp[i].SkillVNum}.";
+                    }
                 }
             }
 

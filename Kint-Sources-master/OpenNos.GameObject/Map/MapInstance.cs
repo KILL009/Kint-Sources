@@ -218,6 +218,15 @@ namespace OpenNos.GameObject
 
                 MonsterMapItem droppedItem = new MonsterMapItem(localMapX, localMapY, drop.ItemVNum, drop.Amount, owner ?? -1);
                 DroppedList[droppedItem.TransportId] = droppedItem;
+
+                if(drop.Amount == 99)
+                {
+                    return;
+                }
+                if (droppedItem == null)
+                {
+                    return;
+                }
                 Broadcast($"drop {droppedItem.ItemVNum} {droppedItem.TransportId} {droppedItem.PositionX} {droppedItem.PositionY} {(droppedItem.GoldAmount > 1 ? droppedItem.GoldAmount : droppedItem.Amount)} 0 0 -1");
             }
             catch (Exception e)
@@ -232,6 +241,27 @@ namespace OpenNos.GameObject
             {
                 MonsterMapItem droppedItem = new MonsterMapItem(drop.Item3, drop.Item4, drop.Item1, drop.Item2);
                 DroppedList[droppedItem.TransportId] = droppedItem;
+
+                if(drop.Item1 == 99)
+                {
+                    return;
+                }
+                if (drop.Item2 == 99)
+                {
+                    return;
+                }
+                if (drop.Item3 == 99)
+                {
+                    return;
+                }
+                if (drop.Item4 == 99)
+                {
+                    return;
+                }
+                if (droppedItem == null)
+                {
+                    return;
+                }
                 Broadcast($"drop {droppedItem.ItemVNum} {droppedItem.TransportId} {droppedItem.PositionX} {droppedItem.PositionY} {(droppedItem.GoldAmount > 1 ? droppedItem.GoldAmount : droppedItem.Amount)} 0 0 -1");
             }
         }
@@ -372,6 +402,7 @@ namespace OpenNos.GameObject
                 newItemInstance.Amount = amount;
                 droppedItem = new CharacterMapItem(mapX, mapY, newItemInstance);
 
+
                 DroppedList[droppedItem.TransportId] = droppedItem;
                 inv.Amount -= amount;
             }
@@ -423,7 +454,24 @@ namespace OpenNos.GameObject
                 destX = (short)(originX + ServerManager.RandomNumber(-10, 10));
                 destY = (short)(originY + ServerManager.RandomNumber(-10, 10));
                 MonsterMapItem droppedItem = new MonsterMapItem(destX, destY, parameter.Item2, amount);
+                if(parameter.Item2 == 99)
+                {
+                    return;
+                }
+                if (amount == 99)
+                {
+                    return;
+                }
+                if(parameter == null)
+                {
+                    return;
+                }
+                if (droppedItem == null)
+                {
+                    return;
+                }
                 DroppedList[droppedItem.TransportId] = droppedItem;
+               
                 Broadcast($"throw {droppedItem.ItemVNum} {droppedItem.TransportId} {originX} {originY} {droppedItem.PositionX} {droppedItem.PositionY} {(droppedItem.GoldAmount > 1 ? droppedItem.GoldAmount : droppedItem.Amount)}");
             }
         }

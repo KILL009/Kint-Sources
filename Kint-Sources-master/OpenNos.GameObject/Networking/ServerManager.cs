@@ -707,6 +707,8 @@ namespace OpenNos.GameObject.Networking
 
         public static Card GetCardByCardId(short? CardId) => _cards.FirstOrDefault(c => c.CardId == CardId);
 
+        public static Card GetCard(short? cardId) => _cards.FirstOrDefault(s => s.CardId == cardId);
+
         public static List<MapInstance> GetMapInstances(Func<MapInstance, bool> predicate) => _mapinstances.Values.Where(predicate).ToList();
 
         public long GetNextGroupId() => ++_lastGroupId;
@@ -864,6 +866,8 @@ namespace OpenNos.GameObject.Networking
                 }
             }
         }
+
+        
 
         public void Initialize()
         {
